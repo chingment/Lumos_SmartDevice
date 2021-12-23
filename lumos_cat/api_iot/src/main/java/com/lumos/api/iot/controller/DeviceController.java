@@ -17,7 +17,7 @@ public class DeviceController {
     @ResponseBody
     public CustomResult init(){
         Map<String,Object> map=new HashMap<>();
-        map.put("msg","是一个ssss人");
+        map.put("msg","是一个ssdddss人");
 
         //int a=1/0;
         return CustomResult.success("成功",map);
