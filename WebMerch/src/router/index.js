@@ -38,6 +38,12 @@ export const constantRoutes = [
     meta: { title: '登录', icon: '' }
   },
   {
+    path: '/home',
+    component: () => import('@/views/home/index'),
+    hidden: true,
+    meta: { title: '主页', icon: '' }
+  },
+  {
     path: '/404',
     component: () => import('@/views/errorpage/404'),
     hidden: true,

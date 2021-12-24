@@ -23,7 +23,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['Token'] = getToken()
     }
     return config
   },
@@ -83,11 +83,11 @@ service.interceptors.response.use(
   },
   error => {
     // console.log('err' + error) // for debug
-    // Message({
-    //   message: error.message,
-    //   type: 'error',
-    //   duration: 5 * 1000
-    // })
+    Message({
+      message: '服务请求发生异常',
+      type: 'error',
+      duration: 5 * 1000
+    })
     // return Promise.reject(error)
 
     var config = error.config

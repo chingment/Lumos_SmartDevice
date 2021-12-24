@@ -54,7 +54,7 @@
 
 <script>
 
-import { loginByAccount } from '@/api/own'
+import { changeURLArg } from '@/utils/commonUtil'
 export default {
   name: 'Login',
   data() {
@@ -74,6 +74,7 @@ export default {
     }
     return {
       loading: false,
+      redirect: undefined,
       formByLoginAccount: {
         username: '',
         password: ''
@@ -83,6 +84,14 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password'
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
     }
   },
   created() {
@@ -116,13 +125,22 @@ export default {
           this.formByLoginAccount.redirectUrl = this.redirect
           this.formByLoginAccount.appId = this.appId
 
-          loginByAccount(this.formByLoginAccount).then(res => {
+          this.$store.dispatch('own/loginByAccount', this.formByLoginAccount).then((res) => {
             this.loading = false
             if (res.code === this.$code_suc) {
-
+              console.log('aa')
+              var path = this.redirect || '/'
+              var redirect = decodeURIComponent(path)
+              console.log('redirect:' + redirect)
+              window.location.href = redirect
             } else {
-
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
             }
+          }).catch(() => {
+            this.loading = false
           })
         }
       })

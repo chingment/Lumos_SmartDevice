@@ -4,6 +4,8 @@ import router from '@/router'
 import Layout from '@/layout'
 
 function _generateRoutes(routers, menus) {
+  if (menus == null) { return }
+
   menus.forEach((item) => {
     var path = item.path
     if (item.path.indexOf('?') > -1) {

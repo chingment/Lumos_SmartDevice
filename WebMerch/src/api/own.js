@@ -8,27 +8,26 @@ export function loginByAccount(data) {
   })
 }
 
-export function getInfo(token, website, path) {
+export function getInfo(params) {
   return request({
     url: '/own/getInfo',
     method: 'get',
-    params: { token, website, path }
+    params: params
   })
 }
 
-export function logout(token, appId) {
+export function logout(data) {
   return request({
     url: '/own/logout',
     method: 'post',
-    params: { token: token, appId: appId },
-    data: { token: token, appId: appId }
+    data
   })
 }
 
-export function checkPermission(tpye, content) {
+export function checkPermission(params) {
   return request({
     url: '/own/checkPermission',
     method: 'get',
-    params: { tpye, content }
+    params: params
   })
 }

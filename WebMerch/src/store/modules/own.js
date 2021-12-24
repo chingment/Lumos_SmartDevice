@@ -1,4 +1,4 @@
-import { getInfo, checkPermission } from '@/api/own'
+import { loginByAccount, getInfo, checkPermission } from '@/api/own'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router from '@/router'
 import { generateRoutes } from '@/utils/ownResource'
@@ -31,11 +31,24 @@ const actions = {
     setToken(token)
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  loginByAccount({ commit }, state) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token, 'merch').then(res => {
-        if (res.result === 1) {
+      loginByAccount(state).then(res => {
+        const { data } = res
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
+        resolve(res)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // get user info
+  getInfo({ commit }) {
+    return new Promise((resolve, reject) => {
+      getInfo().then(res => {
+        if (res.code === 1000) {
           const d = res.data
           commit('SET_USERINFO', d)
           generateRoutes(d.menus)
@@ -68,10 +81,10 @@ const actions = {
   // checkperminssion
   checkPermission({ commit }, state) {
     return new Promise((resolve, reject) => {
-      checkPermission('merch', state.type, state.content).then(res => {
-        if (res.result === 1) {
+      checkPermission({ type: state.type, content: state.content }).then(res => {
+        if (res.code === 1000) {
           const d = res.data
-          commit('SET_PERMISSION', d.permission)
+          // commit('SET_PERMISSION', d.permission)
         }
         resolve(res)
       }).catch(error => {

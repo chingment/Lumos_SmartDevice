@@ -43,34 +43,34 @@ public class CustomResult<T>  {
     }
 
     public static CustomResult success() {
-        return CustomResult.set(1,"成功",null);
+        return CustomResult.set(1000,"成功",null);
     }
 
     public static CustomResult success(String msg) {
-        return CustomResult.set(1,msg,null);
+        return CustomResult.set(1000,msg,null);
     }
 
     public static CustomResult success(String msg, Object object) {
-        return CustomResult.set(1,msg,object);
+        return CustomResult.set(1000,msg,object);
     }
 
     public static CustomResult success(Object object) {
-        return CustomResult.set(1,"成功",object);
+        return CustomResult.set(1000,"成功",object);
     }
 
     public static CustomResult fail(Object object) {
-        return CustomResult.set(2,"失败",object);
+        return CustomResult.set(2000,"失败",object);
     }
 
     public static CustomResult exception() {
-        return CustomResult.set(3,"异常",null);
+        return CustomResult.set(3000,"异常",null);
     }
 
     public static CustomResult exception(String msg) {
-        return CustomResult.set(3,msg,null);
+        return CustomResult.set(3000,msg,null);
     }
 
     public static CustomResult exception(Object object) {
-        return CustomResult.set(3,"异常",object);
+        return CustomResult.set(3000,"异常",object);
     }
 }
