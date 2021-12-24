@@ -58,8 +58,8 @@ public class CustomResult<T>  {
         return CustomResult.set(1000,"成功",object);
     }
 
-    public static CustomResult fail(Object object) {
-        return CustomResult.set(2000,"失败",object);
+    public static CustomResult fail(String msg) {
+        return CustomResult.set(2000,msg,null);
     }
 
     public static CustomResult exception() {

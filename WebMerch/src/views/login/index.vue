@@ -10,13 +10,13 @@
           <div class="title-container">
             <h3 class="title">登录</h3>
           </div>
-          <el-form-item prop="username">
+          <el-form-item prop="userName">
             <span class="svg-container">
               <svg-icon icon-class="user" />
             </span>
             <el-input
-              ref="username"
-              v-model="formByLoginAccount.username"
+              ref="userName"
+              v-model="formByLoginAccount.userName"
               placeholder="账号"
               name="username"
               type="text"
@@ -54,11 +54,10 @@
 
 <script>
 
-import { changeURLArg } from '@/utils/commonUtil'
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
+    const validateUserName = (rule, value, callback) => {
       if (value.length <= 0) {
         callback(new Error('账号不能为空'))
       } else {
@@ -76,11 +75,11 @@ export default {
       loading: false,
       redirect: undefined,
       formByLoginAccount: {
-        username: '',
+        userName: '',
         password: ''
       },
       rulesByLoginAccount: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        userName: [{ required: true, trigger: 'blur', validator: validateUserName }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password'
@@ -98,8 +97,8 @@ export default {
 
   },
   mounted() {
-    if (this.formByLoginAccount.username === '') {
-      this.$refs.username.focus()
+    if (this.formByLoginAccount.userName === '') {
+      this.$refs.userName.focus()
     } else if (this.formByLoginAccount.password === '') {
       this.$refs.password.focus()
     }
@@ -123,14 +122,13 @@ export default {
         if (valid) {
           this.loading = true
           this.formByLoginAccount.redirectUrl = this.redirect
-          this.formByLoginAccount.appId = this.appId
 
           this.$store.dispatch('own/loginByAccount', this.formByLoginAccount).then((res) => {
             this.loading = false
+            console.log(res)
             if (res.code === this.$code_suc) {
-              console.log('aa')
-              var path = this.redirect || '/'
-              var redirect = decodeURIComponent(path)
+              var redirect = this.redirect || '/'
+              redirect = decodeURIComponent(redirect)
               console.log('redirect:' + redirect)
               window.location.href = redirect
             } else {

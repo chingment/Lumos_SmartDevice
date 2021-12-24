@@ -4,7 +4,9 @@ package com.lumos.api.merch.controller;
 import com.lumos.api.merch.rop.RetOwnGetInfo;
 import com.lumos.api.merch.rop.RopOwnCheckPermission;
 import com.lumos.api.merch.rop.RopOwnLoginByAccount;
+import com.lumos.api.merch.service.OwnService;
 import com.lumos.common.CustomResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,19 +18,13 @@ import java.util.logging.Logger;
 
 public class OwnController {
 
+    @Autowired
+    private OwnService ownService;
+
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop){
-        System.out.print("getUsername."+rop.getUsername());
-        System.out.print("getPassword."+rop.getPassword());
-        Map<String,Object> map=new HashMap<>();
-        map.put("token","123456");
-
-        if(rop.getUsername().equals("admin")) {
-            return CustomResult.success("成功", map);
-        }else{
-            return CustomResult.fail("失败");
-        }
+        return  ownService.loginByAccount(rop);
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
