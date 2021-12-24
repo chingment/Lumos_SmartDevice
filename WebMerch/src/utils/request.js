@@ -71,12 +71,11 @@ service.interceptors.response.use(
         return res
       } else {
         Message({
-          message: res.message || 'Error',
+          message: res.msg || '系统异常',
           type: 'error',
           duration: 5 * 1000
         })
-
-        return Promise.reject(new Error(res.message || 'Error'))
+        return Promise.reject(new Error(res.msg || '系统异常'))
       }
     } else {
       return response

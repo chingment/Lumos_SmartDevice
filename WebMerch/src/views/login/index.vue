@@ -118,6 +118,11 @@ export default {
 
           loginByAccount(this.formByLoginAccount).then(res => {
             this.loading = false
+            if (res.code === this.$code_suc) {
+
+            } else {
+
+            }
           })
         }
       })

@@ -12,6 +12,7 @@ import App from './views/App'
 import store from './store'
 import router from './router'
 import VueCookies from 'vue-cookies'
+import G from './global'
 import '@/icons' // icon
 import '@/permission' // permission control
 // import BaiduMap from 'vue-baidu-map'
@@ -32,7 +33,7 @@ import '@/permission' // permission control
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 Vue.use(VueCookies)
-
+Vue.use(G)
 // Vue.use(BaiduMap, {
 //   ak: '4Uzg40oyzbtgTxT2qVnL9pjXIGF7y9P6' // 这个地方是官方提供的ak密钥
 // })
