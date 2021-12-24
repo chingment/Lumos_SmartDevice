@@ -14,7 +14,7 @@ import router from './router'
 import VueCookies from 'vue-cookies'
 import '@/icons' // icon
 import '@/permission' // permission control
-import BaiduMap from 'vue-baidu-map'
+// import BaiduMap from 'vue-baidu-map'
 
 /**
  * If you don't want to use mock-server
@@ -33,9 +33,9 @@ import BaiduMap from 'vue-baidu-map'
 Vue.use(ElementUI, { locale })
 Vue.use(VueCookies)
 
-Vue.use(BaiduMap, {
-  ak: '4Uzg40oyzbtgTxT2qVnL9pjXIGF7y9P6' // 这个地方是官方提供的ak密钥
-})
+// Vue.use(BaiduMap, {
+//   ak: '4Uzg40oyzbtgTxT2qVnL9pjXIGF7y9P6' // 这个地方是官方提供的ak密钥
+// })
 Vue.config.productionTip = false
 
 new Vue({

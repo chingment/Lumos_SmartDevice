@@ -51,32 +51,23 @@ service.interceptors.response.use(
 
     const res = response.data
     if (contentType.indexOf('application/json') > -1) {
-    // console.log(JSON.stringify(res))
-    // if the custom code is not 20000, it is judged as an error.
-      if (res.result === 1 || res.result === 2) {
-        if (res.result === 2) {
-        // Message({
-        //   message: res.message || 'Error',
-        //   type: 'error',
-        //   duration: 5 * 1000
-        // })
+      var code = parseInt(res.code)
+      var i_code = parseInt(res.code.toString().substring(0, 1))
 
-          if (res.code === 5000) {
-          // to re-login
-            MessageBox.confirm('您链接请求已经超时', '确定退出？', {
-              confirmButtonText: '重新登录',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              store.dispatch('own/resetToken').then(() => {
-                var path = encodeURIComponent(window.location.href)
-                window.location.href = `${process.env.VUE_APP_LOGIN_URL}?appId=${process.env.VUE_APP_ID}&logout=2&redirect=${path}`
-              })
-            }).catch(() => {
+      if (i_code === 1 || i_code === 2) {
+        if (code === 2501) {
+          MessageBox.confirm('您链接请求已经超时', '确定退出？', {
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            store.dispatch('own/resetToken').then(() => {
+              var path = encodeURIComponent(window.location.href)
+              window.location.href = `${process.env.VUE_APP_LOGIN_URL}?appId=${process.env.VUE_APP_ID}&logout=2&redirect=${path}`
             })
-          }
+          }).catch(() => {
+          })
         }
-
         return res
       } else {
         Message({

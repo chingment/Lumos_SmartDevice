@@ -17,17 +17,17 @@ router.beforeEach(async(to, from, next) => {
   var appId = getUrlParam('appId')
   var redirect = getUrlParam('redirect')
   var token = getToken()
-  //console.log('appId：' + appId)
-  //console.log('logout：' + logout)
-  //console.log('redirect：' + redirect)
-  //console.log('token befefore: ' + token)
+  // console.log('appId：' + appId)
+  // console.log('logout：' + logout)
+  // console.log('redirect：' + redirect)
+  // console.log('token befefore: ' + token)
   if (logout !== null) {
     token = undefined
     if (logout === '1') {
       await store.dispatch('own/logout', { appId: appId })
     }
   }
-  //console.log('token after: ' + token)
+  // console.log('token after: ' + token)
   if (token) {
     var hasRedirect = false
     if (redirect != null) {
@@ -35,7 +35,7 @@ router.beforeEach(async(to, from, next) => {
         hasRedirect = true
       }
     }
-    //console.log('store.getters.userInfo：' + store.getters.userInfo)
+    // console.log('store.getters.userInfo：' + store.getters.userInfo)
     if (store.getters.userInfo == null) {
       await store.dispatch('own/getInfo', to.path).then((res) => {
         next({ ...to, replace: true })
@@ -63,7 +63,6 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     }
   }
-
 })
 
 router.afterEach(() => {

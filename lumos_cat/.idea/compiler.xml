@@ -8,9 +8,9 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api_merch" />
         <module name="common" />
-        <module name="api_iot" />
-        <module name="apimerch" />
         <module name="apiiot" />
+        <module name="apimerch" />
+        <module name="api_iot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
