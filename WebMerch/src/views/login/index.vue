@@ -130,7 +130,8 @@ export default {
               var redirect = this.redirect || '/'
               redirect = decodeURIComponent(redirect)
               console.log('redirect:' + redirect)
-              window.location.href = redirect
+              this.$router.push({ path: redirect })
+              // window.location.href = redirect
             } else {
               this.$message({
                 message: res.msg,

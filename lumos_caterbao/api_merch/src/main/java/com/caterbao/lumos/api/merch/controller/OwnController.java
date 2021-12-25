@@ -11,15 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/own")
+public class OwnController extends  BaseController {
 
-public class OwnController {
+    private OwnService ownService;
 
     @Autowired
-    private OwnService ownService;
+    public OwnController(OwnService ownService) {
+        this.ownService = ownService;
+    }
 
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop){
+
+        getCurrentUserId();
+
         return  ownService.loginByAccount(rop);
     }
 
@@ -32,6 +38,7 @@ public class OwnController {
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
     @ResponseBody
     public CustomResult getInfo(){
+        getCurrentUserId();
         RetOwnGetInfo ret=new RetOwnGetInfo();
         ret.setUserName("chingment");
         return CustomResult.success("成功ssdddrrrddddd",ret);

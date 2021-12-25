@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
 
-    SysUser findByUserNameAndPassword(String/**/ userName, String passwordHash);
+    SysUser findByUserNameAndPassword(String userName, String passwordHash);
 }

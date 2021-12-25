@@ -35,8 +35,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       loginByAccount(state).then(res => {
         if (res.code === 1000) {
-          commit('SET_TOKEN', res.token)
-          setToken(res.token)
+          var d = res.data
+          commit('SET_TOKEN', d.token)
+          setToken(d.token)
         }
         resolve(res)
       }).catch(error => {
