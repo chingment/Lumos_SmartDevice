@@ -6,6 +6,7 @@ import com.caterbao.lumos.api.merch.service.OwnService;
 import com.caterbao.lumos.locals.dal.mapper.UserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +20,15 @@ public class OwnServiceImpl implements OwnService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private  RedisTemplate redisTemplate;
+
+    @Autowired
+    public OwnServiceImpl() {
+       // this.userMapper = userMapper;
+       // this.redisTemplate = redisTemplate;
+    }
+
     @Override
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
         CustomResult result = new CustomResult();
@@ -30,6 +40,10 @@ public class OwnServiceImpl implements OwnService {
 
         Map<String, Object> ret = new HashMap<>();
         ret.put("token", "123456");
+
+        redisTemplate.opsForValue().set("aaaa",ret);
+
+        Object obj= redisTemplate.opsForValue().get("aaaa");
 
         return CustomResult.success("成功", ret);
 
