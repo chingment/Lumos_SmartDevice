@@ -3,6 +3,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
+import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.mapper.UserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,6 @@ public class OwnServiceImpl implements OwnService {
 
     @Autowired
     public OwnServiceImpl() {
-       // this.userMapper = userMapper;
-       // this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -38,14 +37,18 @@ public class OwnServiceImpl implements OwnService {
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");
 
+        String token = IdWork.generateGUID();
+
         Map<String, Object> ret = new HashMap<>();
-        ret.put("token", "123456");
+        ret.put("token", token);
 
-        redisTemplate.opsForValue().set("aaaa",ret);
+        Map<String, Object> token_val = new HashMap<>();
+        token_val.put("id", d_User.getId());
+        token_val.put("userName", d_User.getUserName());
 
-        Object obj= redisTemplate.opsForValue().get("aaaa");
+        redisTemplate.opsForValue().set("token:" + token, token_val);
 
-        return CustomResult.success("成功", ret);
+        return CustomResult.success("登录成功", ret);
 
     }
 }

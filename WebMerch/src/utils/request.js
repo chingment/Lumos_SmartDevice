@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 
 axios.defaults.retry = 4
 axios.defaults.retryDelay = 1000
@@ -57,17 +57,20 @@ service.interceptors.response.use(
 
       if (i_code === 1 || i_code === 2) {
         if (code === 2501) {
-          MessageBox.confirm('您链接请求已经超时', '确定退出？', {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            store.dispatch('own/resetToken').then(() => {
-              var path = encodeURIComponent(window.location.href)
-              window.location.href = `${process.env.VUE_APP_LOGIN_URL}?appId=${process.env.VUE_APP_ID}&logout=2&redirect=${path}`
-            })
-          }).catch(() => {
-          })
+          removeToken()
+          // MessageBox.confirm('您链接请求已经超时', '确定退出？', {
+          //   confirmButtonText: '重新登录',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   store.dispatch('own/resetToken').then(() => {
+          //     window.location.href = '/login'
+          //     // this.$router.push({ path: '/login' })
+          //     // var path = encodeURIComponent(window.location.href)
+          //     // window.location.href = `${process.env.VUE_APP_LOGIN_URL}?appId=${process.env.VUE_APP_ID}&logout=2&redirect=${path}`
+          //   })
+          // }).catch(() => {
+          // })
         }
         return res
       } else {

@@ -1,5 +1,9 @@
 package com.caterbao.lumos.api.merch.handler;
 
+import com.alibaba.druid.util.StringUtils;
+import com.caterbao.lumos.locals.common.CustomResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -9,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AppAuthHandler implements HandlerInterceptor {
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
         System.out.println("AppAuthHandler.preHandle");
@@ -17,30 +24,26 @@ public class AppAuthHandler implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
+        String token = request.getHeader("token");
+        Object token_val=null;
 
-        return true;
-//        response.setCharacterEncoding("utf-8");
-//        String token = request.getHeader("token");
-//        if(token != null){
-//            boolean result = TokenUtil.verify(token);
-//            if(result){
-//                System.out.println("通过拦截器");
-//                return true;
-//            }
-//        }
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("application/json; charset=utf-8");
-//        try{
-//            JSONObject json = new JSONObject();
-//            json.put("msg","token verify fail");
-//            json.put("code","50000");
-//            response.getWriter().append(json.toJSONString());
-//            System.out.println("认证失败，未通过拦截器");
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            response.sendError(500);
-//            return false;
-//        }
-//        return false;
+        if(!StringUtils.isEmpty(token)) {
+            token_val = redisTemplate.opsForValue().get("token:" + token);
+        }
+
+        if(token_val==null) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=utf-8");
+            CustomResult result = new CustomResult();
+            result.setCode(2501);
+            result.setMsg("登录状态已超时");
+            String str_result = result.toJSONString();
+            response.getWriter().append(str_result);
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -23,9 +23,6 @@ public class OwnController extends  BaseController {
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop){
-
-        getCurrentUserId();
-
         return  ownService.loginByAccount(rop);
     }
 
@@ -37,11 +34,12 @@ public class OwnController extends  BaseController {
 
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult getInfo(){
-        getCurrentUserId();
-        RetOwnGetInfo ret=new RetOwnGetInfo();
+    public CustomResult getInfo() {
+        String useriD = getCurrentUserId();
+        System.out.println("useriD:"+useriD);
+        RetOwnGetInfo ret = new RetOwnGetInfo();
         ret.setUserName("chingment");
-        return CustomResult.success("成功ssdddrrrddddd",ret);
+        return CustomResult.success("成功ssdddrrrddddd", ret);
     }
 
     @RequestMapping(value = "checkPermission", method = RequestMethod.GET)

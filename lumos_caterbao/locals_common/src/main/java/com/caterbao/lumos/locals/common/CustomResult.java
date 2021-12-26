@@ -1,6 +1,7 @@
 package com.caterbao.lumos.locals.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CustomResult<T>  {
     private Integer code;
@@ -72,5 +73,14 @@ public class CustomResult<T>  {
 
     public static CustomResult exception(Object object) {
         return CustomResult.set(3000,"异常",object);
+    }
+
+    public String toJSONString() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
