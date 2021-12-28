@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RetOwnGetInfo;
 import com.caterbao.lumos.api.merch.rop.RopOwnCheckPermission;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/own")
 public class OwnController extends  BaseController {
+
 
     private OwnService ownService;
 
@@ -35,18 +37,12 @@ public class OwnController extends  BaseController {
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
     @ResponseBody
     public CustomResult getInfo() {
-        String useriD = getCurrentUserId();
-        System.out.println("useriD:"+useriD);
-        RetOwnGetInfo ret = new RetOwnGetInfo();
-        ret.setUserName("chingment");
-        return CustomResult.success("成功ssdddrrrddddd", ret);
+        return  ownService.getInfo(getCurrentUserId(),getCurrentUserId());
     }
 
     @RequestMapping(value = "checkPermission", method = RequestMethod.GET)
     @ResponseBody
     public CustomResult checkPermission(RopOwnCheckPermission rop){
-
-
 
         return CustomResult.success("成功");
     }

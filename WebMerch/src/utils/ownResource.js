@@ -3,13 +3,16 @@ import store from '@/store'
 import router from '@/router'
 import Layout from '@/layout'
 
-function _generateRoutes(routers, menus) {
-  if (menus == null) { return }
+var routes = []
 
+function _generateRoutes(routes, menus) {
+  if (menus == null) { return }
   menus.forEach((item) => {
     var path = item.path
-    if (item.path.indexOf('?') > -1) {
-      path = item.path.split('?')[0]
+    if (path != null) {
+      if (item.path.indexOf('?') > -1) {
+        path = item.path.split('?')[0]
+      }
     }
     if (item.component != null && item.component !== '') {
       const component = resolve => require([`@/views${item.component}`], resolve)
@@ -18,12 +21,11 @@ function _generateRoutes(routers, menus) {
         component: component,
         children: undefined,
         redirect: undefined,
-        hidden: !item.isSidebar,
-        isSidebar: item.isSidebar,
+        hidden: !item.isSideBar,
+        isSideBar: item.isSideBar,
         name: item.name,
         meta: { title: item.title, icon: item.icon, id: item.id, pId: item.pId }
       }
-
       if (item.children) {
         if (menu.children === undefined) {
           menu.children = []
@@ -33,45 +35,55 @@ function _generateRoutes(routers, menus) {
         menu.redirect = redirect
         _generateRoutes(menu.children, item.children)
       }
-
-      routers.push(menu)
+      routes.push(menu)
     }
   })
 }
 
 export function getSideBars() {
-  var menus = store.getters.userInfo.menus
-  var routers = []
-  _generateRoutes(routers, menus)
-  return routers
+  return routes
 }
 
-export function getNavbars() {
+export function getNavBars() {
   var navbars = []
   store.getters.userInfo.menus.forEach((item) => {
-    if (item.isNavbar) {
+    if (item.isNavBar) {
       navbars.push(item)
     }
   })
   return navbars
 }
 
-export function generateRoutes(data) {
-  var routers = []
+export function generateRoutes(menus) {
+  var newNodes = {}
+  menus.map(function(cur, i, arr) {
+    newNodes[cur.id] = cur
+  })
+  var list = []
+  for (var i = 0; i < menus.length; i++) {
+    var parent = newNodes[menus[i].pId]
+    if (parent) {
+      ((parent['children']) || (parent['children'] = [])).push(menus[i])
+    } else {
+      list.push(menus[i])
+    }
+  }
 
-  _generateRoutes(routers, data)
+  _generateRoutes(routes, list)
 
-  var _routers = [{
+  console.log(routes)
+
+  var _routes = [{
     path: '/',
     component: Layout,
     redirect: '/home',
-    children: routers
+    children: routes
   }, {
     path: '*',
     redirect: '/404',
     hidden: true
   }]
 
-  router.addRoutes(_routers)
+  router.addRoutes(_routes)
 }
 

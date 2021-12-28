@@ -30,7 +30,7 @@ import Hamburger from '@/components/Hamburger'
 import { removeToken } from '@/utils/auth'
 import { getToken } from '@/utils/auth'
 import { isExternal } from '@/utils/validate'
-import { getNavbars } from '@/utils/ownResource'
+import { getNavBars } from '@/utils/ownResource'
 
 export default {
   components: {
@@ -38,7 +38,7 @@ export default {
     Hamburger
   },
   data() {
-    return { dropdownItems: getNavbars() }
+    return { dropdownItems: getNavBars() }
   },
   computed: {
     ...mapGetters([

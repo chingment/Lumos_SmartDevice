@@ -1,25 +1,30 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
+import com.caterbao.lumos.api.merch.rop.RetOwnGetInfo;
+import com.caterbao.lumos.api.merch.rop.model.MenuModel;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
 import com.caterbao.lumos.locals.dal.IdWork;
-import com.caterbao.lumos.locals.dal.mapper.UserMapper;
+import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
+import com.caterbao.lumos.locals.dal.pojo.SysMenu;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 
 public class OwnServiceImpl implements OwnService {
 
     @Autowired
-    private UserMapper userMapper;
+    private SysUserMapper sysUserMapper;
 
     @Autowired
     private  RedisTemplate redisTemplate;
@@ -32,7 +37,7 @@ public class OwnServiceImpl implements OwnService {
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
         CustomResult result = new CustomResult();
 
-        SysUser d_User = userMapper.findByUserNameAndPassword(rop.getUserName(), rop.getPassword());
+        SysUser d_User = sysUserMapper.findByUserNameAndPassword(rop.getUserName(), rop.getPassword());
 
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");
@@ -46,9 +51,41 @@ public class OwnServiceImpl implements OwnService {
         token_val.put("id", d_User.getId());
         token_val.put("userName", d_User.getUserName());
 
-        redisTemplate.opsForValue().set("token:" + token, token_val);
+        redisTemplate.opsForValue().set("token:" + token, token_val,1,TimeUnit.HOURS);
 
         return CustomResult.success("登录成功", ret);
 
+    }
+
+
+    @Override
+    public CustomResult getInfo(String operater,String userId) {
+
+        RetOwnGetInfo ret = new RetOwnGetInfo();
+
+        List<SysMenu> d_Menus = sysUserMapper.getMenusByUserId(userId);
+
+        ret.setUserName("chingment");
+
+        List<MenuModel> r_Menus=new ArrayList<>();
+        for (SysMenu d_Menu : d_Menus) {
+            MenuModel r_Menu = new MenuModel();
+            r_Menu.setId(d_Menu.getId());
+            r_Menu.setName(d_Menu.getCode());
+            r_Menu.setTitle(d_Menu.getTitle());
+            r_Menu.setpId(d_Menu.getpId());
+            r_Menu.setComponent(d_Menu.getComponent());
+            r_Menu.setPath(d_Menu.getPath());
+            r_Menu.setIcon(d_Menu.getIcon());
+            r_Menu.setIsNavBar(d_Menu.getNavBar());
+            r_Menu.setIsSideBar(d_Menu.getSideBar());
+            r_Menu.setIsRouter(d_Menu.getRouter());
+            r_Menu.setRedirect(d_Menu.getRedirect());
+            r_Menus.add(r_Menu);
+        }
+
+        ret.setMenus(r_Menus);
+
+        return CustomResult.success("获取成功", ret);
     }
 }

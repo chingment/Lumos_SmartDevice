@@ -1,7 +1,10 @@
 package com.caterbao.lumos.api.merch.handler;
 
 import com.alibaba.druid.util.StringUtils;
+import com.caterbao.lumos.api.merch.controller.OwnController;
 import com.caterbao.lumos.locals.common.CustomResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -9,17 +12,21 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class AppAuthHandler implements HandlerInterceptor {
+
+    public static Logger logger = LoggerFactory.getLogger(OwnController.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
-        System.out.println("AppAuthHandler.preHandle");
-
+        logger.debug("AppAuthHandler.preHandle");
+        //logger.info("default log 123正确 *************************\n");
+        //logger.error("errorMessage 错误*************");
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
@@ -43,6 +50,8 @@ public class AppAuthHandler implements HandlerInterceptor {
         }
         else
         {
+            redisTemplate.expire("token:" + token,1, TimeUnit.HOURS);
+
             return true;
         }
     }

@@ -1,33 +1,35 @@
 <template>
-  <div>
-
-    <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onLogout">登录</el-button>
-  </div>
+  <div id="home_container" class="app-container" />
 </template>
-
 <script>
 
 export default {
-  name: 'Login',
+  name: 'HomeIndex',
+  components: {
+  },
   data() {
     return {
-      loading: false
+      workBench: 0
     }
   },
   created() {
-
-  },
-  destroyed() {
-
+    this.init()
   },
   methods: {
-    onLogout() {
-      this.$store.dispatch('own/resetToken').then((res) => {
+    init() {
 
-      }).catch(() => {
-        this.loading = false
-      })
     }
   }
 }
+
 </script>
+
+<style>
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+</style>

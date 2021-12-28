@@ -7,10 +7,10 @@ public class SysUser {
     private String userName;
     private String passwordHash;
     private String SecurityStamp;
-    private String Creator;
-    private Timestamp CreateTime;
-    private String Mender;
-    private Timestamp MendTime;
+    private String creator;
+    private Timestamp createTime;
+    private String mender;
+    private Timestamp mendTime;
 
     public String getId() {
         return id;
@@ -45,34 +45,34 @@ public class SysUser {
     }
 
     public String getCreator() {
-        return Creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
-        Creator = creator;
+        this.creator = creator;
     }
 
     public Timestamp getCreateTime() {
-        return CreateTime;
+        return createTime;
     }
 
     public void setCreateTime(Timestamp createTime) {
-        CreateTime = createTime;
+        this.createTime = createTime;
     }
 
     public String getMender() {
-        return Mender;
+        return mender;
     }
 
     public void setMender(String mender) {
-        Mender = mender;
+        this.mender = mender;
     }
 
     public Timestamp getMendTime() {
-        return MendTime;
+        return mendTime;
     }
 
     public void setMendTime(Timestamp mendTime) {
-        MendTime = mendTime;
+        this.mendTime = mendTime;
     }
 }
