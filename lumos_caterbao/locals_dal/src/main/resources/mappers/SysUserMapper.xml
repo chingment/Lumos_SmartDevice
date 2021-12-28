@@ -11,11 +11,10 @@
         <result property="passwordHash" column="passwordHash"/>
     </resultMap>
 
-    <select id="findByUserNameAndPassword" resultMap="user">
+    <select id="findByUserName" resultMap="user">
         select * from SysUser
         <where>
             <if test="userName != null and userName.length() > 0">SysUser.userName=#{userName}</if>
-            <if test="passwordHash != null and passwordHash.length() > 0">and SysUser.passwordHash=#{passwordHash}</if>
         </where>
     </select>
 

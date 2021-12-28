@@ -3,8 +3,7 @@ import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken, setToken } from '@/utils/auth' // get token from cookie
-import { getUrlParam } from '@/utils/commonUtil'
-import getPageTitle from '@/utils/get-page-title'
+import { getUrlParam, getPageTitle } from '@/utils/commonUtil'
 
 const whiteList = ['/login'] // no redirect whitelist
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SysUserMapper {
 
-    SysUser findByUserNameAndPassword(String userName, String passwordHash);
+    SysUser findByUserName(String userName);
 
     List<SysMenu> getMenusByUserId(String userId);
 }

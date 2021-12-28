@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.merch.rop.model;
 
 public class MenuModel {
     private String id;
-    private String name;
+    private String code;
     private String pId;
     private String title;
     private String component;
@@ -21,12 +21,12 @@ public class MenuModel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Boolean getRouter() {

@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.merch.rop.model.MenuModel;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
+import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
@@ -37,9 +38,16 @@ public class OwnServiceImpl implements OwnService {
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
         CustomResult result = new CustomResult();
 
-        SysUser d_User = sysUserMapper.findByUserNameAndPassword(rop.getUserName(), rop.getPassword());
+        SysUser d_User = sysUserMapper.findByUserName(rop.getUserName());
 
         if (d_User == null)
+            return CustomResult.fail("账号或密码错误");
+
+        String passwordHash = d_User.getPasswordHash();
+
+        boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_User.getSecurityStamp(), passwordHash);
+
+        if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
         String token = IdWork.generateGUID();
@@ -51,7 +59,7 @@ public class OwnServiceImpl implements OwnService {
         token_val.put("id", d_User.getId());
         token_val.put("userName", d_User.getUserName());
 
-        redisTemplate.opsForValue().set("token:" + token, token_val,1,TimeUnit.HOURS);
+        redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);
 
         return CustomResult.success("登录成功", ret);
 
@@ -71,7 +79,7 @@ public class OwnServiceImpl implements OwnService {
         for (SysMenu d_Menu : d_Menus) {
             MenuModel r_Menu = new MenuModel();
             r_Menu.setId(d_Menu.getId());
-            r_Menu.setName(d_Menu.getCode());
+            r_Menu.setCode(d_Menu.getCode());
             r_Menu.setTitle(d_Menu.getTitle());
             r_Menu.setpId(d_Menu.getpId());
             r_Menu.setComponent(d_Menu.getComponent());
