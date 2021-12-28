@@ -16,11 +16,10 @@ export function getInfo(params) {
   })
 }
 
-export function logout(data) {
+export function logout() {
   return request({
     url: '/own/logout',
-    method: 'post',
-    data
+    method: 'post'
   })
 }
 

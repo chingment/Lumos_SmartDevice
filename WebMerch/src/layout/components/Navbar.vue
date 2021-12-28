@@ -58,9 +58,13 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
+      this.$store.dispatch('own/logout', {}).then((res) => {
+      }).catch(() => {
+      })
+
       removeToken()
-      var path = encodeURIComponent(window.location.href)
-      window.location.href = `${process.env.VUE_APP_LOGIN_URL}?appId=${process.env.VUE_APP_ID}&logout=1&redirect=${path}`
+
+      this.$router.push({ path: '/login' })
     },
     getAvatar(avatar) {
       if (avatar == null) { return 'http://file.17fanju.com/Upload/Avatar_default.png' }

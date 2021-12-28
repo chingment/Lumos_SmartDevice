@@ -17,9 +17,9 @@ router.beforeEach(async(to, from, next) => {
 
   var token = getToken()
 
-  console.log('redirect:' + redirect)
-  console.log('token:' + token)
-  console.log('to.path:' + to.path)
+  // console.log('redirect:' + redirect)
+  // console.log('token:' + token)
+  // console.log('to.path:' + to.path)
 
   if (token) {
     if (store.getters.userInfo == null) {

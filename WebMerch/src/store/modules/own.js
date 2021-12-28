@@ -1,4 +1,4 @@
-import { loginByAccount, getInfo, checkPermission } from '@/api/own'
+import { loginByAccount, logout, getInfo, checkPermission } from '@/api/own'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router from '@/router'
 import { generateRoutes } from '@/utils/ownResource'
@@ -63,12 +63,14 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit }, state) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
       removeToken()
+      logout().then(res => {
+        resolve(res)
+      })
       router.resetRouter()
-      resolve()
     })
   },
 

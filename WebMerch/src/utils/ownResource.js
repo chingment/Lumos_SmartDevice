@@ -71,7 +71,7 @@ export function generateRoutes(menus) {
 
   _generateRoutes(routes, list)
 
-  console.log(routes)
+  // console.log(routes)
 
   var _routes = [{
     path: '/',
