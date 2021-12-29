@@ -30,8 +30,8 @@ function _generateRoutes(routes, menus) {
         if (menu.children === undefined) {
           menu.children = []
         }
-        const redirect = item.redirect == null ? undefined : item.redirect
-
+        const redirect = item.path + '/' + item.children[0].path
+        // console.log(redirect)
         menu.redirect = redirect
         _generateRoutes(menu.children, item.children)
       }

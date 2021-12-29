@@ -64,11 +64,11 @@ export default {
 
       removeToken()
 
-      this.$router.push({ path: '/login' })
+      var redirect = encodeURIComponent(this.$route.fullPath)
+      this.$router.push({ path: '/login?redirect=' + redirect })
     },
     getAvatar(avatar) {
       if (avatar == null) { return 'http://file.17fanju.com/Upload/Avatar_default.png' }
-
       return avatar
     }
   }

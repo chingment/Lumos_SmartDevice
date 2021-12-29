@@ -88,7 +88,6 @@ public class OwnServiceImpl implements OwnService {
             r_Menu.setIsNavBar(d_Menu.getNavBar());
             r_Menu.setIsSideBar(d_Menu.getSideBar());
             r_Menu.setIsRouter(d_Menu.getRouter());
-            r_Menu.setRedirect(d_Menu.getRedirect());
             r_Menus.add(r_Menu);
         }
 

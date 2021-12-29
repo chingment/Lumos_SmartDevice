@@ -75,8 +75,8 @@ export default {
       loading: false,
       redirect: undefined,
       formByLoginAccount: {
-        userName: '',
-        password: ''
+        userName: 'admin',
+        password: '123456'
       },
       rulesByLoginAccount: {
         userName: [{ required: true, trigger: 'blur', validator: validateUserName }],

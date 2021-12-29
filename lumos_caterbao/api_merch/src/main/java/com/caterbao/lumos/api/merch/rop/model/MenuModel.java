@@ -11,7 +11,6 @@ public class MenuModel {
     private Boolean isSideBar;
     private Boolean isNavBar;
     private Boolean isRouter;
-    private String redirect;
 
     public String getId() {
         return id;
@@ -99,13 +98,5 @@ public class MenuModel {
 
     public void setIsRouter(Boolean isRouter) {
         this.isRouter = isRouter;
-    }
-
-    public String getRedirect() {
-        return redirect;
-    }
-
-    public void setRedirect(String redirect) {
-        this.redirect = redirect;
     }
 }

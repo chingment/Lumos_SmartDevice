@@ -10,12 +10,11 @@ public class SysMenu {
     private String component;
     private String path;
     private String icon;
-    private Integer prority;
+    private Integer priority;
     private Integer depth;
     private Boolean isSideBar;
     private Boolean isNavBar;
     private Boolean isRouter;
-    private String redirect;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -78,14 +77,6 @@ public class SysMenu {
         this.icon = icon;
     }
 
-    public Integer getPrority() {
-        return prority;
-    }
-
-    public void setPrority(Integer prority) {
-        this.prority = prority;
-    }
-
     public Integer getDepth() {
         return depth;
     }
@@ -118,14 +109,6 @@ public class SysMenu {
         isRouter = router;
     }
 
-    public String getRedirect() {
-        return redirect;
-    }
-
-    public void setRedirect(String redirect) {
-        this.redirect = redirect;
-    }
-
     public String getCreator() {
         return creator;
     }
@@ -156,5 +139,13 @@ public class SysMenu {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }
