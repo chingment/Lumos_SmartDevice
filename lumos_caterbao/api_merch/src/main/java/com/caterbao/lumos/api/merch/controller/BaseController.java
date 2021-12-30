@@ -39,4 +39,24 @@ public class BaseController {
         return null;
     }
 
+    public String getCurrentMerchId() {
+
+        //根据redis缓存获取用户Id
+        if (request != null) {
+            String token = request.getHeader("Token");
+
+            if(StringUtils.isEmpty(token)) {
+                return null;
+            }
+
+            Map<String, Object> token_val= (Map<String, Object>)redisTemplate.opsForValue().get("token:"+token);
+
+            if(token_val.containsKey("id"))
+                return token_val.get("id").toString();
+
+            return null;
+        }
+
+        return null;
+    }
 }

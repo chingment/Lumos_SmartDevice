@@ -1,5 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
+import com.caterbao.lumos.api.merch.rop.RopProductListBySpu;
+import com.caterbao.lumos.api.merch.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -17,15 +19,22 @@ public class OwnController extends  BaseController {
 
     private OwnService ownService;
 
+    private ProductService productService;
     @Autowired
-    public OwnController(OwnService ownService) {
+    public OwnController(OwnService ownService,ProductService productService) {
         this.ownService = ownService;
+        this.productService=productService;
     }
 
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop){
-        return  ownService.loginByAccount(rop);
+    public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop) {
+
+//        RopProductListBySpu rp = new RopProductListBySpu();
+//        rp.setPageNum(1);
+//        rp.setPageSize(10);
+//        productService.listBySpu("", "", rp);
+        return ownService.loginByAccount(rop);
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
