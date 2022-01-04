@@ -8,6 +8,8 @@ public class RopDeviceInitData {
     public String versionMode;
     public String appVerCode;
     public String appVerName;
+    public String sysVerName;
+    public String ctrlVerName;
 
     public String getDeviceId() {
         return deviceId;
@@ -63,5 +65,21 @@ public class RopDeviceInitData {
 
     public void setVersionMode(String versionMode) {
         this.versionMode = versionMode;
+    }
+
+    public String getSysVerName() {
+        return sysVerName;
+    }
+
+    public void setSysVerName(String sysVerName) {
+        this.sysVerName = sysVerName;
+    }
+
+    public String getCtrlVerName() {
+        return ctrlVerName;
+    }
+
+    public void setCtrlVerName(String ctrlVerName) {
+        this.ctrlVerName = ctrlVerName;
     }
 }

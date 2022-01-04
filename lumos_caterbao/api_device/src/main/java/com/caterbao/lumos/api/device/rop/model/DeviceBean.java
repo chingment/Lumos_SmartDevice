@@ -1,10 +1,14 @@
 package com.caterbao.lumos.api.device.rop.model;
 
+import java.util.HashMap;
+
 public class DeviceBean {
-    public String deviceId;
-    public String name;
-    public String type;
-    public String sceneMode;
-    public String versionMode;
+    private String deviceId;
+    private String name;
+    private String type;
+    private String sceneMode;
+    private String versionMode;
+    private HashMap<String, CabinetBean> cabinets;
+
 
 }

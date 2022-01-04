@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/device")
 public class DeviceController extends BaseController{
 
-
     private DeviceService deviceService;
 
     @Autowired

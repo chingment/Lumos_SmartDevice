@@ -3,22 +3,22 @@ package com.caterbao.lumos.api.device.rop;
 import com.caterbao.lumos.api.device.rop.model.DeviceBean;
 
 public class RetDeviceInitData {
-     private DeviceBean deivce;
-     private Object cumstonData;
+    private DeviceBean device;
+    private Object customData;
 
-    public DeviceBean getDeivce() {
-        return deivce;
+    public DeviceBean getDevice() {
+        return device;
     }
 
-    public void setDeivce(DeviceBean deivce) {
-        this.deivce = deivce;
+    public void setDevice(DeviceBean device) {
+        this.device = device;
     }
 
-    public Object getCumstonData() {
-        return cumstonData;
+    public Object getCustomData() {
+        return customData;
     }
 
-    public void setCumstonData(Object cumstonData) {
-        this.cumstonData = cumstonData;
+    public void setCustomData(Object customData) {
+        this.customData = customData;
     }
 }

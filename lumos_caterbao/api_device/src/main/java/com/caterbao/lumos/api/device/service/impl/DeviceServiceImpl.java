@@ -12,7 +12,6 @@ import java.util.HashMap;
 @Service
 public class DeviceServiceImpl implements DeviceService{
 
-
     public CustomResult init(String operater, String merchId, RopDeviceInitData rop) {
 
         if (rop == null)
@@ -23,12 +22,9 @@ public class DeviceServiceImpl implements DeviceService{
 
         RetDeviceInitData ret =new RetDeviceInitData();
 
-
-
         HashMap<String,Object> customData=new HashMap<>();
 
-
-        ret.setCumstonData(customData);
+        ret.setCustomData(customData);
 
         return CustomResult.success("获取成功",ret);
     }
