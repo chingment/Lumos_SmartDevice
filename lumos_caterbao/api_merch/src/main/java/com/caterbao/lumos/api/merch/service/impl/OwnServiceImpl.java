@@ -58,6 +58,7 @@ public class OwnServiceImpl implements OwnService {
         Map<String, Object> token_val = new HashMap<>();
         token_val.put("id", d_User.getId());
         token_val.put("userName", d_User.getUserName());
+        token_val.put("merchId","");
 
         redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);
 

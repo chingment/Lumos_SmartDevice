@@ -3,7 +3,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 import com.caterbao.lumos.api.merch.rop.RopProductListBySpu;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.dal.mapper.ProductMapper;
+import com.caterbao.lumos.locals.dal.mapper.PrdSpuMapper;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductMapper productMapper;
+    private PrdSpuMapper productMapper;
 
     @Override
     public CustomResult listBySpu(String operater, String merchId, RopProductListBySpu rop) {

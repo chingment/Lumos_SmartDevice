@@ -6,7 +6,7 @@ public class IdWork {
 
     public static final String generateGUID()
     {
-        UUID uuid= UUID.randomUUID();
-        return uuid.toString();
+        String uuid= UUID.randomUUID().toString().toString().replace("-", "");
+        return uuid;
     }
 }

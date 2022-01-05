@@ -8,22 +8,6 @@ export function getList(params) {
   })
 }
 
-export function getListBySbStore(params) {
-  return request({
-    url: '/shop/getListBySbStore',
-    method: 'get',
-    params
-  })
-}
-
-export function getDetails(params) {
-  return request({
-    url: '/shop/getDetails',
-    method: 'get',
-    params
-  })
-}
-
 export function add(data) {
   return request({
     url: '/shop/add',

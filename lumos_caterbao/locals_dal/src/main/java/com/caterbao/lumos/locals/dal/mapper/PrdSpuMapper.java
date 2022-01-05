@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductMapper {
+public interface PrdSpuMapper {
     List<PrdSpu> getSpus();
 }

@@ -51,8 +51,8 @@ public class BaseController {
 
             Map<String, Object> token_val= (Map<String, Object>)redisTemplate.opsForValue().get("token:"+token);
 
-            if(token_val.containsKey("id"))
-                return token_val.get("id").toString();
+            if(token_val.containsKey("merchId"))
+                return token_val.get("merchId").toString();
 
             return null;
         }
