@@ -8,7 +8,6 @@
 
     <select id="getSpus" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSpu">
         select * from PrdSpu
-
     </select>
 
 

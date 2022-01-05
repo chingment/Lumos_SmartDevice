@@ -1,7 +1,6 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RetOwnLogin {
-
+public class RetOwnSaveInfo {
     private String userId;
     private String userName;
     private String fullName;
@@ -38,5 +37,4 @@ public class RetOwnLogin {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-
 }

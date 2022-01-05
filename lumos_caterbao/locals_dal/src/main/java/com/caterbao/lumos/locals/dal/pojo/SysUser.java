@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 public class SysUser {
     private String id;
     private String userName;
+    private String fullName;
+    private String avatar;
     private String passwordHash;
     private String SecurityStamp;
     private String creator;
@@ -74,5 +76,21 @@ public class SysUser {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

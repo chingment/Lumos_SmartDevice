@@ -1,15 +1,13 @@
 package com.caterbao.lumos.api.device.rop;
 
 public class RopDeviceInitData {
-    public String deviceId;
-    public String imeiId;
-    public String macAddr;
-    public String sceneMode;
-    public String versionMode;
-    public String appVerCode;
-    public String appVerName;
-    public String sysVerName;
-    public String ctrlVerName;
+    private String deviceId;
+    private String imeiId;
+    private String macAddr;
+    private String appVerCode;
+    private String appVerName;
+    private String sysVerName;
+    private String ctrlVerName;
 
     public String getDeviceId() {
         return deviceId;
@@ -49,22 +47,6 @@ public class RopDeviceInitData {
 
     public void setAppVerName(String appVerName) {
         this.appVerName = appVerName;
-    }
-
-    public String getSceneMode() {
-        return sceneMode;
-    }
-
-    public void setSceneMode(String sceneMode) {
-        this.sceneMode = sceneMode;
-    }
-
-    public String getVersionMode() {
-        return versionMode;
-    }
-
-    public void setVersionMode(String versionMode) {
-        this.versionMode = versionMode;
     }
 
     public String getSysVerName() {

@@ -1,12 +1,22 @@
 package com.caterbao.lumos.api.device.rop.model;
 
 public class CabinetBean {
+    private String cabinetId;
+
     private String name;
     private String comId;
     private int comBaud;
     private String comPrl;
     private String layout;
     private int priority;
+
+    public String getCabinetId() {
+        return cabinetId;
+    }
+
+    public void setCabinetId(String cabinetId) {
+        this.cabinetId = cabinetId;
+    }
 
     public String getName() {
         return name;

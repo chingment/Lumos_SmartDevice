@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.DeviceMapper">
+
+    <select id="firstOrDefault" resultType="com.caterbao.lumos.locals.dal.pojo.Device" parameterType="java.util.HashMap" >
+        select  * from Device
+
+        <where>
+            <if test="id != null and id.length() > 0">Device.id=#{id}</if>
+        </where>
+
+        limit 0,1
+    </select>
+
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.Device">
+        update Device
+        <set>
+            <if test="appVerCode != null">appVerCode=#{appVerCode},</if>
+            <if test="appVerName != null">appVerName=#{appVerName},</if>
+            <if test="sysVerName != null">sysVerName=#{sysVerName},</if>
+            <if test="ctrlVerName != null">ctrlVerName=#{ctrlVerName},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

@@ -12,6 +12,7 @@ import java.util.List;
 public interface SysUserMapper {
 
     SysUser findByUserName(String userName);
-
+    SysUser findByUserId(String userId);
     List<SysMenu> getMenusByUserId(String userId);
+    long update(SysUser sysUser);
 }

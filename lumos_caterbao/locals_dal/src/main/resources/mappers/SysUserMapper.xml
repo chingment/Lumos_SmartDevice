@@ -18,10 +18,27 @@
         </where>
     </select>
 
+    <select id="findByUserId" resultMap="user">
+        select * from SysUser
+        <where>
+            <if test="userId != null and userId.length() > 0">SysUser.id=#{userId}</if>
+        </where>
+    </select>
+
     <select id="getMenusByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMenu">
         select * from SysMenu
         where depth!=0
-
     </select>
+
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.SysUser">
+        update SysUser
+        <set>
+            <if test="fullName != null">fullName=#{fullName},</if>
+            <if test="passwordHash != null">passwordHash=#{passwordHash},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
 
 </mapper>
