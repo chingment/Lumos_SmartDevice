@@ -16,7 +16,25 @@ export function add(data) {
   })
 }
 
+export function init_edit(params) {
+  return request({
+    url: '/shop/init_edit',
+    method: 'get',
+    params
+  })
+}
+
+export function edit(data) {
+  return request({
+    url: '/shop/edit',
+    method: 'post',
+    data
+  })
+}
+
 export default {
   list: list,
-  add: add
+  add: add,
+  init_edit: init_edit,
+  edit: edit
 }

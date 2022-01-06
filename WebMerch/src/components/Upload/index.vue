@@ -97,10 +97,15 @@ export default {
   watch: {
     elFileList: {
       handler(newName, oldName) {
-        // console.log(this.elFileList);
+        console.log(newName)
         this.$emit('input', newName)// 传值给父组件, 让父组件监听到这个变化
       },
       immediate: true // 代表在wacth里声明了firstName这个属性之后立即先去执行handler方法
+    },
+    fileList: {
+      handler(newName, oldName) {
+        this.elFileList = newName
+      }
     }
   },
   created: function() {

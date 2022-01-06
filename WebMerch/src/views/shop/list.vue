@@ -13,7 +13,6 @@
       </el-row>
     </div>
     <el-row v-loading="loading" :gutter="24">
-
       <el-col v-for="item in listData" :key="item.id" :xs="24" :sm="12" :lg="8" :xl="6" class="my-col">
         <el-card class="box-card">
           <div slot="header" class="it-header clearfix">
@@ -58,7 +57,7 @@ export default {
       loading: true,
       listQuery: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 1024,
         name: undefined
       },
       listData: []

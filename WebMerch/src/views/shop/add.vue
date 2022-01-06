@@ -91,28 +91,28 @@ export default {
   methods: {
     onSave() {
       this.$refs['form'].validate((valid) => {
-        if (valid) {
-          MessageBox.confirm('确定要保存', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            add(this.form).then(res => {
-              this.loading = false
-              if (res.code === this.$code_suc) {
-                this.$message.success(res.msg)
-                this.$router.push({
-                  path: '/shop/list'
-                })
-              } else {
-                this.$message.error(res.msg)
-              }
-            }).catch(() => {
-              this.loading = false
-            })
+        if (!valid) { return }
+
+        MessageBox.confirm('确定要保存', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          add(this.form).then(res => {
+            this.loading = false
+            if (res.code === this.$code_suc) {
+              this.$message.success(res.msg)
+              this.$router.push({
+                path: '/shop/list'
+              })
+            } else {
+              this.$message.error(res.msg)
+            }
+          }).catch(() => {
+            this.loading = false
           })
-        }
+        })
       })
     },
     onSelectAddressPoint(rs) {
