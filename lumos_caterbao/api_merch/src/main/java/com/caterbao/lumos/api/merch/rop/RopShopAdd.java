@@ -1,10 +1,12 @@
 package com.caterbao.lumos.api.merch.rop;
 
+import com.caterbao.lumos.locals.common.ImgVo;
+
 import java.util.List;
 
 public class RopShopAdd {
     private String name;
-    private List<Object> displayImgUrls;
+    private List<ImgVo> displayImgUrls;
     private String contactName;
     private String contactPhone;
     private String contactAddress;
@@ -17,11 +19,11 @@ public class RopShopAdd {
         this.name = name;
     }
 
-    public List<Object> getDisplayImgUrls() {
+    public List<ImgVo> getDisplayImgUrls() {
         return displayImgUrls;
     }
 
-    public void setDisplayImgUrls(List<Object> displayImgUrls) {
+    public void setDisplayImgUrls(List<ImgVo> displayImgUrls) {
         this.displayImgUrls = displayImgUrls;
     }
 

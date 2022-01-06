@@ -33,6 +33,9 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setCreateTime(CommonUtil.getDateTimeNow());
         long isFlag = shopMapper.insert(d_Shop);
 
-        return null;
+        if(isFlag>0)
+            return CustomResult.success("保存成功");
+
+        return CustomResult.success("保存失败");
     }
 }
