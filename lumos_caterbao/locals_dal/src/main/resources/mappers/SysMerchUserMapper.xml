@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper">
+
+
+    <select id="findByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMerchUser">
+        select * from SysMerchUser
+        <where>
+            <if test="userId != null and userId.length() > 0">SysMerchUser.userId=#{userId}</if>
+        </where>
+    </select>
+
+</mapper>

@@ -21,6 +21,12 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public CustomResult add(String operater, String merchId, RopShopAdd rop) {
 
+        if(StringUtils.isEmpty(merchId))
+            return CustomResult.fail("商户编号不能为空");
+
+        if(StringUtils.isEmpty(rop.getName()))
+            return CustomResult.fail("名称不能为空");
+
         Shop d_Shop = new Shop();
         d_Shop.setId(IdWork.generateGUID());
         d_Shop.setMerchId(merchId);
@@ -31,6 +37,7 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
         d_Shop.setCreator(operater);
         d_Shop.setCreateTime(CommonUtil.getDateTimeNow());
+
         long isFlag = shopMapper.insert(d_Shop);
 
         if(isFlag>0)

@@ -1,30 +1,73 @@
 package com.caterbao.lumos.api.merch.controller;
 
 import com.caterbao.lumos.locals.common.CustomResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/file")
 public class FileController extends  BaseController {
 
+    public static Logger logger = LoggerFactory.getLogger(FileController.class);
+
+    @Autowired
+    private Environment env;
+
     @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult upload(MultipartFile file) throws IOException {
 
-        System.out.println(file.getName());
-        System.out.println(file.getOriginalFilename());
-        System.out.println(file.getSize());
+        try {
 
-        //String holder = "G:\\0001-myproject\\mysecurity\\mysecurity-demo\\src\\main\\java\\com\\nxz\\controller";
+            String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+            String fileName = file.getOriginalFilename();  //获取文件名
 
-        //ile localFile = new File(holder, new Date().getTime() + ".txt");
+            String suffixname = fileName.substring(fileName.lastIndexOf("."));//后缀
+            String newFileName = UUID.randomUUID() + suffixname;//文件上传后重命名数据库存储
 
-        //file.transferTo(localFile);
+            String folder = "common";
+
+            String save_path = "upload" + File.separator + folder;
+
+            // 图片存储目录及图片名称
+            String access_path =env.getProperty("lumos.custom.file-service-url")+File.separator+ save_path + File.separator + newFileName;
+
+            //图片保存路径
+            String file_save_dir = staticPath + File.separator + save_path;
+
+            String file_save_path = file_save_dir + File.separator + newFileName;
+
+            System.out.println("图片保存地址：" + file_save_path);
 
 
-        return CustomResult.success("保存成功");
+            File saveFile = new File(file_save_path);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+
+            file.transferTo(saveFile);
+
+            Map<String, Object> ret = new HashMap<>();
+            ret.put("url",  access_path);
+            ret.put("name", newFileName);
+
+            return CustomResult.success("上传成功", ret);
+
+        }
+        catch (Exception ex){
+            logger.error("上传服务发生异常",ex);
+            return CustomResult.fail("上传服务发生异常");
+        }
     }
 }

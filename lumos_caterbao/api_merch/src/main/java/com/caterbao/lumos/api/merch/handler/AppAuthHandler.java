@@ -29,12 +29,6 @@ public class AppAuthHandler implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
         logger.debug("AppAuthHandler.preHandle");
 
-        String salt= UUID.randomUUID().toString();
-        String d= PasswordUtil.encryBySHA256("123456",salt);
-
-//06da4bb3d3c4b1ef656645e9f5009cb5ec41669c0325aa4ca11e061b5a26d539
-        //logger.info("default log 123正确 *************************\n");
-        //logger.error("errorMessage 错误*************");
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;

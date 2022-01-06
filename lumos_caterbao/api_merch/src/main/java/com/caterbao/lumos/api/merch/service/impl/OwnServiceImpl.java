@@ -7,8 +7,10 @@ import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
 import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
+import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,6 +28,9 @@ public class OwnServiceImpl implements OwnService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysMerchUserMapper sysMerchUserMapper;
 
     @Autowired
     private  RedisTemplate redisTemplate;
@@ -50,6 +55,11 @@ public class OwnServiceImpl implements OwnService {
         if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
+        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findByUserId(d_User.getId());
+
+        if (d_SysMerchUser == null)
+            return CustomResult.fail("该账号未授权");
+
         String token = IdWork.generateGUID();
 
         Map<String, Object> ret = new HashMap<>();
@@ -58,7 +68,7 @@ public class OwnServiceImpl implements OwnService {
         Map<String, Object> token_val = new HashMap<>();
         token_val.put("id", d_User.getId());
         token_val.put("userName", d_User.getUserName());
-        token_val.put("merchId","");
+        token_val.put("merchId", d_SysMerchUser.getMerchId());
 
         redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);
 
