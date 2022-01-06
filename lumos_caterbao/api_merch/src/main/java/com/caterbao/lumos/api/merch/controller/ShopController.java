@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
 import com.caterbao.lumos.api.merch.rop.RopShopAdd;
+import com.caterbao.lumos.api.merch.rop.RopShopEdit;
 import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -17,7 +18,6 @@ public class ShopController extends  BaseController {
         this.shopService = shopService;
     }
 
-
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult list(@RequestBody RopShopList rop) {
@@ -28,5 +28,17 @@ public class ShopController extends  BaseController {
     @ResponseBody
     public CustomResult add(@RequestBody RopShopAdd rop) {
         return shopService.add(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "init_edit", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult init_edit(@RequestParam String id) {
+        return shopService.init_edit(this.getCurrentUserId(), this.getCurrentMerchId(), id);
+    }
+
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult edit(@RequestBody RopShopEdit rop) {
+        return shopService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

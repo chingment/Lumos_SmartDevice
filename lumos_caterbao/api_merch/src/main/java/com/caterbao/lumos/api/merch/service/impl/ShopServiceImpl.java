@@ -2,6 +2,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.merch.rop.RopShopAdd;
+import com.caterbao.lumos.api.merch.rop.RopShopEdit;
 import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.CommonUtil;
@@ -26,7 +27,6 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopMapper shopMapper;
-
 
     @Override
     public CustomResult list(String operater, String merchId, RopShopList rop) {
@@ -56,6 +56,9 @@ public class ShopServiceImpl implements ShopService {
 
         long total = page.getTotal();
         PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
         ret.setTotalSize(total);
         ret.setItems(items);
 
@@ -86,6 +89,50 @@ public class ShopServiceImpl implements ShopService {
         long isFlag = shopMapper.insert(d_Shop);
 
         if(isFlag>0)
+            return CustomResult.success("保存成功");
+
+        return CustomResult.success("保存失败");
+    }
+
+    @Override
+    public CustomResult init_edit(String operater, String merchId, String shopId) {
+
+        Shop d_Shop = shopMapper.findByShopId(shopId);
+
+        if(d_Shop==null)
+           return CustomResult.fail("初始失败");
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+        ret.put("id",d_Shop.getId());
+        ret.put("name",d_Shop.getName());
+        ret.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
+        ret.put("contactName",d_Shop.getContactName());
+        ret.put("contactPhone",d_Shop.getContactPhone());
+        ret.put("contactAddress",d_Shop.getContactAddress());
+
+        return CustomResult.success("初始成功",ret);
+    }
+
+    @Override
+    public CustomResult edit(String operater, String merchId, RopShopEdit rop) {
+
+        Shop d_Shop = shopMapper.findByShopId(rop.getId());
+
+        if (d_Shop == null)
+            return CustomResult.fail("数据不存在");
+
+
+        d_Shop.setName(rop.getName());
+        d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
+        d_Shop.setContactName(rop.getContactName());
+        d_Shop.setContactPhone(rop.getContactPhone());
+        d_Shop.setContactAddress(rop.getContactAddress());
+        d_Shop.setMender(operater);
+        d_Shop.setMendTime(CommonUtil.getDateTimeNow());
+
+        long isflag = shopMapper.update(d_Shop);
+        if (isflag>0)
             return CustomResult.success("保存成功");
 
         return CustomResult.success("保存失败");

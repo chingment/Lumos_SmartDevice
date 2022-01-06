@@ -9,4 +9,6 @@ import java.util.List;
 public interface ShopMapper {
     List<Shop> list();
     long insert(Shop shop);
+    long update(Shop shop);
+    Shop findByShopId(String shopId);
 }
