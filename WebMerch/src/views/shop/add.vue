@@ -19,21 +19,19 @@
         <el-input v-model="form.contactAddress" clearable style="max-width:500px" />
       </el-form-item>
       <el-form-item label="门店图片" prop="displayImgUrls">
-        {{ JSON.stringify(form.displayImgUrls) }}
         <el-input :value="form.displayImgUrls.toString()" style="display:none" />
         <lm-upload
           v-model="form.displayImgUrls"
           list-type="picture-card"
           :file-list="form.displayImgUrls"
           :action="uploadImgServiceUrl"
-          :data="{folder:'test'}"
+          :data="{folder:'shop'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
           :max-size="1024"
           :sortable="true"
           :limit="4"
         />
-
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSave">保存</el-button>

@@ -138,12 +138,7 @@ export default {
       return this.beforeUpload(file)
     },
     onElSuccess: function(response, file, fileList) {
-      console.log('onElSuccess')
-      console.log(fileList)
-      console.log(response)
-      console.log(file)
       if (response.data) {
-        console.log('a')
         var d = response.data
         console.log(fileList)
         this.elCount = fileList.length
@@ -152,12 +147,20 @@ export default {
         this.uploadCardCheckShow()
         this.onSuccess(response, file, fileList)
       } else {
-        console.log('b')
+        if (fileList != null) {
+          if (fileList.length > 0) {
+            for (var i = 0; i < fileList.length; i++) {
+              if (fileList[i].uid === file.uid) {
+                fileList.splice(i, 1)
+              }
+            }
+          }
+        }
+        this.elFileList = fileList
+        this.$message.error('上传服务发生异常')
       }
     },
     onElError: function(err, file, fileList) {
-      console.log(err)
-      console.log('c')
       this.uploadCardCheckShow()
       this.onError(err, file, fileList)
     },
@@ -166,6 +169,7 @@ export default {
       this.onChange(file, fileList)
     },
     onElProgress: function(event, file, fileList) {
+      console.log(event)
       this.onProgress(event, file, fileList)
     },
     onElRemove: function(file, fileList) {

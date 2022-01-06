@@ -9,6 +9,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class FileController extends  BaseController {
 
     @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult upload(MultipartFile file) throws IOException {
+    public CustomResult upload(MultipartFile file,HttpServletRequest request) throws IOException {
 
         try {
 
@@ -38,6 +39,10 @@ public class FileController extends  BaseController {
 
             String folder = "common";
 
+            if(request.getParameter("folder")!=null){
+                folder=request.getParameter("folder");
+            }
+
             String save_path = "upload" + File.separator + folder;
 
             // 图片存储目录及图片名称
@@ -47,9 +52,6 @@ public class FileController extends  BaseController {
             String file_save_dir = staticPath + File.separator + save_path;
 
             String file_save_path = file_save_dir + File.separator + newFileName;
-
-            System.out.println("图片保存地址：" + file_save_path);
-
 
             File saveFile = new File(file_save_path);
             if (!saveFile.exists()) {
