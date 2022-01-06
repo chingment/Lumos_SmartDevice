@@ -20,6 +20,7 @@
       :class="{elExceed:checkLimit}"
     >
       <i v-if="isImage" class="el-icon-plus" />
+
       <el-button v-else size="small" type="primary">点击上传</el-button>
       <div v-if="tip!=''" slot="tip" class="el-upload__tip"><span class="sign">*注</span>{{ tip }}</div>
 

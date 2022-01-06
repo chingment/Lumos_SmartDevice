@@ -18,7 +18,7 @@
       <el-form-item label="联系地址" prop="contactAddress">
         <el-input v-model="form.contactAddress" clearable style="max-width:500px" />
       </el-form-item>
-      <el-form-item label="门店图片" prop="displayImgUrls">
+      <el-form-item label="门店图片" prop="displayImgUrls" class="el-form-item__content_upload">
         <el-input :value="form.displayImgUrls.toString()" style="display:none" />
         <lm-upload
           v-model="form.displayImgUrls"
