@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
 import com.caterbao.lumos.api.merch.rop.RopShopAdd;
+import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,13 @@ public class ShopController extends  BaseController {
     @Autowired
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
+    }
+
+
+    @RequestMapping(value = "list", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult list(@RequestBody RopShopList rop) {
+        return shopService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)

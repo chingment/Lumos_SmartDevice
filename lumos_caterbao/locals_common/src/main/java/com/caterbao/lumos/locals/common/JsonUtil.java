@@ -1,12 +1,13 @@
 package com.caterbao.lumos.locals.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.text.SimpleDateFormat;
 
-public class JsonUtil {
+public class JsonUtil<T> {
     public static  String getJson(Object object){
         String str =null;
         //jackson中的方法用于将对象转换为字符串形式
@@ -36,5 +37,18 @@ public class JsonUtil {
             e.printStackTrace();
         }
         return str;
+    }
+
+    public static Object toObject(String json) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Object obj = objectMapper.readValue(json,
+                    new TypeReference<Object>() {
+                    });
+            return obj;
+        }
+        catch (Exception ex){
+            return  null;
+        }
     }
 }

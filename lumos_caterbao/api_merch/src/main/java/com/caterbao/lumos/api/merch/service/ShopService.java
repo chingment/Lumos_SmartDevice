@@ -6,4 +6,5 @@ import com.caterbao.lumos.locals.common.CustomResult;
 
 public interface ShopService {
     CustomResult add(String operater, String merchId, RopShopAdd rop);
+    CustomResult list(String operater, String merchId, RopShopList rop);
 }

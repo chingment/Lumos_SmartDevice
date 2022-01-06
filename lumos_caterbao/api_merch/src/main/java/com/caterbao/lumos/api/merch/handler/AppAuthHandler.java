@@ -29,6 +29,7 @@ public class AppAuthHandler implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
         logger.debug("AppAuthHandler.preHandle");
 
+
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;

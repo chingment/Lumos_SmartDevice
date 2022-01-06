@@ -25,6 +25,7 @@
           list-type="picture-card"
           :file-list="form.displayImgUrls"
           :action="uploadImgServiceUrl"
+          :headers="uploadImgHeaders"
           :data="{folder:'shop'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
@@ -50,9 +51,10 @@ import { MessageBox } from 'element-ui'
 import { add } from '@/api/shop'
 import PageHeader from '@/components/PageHeader/index.vue'
 import LmUpload from '@/components/Upload/index.vue'
+import { getToken } from '@/utils/auth'
 import SelectAddressPoint from '@/components/SelectAddressPoint/index.vue'
 export default {
-  name: 'ShopAdd',
+  name: 'MerchShopAdd',
   components: { PageHeader, SelectAddressPoint, LmUpload },
   data() {
     return {
@@ -74,6 +76,7 @@ export default {
         address: [{ required: true, min: 1, max: 512, message: '请选择' }],
         displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且最多4张', max: 4 }]
       },
+      uploadImgHeaders: {},
       uploadImgServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL,
       dialogIsShowBySelectAddressPoint: false,
       isDesktop: this.$store.getters.isDesktop
@@ -83,6 +86,7 @@ export default {
 
   },
   created() {
+    this.uploadImgHeaders = { token: getToken() }
   },
   methods: {
     onSave() {
@@ -97,18 +101,12 @@ export default {
             add(this.form).then(res => {
               this.loading = false
               if (res.code === this.$code_suc) {
-                this.$message({
-                  message: res.msg,
-                  type: 'success'
-                })
+                this.$message.success(res.msg)
                 this.$router.push({
                   path: '/shop/list'
                 })
               } else {
-                this.$message({
-                  message: res.msg,
-                  type: 'error'
-                })
+                this.$message.error(res.msg)
               }
             }).catch(() => {
               this.loading = false

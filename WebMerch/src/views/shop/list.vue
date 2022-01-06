@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="it-component">
-            <div class="img"> <img :src="item.mainImgUrl" alt=""> </div>
+            <div class="img"> <img :src="item.displayImgUrls[0].url" alt=""> </div>
             <div class="describe" />
           </div>
         </el-card>
@@ -40,7 +40,7 @@
             <el-button type="text" @click="onAdd">新建</el-button>
           </div>
           <div class="it-component">
-            <div style="margin:auto;height:120px !important;width:120px !important; line-height:125px;" class="el-upload el-upload--picture-card" @click="onAdd"><i data-v-62e19c49="" class="el-icon-plus" /></div>
+            <div style="margin:auto;height:120px !important;width:120px !important; line-height:125px;" class="el-upload el-upload--picture-card" @click="onAdd"><i class="el-icon-plus" /></div>
           </div>
         </el-card>
       </el-col>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/shop'
+import { list } from '@/api/shop'
 
 export default {
   name: 'ShopList',
@@ -57,8 +57,8 @@ export default {
     return {
       loading: true,
       listQuery: {
-        page: 1,
-        limit: 10,
+        pageNum: 1,
+        pageSize: 10,
         name: undefined
       },
       listData: []
@@ -68,32 +68,39 @@ export default {
     if (this.$store.getters.listPageQuery.has(this.$route.path)) {
       this.listQuery = this.$store.getters.listPageQuery.get(this.$route.path)
     }
-    this.onGetList()
+    this.onList()
   },
   methods: {
-    onGetList() {
+    onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      getList(this.listQuery).then(res => {
-        if (res.result === 1) {
+      list(this.listQuery).then(res => {
+        if (res.code === this.$code_suc) {
           var d = res.data
           this.listData = d.items
         }
+        this.loading = false
+      }).catch(() => {
         this.loading = false
       })
     },
     onFilter() {
       this.listQuery.page = 1
-      this.onGetList()
+      this.onList()
     },
     onAdd() {
       this.$router.push({
+        name: 'MerchShopAdd',
         path: '/shop/add'
       })
     },
     onEdit(item) {
       this.$router.push({
-        path: '/shop/edit?id=' + item.id
+        name: 'MerchShopEdit',
+        path: '/shop/edit',
+        params: {
+          id: item.id
+        }
       })
     }
   }

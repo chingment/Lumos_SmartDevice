@@ -62,7 +62,7 @@ import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
 import SelectAddressPoint from '@/components/SelectAddressPoint/index.vue'
 export default {
-  name: 'ShopEdit',
+  name: 'MerchShopEdit',
   components: { PageHeader, SelectAddressPoint },
   data() {
     return {

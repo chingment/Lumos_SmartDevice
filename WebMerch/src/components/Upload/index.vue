@@ -8,7 +8,7 @@
       :file-list="elFileList"
       :limit="elLimit"
       :on-exceed="onElExceed"
-      :headers="elHeaders"
+      :headers="headers"
       :before-upload="beforeElUpload"
       :on-remove="onElRemove"
       :before-remove="beforeElRemove"
@@ -33,7 +33,6 @@
 <script>
 
 import Sortable from 'sortablejs'
-import { getToken } from '@/utils/auth'
 export default {
   name: 'LmUpload',
   props: {
@@ -60,6 +59,7 @@ export default {
       type: String,
       default: 'picture-card'
     },
+    headers: Object,
     sortable: { type: Boolean, default: false },
     onPreview: { type: Function, default: function() { } },
     onRemove: { type: Function, default: function() { } },
@@ -82,8 +82,7 @@ export default {
       elLimit: this.limit,
       elExt: this.ext,
       elMaxSize: this.maxSize,
-      elListType: this.listType,
-      elHeaders: {}
+      elListType: this.listType
     }
   },
   computed: {
@@ -106,7 +105,6 @@ export default {
   },
   created: function() {
     this.elCount = this.elFileList.length
-    this.elHeaders = { token: getToken() }
   },
   mounted: function() {
     var that = this

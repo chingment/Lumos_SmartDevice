@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function list(data) {
   return request({
-    url: '/shop/getlist',
-    method: 'get',
-    params
+    url: '/shop/list',
+    method: 'post',
+    data
   })
 }
 
@@ -17,5 +17,6 @@ export function add(data) {
 }
 
 export default {
+  list: list,
   add: add
 }

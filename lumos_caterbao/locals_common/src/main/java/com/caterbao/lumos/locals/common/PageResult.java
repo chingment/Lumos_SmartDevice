@@ -1,13 +1,19 @@
 package com.caterbao.lumos.locals.common;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageResult {
+
+public class PageResult<T> implements Serializable  {
     private int pageNum;
     private int pageSize;
     private long totalSize;
     private int totalPages;
-    private List<?> items;
+    private List<T> items;
+
+    public PageResult(){
+
+    }
 
     public int getPageNum() {
         return pageNum;
@@ -41,11 +47,11 @@ public class PageResult {
         this.totalPages = totalPages;
     }
 
-    public List<?> getItems() {
+    public List<T> getItems() {
         return items;
     }
 
-    public void setItems(List<?> items) {
+    public void setItems(List<T> items) {
         this.items = items;
     }
 }

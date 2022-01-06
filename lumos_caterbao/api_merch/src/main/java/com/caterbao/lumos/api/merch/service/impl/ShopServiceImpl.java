@@ -2,21 +2,66 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.merch.rop.RopShopAdd;
+import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
+import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopMapper shopMapper;
+
+
+    @Override
+    public CustomResult list(String operater, String merchId, RopShopList rop) {
+
+        CustomResult result = new CustomResult();
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+
+        Page<?> page =PageHelper.startPage(pageNum, pageSize);
+
+        List<Shop> d_Shops = shopMapper.list();
+
+        List<Object> items=new ArrayList<>();
+
+        for (Shop d_Shop:
+                d_Shops ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_Shop.getId());
+            item.put("name",d_Shop.getName());
+            item.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return CustomResult.success("",ret);
+
+    }
 
     @Override
     public CustomResult add(String operater, String merchId, RopShopAdd rop) {

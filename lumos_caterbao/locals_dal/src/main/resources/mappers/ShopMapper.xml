@@ -8,5 +8,8 @@
   values(#{id},#{name},#{merchId},#{displayImgUrls},#{contactName},#{contactPhone},#{contactAddress},#{creator},#{createTime})
 </insert>
 
+    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Shop">
+        select * from Shop
+    </select>
 
 </mapper>

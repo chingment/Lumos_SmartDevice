@@ -23,7 +23,7 @@ function _generateRoutes(routes, menus) {
         redirect: undefined,
         hidden: !item.isSideBar,
         isSideBar: item.isSideBar,
-        code: item.code,
+        name: item.code,
         meta: { title: item.title, icon: item.icon, id: item.id, pId: item.pId }
       }
       if (item.children) {
