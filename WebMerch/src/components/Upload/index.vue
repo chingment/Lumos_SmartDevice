@@ -108,18 +108,20 @@ export default {
       handler(newName, oldName) {
         this.elFileList = newName
 
-        var c = this.$refs.uploadImg.$el
-        setTimeout(function() {
-          var uploadcards = c.querySelectorAll('.el-upload--picture-card')
-          uploadcards.forEach(element => {
-            element.style.display = 'none'
-          })
+        if (!this.edit) {
+          var c = this.$refs.uploadImg.$el
+          setTimeout(function() {
+            var uploadcards = c.querySelectorAll('.el-upload--picture-card')
+            uploadcards.forEach(element => {
+              element.style.display = 'none'
+            })
 
-          var deletes = c.querySelectorAll('.el-upload-list__item-delete')
-          deletes.forEach(element => {
-            element.style.display = 'none'
-          })
-        }, 100)
+            var deletes = c.querySelectorAll('.el-upload-list__item-delete')
+            deletes.forEach(element => {
+              element.style.display = 'none'
+            })
+          }, 100)
+        }
       }
     }
   },

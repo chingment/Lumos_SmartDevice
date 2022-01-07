@@ -56,6 +56,38 @@ export function unBindShop(data) {
   })
 }
 
+export function devices(data) {
+  return request({
+    url: '/store/devices',
+    method: 'post',
+    data
+  })
+}
+
+export function unDevices(data) {
+  return request({
+    url: '/store/unDevices',
+    method: 'post',
+    data
+  })
+}
+
+export function bindDevice(data) {
+  return request({
+    url: '/store/bindDevice',
+    method: 'post',
+    data
+  })
+}
+
+export function unBindDevice(data) {
+  return request({
+    url: '/store/unBindDevice',
+    method: 'post',
+    data
+  })
+}
+
 export default {
   list: list,
   initManage: initManage,
@@ -63,5 +95,9 @@ export default {
   shops: shops,
   unShops: unShops,
   bindShop: bindShop,
-  unBindShop: unBindShop
+  unBindShop: unBindShop,
+  devices: devices,
+  unDevices: unDevices,
+  bindDevice: bindDevice,
+  unBindDevice: unBindDevice
 }

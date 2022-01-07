@@ -1,23 +1,25 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import com.caterbao.lumos.api.merch.rop.RopStoreBindShop;
-import com.caterbao.lumos.api.merch.rop.RopStoreEdit;
-import com.caterbao.lumos.api.merch.rop.RopStoreList;
-import com.caterbao.lumos.api.merch.rop.RopStoreShops;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.StoreService;
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.mapper.StoreMapper;
 import com.caterbao.lumos.locals.dal.mapper.StoreShopMapper;
+import com.caterbao.lumos.locals.dal.pojo.MerchDevice;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
 import com.caterbao.lumos.locals.dal.pojo.Store;
 import com.caterbao.lumos.locals.dal.pojo.StoreShop;
+import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private StoreShopMapper storeShopMapper;
+
+    @Autowired
+    private MerchDeviceMapper merchDeviceMapper;
 
     @Override
     public CustomResult list(String operater, String merchId, RopStoreList rop) {
@@ -237,8 +242,6 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public CustomResult bindShop(String operater, String merchId, RopStoreBindShop rop) {
 
-
-
         StoreShop d_StoreShop = new StoreShop();
         d_StoreShop.setId(IdWork.generateGUID());
         d_StoreShop.setMerchId(merchId);
@@ -261,6 +264,123 @@ public class StoreServiceImpl implements StoreService {
         d_StoreShop.setStoreId(rop.getStoreId());
         d_StoreShop.setShopId(rop.getShopId());
         storeShopMapper.delete(d_StoreShop);
+
+        return CustomResult.success("解绑成功");
+    }
+
+    @Override
+    public CustomResult devices(String operater, String merchId, RopStoreDevices rop) {
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        Page<?> page =PageHelper.startPage(pageNum, pageSize);
+
+        HashMap<String,String> selective=new HashMap<>();
+
+        selective.put("where_merchId",merchId);
+        selective.put("where_storeId",rop.getStoreId());
+        selective.put("where_shopId",rop.getShopId());
+        selective.put("where_deviceCode",rop.getDeviceCode());
+
+        List<MerchDeviceVw> d_Devices = merchDeviceMapper.getBindDevices(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (MerchDeviceVw d_Device:
+                d_Devices ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_Device.getId());
+            item.put("code",DeviceVoUtil.getCode(d_Device.getId(),d_Device.getCumCode()));
+            item.put("shopId", d_Device.getShopId());
+            item.put("shopName", d_Device.getShopName());
+            item.put("storeId", d_Device.getStoreId());
+            item.put("storeName", d_Device.getShopName());
+
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return CustomResult.success("",ret);
+
+    }
+
+    @Override
+    public CustomResult unDevices(String operater, String merchId, RopStoreDevices rop) {
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        Page<?> page =PageHelper.startPage(pageNum, pageSize);
+
+        HashMap<String,String> selective=new HashMap<>();
+
+        selective.put("where_merchId",merchId);
+        selective.put("where_storeId",rop.getStoreId());
+        selective.put("where_shopId",rop.getShopId());
+        selective.put("where_deviceCode",rop.getDeviceCode());
+        List<MerchDeviceVw> d_Devices = merchDeviceMapper.getUnBindDevices(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (MerchDeviceVw d_Device:
+                d_Devices ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_Device.getId());
+            item.put("code", DeviceVoUtil.getCode(d_Device.getId(),d_Device.getCumCode()));
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return CustomResult.success("",ret);
+
+    }
+
+    @Override
+    @Transactional
+    public CustomResult bindDevice(String operater, String merchId, RopStoreBindDevice rop) {
+
+        MerchDevice d_MerchDevice=new MerchDevice();
+
+        d_MerchDevice.setDeviceId(rop.getDeviceId());
+        d_MerchDevice.setMerchId(merchId);
+        d_MerchDevice.setCurStoreId(rop.getStoreId());
+        d_MerchDevice.setCurShopId(rop.getShopId());
+
+        merchDeviceMapper.bindOrUnBindDevice(d_MerchDevice);
+
+        return CustomResult.success("绑定成功");
+
+    }
+
+    @Override
+    @Transactional
+    public CustomResult unBindDevice(String operater, String merchId, RopStoreBindDevice rop) {
+
+        MerchDevice d_MerchDevice=new MerchDevice();
+
+        d_MerchDevice.setDeviceId(rop.getDeviceId());
+        d_MerchDevice.setMerchId(merchId);
+
+        merchDeviceMapper.bindOrUnBindDevice(d_MerchDevice);
 
         return CustomResult.success("解绑成功");
     }

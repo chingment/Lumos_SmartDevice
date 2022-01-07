@@ -34,7 +34,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-if="dialogByDeviceIsVisible" :title="'设备管理'" width="800px" :visible.sync="dialogByDeviceIsVisible" @close="onGetList(listQuery)">
+    <el-dialog v-if="dialogByDeviceIsVisible" :title="'设备管理'" width="800px" :visible.sync="dialogByDeviceIsVisible" @close="onList(listQuery)">
       <div style="width:100%;height:600px">
         <pane-device-bind :store-id="storeId" :shop-id="shopId" />
       </div>

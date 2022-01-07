@@ -1,9 +1,6 @@
 package com.caterbao.lumos.api.merch.service;
 
-import com.caterbao.lumos.api.merch.rop.RopStoreBindShop;
-import com.caterbao.lumos.api.merch.rop.RopStoreEdit;
-import com.caterbao.lumos.api.merch.rop.RopStoreList;
-import com.caterbao.lumos.api.merch.rop.RopStoreShops;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.locals.common.CustomResult;
 
 public interface StoreService {
@@ -16,4 +13,8 @@ public interface StoreService {
     CustomResult unShops(String operater, String merchId, RopStoreShops rop);
     CustomResult bindShop(String operater, String merchId, RopStoreBindShop rop);
     CustomResult unBindShop(String operater, String merchId, RopStoreBindShop rop);
+    CustomResult devices(String operater, String merchId, RopStoreDevices rop);
+    CustomResult unDevices(String operater, String merchId, RopStoreDevices rop);
+    CustomResult bindDevice(String operater, String merchId, RopStoreBindDevice rop);
+    CustomResult unBindDevice(String operater, String merchId, RopStoreBindDevice rop);
 }

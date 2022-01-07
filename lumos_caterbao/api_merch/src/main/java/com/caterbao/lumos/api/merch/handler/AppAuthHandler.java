@@ -3,8 +3,6 @@ package com.caterbao.lumos.api.merch.handler;
 import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.merch.controller.OwnController;
 import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.PasswordUtil;
-import com.caterbao.lumos.locals.dal.IdWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
