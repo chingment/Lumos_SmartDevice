@@ -13,4 +13,6 @@ public class CommonUtil {
     public static Timestamp getDateTimeNow(){
         return  new Timestamp(new java.util.Date().getTime());
     }
+
+
 }

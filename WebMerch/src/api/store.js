@@ -1,37 +1,67 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function list(data) {
   return request({
-    url: '/shop/getlist',
+    url: '/store/list',
+    method: 'post',
+    data
+  })
+}
+
+export function initManage(params) {
+  return request({
+    url: '/store/init_manage',
     method: 'get',
     params
   })
 }
 
-export function getListBySbStore(params) {
+export function initManageBaseInfo(params) {
   return request({
-    url: '/shop/getListBySbStore',
+    url: '/store/init_manage_baseinfo',
     method: 'get',
     params
   })
 }
 
-export function getDetails(params) {
+export function shops(data) {
   return request({
-    url: '/shop/getDetails',
-    method: 'get',
-    params
+    url: '/store/shops',
+    method: 'post',
+    data
   })
 }
 
-export function add(data) {
+export function unShops(data) {
   return request({
-    url: '/shop/add',
+    url: '/store/unShops',
+    method: 'post',
+    data
+  })
+}
+
+export function bindShop(data) {
+  return request({
+    url: '/store/bindShop',
+    method: 'post',
+    data
+  })
+}
+
+export function unBindShop(data) {
+  return request({
+    url: '/store/unBindShop',
     method: 'post',
     data
   })
 }
 
 export default {
-  add: add
+  list: list,
+  initManage: initManage,
+  initManageBaseInfo: initManageBaseInfo,
+  shops: shops,
+  unShops: unShops,
+  bindShop: bindShop,
+  unBindShop: unBindShop
 }

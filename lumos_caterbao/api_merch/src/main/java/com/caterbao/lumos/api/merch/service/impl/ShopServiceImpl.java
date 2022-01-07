@@ -5,10 +5,7 @@ import com.caterbao.lumos.api.merch.rop.RopShopAdd;
 import com.caterbao.lumos.api.merch.rop.RopShopEdit;
 import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
-import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.JsonUtil;
-import com.caterbao.lumos.locals.common.PageResult;
+import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
@@ -31,8 +28,6 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public CustomResult list(String operater, String merchId, RopShopList rop) {
 
-        CustomResult result = new CustomResult();
-
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
@@ -42,6 +37,7 @@ public class ShopServiceImpl implements ShopService {
         HashMap<String,String> selective=new HashMap<>();
         selective.put("fields","id,name,displayImgUrls");
         selective.put("where_name",rop.getShopName());
+        selective.put("where_merchId",merchId);
         List<Shop> d_Shops = shopMapper.list(selective);
 
         List<Object> items=new ArrayList<>();
@@ -53,7 +49,7 @@ public class ShopServiceImpl implements ShopService {
 
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());
-            item.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
+            item.put("imgUrl", ImgVo.getMainImgUrl(d_Shop.getDisplayImgUrls()));
             items.add(item);
         }
 

@@ -2,28 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.caterbao.lumos.locals.dal.mapper.ShopMapper">
-    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.Shop">
-  insert into shop(id,name,merchId,displayImgUrls,contactName,contactPhone,contactAddress,creator,createTime)
-  values(#{id},#{name},#{merchId},#{displayImgUrls},#{contactName},#{contactPhone},#{contactAddress},#{creator},#{createTime})
-    </insert>
-    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="java.util.HashMap">
-        select ${fields} from Shop where 1=1
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.StoreMapper">
+    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Store" parameterType="java.util.HashMap">
+        select ${fields} from Store where 1=1
 
         <if test="where_name != null and where_name.length() > 0">and name like concat('%', #{where_name}, '%')</if>
-        <if test="where_merchId != null and where_merchId.length() > 0">and merchId =#{where_merchId}</if>
     </select>
-    <select id="findByShopId" resultType="com.caterbao.lumos.locals.dal.pojo.Shop">
-        select * from Shop
-        where Id=#{shopId}
+    <select id="findByStoreId" resultType="com.caterbao.lumos.locals.dal.pojo.Store">
+        select * from Store
+        where Id=#{storeId}
     </select>
-    <select id="isExistName" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.pojo.Shop">
-        select count(*) from Shop where 1=1
+    <select id="isExistName" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.pojo.Store">
+        select count(*) from Store where 1=1
         <if test="id != null and id.length() > 0"> and id!=#{id} </if>
         <if test="name != null and name.length() > 0"> and name=#{name} </if>
         <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
     </select>
-    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.Shop">
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.Store">
         update Shop
         <set>
             <if test="name != null">name=#{name},</if>

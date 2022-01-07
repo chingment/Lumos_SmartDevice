@@ -22,7 +22,7 @@
       <i v-if="isImage" class="el-icon-plus" />
 
       <el-button v-else size="small" type="primary">点击上传</el-button>
-      <div v-if="tip!=''" slot="tip" class="el-upload__tip"><span class="sign">*注</span>{{ tip }}</div>
+      <div v-if="tip!=''&&edit" slot="tip" class="el-upload__tip"><span class="sign">*注</span>{{ tip }}</div>
 
     </el-upload>
     <el-dialog v-if="isImage" :visible.sync="dialogVisible" size="tiny">
@@ -62,6 +62,7 @@ export default {
     },
     headers: Object,
     sortable: { type: Boolean, default: false },
+    edit: { type: Boolean, default: true },
     onPreview: { type: Function, default: function() { } },
     onRemove: { type: Function, default: function() { } },
     onSuccess: { type: Function, default: function() { } },
@@ -106,6 +107,19 @@ export default {
     fileList: {
       handler(newName, oldName) {
         this.elFileList = newName
+
+        var c = this.$refs.uploadImg.$el
+        setTimeout(function() {
+          var uploadcards = c.querySelectorAll('.el-upload--picture-card')
+          uploadcards.forEach(element => {
+            element.style.display = 'none'
+          })
+
+          var deletes = c.querySelectorAll('.el-upload-list__item-delete')
+          deletes.forEach(element => {
+            element.style.display = 'none'
+          })
+        }, 100)
       }
     }
   },

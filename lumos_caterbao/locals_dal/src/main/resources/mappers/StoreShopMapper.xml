@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.StoreShopMapper">
+
+    <select id="getBindShops" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="java.util.HashMap">
+        select ${fields} from Shop where 1=1
+        and id in (
+        select shopId from StoreShop where 1=1
+        <if test="where_merchId != null and where_merchId.length() > 0">and merchId =#{where_merchId}</if>
+        <if test="where_storeId != null and where_storeId.length() > 0">and storeId =#{where_storeId}</if>
+        )
+        <if test="where_shopName != null and where_shopName.length() > 0">and name like concat('%', #{where_shopName}, '%')</if>
+    </select>
+
+    <select id="getUnBindShops" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="java.util.HashMap">
+        select ${fields} from Shop where 1=1
+        and id not in (
+        select shopId from StoreShop where 1=1
+        <if test="where_merchId != null and where_merchId.length() > 0">and merchId =#{where_merchId}</if>
+        <if test="where_storeId != null and where_storeId.length() > 0">and storeId =#{where_storeId}</if>
+        )
+        <if test="where_shopName != null and where_shopName.length() > 0">and name like concat('%', #{where_shopName}, '%')</if>
+    </select>
+
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.StoreShop">
+  insert into StoreShop(id,merchId,storeId,shopId,creator,createTime)
+  values(#{id},#{merchId},#{storeId},#{shopId},#{creator},#{createTime})
+    </insert>
+
+    <insert id="delete" parameterType="com.caterbao.lumos.locals.dal.pojo.StoreShop">
+  delete from StoreShop where merchId=#{merchId} and storeId=#{storeId} and shopId=#{shopId}
+
+    </insert>
+
+</mapper>

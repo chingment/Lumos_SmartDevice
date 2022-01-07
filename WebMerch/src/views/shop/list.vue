@@ -13,7 +13,7 @@
       </el-row>
     </div>
     <el-row v-loading="loading" :gutter="24">
-      <el-col v-for="item in listData" :key="item.id" :xs="24" :sm="12" :lg="8" :xl="6" class="my-col">
+      <el-col v-for="item in listData.items" :key="item.id" :xs="24" :sm="12" :lg="8" :xl="6" class="my-col">
         <el-card class="box-card">
           <div slot="header" class="it-header clearfix">
             <div class="left">
@@ -26,7 +26,7 @@
             </div>
           </div>
           <div class="it-component">
-            <div class="img"> <img :src="item.displayImgUrls[0].url" alt=""> </div>
+            <div class="img"> <img :src="item.imgUrl" alt=""> </div>
             <div class="describe" />
           </div>
         </el-card>
@@ -60,7 +60,13 @@ export default {
         pageSize: 1024,
         shopName: undefined
       },
-      listData: []
+      listData: {
+        items: [],
+        pageNum: 0,
+        pageSize: 0,
+        totalPages: 0,
+        totalSize: 0
+      }
     }
   },
   created() {
@@ -75,8 +81,7 @@ export default {
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
       list(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
-          var d = res.data
-          this.listData = d.items
+          this.listData = res.data
         }
         this.loading = false
       }).catch(() => {
@@ -84,7 +89,7 @@ export default {
       })
     },
     onFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageNum = 1
       this.onList()
     },
     onAdd() {
