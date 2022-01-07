@@ -3,7 +3,7 @@
     <page-header />
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="门店名称" prop="name">
-        <el-input v-model="form.name" clearable style="max-width:500px" />
+        <el-input v-model.trim="form.name" clearable style="max-width:500px" />
       </el-form-item>
       <el-form-item label="门店地址" prop="address">
         <el-input v-model="form.address" clearable style="width:450px" />

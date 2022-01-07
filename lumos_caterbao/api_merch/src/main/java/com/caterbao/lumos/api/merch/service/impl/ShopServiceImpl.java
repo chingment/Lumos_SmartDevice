@@ -39,7 +39,10 @@ public class ShopServiceImpl implements ShopService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        List<Shop> d_Shops = shopMapper.list();
+        HashMap<String,String> selective=new HashMap<>();
+        selective.put("fields","id,name,displayImgUrls");
+        selective.put("where_name",rop.getShopName());
+        List<Shop> d_Shops = shopMapper.list(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -76,9 +79,13 @@ public class ShopServiceImpl implements ShopService {
             return CustomResult.fail("名称不能为空");
 
         Shop d_Shop = new Shop();
-        d_Shop.setId(IdWork.generateGUID());
         d_Shop.setMerchId(merchId);
         d_Shop.setName(rop.getName());
+
+        if(shopMapper.isExistName(d_Shop)>0)
+            return CustomResult.fail("名称已经存在");
+
+        d_Shop.setId(IdWork.generateGUID());
         d_Shop.setContactName(rop.getContactName());
         d_Shop.setContactPhone(rop.getContactPhone());
         d_Shop.setContactAddress(rop.getContactAddress());
@@ -106,6 +113,7 @@ public class ShopServiceImpl implements ShopService {
 
         ret.put("id",d_Shop.getId());
         ret.put("name",d_Shop.getName());
+
         ret.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
         ret.put("contactName",d_Shop.getContactName());
         ret.put("contactPhone",d_Shop.getContactPhone());
@@ -124,7 +132,13 @@ public class ShopServiceImpl implements ShopService {
 
 
         d_Shop.setName(rop.getName());
+        d_Shop.setMerchId(merchId);
+
+        if(shopMapper.isExistName(d_Shop)>0)
+            return CustomResult.fail("名称已经存在");
+
         d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
+
         d_Shop.setContactName(rop.getContactName());
         d_Shop.setContactPhone(rop.getContactPhone());
         d_Shop.setContactAddress(rop.getContactAddress());
