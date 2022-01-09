@@ -7,6 +7,7 @@ import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
 import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
@@ -43,7 +44,11 @@ public class OwnServiceImpl implements OwnService {
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
         CustomResult result = new CustomResult();
 
-        SysUser d_User = sysUserMapper.findByUserName(rop.getUserName());
+        LumosSelective user_Selective=new LumosSelective();
+        user_Selective.setFields("Id,UserName,PasswordHash,SecurityStamp");
+        user_Selective.addWhere("UserName",rop.getUserName());
+
+        SysUser d_User = sysUserMapper.findByUserName(user_Selective);
 
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");
@@ -55,7 +60,11 @@ public class OwnServiceImpl implements OwnService {
         if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
-        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findByUserId(d_User.getId());
+        LumosSelective merchUser_Selective=new LumosSelective();
+        merchUser_Selective.setFields("*");
+        merchUser_Selective.addWhere("UserId",d_User.getId());
+
+        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findByUserId(merchUser_Selective);
 
         if (d_SysMerchUser == null)
             return CustomResult.fail("该账号未授权");
@@ -82,7 +91,12 @@ public class OwnServiceImpl implements OwnService {
 
         RetOwnGetInfo ret = new RetOwnGetInfo();
 
-        List<SysMenu> d_Menus = sysUserMapper.getMenusByUserId(userId);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("UserId",userId);
+
+
+        List<SysMenu> d_Menus = sysUserMapper.getMenusByUserId(selective);
 
         ret.setUserName("chingment");
 

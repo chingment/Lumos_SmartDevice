@@ -5,14 +5,8 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.DeviceMapper">
 
-    <select id="firstOrDefault" resultType="com.caterbao.lumos.locals.dal.pojo.Device" parameterType="java.util.HashMap" >
-        select  * from Device
-
-        <where>
-            <if test="id != null and id.length() > 0">Device.id=#{id}</if>
-        </where>
-
-        limit 0,1
+    <select id="findByDeviceId" resultType="com.caterbao.lumos.locals.dal.pojo.Device"  parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+        select  ${fields}  from Device  where  id =#{where.DeviceId}
     </select>
 
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.Device">

@@ -7,6 +7,7 @@ import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,11 @@ public class OwnServiceImpl implements OwnService {
 
         CustomResult result = new CustomResult();
 
-        SysUser d_User = sysUserMapper.findByUserName(rop.getUserName());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,PasswordHash,SecurityStamp");
+        selective.addWhere("UserName",rop.getUserName());
+
+        SysUser d_User = sysUserMapper.findByUserName(selective);
 
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");

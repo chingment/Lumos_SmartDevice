@@ -5,9 +5,8 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.DeviceCabinetMapper">
 
-    <select id="findByDeviceId" resultType="com.caterbao.lumos.locals.dal.pojo.DeviceCabinet">
-        select * from DeviceCabinet
-        where DeviceId=#{deviceId}
+    <select id="findByDeviceId" resultType="com.caterbao.lumos.locals.dal.pojo.DeviceCabinet" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields}  from DeviceCabinet where DeviceId=#{where.DeviceId}
     </select>
 
 </mapper>

@@ -7,6 +7,7 @@ import com.caterbao.lumos.api.merch.rop.RopShopList;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
 import com.github.pagehelper.Page;
@@ -34,10 +35,11 @@ public class ShopServiceImpl implements ShopService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
-        selective.put("fields","id,name,displayImgUrls");
-        selective.put("where_name",rop.getShopName());
-        selective.put("where_merchId",merchId);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.addWhere("Name",rop.getShopName());
+        selective.addWhere("MerchId",merchId);
+
         List<Shop> d_Shops = shopMapper.list(selective);
 
         List<Object> items=new ArrayList<>();
@@ -100,7 +102,12 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public CustomResult init_edit(String operater, String merchId, String shopId) {
 
-        Shop d_Shop = shopMapper.findByShopId(shopId);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("ShopId",shopId);
+        selective.addWhere("MerchId",merchId);
+
+        Shop d_Shop = shopMapper.findByShopId(selective);
 
         if(d_Shop==null)
            return CustomResult.fail("初始失败");
@@ -121,7 +128,12 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public CustomResult edit(String operater, String merchId, RopShopEdit rop) {
 
-        Shop d_Shop = shopMapper.findByShopId(rop.getId());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("ShopId",rop.getId());
+        selective.addWhere("MerchId",merchId);
+
+        Shop d_Shop = shopMapper.findByShopId(selective);
 
         if (d_Shop == null)
             return CustomResult.fail("数据不存在");

@@ -4,25 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper">
 
-    <select id="getBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="java.util.HashMap">
+    <select id="getBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
         select a.Id ,b.CumCode,a.curShopId as ShopId,c.name as ShopName,a.curStoreId as StoreId,c.name as StoreName
         from Device as a left join MerchDevice  as b on a.Id=b.DeviceId
         left join Shop as c on a.curShopId=c.Id
         left join Store as d on a.curStoreId=d.Id
-        where b.merchId=#{where_merchId} and b.curStoreId=#{where_storeId} and b.curShopId=#{where_shopId}
+        where b.merchId=#{where.MerchId} and b.curStoreId=#{where.StoreId} and b.curShopId=#{where.shopId}
 
-        <if test="where_deviceCode != null and where_deviceCode.length() > 0">and (a.id like concat('%', #{where_deviceCode}, '%') or b.cumCode like concat('%', #{where_deviceCode}, '%'))</if>
+        <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.id like concat('%', #{where.DeviceCode}, '%') or b.cumCode like concat('%', #{where.DeviceCode}, '%'))</if>
 
     </select>
 
-    <select id="getUnBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="java.util.HashMap">
+    <select id="getUnBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
 select a.Id ,b.CumCode,a.curShopId as ShopId,c.name as ShopName,a.curStoreId as StoreId,c.name as StoreName
 from Device as a left join MerchDevice  as b on a.Id=b.DeviceId
 left join Shop as c on a.curShopId=c.Id
 left join Store as d on a.curStoreId=d.Id
-where b.merchId=#{where_merchId} and b.curStoreId is NULL and b.curShopId is NULL
+where b.merchId=#{where.MerchId} and b.curStoreId is NULL and b.curShopId is NULL
 
-        <if test="where_deviceCode != null and where_deviceCode.length() > 0">and (a.id like concat('%', #{where_deviceCode}, '%') or b.cumCode like concat('%', #{where_deviceCode}, '%'))</if>
+        <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.id like concat('%', #{where.DeviceCode}, '%') or b.cumCode like concat('%', #{where.DeviceCode}, '%'))</if>
 
     </select>
 

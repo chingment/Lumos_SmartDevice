@@ -6,11 +6,9 @@
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper">
 
 
-    <select id="findByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMerchUser">
-        select * from SysMerchUser
-        <where>
-            <if test="userId != null and userId.length() > 0">SysMerchUser.userId=#{userId}</if>
-        </where>
+    <select id="findByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMerchUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from SysMerchUser
+        where SysMerchUser.userId=#{where.UserId}
     </select>
 
 </mapper>

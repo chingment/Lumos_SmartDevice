@@ -3,14 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.StoreMapper">
-    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Store" parameterType="java.util.HashMap">
+    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Store" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from Store where 1=1
-
-        <if test="where_name != null and where_name.length() > 0">and name like concat('%', #{where_name}, '%')</if>
+        <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
     </select>
-    <select id="findByStoreId" resultType="com.caterbao.lumos.locals.dal.pojo.Store">
-        select * from Store
-        where Id=#{storeId}
+    <select id="findByStoreId" resultType="com.caterbao.lumos.locals.dal.pojo.Store" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from Store
+        where Id=#{where.StoreId}
     </select>
     <select id="isExistName" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.pojo.Store">
         select count(*) from Store where 1=1

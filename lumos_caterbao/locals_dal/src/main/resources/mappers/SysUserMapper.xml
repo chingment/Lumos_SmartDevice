@@ -5,29 +5,16 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysUserMapper">
 
-    <resultMap id="user" type="com.caterbao.lumos.locals.dal.pojo.SysUser">
-        <result property="id" column="id"/>
-        <result property="userName" column="userName"/>
-        <result property="passwordHash" column="passwordHash"/>
-    </resultMap>
-
-    <select id="findByUserName" resultMap="user">
-        select * from SysUser
-        <where>
-            <if test="userName != null and userName.length() > 0">SysUser.userName=#{userName}</if>
-        </where>
+    <select id="findByUserName" resultType="com.caterbao.lumos.locals.dal.pojo.SysUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from SysUser where SysUser.userName=#{where.UserName}
     </select>
 
-    <select id="findByUserId" resultMap="user">
-        select * from SysUser
-        <where>
-            <if test="userId != null and userId.length() > 0">SysUser.id=#{userId}</if>
-        </where>
+    <select id="findByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+       select  ${fields} from SysUser where SysUser.id=#{where.UserId}
     </select>
 
-    <select id="getMenusByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMenu">
-        select * from SysMenu
-        where depth!=0
+    <select id="getMenusByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMenu" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from SysMenu where depth!=0
     </select>
 
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.SysUser">

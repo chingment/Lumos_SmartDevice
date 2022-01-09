@@ -6,6 +6,7 @@ import com.caterbao.lumos.api.merch.service.StoreService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
+import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.mapper.StoreMapper;
@@ -46,10 +47,12 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
-        selective.put("fields","id,name,displayImgUrls");
-        selective.put("where_name",rop.getStoreName());
-        selective.put("where_merchId",merchId);
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.addWhere("Name",rop.getStoreName());
+        selective.addWhere("MerchId",merchId);
+
         List<Store> d_Stores = storeMapper.list(selective);
 
         List<Object> items=new ArrayList<>();
@@ -82,9 +85,12 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page = PageHelper.startPage(1, 1024);
 
-        HashMap<String, String> selective = new HashMap<>();
-        selective.put("fields", "id,name,displayImgUrls");
-        selective.put("where_merchId", merchId);
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.addWhere("MerchId",merchId);
+
+
         List<Store> d_Stores = storeMapper.list(selective);
 
         List<Object> m_Stores = new ArrayList<>();
@@ -108,7 +114,11 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public CustomResult init_manage_baseinfo(String operater, String merchId, String storeId) {
 
-        Store d_Store = storeMapper.findByStoreId(storeId);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("StoreId",merchId);
+
+        Store d_Store = storeMapper.findByStoreId(selective);
 
         if(d_Store==null)
             return CustomResult.fail("初始失败");
@@ -130,7 +140,11 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public CustomResult edit(String operater, String merchId, RopStoreEdit rop) {
 
-        Store d_Store = storeMapper.findByStoreId(rop.getId());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("StoreId",merchId);
+
+        Store d_Store = storeMapper.findByStoreId(selective);
 
         if (d_Store == null)
             return CustomResult.fail("数据不存在");
@@ -165,11 +179,12 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
-        selective.put("fields","id,name,displayImgUrls");
-        selective.put("where_shopName",rop.getShopName());
-        selective.put("where_merchId",merchId);
-        selective.put("where_storeId",rop.getStoreId());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.addWhere("ShopName",rop.getShopName());
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+
 
         List<Shop> d_Shops = storeShopMapper.getBindShops(selective);
 
@@ -206,11 +221,13 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
-        selective.put("fields","id,name,displayImgUrls");
-        selective.put("where_shopName",rop.getShopName());
-        selective.put("where_merchId",merchId);
-        selective.put("where_storeId",rop.getStoreId());
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.addWhere("ShopName",rop.getShopName());
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+
 
         List<Shop> d_Shops = storeShopMapper.getUnBindShops(selective);
 
@@ -276,12 +293,13 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
+        LumosSelective selective=new LumosSelective();
 
-        selective.put("where_merchId",merchId);
-        selective.put("where_storeId",rop.getStoreId());
-        selective.put("where_shopId",rop.getShopId());
-        selective.put("where_deviceCode",rop.getDeviceCode());
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+        selective.addWhere("ShopId",rop.getShopId());
+        selective.addWhere("DeviceCode",rop.getDeviceCode());
+
 
         List<MerchDeviceVw> d_Devices = merchDeviceMapper.getBindDevices(selective);
 
@@ -322,12 +340,12 @@ public class StoreServiceImpl implements StoreService {
 
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
-        HashMap<String,String> selective=new HashMap<>();
+        LumosSelective selective=new LumosSelective();
+        selective.addWhere("merchId",merchId);
+        selective.addWhere("storeId",rop.getStoreId());
+        selective.addWhere("shopId",rop.getShopId());
+        selective.addWhere("deviceCode",rop.getDeviceCode());
 
-        selective.put("where_merchId",merchId);
-        selective.put("where_storeId",rop.getStoreId());
-        selective.put("where_shopId",rop.getShopId());
-        selective.put("where_deviceCode",rop.getDeviceCode());
         List<MerchDeviceVw> d_Devices = merchDeviceMapper.getUnBindDevices(selective);
 
         List<Object> items=new ArrayList<>();

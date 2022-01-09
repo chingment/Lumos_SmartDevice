@@ -38,9 +38,10 @@ public class DeviceServiceImpl implements DeviceService{
             return CustomResult.fail("设备编码为空");
 
         HashMap<String, String> d_Device_Selective = new HashMap<>();
-        d_Device_Selective.put("id", rop.getDeviceId());
+        d_Device_Selective.put("fields", "*");
+        d_Device_Selective.put("where_DeviceId", rop.getDeviceId());
 
-        Device d_Device = deviceMapper.firstOrDefault(d_Device_Selective);
+        Device d_Device = deviceMapper.findByDeviceId(d_Device_Selective);
 
         if (d_Device == null)
             return CustomResult.fail("设备编码未注册");

@@ -7,15 +7,15 @@
   insert into shop(id,name,merchId,displayImgUrls,contactName,contactPhone,contactAddress,creator,createTime)
   values(#{id},#{name},#{merchId},#{displayImgUrls},#{contactName},#{contactPhone},#{contactAddress},#{creator},#{createTime})
     </insert>
-    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="java.util.HashMap">
+    <select id="list" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from Shop where 1=1
 
-        <if test="where_name != null and where_name.length() > 0">and name like concat('%', #{where_name}, '%')</if>
-        <if test="where_merchId != null and where_merchId.length() > 0">and merchId =#{where_merchId}</if>
+        <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
     </select>
-    <select id="findByShopId" resultType="com.caterbao.lumos.locals.dal.pojo.Shop">
-        select * from Shop
-        where Id=#{shopId}
+    <select id="findByShopId" resultType="com.caterbao.lumos.locals.dal.pojo.Shop" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select  ${fields} from Shop
+        where Id=#{where.ShopId}
     </select>
     <select id="isExistName" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.pojo.Shop">
         select count(*) from Shop where 1=1
