@@ -8,6 +8,7 @@ import com.caterbao.lumos.api.device.rop.model.DeviceBean;
 import com.caterbao.lumos.api.device.service.DeviceService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.DeviceCabinetMapper;
 import com.caterbao.lumos.locals.dal.mapper.DeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.Device;
@@ -37,11 +38,11 @@ public class DeviceServiceImpl implements DeviceService{
         if (StringUtils.isEmpty(rop.getDeviceId()))
             return CustomResult.fail("设备编码为空");
 
-        HashMap<String, String> d_Device_Selective = new HashMap<>();
-        d_Device_Selective.put("fields", "*");
-        d_Device_Selective.put("where_DeviceId", rop.getDeviceId());
+        LumosSelective device_Selective=new LumosSelective();
+        device_Selective.setFields("Id,CurMerchId,CurStoreId,CurShopId");
+        device_Selective.addWhere("DeviceId",rop.getDeviceId());
 
-        Device d_Device = deviceMapper.findByDeviceId(d_Device_Selective);
+        Device d_Device = deviceMapper.findOne(device_Selective);
 
         if (d_Device == null)
             return CustomResult.fail("设备编码未注册");
@@ -64,7 +65,12 @@ public class DeviceServiceImpl implements DeviceService{
 
         deviceMapper.update(d_Device);
 
-        List<DeviceCabinet> d_Cabinets = deviceCabinetMapper.findByDeviceId(rop.getDeviceId());
+
+        LumosSelective cabinet_Selective=new LumosSelective();
+        cabinet_Selective.setFields("Id,CurMerchId,CurStoreId,CurShopId");
+        cabinet_Selective.addWhere("DeviceId",rop.getDeviceId());
+
+        List<DeviceCabinet> d_Cabinets = deviceCabinetMapper.find(cabinet_Selective);
 
         RetDeviceInitData ret = new RetDeviceInitData();
 

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SysMerchUserMapper {
-    SysMerchUser findByUserId(LumosSelective selective);
+    SysMerchUser findOne(LumosSelective selective);
 }

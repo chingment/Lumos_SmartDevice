@@ -34,12 +34,6 @@ public class StoreController extends  BaseController {
         return storeService.init_manage_baseinfo(this.getCurrentUserId(), this.getCurrentMerchId(), id);
     }
 
-    @RequestMapping(value = "edit", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult edit(@RequestBody RopStoreEdit rop) {
-        return storeService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
-    }
-
     @RequestMapping(value = "shops", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult shops(@RequestBody RopStoreShops rop) {

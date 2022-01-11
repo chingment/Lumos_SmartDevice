@@ -5,12 +5,10 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysUserMapper">
 
-    <select id="findByUserName" resultType="com.caterbao.lumos.locals.dal.pojo.SysUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-        select ${fields} from SysUser where SysUser.userName=#{where.UserName}
-    </select>
-
-    <select id="findByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-       select  ${fields} from SysUser where SysUser.id=#{where.UserId}
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.SysUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from SysUser where 1=1
+        <if test="where.UserId != null ">and Id =#{where.UserId}</if>
+        <if test="where.UserName != null ">and UserName =#{where.UserName}</if>
     </select>
 
     <select id="getMenusByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMenu" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">

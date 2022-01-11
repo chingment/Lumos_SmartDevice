@@ -42,13 +42,12 @@ public class OwnServiceImpl implements OwnService {
 
     @Override
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
-        CustomResult result = new CustomResult();
 
         LumosSelective user_Selective=new LumosSelective();
         user_Selective.setFields("Id,UserName,PasswordHash,SecurityStamp");
         user_Selective.addWhere("UserName",rop.getUserName());
 
-        SysUser d_User = sysUserMapper.findByUserName(user_Selective);
+        SysUser d_User = sysUserMapper.findOne(user_Selective);
 
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");
@@ -61,10 +60,10 @@ public class OwnServiceImpl implements OwnService {
             return CustomResult.fail("账号或密码错误");
 
         LumosSelective merchUser_Selective=new LumosSelective();
-        merchUser_Selective.setFields("*");
+        merchUser_Selective.setFields("UserId,MerchId");
         merchUser_Selective.addWhere("UserId",d_User.getId());
 
-        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findByUserId(merchUser_Selective);
+        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(merchUser_Selective);
 
         if (d_SysMerchUser == null)
             return CustomResult.fail("该账号未授权");

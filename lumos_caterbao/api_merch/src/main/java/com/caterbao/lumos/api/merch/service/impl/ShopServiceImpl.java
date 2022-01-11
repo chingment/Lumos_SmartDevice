@@ -40,7 +40,7 @@ public class ShopServiceImpl implements ShopService {
         selective.addWhere("Name",rop.getShopName());
         selective.addWhere("MerchId",merchId);
 
-        List<Shop> d_Shops = shopMapper.list(selective);
+        List<Shop> d_Shops = shopMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setMerchId(merchId);
         d_Shop.setName(rop.getName());
 
-        if(shopMapper.isExistName(d_Shop)>0)
+        if(shopMapper.isExistName(null,merchId,rop.getName())>0)
             return CustomResult.fail("名称已经存在");
 
         d_Shop.setId(IdWork.generateGUID());
@@ -103,15 +103,15 @@ public class ShopServiceImpl implements ShopService {
     public CustomResult init_edit(String operater, String merchId, String shopId) {
 
         LumosSelective selective=new LumosSelective();
-        selective.setFields("*");
+        selective.setFields("Id,Name,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
         selective.addWhere("ShopId",shopId);
         selective.addWhere("MerchId",merchId);
 
-        Shop d_Shop = shopMapper.findByShopId(selective);
+        Shop d_Shop = shopMapper.findOne(selective);
 
-        if(d_Shop==null)
+        if (d_Shop == null)
            return CustomResult.fail("初始失败");
-
+        
         HashMap<String,Object> ret=new HashMap<>();
 
         ret.put("id",d_Shop.getId());
@@ -133,7 +133,7 @@ public class ShopServiceImpl implements ShopService {
         selective.addWhere("ShopId",rop.getId());
         selective.addWhere("MerchId",merchId);
 
-        Shop d_Shop = shopMapper.findByShopId(selective);
+        Shop d_Shop = shopMapper.findOne(selective);
 
         if (d_Shop == null)
             return CustomResult.fail("数据不存在");
@@ -142,7 +142,7 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setName(rop.getName());
         d_Shop.setMerchId(merchId);
 
-        if(shopMapper.isExistName(d_Shop)>0)
+        if(shopMapper.isExistName(d_Shop.getId(),merchId,rop.getName())>0)
             return CustomResult.fail("名称已经存在");
 
         d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));

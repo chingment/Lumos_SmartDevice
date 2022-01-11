@@ -36,7 +36,7 @@ public class OwnServiceImpl implements OwnService {
         selective.setFields("Id,PasswordHash,SecurityStamp");
         selective.addWhere("UserName",rop.getUserName());
 
-        SysUser d_User = sysUserMapper.findByUserName(selective);
+        SysUser d_User = sysUserMapper.findOne(selective);
 
         if (d_User == null)
             return CustomResult.fail("账号或密码错误");
@@ -67,7 +67,11 @@ public class OwnServiceImpl implements OwnService {
 
         RetOwnGetInfo ret = new RetOwnGetInfo();
 
-        SysUser d_User = sysUserMapper.findByUserId(rop.getUserId());
+        LumosSelective user_Selective=new LumosSelective();
+        user_Selective.setFields("Id,UserName,FullName,Avatar");
+        user_Selective.addWhere("UserId",rop.getUserId());
+
+        SysUser d_User = sysUserMapper.findOne(user_Selective);
 
         if (d_User == null)
             return CustomResult.fail("信息不存在");
@@ -83,7 +87,11 @@ public class OwnServiceImpl implements OwnService {
     @Override
     public CustomResult saveInfo(String operater, RopOwnSaveInfo rop) {
 
-        SysUser d_User = sysUserMapper.findByUserId(rop.getUserId());
+        LumosSelective user_Selective=new LumosSelective();
+        user_Selective.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
+        user_Selective.addWhere("UserId",rop.getUserName());
+
+        SysUser d_User = sysUserMapper.findOne(user_Selective);
 
         if (d_User == null)
             return CustomResult.fail("信息不存在");

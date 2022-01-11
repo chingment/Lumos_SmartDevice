@@ -53,7 +53,7 @@ public class StoreServiceImpl implements StoreService {
         selective.addWhere("Name",rop.getStoreName());
         selective.addWhere("MerchId",merchId);
 
-        List<Store> d_Stores = storeMapper.list(selective);
+        List<Store> d_Stores = storeMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -87,11 +87,10 @@ public class StoreServiceImpl implements StoreService {
 
 
         LumosSelective selective=new LumosSelective();
-        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.setFields("Id,Name");
         selective.addWhere("MerchId",merchId);
 
-
-        List<Store> d_Stores = storeMapper.list(selective);
+        List<Store> d_Stores = storeMapper.find(selective);
 
         List<Object> m_Stores = new ArrayList<>();
 
@@ -115,10 +114,10 @@ public class StoreServiceImpl implements StoreService {
     public CustomResult init_manage_baseinfo(String operater, String merchId, String storeId) {
 
         LumosSelective selective=new LumosSelective();
-        selective.setFields("*");
-        selective.addWhere("StoreId",merchId);
-
-        Store d_Store = storeMapper.findByStoreId(selective);
+        selective.setFields("Id,Name,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",storeId);
+        Store d_Store = storeMapper.findOne(selective);
 
         if(d_Store==null)
             return CustomResult.fail("初始失败");
@@ -135,40 +134,6 @@ public class StoreServiceImpl implements StoreService {
 
         return CustomResult.success("初始成功",ret);
 
-    }
-
-    @Override
-    public CustomResult edit(String operater, String merchId, RopStoreEdit rop) {
-
-        LumosSelective selective=new LumosSelective();
-        selective.setFields("*");
-        selective.addWhere("StoreId",merchId);
-
-        Store d_Store = storeMapper.findByStoreId(selective);
-
-        if (d_Store == null)
-            return CustomResult.fail("数据不存在");
-
-
-        d_Store.setName(rop.getName());
-        d_Store.setMerchId(merchId);
-
-        //if(storeMapper.isExistName(d_Store)>0)
-        //    return CustomResult.fail("名称已经存在");
-
-        d_Store.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
-
-        d_Store.setContactName(rop.getContactName());
-        d_Store.setContactPhone(rop.getContactPhone());
-        d_Store.setContactAddress(rop.getContactAddress());
-        d_Store.setMender(operater);
-        d_Store.setMendTime(CommonUtil.getDateTimeNow());
-
-        long isflag = storeMapper.update(d_Store);
-        if (isflag>0)
-            return CustomResult.success("保存成功");
-
-        return CustomResult.success("保存失败");
     }
 
     @Override
@@ -294,7 +259,7 @@ public class StoreServiceImpl implements StoreService {
         Page<?> page =PageHelper.startPage(pageNum, pageSize);
 
         LumosSelective selective=new LumosSelective();
-
+        selective.setFields("*");
         selective.addWhere("MerchId",merchId);
         selective.addWhere("StoreId",rop.getStoreId());
         selective.addWhere("ShopId",rop.getShopId());

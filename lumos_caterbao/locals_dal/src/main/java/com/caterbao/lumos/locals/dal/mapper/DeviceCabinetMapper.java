@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface DeviceCabinetMapper {
-    List<DeviceCabinet> findByDeviceId(LumosSelective selective);
+    List<DeviceCabinet> find(LumosSelective selective);
 }
