@@ -30,6 +30,7 @@ select count(Id) from ShopDevice where 1=1
         and storeId =#{where.StoreId}
         and shopId =#{where.ShopId}
         )
+        <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.Id like concat('%', #{where.DeviceCode}, '%') or b.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>
 
     </select>
 
@@ -41,6 +42,9 @@ select count(Id) from ShopDevice where 1=1
 			 not exists(select 1 from ShopDevice where  merchId =#{where.MerchId}
 			and DeviceId=a.Id and BindStatus=1
 			)
+
+        <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.Id like concat('%', #{where.DeviceCode}, '%') or b.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>
+
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.ShopDevice">

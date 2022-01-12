@@ -1,5 +1,6 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
+import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
 import com.caterbao.lumos.api.merch.rop.RopProductListBySpu;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -30,5 +31,13 @@ public class ProductServiceImpl implements ProductService {
         List<PrdSpu> sysMenus = productMapper.getSpus();
 
         return result;
+    }
+
+    @Override
+    public CustomResult add(String operater, String merchId, RopProdcutAdd rop) {
+        CustomResult result = new CustomResult();
+
+
+        return CustomResult.success("保存成功");
     }
 }

@@ -22,6 +22,12 @@ public class ShopController extends  BaseController {
         return shopService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
+    @RequestMapping(value = "details", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult details(@RequestParam String id) {
+        return shopService.details(this.getCurrentUserId(), this.getCurrentMerchId(), id);
+    }
+
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult add(@RequestBody RopShopAdd rop) {

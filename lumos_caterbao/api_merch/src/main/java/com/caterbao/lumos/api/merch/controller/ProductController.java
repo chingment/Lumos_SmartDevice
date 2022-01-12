@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
 
+import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
 import com.caterbao.lumos.api.merch.rop.RopProductListBySpu;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -23,5 +24,11 @@ public class ProductController extends  BaseController {
     @ResponseBody
     public CustomResult listBySpu(@RequestBody RopProductListBySpu rop) {
         return productService.listBySpu(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult add(@RequestBody RopProdcutAdd rop) {
+        return productService.add(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

@@ -73,6 +73,30 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public CustomResult details(String operater, String merchId, String shopId) {
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
+        selective.addWhere("ShopId",shopId);
+        selective.addWhere("MerchId",merchId);
+
+        Shop d_Shop = shopMapper.findOne(selective);
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+        ret.put("id",d_Shop.getId());
+        ret.put("name",d_Shop.getName());
+
+        ret.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
+        ret.put("contactName",d_Shop.getContactName());
+        ret.put("contactPhone",d_Shop.getContactPhone());
+        ret.put("contactAddress",d_Shop.getContactAddress());
+
+        return CustomResult.success("",ret);
+
+    }
+
+    @Override
     public CustomResult add(String operater, String merchId, RopShopAdd rop) {
 
         if(StringUtils.isEmpty(merchId))
@@ -178,8 +202,7 @@ public class ShopServiceImpl implements ShopService {
         selective.addWhere("MerchId",merchId);
         selective.addWhere("StoreId",rop.getStoreId());
         selective.addWhere("ShopId",rop.getShopId());
-        selective.addWhere("DeviceId",rop.getDeviceId());
-        selective.addWhere("DeviceCumCode",rop.getDeviceCumCode());
+        selective.addWhere("DeviceCode",rop.getDeviceCode());
 
         List<MerchDeviceVw> d_Devices = shopDeviceMapper.getBindDevices(selective);
 
@@ -220,7 +243,7 @@ public class ShopServiceImpl implements ShopService {
         selective.addWhere("MerchId",merchId);
         selective.addWhere("StoreId",rop.getStoreId());
         selective.addWhere("ShopId",rop.getShopId());
-        //selective.addWhere("DeviceCode",rop.getDeviceCode());
+        selective.addWhere("DeviceCode",rop.getDeviceCode());
 
         List<MerchDeviceVw> d_Devices = shopDeviceMapper.getUnBindDevices(selective);
 

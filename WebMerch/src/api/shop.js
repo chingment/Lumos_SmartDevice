@@ -8,6 +8,14 @@ export function list(data) {
   })
 }
 
+export function details(params) {
+  return request({
+    url: '/shop/details',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     url: '/shop/add',
@@ -67,6 +75,7 @@ export function unBindDevice(data) {
 export default {
   list: list,
   add: add,
+  details: details,
   init_edit: init_edit,
   edit: edit,
   devices: devices,

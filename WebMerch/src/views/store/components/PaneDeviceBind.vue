@@ -4,8 +4,9 @@
 
       <el-row :gutter="16">
         <el-col :span="8" :xs="24" style="margin-bottom:20px">
-          <el-input v-model="listQueryByDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码" class="filter-item" />
+          <el-input v-model="listQueryByDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
         </el-col>
+
         <el-col :span="8" :xs="24" style="margin-bottom:20px">
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilterByDevices">
             查询
@@ -15,7 +16,11 @@
           </el-button>
         </el-col>
       </el-row>
-
+    </div>
+    <div class="cur-tab">
+      <div class="it-name">
+        <span class="title">当前门店:</span><span class="name">{{ shopDetails.name }}</span>
+      </div>
     </div>
     <el-table
       :key="listKeyByDevices"
@@ -56,7 +61,7 @@
         <div class="filter-container">
           <el-row :gutter="16">
             <el-col :span="8" :xs="24" style="margin-bottom:20px">
-              <el-input v-model="listQueryByUnDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码" class="filter-item" />
+              <el-input v-model="listQueryByUnDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
             </el-col>
             <el-col :span="8" :xs="24" style="margin-bottom:20px">
               <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onUnDevices">
@@ -66,6 +71,13 @@
           </el-row>
 
         </div>
+
+        <div class="cur-tab">
+          <div class="it-name">
+            <span class="title">当前门店:</span><span class="name">{{ shopDetails.name }}</span>
+          </div>
+        </div>
+
         <el-table
           :key="listKeyByUnDevices"
           v-loading="loadingByUnDevices"
@@ -106,7 +118,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { devices, unDevices, bindDevice, unBindDevice } from '@/api/shop'
+import { details as shopDetails, devices, unDevices, bindDevice, unBindDevice } from '@/api/shop'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -160,6 +172,7 @@ export default {
         totalPages: 0,
         totalSize: 0
       },
+      shopDetails: { name: '' },
       dialogVisibleByUnDevices: false,
       isDesktop: this.$store.getters.isDesktop
     }
@@ -175,9 +188,19 @@ export default {
     this.listQueryByUnDevices.shopId = this.shopId
     this.listQueryByDevices.storeId = this.storeId
     this.listQueryByDevices.shopId = this.shopId
+    this.onShopDetails()
     this.onDevices()
   },
   methods: {
+    onShopDetails() {
+      this.loadingByDevices = true
+      shopDetails({ storeId: this.storeId, id: this.shopId }).then(res => {
+        if (res.code === this.$code_suc) {
+          this.shopDetails = res.data
+        }
+        this.loadingByDevices = false
+      })
+    },
     onDevices() {
       this.loadingByDevices = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQueryByDevices })
