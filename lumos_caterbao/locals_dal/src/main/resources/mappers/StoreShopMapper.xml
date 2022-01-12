@@ -36,7 +36,7 @@
   values(#{id},#{merchId},#{storeId},#{shopId},#{bindStatus},#{creator},#{createTime})
     </insert>
 
-    <insert id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.StoreShop">
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.StoreShop">
         update StoreShop
         <set>
             <if test="bindStatus != null">bindStatus=#{bindStatus},</if>
@@ -46,6 +46,6 @@
         where  MerchId =#{merchId} and StoreId =#{storeId}
         and ShopId =#{shopId}
 
-    </insert>
+    </update>
 
 </mapper>

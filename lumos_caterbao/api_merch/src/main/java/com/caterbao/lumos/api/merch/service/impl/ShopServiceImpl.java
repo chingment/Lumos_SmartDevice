@@ -120,9 +120,9 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setCreator(operater);
         d_Shop.setCreateTime(CommonUtil.getDateTimeNow());
 
-        long isFlag = shopMapper.insert(d_Shop);
+        long r_Shop_Insert = shopMapper.insert(d_Shop);
 
-        if(isFlag>0)
+        if(r_Shop_Insert>0)
             return CustomResult.success("保存成功");
 
         return CustomResult.success("保存失败");
@@ -182,8 +182,8 @@ public class ShopServiceImpl implements ShopService {
         d_Shop.setMender(operater);
         d_Shop.setMendTime(CommonUtil.getDateTimeNow());
 
-        long isflag = shopMapper.update(d_Shop);
-        if (isflag>0)
+        long r_Shop_Update = shopMapper.update(d_Shop);
+        if (r_Shop_Update>0)
             return CustomResult.success("保存成功");
 
         return CustomResult.success("保存失败");

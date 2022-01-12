@@ -10,5 +10,20 @@
         select * from PrdSpu
     </select>
 
+    <select id="isExistCumCode" resultType="java.lang.Long">
+        select count(*) from PrdSpu where 1=1
+        <if test="id != null and id.length() > 0"> and id!=#{id} </if>
+        <if test="cumCode != null and cumCode.length() > 0"> and cumCode=#{cumCode} </if>
+        <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
+    </select>
+
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSpu">
+  insert into PrdSpu(id,name,merchId,cumCode,kindId1,
+  kindId2,kindId3,pyIdx,charTags,isDelete,specItems,displayImgUrls,briefDes,detailsDes,creator,createTime)
+  values(#{id},#{name},#{merchId},#{cumCode},#{kindId1},
+  #{kindId2},#{kindId3},#{pyIdx},#{charTags},#{isDelete},#{specItems},#{displayImgUrls},#{briefDes}
+  ,#{detailsDes},#{creator},#{createTime}
+  )
+    </insert>
 
 </mapper>

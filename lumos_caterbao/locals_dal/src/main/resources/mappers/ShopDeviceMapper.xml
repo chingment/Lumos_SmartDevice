@@ -52,7 +52,7 @@ select count(Id) from ShopDevice where 1=1
   values(#{id},#{merchId},#{storeId},#{shopId},#{deviceId},#{bindStatus},#{creator},#{createTime})
     </insert>
 
-    <insert id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.ShopDevice">
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.ShopDevice">
         update ShopDevice
         <set>
             <if test="bindStatus != null">bindStatus=#{bindStatus},</if>
@@ -62,6 +62,6 @@ select count(Id) from ShopDevice where 1=1
         where  MerchId =#{merchId} and StoreId =#{storeId}
         and ShopId =#{shopId} and DeviceId =#{deviceId}
 
-    </insert>
+    </update>
 
 </mapper>

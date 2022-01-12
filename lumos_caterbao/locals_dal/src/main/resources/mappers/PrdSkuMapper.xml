@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper">
+
+
+    <select id="isExistCumCode" resultType="java.lang.Long">
+        select count(*) from PrdSku where 1=1
+        <if test="id != null and id.length() > 0"> and id!=#{id} </if>
+        <if test="cumCode != null and cumCode.length() > 0"> and cumCode=#{cumCode} </if>
+        <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
+    </select>
+
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSku">
+  insert into PrdSku(id,spuId,name,merchId,cumCode,barCode,
+  pyIdx,salePrice,specDes,specIdx,isDelete,creator,createTime)
+  values(#{id},#{spuId},#{name},#{merchId},#{cumCode},#{barCode},
+  #{pyIdx},#{salePrice},#{specDes},#{specIdx},#{isDelete},#{creator},#{createTime}
+  )
+    </insert>
+
+</mapper>

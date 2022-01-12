@@ -116,7 +116,7 @@ public class StoreServiceImpl implements StoreService {
         selective.addWhere("StoreId",storeId);
         Store d_Store = storeMapper.findOne(selective);
 
-        if(d_Store==null)
+        if(d_Store == null)
             return CustomResult.fail("初始失败");
 
         HashMap<String,Object> ret=new HashMap<>();

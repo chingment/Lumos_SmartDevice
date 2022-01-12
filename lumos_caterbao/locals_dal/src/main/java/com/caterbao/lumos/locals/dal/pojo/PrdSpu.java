@@ -5,12 +5,18 @@ import java.sql.Timestamp;
 public class PrdSpu {
     private String id;
     private String merchId;
+    private String cumCode;
+    private int kindId1;
+    private int kindId2;
+    private int kindId3;
     private String name;
     private String pyIdx;
     private String charTags;
     private Boolean isDelete;
+    private String specItems;
     private String displayImgUrls;
-    private String itemCode;
+    private String briefDes;
+    private String detailsDes;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -30,6 +36,38 @@ public class PrdSpu {
 
     public void setMerchId(String merchId) {
         this.merchId = merchId;
+    }
+
+    public String getCumCode() {
+        return cumCode;
+    }
+
+    public void setCumCode(String cumCode) {
+        this.cumCode = cumCode;
+    }
+
+    public int getKindId1() {
+        return kindId1;
+    }
+
+    public void setKindId1(int kindId1) {
+        this.kindId1 = kindId1;
+    }
+
+    public int getKindId2() {
+        return kindId2;
+    }
+
+    public void setKindId2(int kindId2) {
+        this.kindId2 = kindId2;
+    }
+
+    public int getKindId3() {
+        return kindId3;
+    }
+
+    public void setKindId3(int kindId3) {
+        this.kindId3 = kindId3;
     }
 
     public String getName() {
@@ -64,6 +102,14 @@ public class PrdSpu {
         isDelete = delete;
     }
 
+    public String getSpecItems() {
+        return specItems;
+    }
+
+    public void setSpecItems(String specItems) {
+        this.specItems = specItems;
+    }
+
     public String getDisplayImgUrls() {
         return displayImgUrls;
     }
@@ -72,12 +118,20 @@ public class PrdSpu {
         this.displayImgUrls = displayImgUrls;
     }
 
-    public String getItemCode() {
-        return itemCode;
+    public String getBriefDes() {
+        return briefDes;
     }
 
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
+    public void setBriefDes(String briefDes) {
+        this.briefDes = briefDes;
+    }
+
+    public String getDetailsDes() {
+        return detailsDes;
+    }
+
+    public void setDetailsDes(String detailsDes) {
+        this.detailsDes = detailsDes;
     }
 
     public String getCreator() {

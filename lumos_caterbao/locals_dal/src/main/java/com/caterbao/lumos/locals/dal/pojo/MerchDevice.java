@@ -7,8 +7,7 @@ public class MerchDevice {
     private String merchId;
     private String deviceId;
     private String cumCode;
-    private String curStoreId;
-    private String curShopId;
+    private int bindStatus;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -46,20 +45,12 @@ public class MerchDevice {
         this.cumCode = cumCode;
     }
 
-    public String getCurStoreId() {
-        return curStoreId;
+    public int getBindStatus() {
+        return bindStatus;
     }
 
-    public void setCurStoreId(String curStoreId) {
-        this.curStoreId = curStoreId;
-    }
-
-    public String getCurShopId() {
-        return curShopId;
-    }
-
-    public void setCurShopId(String curShopId) {
-        this.curShopId = curShopId;
+    public void setBindStatus(int bindStatus) {
+        this.bindStatus = bindStatus;
     }
 
     public String getCreator() {
