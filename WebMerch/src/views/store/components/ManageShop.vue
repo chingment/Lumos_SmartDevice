@@ -15,7 +15,7 @@
             <div class="img"> <img :src="item.imgUrl" alt=""> </div>
             <div class="describe">
               <ul>
-                <li><el-button type="text" @click="onDialogOpenByDevice(item)">0台设备</el-button></li>
+                <li><el-button type="text" @click="onDialogOpenByDevice(item)">{{ item.deviceCount }}台设备</el-button></li>
               </ul>
             </div>
           </div>

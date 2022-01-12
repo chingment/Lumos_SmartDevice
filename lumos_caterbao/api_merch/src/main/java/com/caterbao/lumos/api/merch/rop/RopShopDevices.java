@@ -2,10 +2,11 @@ package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.locals.common.BasePageRequest;
 
-public class RopStoreDevices extends BasePageRequest {
+public class RopShopDevices extends BasePageRequest {
     private String storeId;
     private String shopId;
-    private String deviceCode;
+    private String deviceId;
+    private String deviceCumCode;
 
     public String getStoreId() {
         return storeId;
@@ -23,11 +24,19 @@ public class RopStoreDevices extends BasePageRequest {
         this.shopId = shopId;
     }
 
-    public String getDeviceCode() {
-        return deviceCode;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDeviceCode(String deviceCode) {
-        this.deviceCode = deviceCode;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceCumCode() {
+        return deviceCumCode;
+    }
+
+    public void setDeviceCumCode(String deviceCumCode) {
+        this.deviceCumCode = deviceCumCode;
     }
 }

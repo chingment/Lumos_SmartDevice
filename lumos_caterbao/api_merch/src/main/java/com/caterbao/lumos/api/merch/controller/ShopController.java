@@ -1,8 +1,6 @@
 package com.caterbao.lumos.api.merch.controller;
 
-import com.caterbao.lumos.api.merch.rop.RopShopAdd;
-import com.caterbao.lumos.api.merch.rop.RopShopEdit;
-import com.caterbao.lumos.api.merch.rop.RopShopList;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +38,29 @@ public class ShopController extends  BaseController {
     @ResponseBody
     public CustomResult edit(@RequestBody RopShopEdit rop) {
         return shopService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "devices", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult devices(@RequestBody RopShopDevices rop) {
+        return shopService.devices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "unDevices", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult unDevices(@RequestBody RopShopDevices rop) {
+        return shopService.unDevices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "bindDevice", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult bindDevice(@RequestBody RopShopBindDevice rop) {
+        return shopService.bindDevice(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "unBindDevice", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult unBindDevice(@RequestBody RopShopBindDevice rop) {
+        return shopService.unBindDevice(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

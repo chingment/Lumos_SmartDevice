@@ -9,9 +9,10 @@ import java.util.List;
 
 @Repository
 public interface StoreShopMapper {
+    StoreShop findOne(LumosSelective selective);
     List<Shop> getBindShops(LumosSelective selective);
     List<Shop> getUnBindShops(LumosSelective selective);
     long isExist(StoreShop storeShop);
     long insert(StoreShop storeShop);
-    long delete(StoreShop storeShop);
+    long update(StoreShop storeShop);
 }

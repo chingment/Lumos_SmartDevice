@@ -32,12 +32,12 @@
       </el-table-column>
       <el-table-column label="设备编码" align="left" min-width="30%">
         <template slot-scope="scope">
-          <span>{{ scope.row.code }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="门店" align="left" min-width="70%">
+      <el-table-column label="自编码" align="left" min-width="70%">
         <template slot-scope="scope">
-          <span>{{ scope.row.shopName }}</span>
+          <span>{{ scope.row.cumCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="right" width="200" class-name="small-padding fixed-width">
@@ -79,9 +79,14 @@
               <span>{{ scope.$index+1 }} </span>
             </template>
           </el-table-column>
-          <el-table-column label="编码" align="left" min-width="45%">
+          <el-table-column label="设备编码" align="left" min-width="45%">
             <template slot-scope="scope">
-              <span>{{ scope.row.code }}</span>
+              <span>{{ scope.row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="自编码" align="left" min-width="45%">
+            <template slot-scope="scope">
+              <span>{{ scope.row.cumCode }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="right" width="100" class-name="small-padding fixed-width">
@@ -101,7 +106,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { devices, unDevices, bindDevice, unBindDevice } from '@/api/store'
+import { devices, unDevices, bindDevice, unBindDevice } from '@/api/shop'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -210,7 +215,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        unBindDevice({ deviceId: item.id, storeId: item.storeId, shopId: item.shopId }).then(res => {
+        unBindDevice({ deviceId: item.id, storeId: this.storeId, shopId: this.shopId }).then(res => {
           if (res.code === this.$code_suc) {
             this.$message.success(res.msg)
             this.onDevices()

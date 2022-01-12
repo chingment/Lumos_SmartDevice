@@ -57,28 +57,4 @@ public class StoreController extends  BaseController {
     public CustomResult unBindShop(@RequestBody RopStoreBindShop rop) {
         return storeService.unBindShop(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
-
-    @RequestMapping(value = "devices", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult devices(@RequestBody RopStoreDevices rop) {
-        return storeService.devices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
-    }
-
-    @RequestMapping(value = "unDevices", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult unDevices(@RequestBody RopStoreDevices rop) {
-        return storeService.unDevices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
-    }
-
-    @RequestMapping(value = "bindDevice", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult bindDevice(@RequestBody RopStoreBindDevice rop) {
-        return storeService.bindDevice(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
-    }
-
-    @RequestMapping(value = "unBindDevice", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult unBindDevice(@RequestBody RopStoreBindDevice rop) {
-        return storeService.unBindDevice(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
-    }
 }

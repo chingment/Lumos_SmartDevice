@@ -1,20 +1,22 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import com.caterbao.lumos.api.merch.rop.RopShopAdd;
-import com.caterbao.lumos.api.merch.rop.RopShopEdit;
-import com.caterbao.lumos.api.merch.rop.RopShopList;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
+import com.caterbao.lumos.locals.dal.mapper.ShopDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
+import com.caterbao.lumos.locals.dal.pojo.ShopDevice;
+import com.caterbao.lumos.locals.dal.pojo.StoreShop;
+import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Autowired
+    private ShopDeviceMapper shopDeviceMapper;
 
     @Override
     public CustomResult list(String operater, String merchId, RopShopList rop) {
@@ -158,5 +163,142 @@ public class ShopServiceImpl implements ShopService {
             return CustomResult.success("保存成功");
 
         return CustomResult.success("保存失败");
+    }
+
+    @Override
+    public CustomResult devices(String operater, String merchId, RopShopDevices rop) {
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        Page<?> page =PageHelper.startPage(pageNum, pageSize);
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+        selective.addWhere("ShopId",rop.getShopId());
+        selective.addWhere("DeviceId",rop.getDeviceId());
+        selective.addWhere("DeviceCumCode",rop.getDeviceCumCode());
+
+        List<MerchDeviceVw> d_Devices = shopDeviceMapper.getBindDevices(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (MerchDeviceVw d_Device:
+                d_Devices ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_Device.getId());
+            item.put("cumCode", d_Device.getCumCode());
+
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return CustomResult.success("",ret);
+
+    }
+
+    @Override
+    public CustomResult unDevices(String operater, String merchId, RopShopDevices rop) {
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        Page<?> page =PageHelper.startPage(pageNum, pageSize);
+
+        LumosSelective selective=new LumosSelective();
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+        selective.addWhere("ShopId",rop.getShopId());
+        //selective.addWhere("DeviceCode",rop.getDeviceCode());
+
+        List<MerchDeviceVw> d_Devices = shopDeviceMapper.getUnBindDevices(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (MerchDeviceVw d_Device:
+                d_Devices ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_Device.getId());
+            item.put("cumCode", d_Device.getCumCode());
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return CustomResult.success("",ret);
+
+    }
+
+    @Override
+    @Transactional
+    public CustomResult bindDevice(String operater, String merchId, RopShopBindDevice rop) {
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("StoreId",rop.getStoreId());
+        selective.addWhere("ShopId",rop.getShopId());
+        selective.addWhere("DeviceId",rop.getDeviceId());
+
+        ShopDevice d_ShopDevice=shopDeviceMapper.findOne(selective);
+
+        if(d_ShopDevice==null) {
+            d_ShopDevice = new ShopDevice();
+            d_ShopDevice.setId(IdWork.generateGUID());
+            d_ShopDevice.setMerchId(merchId);
+            d_ShopDevice.setStoreId(rop.getStoreId());
+            d_ShopDevice.setShopId(rop.getShopId());
+            d_ShopDevice.setDeviceId(rop.getDeviceId());
+            d_ShopDevice.setBindStatus(1);
+            d_ShopDevice.setCreator(operater);
+            d_ShopDevice.setCreateTime(CommonUtil.getDateTimeNow());
+            shopDeviceMapper.insert(d_ShopDevice);
+        }
+        else {
+            d_ShopDevice.setBindStatus(1);
+            d_ShopDevice.setMender(operater);
+            d_ShopDevice.setMendTime(CommonUtil.getDateTimeNow());
+            shopDeviceMapper.update(d_ShopDevice);
+        }
+
+        return CustomResult.success("绑定成功");
+
+    }
+
+    @Override
+    @Transactional
+    public CustomResult unBindDevice(String operater, String merchId, RopShopBindDevice rop) {
+
+        ShopDevice d_ShopDevice = new ShopDevice();
+        d_ShopDevice.setMerchId(merchId);
+        d_ShopDevice.setStoreId(rop.getStoreId());
+        d_ShopDevice.setShopId(rop.getShopId());
+        d_ShopDevice.setDeviceId(rop.getDeviceId());
+        d_ShopDevice.setBindStatus(2);
+        d_ShopDevice.setMender(operater);
+        d_ShopDevice.setMendTime(CommonUtil.getDateTimeNow());
+        shopDeviceMapper.update(d_ShopDevice);
+
+        return CustomResult.success("解绑成功");
+
     }
 }

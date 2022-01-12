@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-public class RopStoreBindDevice {
+public class RopShopBindDevice {
     private String storeId;
     private String shopId;
     private String deviceId;

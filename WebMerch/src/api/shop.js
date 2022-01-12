@@ -32,9 +32,45 @@ export function edit(data) {
   })
 }
 
+export function devices(data) {
+  return request({
+    url: '/shop/devices',
+    method: 'post',
+    data
+  })
+}
+
+export function unDevices(data) {
+  return request({
+    url: '/shop/unDevices',
+    method: 'post',
+    data
+  })
+}
+
+export function bindDevice(data) {
+  return request({
+    url: '/shop/bindDevice',
+    method: 'post',
+    data
+  })
+}
+
+export function unBindDevice(data) {
+  return request({
+    url: '/shop/unBindDevice',
+    method: 'post',
+    data
+  })
+}
+
 export default {
   list: list,
   add: add,
   init_edit: init_edit,
-  edit: edit
+  edit: edit,
+  devices: devices,
+  unDevices: unDevices,
+  bindDevice: bindDevice,
+  unBindDevice: unBindDevice
 }

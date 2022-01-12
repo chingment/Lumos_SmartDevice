@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.ShopDeviceMapper">
+
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.ShopDevice" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from ShopDevice where 1=1
+        <if test="where.MerchId != null ">and MerchId =#{where.MerchId}</if>
+        <if test="where.StoreId != null ">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null ">and ShopId =#{where.ShopId}</if>
+        <if test="where.DeviceId != null ">and DeviceId =#{where.DeviceId}</if>
+    </select>
+
+    <select id="count" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+select count(Id) from ShopDevice where 1=1
+        <if test="where.MerchId != null ">and MerchId =#{where.MerchId}</if>
+        <if test="where.StoreId != null ">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null ">and ShopId =#{where.ShopId}</if>
+        <if test="where.BindStatus != null ">and BindStatus =#{where.BindStatus}</if>
+    </select>
+
+    <select id="getBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+        select a.Id ,b.CumCode
+        from Device as a left join MerchDevice  as b on a.Id=b.DeviceId
+        where 1=1 and merchId =#{where.MerchId}
+        and a.id in (
+        select DeviceId from ShopDevice where 1=1 and BindStatus=1
+        and merchId =#{where.MerchId}
+        and storeId =#{where.StoreId}
+        and shopId =#{where.ShopId}
+        )
+
+    </select>
+
+    <select id="getUnBindDevices" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+    select a.Id ,b.CumCode
+        from Device as a left join MerchDevice  as b on a.Id=b.DeviceId
+        where 1=1 and b.merchId =#{where.MerchId}
+        	and
+			 not exists(select 1 from ShopDevice where  merchId =#{where.MerchId}
+			and DeviceId=a.Id and BindStatus=1
+			)
+    </select>
+
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.ShopDevice">
+  insert into ShopDevice(id,merchId,storeId,shopId,deviceId,bindStatus,creator,createTime)
+  values(#{id},#{merchId},#{storeId},#{shopId},#{deviceId},#{bindStatus},#{creator},#{createTime})
+    </insert>
+
+    <insert id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.ShopDevice">
+        update ShopDevice
+        <set>
+            <if test="bindStatus != null">bindStatus=#{bindStatus},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where  MerchId =#{merchId} and StoreId =#{storeId}
+        and ShopId =#{shopId} and DeviceId =#{deviceId}
+
+    </insert>
+
+</mapper>

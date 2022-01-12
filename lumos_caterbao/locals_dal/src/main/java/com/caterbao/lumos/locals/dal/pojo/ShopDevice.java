@@ -2,11 +2,13 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class StoreShop {
+public class ShopDevice {
+
     private String id;
     private String merchId;
     private String storeId;
     private String shopId;
+    private String deviceId;
     private int bindStatus;
     private String creator;
     private Timestamp createTime;
@@ -45,6 +47,22 @@ public class StoreShop {
         this.shopId = shopId;
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public int getBindStatus() {
+        return bindStatus;
+    }
+
+    public void setBindStatus(int bindStatus) {
+        this.bindStatus = bindStatus;
+    }
+
     public String getCreator() {
         return creator;
     }
@@ -75,13 +93,5 @@ public class StoreShop {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
-    }
-
-    public int getBindStatus() {
-        return bindStatus;
-    }
-
-    public void setBindStatus(int bindStatus) {
-        this.bindStatus = bindStatus;
     }
 }
