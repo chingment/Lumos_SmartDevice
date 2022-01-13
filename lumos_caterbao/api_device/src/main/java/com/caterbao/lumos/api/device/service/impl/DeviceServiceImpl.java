@@ -1,6 +1,5 @@
 package com.caterbao.lumos.api.device.service.impl;
 
-import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
 import com.caterbao.lumos.api.device.rop.model.CabinetBean;
@@ -16,7 +15,6 @@ import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class DeviceServiceImpl implements DeviceService{
         if (rop == null)
             return CustomResult.fail("初始化数据对象为空");
 
-        if (StringUtils.isEmpty(rop.getDeviceId()))
+        if (CommonUtil.isEmpty(rop.getDeviceId()))
             return CustomResult.fail("设备编码为空");
 
         LumosSelective device_Selective=new LumosSelective();
@@ -47,14 +45,14 @@ public class DeviceServiceImpl implements DeviceService{
         if (d_Device == null)
             return CustomResult.fail("设备编码未注册");
 
-        if (StringUtils.isEmpty(d_Device.getCurMerchId()))
-            return CustomResult.fail("设备未绑定商户");
-
-        if (StringUtils.isEmpty(d_Device.getCurStoreId()))
-            return CustomResult.fail("设备未绑定店铺");
-
-        if (StringUtils.isEmpty(d_Device.getCurShopId()))
-            return CustomResult.fail("设备未绑定门店");
+//        if (CommonUtil.isEmpty(d_Device.getCurMerchId()))
+//            return CustomResult.fail("设备未绑定商户");
+//
+//        if (CommonUtil.isEmpty(d_Device.getCurStoreId()))
+//            return CustomResult.fail("设备未绑定店铺");
+//
+//        if (CommonUtil.isEmpty(d_Device.getCurShopId()))
+//            return CustomResult.fail("设备未绑定门店");
 
 
         d_Device.setAppVerCode(rop.getAppVerCode());

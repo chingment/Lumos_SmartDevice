@@ -5,8 +5,8 @@
         <el-menu router :default-active="navActive">
           <el-menu-item-group>
             <template slot="title">设备</template>
-            <el-menu-item index="/device/booker">智能书柜</el-menu-item>
-            <el-menu-item index="/device/locker">智能储物柜</el-menu-item>
+            <el-menu-item index="/device/bookers">智能书柜</el-menu-item>
+            <el-menu-item index="/device/lockers">智能储物柜</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>

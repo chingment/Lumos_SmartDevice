@@ -1,10 +1,10 @@
 package com.caterbao.lumos.api.merch.controller;
 
+import com.caterbao.lumos.locals.common.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import com.alibaba.druid.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class BaseController {
         if (request != null) {
             String token = request.getHeader("Token");
 
-            if(StringUtils.isEmpty(token)) {
+            if(CommonUtil.isEmpty(token)) {
                 return null;
             }
 
@@ -45,7 +45,7 @@ public class BaseController {
         if (request != null) {
             String token = request.getHeader("Token");
 
-            if(StringUtils.isEmpty(token)) {
+            if(CommonUtil.isEmpty(token)) {
                 return null;
             }
 

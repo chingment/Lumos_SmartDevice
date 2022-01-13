@@ -5,9 +5,9 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSpuMapper">
 
-
-    <select id="getSpus" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSpu">
-        select * from PrdSpu
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSpu" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from PrdSpu where 1=1
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
     </select>
 
     <select id="isExistCumCode" resultType="java.lang.Long">

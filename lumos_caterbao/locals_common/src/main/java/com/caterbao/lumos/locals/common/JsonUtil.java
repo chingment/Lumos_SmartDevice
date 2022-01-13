@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class JsonUtil<T> {
     public static  String getJson(Object object){
+
         String str =null;
         //jackson中的方法用于将对象转换为字符串形式
         ObjectMapper objectMapper = new ObjectMapper();
@@ -20,6 +22,26 @@ public class JsonUtil<T> {
         }
         return  str;
     }
+
+    public static  String getJson(List object) {
+
+        if (object == null)
+            return null;
+        if (object.size() <= 0)
+            return null;
+
+        String str = null;
+        //jackson中的方法用于将对象转换为字符串形式
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            //将对象装换为json形式
+            str = objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
     public static String getJson(Object object, String dateFormat) {
         String str = null;
         //jackson中的方法用于将对象转换为字符串形式

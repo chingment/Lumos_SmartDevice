@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
-import com.alibaba.druid.util.StringUtils;
+
 import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.ShopService;
 import com.caterbao.lumos.locals.common.*;
@@ -10,7 +10,6 @@ import com.caterbao.lumos.locals.dal.mapper.ShopDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.ShopMapper;
 import com.caterbao.lumos.locals.dal.pojo.Shop;
 import com.caterbao.lumos.locals.dal.pojo.ShopDevice;
-import com.caterbao.lumos.locals.dal.pojo.StoreShop;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -99,10 +98,10 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public CustomResult add(String operater, String merchId, RopShopAdd rop) {
 
-        if(StringUtils.isEmpty(merchId))
+        if(CommonUtil.isEmpty(merchId))
             return CustomResult.fail("商户编号不能为空");
 
-        if(StringUtils.isEmpty(rop.getName()))
+        if(CommonUtil.isEmpty(rop.getName()))
             return CustomResult.fail("名称不能为空");
 
         Shop d_Shop = new Shop();

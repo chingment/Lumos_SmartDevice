@@ -35,4 +35,17 @@ public class CommonUtil {
         return convert.toUpperCase();
     }
 
+    public static boolean isEmpty(String str) {
+        if (str == null)
+            return true;
+
+        String c = str.trim();
+
+        if (c.length() == 0)
+            return true;
+
+        return false;
+
+    }
+
 }

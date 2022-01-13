@@ -19,9 +19,6 @@ public class Device {
     private int runMode;
     private Timestamp lastRunTime;
     private int lastRunStatus;
-    private String curMerchId;
-    private String curStoreId;
-    private String curShopId;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -145,30 +142,6 @@ public class Device {
 
     public void setLastRunStatus(int lastRunStatus) {
         this.lastRunStatus = lastRunStatus;
-    }
-
-    public String getCurMerchId() {
-        return curMerchId;
-    }
-
-    public void setCurMerchId(String curMerchId) {
-        this.curMerchId = curMerchId;
-    }
-
-    public String getCurStoreId() {
-        return curStoreId;
-    }
-
-    public void setCurStoreId(String curStoreId) {
-        this.curStoreId = curStoreId;
-    }
-
-    public String getCurShopId() {
-        return curShopId;
-    }
-
-    public void setCurShopId(String curShopId) {
-        this.curShopId = curShopId;
     }
 
     public Timestamp getCreateTime() {

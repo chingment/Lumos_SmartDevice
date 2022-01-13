@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeviceMapper {
     Device findOne(LumosSelective selective);
+
     long update(Device device);
 }

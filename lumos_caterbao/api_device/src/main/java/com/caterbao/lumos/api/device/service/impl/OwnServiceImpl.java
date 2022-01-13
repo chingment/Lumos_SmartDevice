@@ -1,21 +1,15 @@
 package com.caterbao.lumos.api.device.service.impl;
 
-import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.device.rop.*;
 import com.caterbao.lumos.api.device.service.OwnService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PasswordUtil;
-import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class OwnServiceImpl implements OwnService {
@@ -99,7 +93,7 @@ public class OwnServiceImpl implements OwnService {
         d_User.setFullName(rop.getFullName());
         d_User.setMender(d_User.getId());
         d_User.setMendTime(CommonUtil.getDateTimeNow());
-        if(StringUtils.isEmpty(rop.getPassword())) {
+        if(CommonUtil.isEmpty(rop.getPassword())) {
             d_User.setPasswordHash(null);
         }
         else

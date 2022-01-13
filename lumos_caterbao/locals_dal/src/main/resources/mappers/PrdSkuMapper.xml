@@ -5,6 +5,11 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper">
 
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSku" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from PrdSku where 1=1
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
+        <if test="where.SpuId != null and where.SpuId.length() > 0">and spuId =#{where.SpuId}</if>
+    </select>
 
     <select id="isExistCumCode" resultType="java.lang.Long">
         select count(*) from PrdSku where 1=1

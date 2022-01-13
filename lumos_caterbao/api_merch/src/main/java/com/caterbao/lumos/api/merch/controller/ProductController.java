@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.merch.controller;
 
 
 import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
-import com.caterbao.lumos.api.merch.rop.RopProductListBySpu;
+import com.caterbao.lumos.api.merch.rop.RopProductList;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class ProductController extends  BaseController {
         this.productService = productService;
     }
 
-    @RequestMapping(value = "listBySpu", method = RequestMethod.POST)
+    @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult listBySpu(@RequestBody RopProductListBySpu rop) {
-        return productService.listBySpu(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    public CustomResult list(@RequestBody RopProductList rop) {
+        return productService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)

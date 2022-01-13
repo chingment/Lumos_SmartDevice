@@ -1,7 +1,7 @@
 package com.caterbao.lumos.api.merch.handler;
 
-import com.alibaba.druid.util.StringUtils;
 import com.caterbao.lumos.api.merch.controller.OwnController;
+import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -35,7 +34,7 @@ public class AppAuthHandler implements HandlerInterceptor {
         String token = request.getHeader("token");
         Object token_val=null;
 
-        if(!StringUtils.isEmpty(token)) {
+        if(!CommonUtil.isEmpty(token)) {
             token_val = redisTemplate.opsForValue().get("token:" + token);
         }
 

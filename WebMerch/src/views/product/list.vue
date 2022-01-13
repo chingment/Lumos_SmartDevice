@@ -6,21 +6,19 @@
 
           <el-autocomplete
             v-model="listQuery.key"
-            :fetch-suggestions="handleSpuSrh"
             placeholder="商品名称/编码/条形码/首拼音母"
             clearable
             style="width: 100%"
-            @select="handleSpuSel"
-            @keyup.enter.native="handleFilter"
-            @clear="handleFilter"
+            @keyup.enter.native="onFilter"
+            @clear="onFilter"
           />
 
         </el-col>
         <el-col :xs="24" :sm="12" :lg="8" :xl="6" style="margin-bottom:20px">
-          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
             查询
           </el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="onAdd">
             新建
           </el-button>
         </el-col>
@@ -29,7 +27,7 @@
     <el-table
       :key="listKey"
       v-loading="loading"
-      :data="listData"
+      :data="listData.items"
       fit
       highlight-current-row
       style="width: 100%;"
@@ -40,42 +38,41 @@
         </template>
       </el-table-column>
       <el-table-column label="图片" prop="mainImgUrl" fixed="left" align="center" width="110">
-        <template slot-scope="scope">
-          <img :src="scope.row.mainImgUrl" style="width:80px;height:80px;">
+        <template slot-scope="{row}">
+          <img :src="row.imgUrl" style="width:80px;height:80px;">
         </template>
       </el-table-column>
       <el-table-column label="名称" align="left" min-width="100%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="货号" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.spuCode }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.cumCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="条形码" align="left" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.skus[0].barCode }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.skus[0].barCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分类" align="left" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kindNames }}</span>
+        <template slot-scope="{row}">
+          <span>ss</span>
         </template>
       </el-table-column>
       <el-table-column label="默认销售价" align="left" width="110">
         <template slot-scope="{row}">
-          {{ row.skus[0].salePrice }}
-
+          <span>{{ row.skus[0].salePrice }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="text" size="mini" @click="handleUpdate(row)">
+          <el-button type="text" size="mini" @click="onEdit(row)">
             编辑
           </el-button>
-          <el-button type="text" size="mini" @click="handleDelete(row)">
+          <el-button type="text" size="mini" @click="onDelete(row)">
             加入回收站
           </el-button>
         </template>
@@ -88,7 +85,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { getList, searchSku, del } from '@/api/product'
+import { list, delSpu } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -97,14 +94,18 @@ export default {
   data() {
     return {
       loading: false,
-      listKey: 0,
-      listData: null,
-      listTotal: 0,
       listQuery: {
-        page: 1,
-        limit: 10,
-        isDelete: false,
-        key: ''
+        pageNum: 1,
+        pageSize: 1024,
+        shopName: undefined
+      },
+      listKey: 's',
+      listData: {
+        items: [],
+        pageNum: 0,
+        pageSize: 0,
+        totalPages: 0,
+        totalSize: 0
       },
       isDesktop: this.$store.getters.isDesktop
     }
@@ -113,77 +114,45 @@ export default {
     if (this.$store.getters.listPageQuery.has(this.$route.path)) {
       this.listQuery = this.$store.getters.listPageQuery.get(this.$route.path)
     }
-    this.getListData()
+    this.onList()
   },
   methods: {
-    getListData() {
+    onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      getList(this.listQuery).then(res => {
-        if (res.result === 1) {
-          var d = res.data
-          this.listData = d.items
-          this.listTotal = d.total
+      list(this.listQuery).then(res => {
+        if (res.code === this.$code_suc) {
+          this.listData = res.data
         }
         this.loading = false
       })
     },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getListData()
+    onFilter() {
+      this.listQuery.pageNum = 1
+      this.onList()
     },
-    handleCreate() {
+    onAdd() {
       this.$router.push({
         path: '/product/add'
       })
     },
-    handleUpdate(row) {
+    onEdit(row) {
       this.$router.push({
         path: '/product/edit?id=' + row.id
       })
     },
-    handleSpuSrh(queryString, cb) {
-      searchSku({ key: queryString }).then(res => {
-        if (res.result === 1) {
-          var d = res.data
-          var restaurants = []
-          for (var j = 0; j < d.length; j++) {
-            restaurants.push({ 'value': d[j].name, 'mainImgUrl': d[j].mainImgUrl, 'name': d[j].name, 'spuId': d[j].spuId })
-          }
-
-          cb(restaurants)
-        }
-      })
-    },
-    handleSpuSel(item) {
-      this.listQuery.key = item.name
-      getList(this.listQuery).then(res => {
-        if (res.result === 1) {
-          var d = res.data
-          this.listData = d.items
-          this.listTotal = d.total
-        }
-        this.loading = false
-      })
-    },
-    handleDelete(row) {
+    onDelete(row) {
       MessageBox.confirm('确定要删除', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        del({ id: row.id }).then(res => {
-          if (res.result === 1) {
-            this.$message({
-              message: res.message,
-              type: 'success'
-            })
-            this.getListData()
+        delSpu({ id: row.id }).then(res => {
+          if (res.code === this.$code_suc) {
+            this.$message.success(res.msg)
+            this.onList()
           } else {
-            this.$message({
-              message: res.message,
-              type: 'error'
-            })
+            this.$message.error(res.msg)
           }
         })
       }).catch(() => {
