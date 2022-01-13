@@ -4,6 +4,7 @@ import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -24,6 +25,23 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private MerchDeviceMapper merchDeviceMapper;
 
+    @Override
+    public CustomResult init_bookers(String operater, String merchId) {
+
+
+        LumosSelective selective_DeviceCount=new LumosSelective();
+        selective_DeviceCount.addWhere("MerchId",merchId);
+
+
+        long deviceCount=merchDeviceMapper.count(selective_DeviceCount);
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+        ret.put("deviceCount",deviceCount);
+
+
+        return CustomResult.success("初始成功",ret);
+    }
 
     @Override
     public CustomResult bookers(String operater, String merchId, RopDeviceBookers rop) {

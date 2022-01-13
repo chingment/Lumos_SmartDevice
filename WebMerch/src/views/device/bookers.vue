@@ -63,7 +63,7 @@
 
 <script>
 
-import { bookers } from '@/api/device'
+import { init_bookers, bookers } from '@/api/device'
 
 export default {
   name: 'MerchDevice',
@@ -96,7 +96,17 @@ export default {
   },
   methods: {
     init() {
-      this.onList()
+      this.loading = true
+      init_bookers({}).then(res => {
+        if (res.code === this.$code_suc) {
+          var d = res.data
+          this.deviceCount = d.deviceCount
+          this.onList()
+        }
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     onList() {
       this.loading = true
@@ -114,9 +124,8 @@ export default {
     },
     onManage(item) {
       this.$router.push({
-        name: 'MerchDeviceManage',
-        path: '/device/vending/manage',
-        params: {
+        path: '/device/booker/manage',
+        query: {
           id: item.id,
           tab: 'tabBaseInfo'
         }

@@ -32,7 +32,7 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="序号" prop="id" fixed="left" align="left" width="80">
+      <el-table-column label="序号" prop="id" fixed="left" align="left" width="50">
         <template slot-scope="scope">
           <span>{{ scope.$index+1 }} </span>
         </template>
@@ -78,14 +78,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
-    <pagination v-show="listTotal>0" :total="listTotal" background :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getListData" />
   </div>
 </template>
 
 <script>
 import { MessageBox } from 'element-ui'
-import { list, delSpu } from '@/api/product'
+import { list, del } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -96,7 +96,7 @@ export default {
       loading: false,
       listQuery: {
         pageNum: 1,
-        pageSize: 1024,
+        pageSize: 10,
         shopName: undefined
       },
       listKey: 's',
@@ -141,13 +141,13 @@ export default {
         path: '/product/edit?id=' + row.id
       })
     },
-    onDelete(row) {
+    onDelete(item) {
       MessageBox.confirm('确定要删除', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delSpu({ id: row.id }).then(res => {
+        del({ id: item.id }).then(res => {
           if (res.code === this.$code_suc) {
             this.$message.success(res.msg)
             this.onList()

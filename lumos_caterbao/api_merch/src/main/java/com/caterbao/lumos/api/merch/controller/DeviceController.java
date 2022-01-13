@@ -17,9 +17,16 @@ public class DeviceController extends  BaseController  {
         this.deviceService = deviceService;
     }
 
+    @RequestMapping(value = "init_bookers", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult init_bookers() {
+        return deviceService.init_bookers(this.getCurrentUserId(), this.getCurrentMerchId());
+    }
+
     @RequestMapping(value = "bookers", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult list(@RequestBody RopDeviceBookers rop) {
+    public CustomResult bookers(@RequestBody RopDeviceBookers rop) {
         return deviceService.bookers(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
+
 }

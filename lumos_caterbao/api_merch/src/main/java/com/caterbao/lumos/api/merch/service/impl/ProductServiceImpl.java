@@ -1,6 +1,8 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
+import com.caterbao.lumos.api.merch.rop.RopProdcutDelete;
+import com.caterbao.lumos.api.merch.rop.RopProdcutEdit;
 import com.caterbao.lumos.api.merch.rop.RopProductList;
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
 import com.caterbao.lumos.api.merch.rop.model.SpecDesModel;
@@ -102,7 +104,6 @@ public class ProductServiceImpl implements ProductService {
         return CustomResult.success("",ret);
     }
 
-
     @Override
     public CustomResult add(String operater, String merchId, RopProdcutAdd rop) {
         lock.lock();
@@ -174,6 +175,37 @@ public class ProductServiceImpl implements ProductService {
                     return CustomResult.fail("保存失败");
                 }
             }
+
+            platformTransactionManager.commit(transaction);
+            lock.unlock();
+            return  CustomResult.success("保存成功");
+        } catch (Exception e) {
+            platformTransactionManager.rollback(transaction);
+            e.printStackTrace();
+            lock.unlock();
+            return CustomResult.fail("保存失败,服务器异常");
+        }
+    }
+
+    @Override
+    public CustomResult init_edit(String operater, String merchId) {
+        return  null;
+    }
+
+    @Override
+    public CustomResult edit(String operater, String merchId, RopProdcutEdit rop) {
+        return null;
+    }
+
+    @Override
+    public CustomResult delete(String operater, String merchId, RopProdcutDelete rop) {
+        lock.lock();
+        TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
+        CustomResult result = new CustomResult();
+        try {
+            if (CommonUtil.isEmpty(rop.getId()))
+                return CustomResult.fail("货号ID不能为空");
+
 
             platformTransactionManager.commit(transaction);
             lock.unlock();

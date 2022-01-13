@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MerchDeviceMapper {
     List<MerchDeviceVw> find(LumosSelective selective);
+    long count(LumosSelective selective);
 }

@@ -11,8 +11,12 @@
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
         <if test="where.SceneMode != null and where.SceneMode.length() > 0">and b.SceneMode=#{where.SceneMode}</if>
         <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.DeviceId like concat('%', #{where.DeviceCode}, '%') or a.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>
-
     </select>
 
+    <select id="count" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+        select count(Id) from MerchDevice where 1=1
+        <if test="where.MerchId != null ">and MerchId =#{where.MerchId}</if>
+        <if test="where.BindStatus != null ">and BindStatus =#{where.BindStatus}</if>
+    </select>
 
 </mapper>

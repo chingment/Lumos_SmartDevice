@@ -551,7 +551,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 #product_add {
 
 .el-form .el-form-item{
