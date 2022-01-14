@@ -53,14 +53,7 @@
         />
         <el-button v-else class="button-new-tag" size="small" @click="onCharTagsInputShow">+ 添加</el-button>
       </el-form-item>
-      <el-form-item label="SKU列表" style="max-width:1000px">
-        <el-checkbox v-model="form.isUnifyUpdate">统一更新所有店铺销售信息（价格，下架）</el-checkbox>
-        <el-alert
-          show-icon
-          title="提示：勾选后，下面列表里的（价格，下架）会统一更新到所有店铺，不勾选只作参考价格"
-          type="remark"
-          :closable="false"
-        />
+      <el-form-item label="规格商品" style="max-width:1000px">
         <table class="list-tb" cellpadding="0" cellspacing="0">
           <thead>
             <tr>
@@ -146,7 +139,6 @@ export default {
         specItems: [],
         briefDes: '',
         displayImgUrls: [],
-        isUnifyUpdate: false,
         skus: []
       },
       rules: {
@@ -177,7 +169,7 @@ export default {
   methods: {
     init() {
       this.loading = true
-      var id = getUrlParam('id')
+      var id = this.$route.query.id
       init_edit({ id: id }).then(res => {
         if (res.code === this.$code_suc) {
           this.form = res.data

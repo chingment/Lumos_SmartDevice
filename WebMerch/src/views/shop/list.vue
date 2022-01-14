@@ -94,15 +94,13 @@ export default {
     },
     onAdd() {
       this.$router.push({
-        name: 'MerchShopAdd',
         path: '/shop/add'
       })
     },
     onEdit(item) {
       this.$router.push({
-        name: 'MerchShopEdit',
         path: '/shop/edit',
-        params: {
+        query: {
           id: item.id
         }
       })

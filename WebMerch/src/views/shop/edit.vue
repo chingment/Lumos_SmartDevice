@@ -91,7 +91,7 @@ export default {
   methods: {
     init() {
       this.loading = true
-      var id = this.$route.params.id
+      var id = this.$route.query.id
       init_edit({ id: id }).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data

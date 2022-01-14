@@ -279,7 +279,8 @@ public class ProductServiceImpl implements ProductService {
             for (SkuModel sku: rop.getSkus()) {
                 for (SpecDesModel specDes : sku.getSpecDes()) {
 
-                    //<SpecItemModel> s=specItems.stream().filter((SpecItemModel b) ->b.getName()==specDes.getName()).findFirst();
+                    Optional<SpecItemModel> s=specItems.stream().filter((SpecItemModel b) ->b.getName()==specDes.getName()).findFirst();
+
 
 
                 }

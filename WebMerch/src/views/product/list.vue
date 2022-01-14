@@ -136,9 +136,12 @@ export default {
         path: '/product/add'
       })
     },
-    onEdit(row) {
+    onEdit(item) {
       this.$router.push({
-        path: '/product/edit?id=' + row.id
+        path: '/product/edit',
+        query: {
+          id: item.id
+        }
       })
     },
     onDelete(item) {

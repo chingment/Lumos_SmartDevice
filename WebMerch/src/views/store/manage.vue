@@ -47,11 +47,11 @@ export default {
     }
   },
   created() {
-    this.activeId = this.$route.params.id
+    this.activeId = this.$route.query.id
     this.activeTab =
-      typeof this.$route.params.tab === 'undefined'
+      typeof this.$route.query.tab === 'undefined'
         ? 'tabBaseInfo'
-        : this.$route.params.tab
+        : this.$route.query.tab
     this.init()
   },
   methods: {

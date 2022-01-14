@@ -1,14 +1,13 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
+import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
 import com.caterbao.lumos.api.merch.service.DeviceService;
-import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.ImgVo;
-import com.caterbao.lumos.locals.common.JsonUtil;
-import com.caterbao.lumos.locals.common.PageResult;
+import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.pojo.MerchDevice;
 import com.caterbao.lumos.locals.dal.pojo.Store;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
@@ -127,5 +126,30 @@ public class DeviceServiceImpl implements DeviceService {
         ret.put("sysVerName",d_Device.getSysVerName());
         ret.put("ctrlVerName",d_Device.getCtrlVerName());
         return CustomResult.success("初始成功",ret);
+    }
+
+    @Override
+    public CustomResult edit(String operater, String merchId, RopDeviceEdit rop) {
+
+
+        if(!CommonUtil.isEmpty(rop.getCumCode())) {
+            if (merchDeviceMapper.isExistCumCode(rop.getId(), merchId, rop.getCumCode()) > 0) {
+                return CustomResult.fail("自编码已经存在");
+            }
+        }
+
+        MerchDevice d_MerchDevice = new MerchDevice();
+        d_MerchDevice.setMerchId(merchId);
+        d_MerchDevice.setDeviceId(rop.getId());
+        d_MerchDevice.setCumCode(rop.getCumCode());
+        d_MerchDevice.setCreator(operater);
+        d_MerchDevice.setMendTime(CommonUtil.getDateTimeNow());
+        long r_MerchDevice_Update = merchDeviceMapper.update(d_MerchDevice);
+
+        if (r_MerchDevice_Update > 0) {
+            return CustomResult.success("保存成功");
+        }
+
+        return CustomResult.fail("保存失败");
     }
 }

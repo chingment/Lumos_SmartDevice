@@ -24,12 +24,27 @@
         <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.DeviceId like concat('%', #{where.DeviceCode}, '%') or a.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>
     </select>
 
-
-
     <select id="count" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
         select count(Id) from MerchDevice where 1=1
         <if test="where.MerchId != null ">and MerchId =#{where.MerchId}</if>
         <if test="where.BindStatus != null ">and BindStatus =#{where.BindStatus}</if>
     </select>
+
+    <select id="isExistCumCode" resultType="java.lang.Long">
+        select count(*) from MerchDevice where 1=1
+        <if test="deviceId != null and deviceId.length() > 0"> and deviceId!=#{deviceId} </if>
+        <if test="cumCode != null and cumCode.length() > 0"> and cumCode=#{cumCode} </if>
+        <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
+    </select>
+
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.MerchDevice">
+        update MerchDevice
+        <set>
+             cumCode=#{cumCode},
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where DeviceId=#{deviceId} and MerchId=#{merchId}
+    </update>
 
 </mapper>

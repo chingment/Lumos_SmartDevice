@@ -32,9 +32,18 @@ export function init_manage_baseinfo(params) {
   })
 }
 
+export function edit(data) {
+  return request({
+    url: '/device/edit',
+    method: 'post',
+    data
+  })
+}
+
 export default {
   init_bookers: init_bookers,
   bookers: bookers,
   init_manage: init_manage,
-  init_manage_baseinfo: init_manage_baseinfo
+  init_manage_baseinfo: init_manage_baseinfo,
+  edit: edit
 }

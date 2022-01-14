@@ -1,5 +1,6 @@
 package com.caterbao.lumos.api.merch.controller;
 
+import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -40,5 +41,11 @@ public class DeviceController extends  BaseController  {
     public CustomResult init_manage_baseinfo(@RequestParam String id) {
         return deviceService.init_manage_baseinfo(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult edit(@RequestBody RopDeviceEdit rop) {
+        return deviceService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
 
 }

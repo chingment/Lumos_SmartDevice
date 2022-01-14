@@ -2,21 +2,21 @@
   <div id="device_baseinfo" v-loading="loading">
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="100px" :hide-required-asterisk="!isEdit">
       <el-form-item label="设备编码">
-        {{ form.id }}
+        {{ temp.id }}
       </el-form-item>
-      <el-form-item label="自定义编码">
-        <el-input v-show="isEdit" v-model="form.cumCode" clearable />
-        <span v-show="!isEdit">{{ form.cumCode }}</span>
+      <el-form-item label="自定编码" pr>
+        <el-input v-show="isEdit" v-model.trim="form.cumCode" clearable />
+        <span v-show="!isEdit">{{ temp.cumCode }}</span>
       </el-form-item>
       <el-form-item label="所属门店" />
       <el-form-item label="控制程序号">
-        {{ form.ctrlVerName }}
+        {{ temp.ctrlVerName }}
       </el-form-item>
-      <el-form-item label="系统版本">
-        {{ form.sysVerName }}
+      <el-form-item label="装载系统号">
+        {{ temp.sysVerName }}
       </el-form-item>
       <el-form-item label="应用程序号">
-        {{ form.appVerName }}
+        {{ temp.appVerName }}
       </el-form-item>
       <el-form-item label="设备状态" />
       <el-form-item label="最后运行时间" />
@@ -49,11 +49,15 @@ export default {
       form: {
         id: '',
         name: '',
-        cumCode: '',
-        logoImgUrl: ''
+        cumCode: ''
+      },
+      temp: {
+        id: '',
+        name: '',
+        cumCode: ''
       },
       rules: {
-        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }]
+
       }
     }
   },
@@ -71,7 +75,8 @@ export default {
       if (!isEmpty(this.deviceId)) {
         init_manage_baseinfo({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
-            this.form = res.data
+            // this.form = res.data
+            this.temp = res.data
           }
           this.loading = false
         })
@@ -85,27 +90,25 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.loading = true
             edit(this.form).then(res => {
-              if (res.result === 1) {
-                this.$message({
-                  message: res.message,
-                  type: 'success'
-                })
+              this.loading = false
+              if (res.code === this.$code_suc) {
+                this.$message.success(res.msg)
                 this.isEdit = false
                 this.init()
               } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
+                this.$message.error(res.msg)
               }
             })
           }).catch(() => {
+            this.loading = false
           })
         }
       })
     },
     onOpenEdit() {
+      this.form.id = this.temp.id
       this.form.cumCode = this.temp.cumCode
       this.isEdit = true
     },

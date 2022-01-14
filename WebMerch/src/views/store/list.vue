@@ -84,9 +84,8 @@ export default {
     },
     onManage(item) {
       this.$router.push({
-        name: 'MerchStoreManage',
         path: '/store/manage',
-        params: {
+        query: {
           id: item.id,
           tab: 'tabBaseInfo'
         }
