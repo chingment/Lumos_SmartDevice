@@ -1,5 +1,7 @@
 package com.caterbao.lumos.locals.dal.vw;
 
+import java.sql.Timestamp;
+
 public class MerchDeviceVw {
     private String id;
     private String cumCode;
@@ -11,6 +13,15 @@ public class MerchDeviceVw {
     private String ShopName;
     private String storeId;
     private String storeName;
+    private String imeiId;
+    private String model;
+    private String macAddr;
+    private String appVerName;
+    private String sysVerName;
+    private String ctrlVerName;
+    private int runMode;
+    private Timestamp lastRunTime;
+    private int lastRunStatus;
 
     public String getId() {
         return id;
@@ -90,5 +101,77 @@ public class MerchDeviceVw {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public String getImeiId() {
+        return imeiId;
+    }
+
+    public void setImeiId(String imeiId) {
+        this.imeiId = imeiId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getMacAddr() {
+        return macAddr;
+    }
+
+    public void setMacAddr(String macAddr) {
+        this.macAddr = macAddr;
+    }
+
+    public String getAppVerName() {
+        return appVerName;
+    }
+
+    public void setAppVerName(String appVerName) {
+        this.appVerName = appVerName;
+    }
+
+    public String getSysVerName() {
+        return sysVerName;
+    }
+
+    public void setSysVerName(String sysVerName) {
+        this.sysVerName = sysVerName;
+    }
+
+    public String getCtrlVerName() {
+        return ctrlVerName;
+    }
+
+    public void setCtrlVerName(String ctrlVerName) {
+        this.ctrlVerName = ctrlVerName;
+    }
+
+    public int getRunMode() {
+        return runMode;
+    }
+
+    public void setRunMode(int runMode) {
+        this.runMode = runMode;
+    }
+
+    public Timestamp getLastRunTime() {
+        return lastRunTime;
+    }
+
+    public void setLastRunTime(Timestamp lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
+
+    public int getLastRunStatus() {
+        return lastRunStatus;
+    }
+
+    public void setLastRunStatus(int lastRunStatus) {
+        this.lastRunStatus = lastRunStatus;
     }
 }

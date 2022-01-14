@@ -11,5 +11,6 @@ public interface PrdSpuMapper {
     PrdSpu findOne(LumosSelective selective);
     List<PrdSpu> find(LumosSelective selective);
     long insert(PrdSpu prdSpu);
+    long update(PrdSpu prdSpu);
     long isExistCumCode(String id,String merchId,String cumCode);
 }

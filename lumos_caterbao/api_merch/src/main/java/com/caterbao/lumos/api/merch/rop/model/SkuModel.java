@@ -4,10 +4,19 @@ import java.util.List;
 
 public class SkuModel {
 
+    private String id;
     private String cumCode;
     private String barCode;
     private List<SpecDesModel> specDes;
     private float salePrice;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCumCode() {
         return cumCode;

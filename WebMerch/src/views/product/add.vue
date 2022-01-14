@@ -531,6 +531,10 @@ export default {
     onCharTagsInputVaueConfirmAdd() {
       const inputValue = this.charTagsInputValue
 
+      if (this.form.charTags == null) {
+        this.form.charTags = []
+      }
+
       if (inputValue !== '' && this.form.charTags.length <= 2) {
         for (var i = 0; i < this.form.charTags.length; i++) {
           if (this.form.charTags[i] === inputValue) {

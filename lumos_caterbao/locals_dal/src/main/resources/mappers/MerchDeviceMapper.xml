@@ -6,14 +6,18 @@
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper">
 
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-        select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl from
+        select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl,
+        ImeiId,Model,MacAddr,
+        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus from
         MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
-        <if test="where.DeviceId != null and where.DeviceId.length() > 0">and b.DeviceId=#{where.DeviceId}</if>
+        <if test="where.DeviceId != null and where.DeviceId.length() > 0">and a.DeviceId=#{where.DeviceId}</if>
     </select>
 
     <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-        select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl from
+        select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl,
+        ImeiId,Model,MacAddr,
+        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus from
          MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
         <if test="where.SceneMode != null and where.SceneMode.length() > 0">and b.SceneMode=#{where.SceneMode}</if>

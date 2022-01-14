@@ -15,17 +15,17 @@
       </el-dropdown>
     </div>
     <el-tabs v-model="activeTab" type="card">
-      <el-tab-pane label="基本信息" name="tabBaseInfo"> <pane-base-info :device-id="activeDropdown.id" /></el-tab-pane>
+      <el-tab-pane label="基本信息" name="tabBaseInfo"> <manage-base-info :device-id="activeDropdown.id" /></el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { init_manage } from '@/api/device'
-import PaneBaseInfo from './components/PaneBaseInfo'
+import ManageBaseInfo from './components/ManageBaseInfo'
 import PageHeader from '@/components/PageHeader/index.vue'
 export default {
   name: 'DeviceBookerManage',
-  components: { PaneBaseInfo, PageHeader },
+  components: { ManageBaseInfo, PageHeader },
   data() {
     return {
       loading: false,

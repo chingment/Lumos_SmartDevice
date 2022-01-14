@@ -54,7 +54,7 @@
         <el-button v-else class="button-new-tag" size="small" @click="onCharTagsInputShow">+ 添加</el-button>
       </el-form-item>
       <el-form-item label="SKU列表" style="max-width:1000px">
-        <el-checkbox v-model="form.isUnifyUpdateSalePrice">统一更新所有店铺销售信息（价格，下架）</el-checkbox>
+        <el-checkbox v-model="form.isUnifyUpdate">统一更新所有店铺销售信息（价格，下架）</el-checkbox>
         <el-alert
           show-icon
           title="提示：勾选后，下面列表里的（价格，下架）会统一更新到所有店铺，不勾选只作参考价格"
@@ -146,7 +146,7 @@ export default {
         specItems: [],
         briefDes: '',
         displayImgUrls: [],
-        isUnifyUpdateSalePrice: false,
+        isUnifyUpdate: false,
         skus: []
       },
       rules: {
@@ -158,9 +158,9 @@ export default {
         charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }]
       },
       kind_options: [
-        { label: '图书', value: '1', children: [
-          { label: '童书', value: '2', children: [
-            { label: '儿童文学', value: '3' }
+        { label: '图书', value: 1, children: [
+          { label: '童书', value: 2, children: [
+            { label: '儿童文学', value: 3 }
           ] }
         ] }
       ],
@@ -179,18 +179,8 @@ export default {
       this.loading = true
       var id = getUrlParam('id')
       init_edit({ id: id }).then(res => {
-        if (res.result === 1) {
-          var d = res.data
-          this.form.id = d.id
-          this.form.name = d.name
-          this.form.cumCode = d.cumCode
-          this.form.kindIds = d.kindIds
-          this.form.detailsDes = d.detailsDes
-          this.form.briefDes = d.briefDes
-          this.form.displayImgUrls = d.displayImgUrls
-          this.form.specItems = d.specItems
-          this.form.skus = d.skus
-          this.form.charTags = d.charTags === null ? [] : d.charTags
+        if (res.code === this.$code_suc) {
+          this.form = res.data
         }
         this.loading = false
       }).catch(() => {
@@ -223,30 +213,21 @@ export default {
             }
           }
 
-          var _form = {}
-          _form.id = this.form.id
-          _form.name = this.form.name
-          _form.cumCode = this.form.cumCode
-          _form.kindIds = this.form.kindIds
-          _form.detailsDes = this.form.detailsDes
-          _form.specDes = this.form.specDes
-          _form.briefDes = this.form.briefDes
-          _form.displayImgUrls = this.form.displayImgUrls
-          _form.isUnifyUpdateSalePrice = this.form.isUnifyUpdateSalePrice
-          _form.charTags = this.form.charTags
-          _form.skus = this.form.skus
           MessageBox.confirm('确定要保存', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            edit(_form).then(res => {
+            this.loading = true
+            edit(this.form).then(res => {
               this.loading = false
               if (res.code === this.$code_suc) {
                 this.$message.success(res.msg)
               } else {
                 this.$message.error(res.msg)
               }
+            }).catch(() => {
+              this.loading = false
             })
           })
         }
@@ -266,7 +247,17 @@ export default {
 
       // if (inputValue === '') {
 
+      if (this.form.charTags == null) {
+        this.form.charTags = []
+      }
+
       if (inputValue !== '' && this.form.charTags.length <= 2) {
+        for (var i = 0; i < this.form.charTags.length; i++) {
+          if (this.form.charTags[i] === inputValue) {
+            this.$message('已存在' + inputValue)
+            return
+          }
+        }
         this.form.charTags.push(inputValue)
       } else if (inputValue !== '' && this.form.charTags.length >= 3) {
         this.$message('最多输入3个特色标签')

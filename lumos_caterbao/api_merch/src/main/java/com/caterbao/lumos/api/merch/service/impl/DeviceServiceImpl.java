@@ -115,13 +115,17 @@ public class DeviceServiceImpl implements DeviceService {
 
         LumosSelective selective=new LumosSelective();
         selective.addWhere("MerchId",merchId);
-        selective.addWhere("Device",merchId);
+        selective.addWhere("DeviceId",deviceId);
         MerchDeviceVw d_Device = merchDeviceMapper.findOne(selective);
 
 
         HashMap<String,Object> ret=new HashMap<>();
 
-
+        ret.put("id",d_Device.getId());
+        ret.put("cumCode",d_Device.getCumCode());
+        ret.put("appVerName",d_Device.getAppVerName());
+        ret.put("sysVerName",d_Device.getSysVerName());
+        ret.put("ctrlVerName",d_Device.getCtrlVerName());
         return CustomResult.success("初始成功",ret);
     }
 }

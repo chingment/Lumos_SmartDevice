@@ -2,29 +2,26 @@
   <div id="device_baseinfo" v-loading="loading">
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="100px" :hide-required-asterisk="!isEdit">
       <el-form-item label="设备编码">
-        {{ temp.id }}
+        {{ form.id }}
       </el-form-item>
       <el-form-item label="自定义编码">
         <el-input v-show="isEdit" v-model="form.cumCode" clearable />
-        <span v-show="!isEdit">{{ temp.cumCode }}</span>
+        <span v-show="!isEdit">{{ form.cumCode }}</span>
       </el-form-item>
-      <el-form-item label="所属门店">
-        {{ temp.shopName }}
-      </el-form-item>
+      <el-form-item label="所属门店" />
       <el-form-item label="控制程序号">
-        {{ temp.ctrlSdkVersion }}
+        {{ form.ctrlVerName }}
+      </el-form-item>
+      <el-form-item label="系统版本">
+        {{ form.sysVerName }}
       </el-form-item>
       <el-form-item label="应用程序号">
-        {{ temp.appVersion }}
+        {{ form.appVerName }}
       </el-form-item>
-      <el-form-item label="设备状态">
-        {{ temp.status.text }}
-      </el-form-item>
-      <el-form-item label="最后运行时间">
-        {{ temp.lastRequestTime }}
-      </el-form-item>
+      <el-form-item label="设备状态" />
+      <el-form-item label="最后运行时间" />
       <el-form-item>
-        <el-button v-show="!isEdit&&!temp.isStopUse" type="primary" @click="onOpenEdit">编辑</el-button>
+        <el-button v-show="!isEdit" type="primary" @click="onOpenEdit">编辑</el-button>
         <el-button v-show="isEdit" type="info" @click="onCancleEdit">取消</el-button>
         <el-button v-show="isEdit" type="primary" @click="onSubmit">保存</el-button>
       </el-form-item>
@@ -34,7 +31,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { edit, initManageBaseInfo } from '@/api/device'
+import { edit, init_manage_baseinfo } from '@/api/device'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
@@ -49,15 +46,6 @@ export default {
     return {
       isEdit: false,
       loading: false,
-      temp: {
-        name: '',
-        cumCode: '',
-        logoImgUrl: '',
-        status: {
-          text: '',
-          value: ''
-        }
-      },
       form: {
         id: '',
         name: '',
@@ -71,34 +59,19 @@ export default {
   },
   watch: {
     deviceId: function(val, oldval) {
-      // this.init()
+      this.init()
     }
   },
   created() {
-    // this.init()
+    this.init()
   },
   methods: {
     init() {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
-        initManageBaseInfo({ id: this.deviceId }).then(res => {
-          if (res.result === 1) {
-            var d = res.data
-            this.form.id = d.id
-            this.form.name = d.name
-            this.form.cumCode = d.cumCode
-            this.form.logoImgUrl = d.logoImgUrl
-
-            this.temp.id = d.id
-            this.temp.name = d.name
-            this.temp.cumCode = d.cumCode
-            this.temp.logoImgUrl = d.logoImgUrl
-            this.temp.status = d.status
-            this.temp.ctrlSdkVersion = d.ctrlSdkVersion
-            this.temp.appVersion = d.appVersion
-            this.temp.shopName = d.shopName
-            this.temp.lastRequestTime = d.lastRequestTime
-            this.temp.isStopUse = d.isStopUse
+        init_manage_baseinfo({ id: this.deviceId }).then(res => {
+          if (res.code === this.$code_suc) {
+            this.form = res.data
           }
           this.loading = false
         })

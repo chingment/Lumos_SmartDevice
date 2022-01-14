@@ -32,4 +32,25 @@
   )
     </insert>
 
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSpu">
+        update PrdSpu
+        <set>
+            <if test="name != null">name=#{name},</if>
+            <if test="cumCode != null">cumCode=#{cumCode},</if>
+            <if test="kindId1 != null">kindId1=#{kindId1},</if>
+            <if test="kindId2 != null">kindId2=#{kindId2},</if>
+            <if test="kindId3 != null">kindId3=#{kindId3},</if>
+            <if test="pyIdx != null">pyIdx=#{pyIdx},</if>
+            <if test="charTags != null">charTags=#{charTags},</if>
+            <if test="specItems != null">specItems=#{specItems},</if>
+            <if test="displayImgUrls != null">displayImgUrls=#{displayImgUrls},</if>
+            <if test="briefDes != null">briefDes=#{briefDes},</if>
+            <if test="detailsDes != null">detailsDes=#{detailsDes},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+
 </mapper>
