@@ -104,6 +104,8 @@ export default {
           this.listData = res.data
         }
         this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     onDialogOpenByShop() {
@@ -132,6 +134,8 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
+        }).catch(() => {
+          this.loading = false
         })
       })
     }

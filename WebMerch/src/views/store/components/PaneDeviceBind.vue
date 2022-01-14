@@ -199,6 +199,8 @@ export default {
           this.shopDetails = res.data
         }
         this.loadingByDevices = false
+      }).catch(() => {
+        this.loadingByDevices = false
       })
     },
     onDevices() {
@@ -208,6 +210,8 @@ export default {
         if (res.code === this.$code_suc) {
           this.listDataByDevices = res.data
         }
+        this.loadingByDevices = false
+      }).catch(() => {
         this.loadingByDevices = false
       })
     },
@@ -221,6 +225,8 @@ export default {
         if (res.code === this.$code_suc) {
           this.listDataByUnDevices = res.data
         }
+        this.loadingByUnDevices = false
+      }).catch(() => {
         this.loadingByUnDevices = false
       })
     },
@@ -238,6 +244,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.loadingByUnDevices = true
         unBindDevice({ deviceId: item.id, storeId: this.storeId, shopId: this.shopId }).then(res => {
           if (res.code === this.$code_suc) {
             this.$message.success(res.msg)
@@ -245,6 +252,8 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
+        }).catch(() => {
+          this.loadingByUnDevices = false
         })
       })
     },
@@ -254,9 +263,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.loadingByUnDevices = true
+        this.loadingByDevices = true
         bindDevice({ deviceId: item.id, storeId: this.storeId, shopId: this.shopId }).then(res => {
-          this.loadingByUnDevices = false
+          this.loadingByDevices = false
           if (res.code === this.$code_suc) {
             this.$message.success(res.msg)
             this.onDevices()
@@ -264,6 +273,8 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
+        }).catch(() => {
+          this.loadingByDevices = false
         })
       })
     }

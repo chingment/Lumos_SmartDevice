@@ -79,6 +79,8 @@ export default {
             this.form = res.data
           }
           this.loading = false
+        }).catch(() => {
+          this.loading = false
         })
       }
     }

@@ -62,6 +62,8 @@ export default {
           this.activeDropdown = this.getActiveDropdown(this.activeId)
         }
         this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     onChangeDropdown(id) {

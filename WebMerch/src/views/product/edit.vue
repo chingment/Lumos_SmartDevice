@@ -8,7 +8,7 @@
       <el-form-item label="货号" prop="cumCode">
         <el-input v-model="form.cumCode" clearable />
       </el-form-item>
-      <el-form-item label="图片" prop="displayImgUrls">
+      <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
         <el-input :value="form.displayImgUrls.toString()" style="display:none" />
         <lm-upload
           v-model="form.displayImgUrls"
@@ -89,7 +89,7 @@
       <el-form-item label="简短描述" style="max-width:1000px">
         <el-input v-model="form.briefDes" maxlength="200" clearable />
       </el-form-item>
-      <el-form-item label="详情图片" prop="detailsDes">
+      <el-form-item label="详情图片" prop="detailsDes" class="el-form-item-upload">
         <el-input
           :value="form.detailsDes==null?'':form.detailsDes.toString()"
           style="display:none"

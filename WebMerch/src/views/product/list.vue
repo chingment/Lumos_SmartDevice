@@ -125,6 +125,8 @@ export default {
           this.listData = res.data
         }
         this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     onFilter() {

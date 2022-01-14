@@ -4,7 +4,7 @@
       <el-form-item label="设备编码">
         {{ temp.id }}
       </el-form-item>
-      <el-form-item label="自定编码" pr>
+      <el-form-item label="自编码" pr>
         <el-input v-show="isEdit" v-model.trim="form.cumCode" clearable />
         <span v-show="!isEdit">{{ temp.cumCode }}</span>
       </el-form-item>
@@ -75,9 +75,10 @@ export default {
       if (!isEmpty(this.deviceId)) {
         init_manage_baseinfo({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
-            // this.form = res.data
             this.temp = res.data
           }
+          this.loading = false
+        }).catch(() => {
           this.loading = false
         })
       }

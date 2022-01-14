@@ -14,7 +14,7 @@
       <el-form-item v-show="!isOpenAddMultiSpecs" label="条形码" prop="singleSkuBarCode">
         <el-input v-model="form.singleSkuBarCode" clearable />
       </el-form-item>
-      <el-form-item label="图片" prop="displayImgUrls">
+      <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
         <el-input :value="form.displayImgUrls.toString()" style="display:none" />
         <lm-upload
           v-model="form.displayImgUrls"
@@ -204,7 +204,7 @@
       <el-form-item label="简短描述" style="max-width:1000px">
         <el-input v-model="form.briefDes" type="text" maxlength="200" clearable show-word-limit />
       </el-form-item>
-      <el-form-item label="详情图片" prop="detailsDes">
+      <el-form-item label="详情图片" prop="detailsDes" class="el-form-item-upload">
         <el-input :value="form.detailsDes.toString()" style="display:none" />
         <lm-upload
           v-model="form.detailsDes"

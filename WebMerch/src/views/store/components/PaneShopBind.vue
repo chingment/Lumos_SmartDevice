@@ -111,6 +111,8 @@ export default {
           this.listData = res.data
         }
         this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     onFilter() {
@@ -134,6 +136,8 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
+        }).catch(() => {
+          this.loading = false
         })
       })
     },
