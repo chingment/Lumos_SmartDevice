@@ -27,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -277,41 +279,45 @@ public class ProductServiceImpl implements ProductService {
             for (SkuModel sku: rop.getSkus()) {
                 for (SpecDesModel specDes : sku.getSpecDes()) {
 
-                    boolean isHas = false;
-                    for (SpecItemModel specItem : specItems) {
-                        if (specItem.getName() == specDes.getName()) {
-                            isHas = true;
+                    //<SpecItemModel> s=specItems.stream().filter((SpecItemModel b) ->b.getName()==specDes.getName()).findFirst();
 
-                            boolean isFlag = false;
-                            for (SpecItemValueModel itemVal : specItem.getValue()) {
-                                if (itemVal.getName() == specDes.getValue()) {
-                                    isFlag = true;
-                                }
-                            }
 
-                            if (!isFlag) {
-                                List<SpecItemValueModel> itemVals = new ArrayList<>();
-                                SpecItemValueModel itemVal = new SpecItemValueModel();
-                                itemVal.setName(specDes.getValue());
-                                itemVals.add(itemVal);
-                                specItem.setValue(itemVals);
-                            }
-
-                            break;
-                        }
-                    }
-
-                    if (!isHas) {
-                        SpecItemModel itemModel = new SpecItemModel();
-                        itemModel.setName(specDes.getName());
-                        List<SpecItemValueModel> itemVals = new ArrayList<>();
-                        SpecItemValueModel itemVal = new SpecItemValueModel();
-                        itemVal.setName(specDes.getValue());
-                        itemVals.add(itemVal);
-                        itemModel.setValue(itemVals);
-                    }
                 }
             }
+
+//            boolean isHas = false;
+//            for (SpecItemModel specItem : specItems) {
+//                if (specItem.getName() == specDes.getName()) {
+//                    isHas = true;
+//
+//                    boolean isFlag = false;
+//                    for (SpecItemValueModel itemVal : specItem.getValue()) {
+//                        if (itemVal.getName() == specDes.getValue()) {
+//                            isFlag = true;
+//                        }
+//                    }
+//
+//                    if (!isFlag) {
+//                        List<SpecItemValueModel> itemVals = new ArrayList<>();
+//                        SpecItemValueModel itemVal = new SpecItemValueModel();
+//                        itemVal.setName(specDes.getValue());
+//                        itemVals.add(itemVal);
+//                        specItem.setValue(itemVals);
+//                    }
+//
+//                    break;
+//                }
+//            }
+//
+//            if (!isHas) {
+//                SpecItemModel itemModel = new SpecItemModel();
+//                itemModel.setName(specDes.getName());
+//                List<SpecItemValueModel> itemVals = new ArrayList<>();
+//                SpecItemValueModel itemVal = new SpecItemValueModel();
+//                itemVal.setName(specDes.getValue());
+//                itemVals.add(itemVal);
+//                itemModel.setValue(itemVals);
+//            }
 
 
             d_PrdSpu.setSpecItems(JsonUtil.getJson(specItems));
