@@ -5,6 +5,13 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper">
 
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl from
+        MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
+        <if test="where.DeviceId != null and where.DeviceId.length() > 0">and b.DeviceId=#{where.DeviceId}</if>
+    </select>
+
     <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl from
          MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
@@ -12,6 +19,8 @@
         <if test="where.SceneMode != null and where.SceneMode.length() > 0">and b.SceneMode=#{where.SceneMode}</if>
         <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.DeviceId like concat('%', #{where.DeviceCode}, '%') or a.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>
     </select>
+
+
 
     <select id="count" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
         select count(Id) from MerchDevice where 1=1

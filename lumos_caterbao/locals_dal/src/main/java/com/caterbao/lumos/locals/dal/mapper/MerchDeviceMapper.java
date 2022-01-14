@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface MerchDeviceMapper {
+    MerchDeviceVw findOne(LumosSelective selective);
     List<MerchDeviceVw> find(LumosSelective selective);
     long count(LumosSelective selective);
 }

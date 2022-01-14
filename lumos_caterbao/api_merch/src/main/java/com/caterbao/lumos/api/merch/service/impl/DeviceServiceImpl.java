@@ -9,6 +9,7 @@ import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.pojo.Store;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -83,4 +84,44 @@ public class DeviceServiceImpl implements DeviceService {
         return CustomResult.success("",ret);
     }
 
+    @Override
+    public CustomResult init_manage(String operater, String merchId,String deviceId) {
+
+
+        LumosSelective selective=new LumosSelective();
+        selective.addWhere("MerchId",merchId);
+
+        List<MerchDeviceVw> d_Devices = merchDeviceMapper.find(selective);
+        List<Object> m_Devices = new ArrayList<>();
+
+        for (MerchDeviceVw d_Device :
+                d_Devices) {
+            HashMap<String, Object> m_Device = new HashMap<>();
+            m_Device.put("id", d_Device.getId());
+            m_Device.put("name", DeviceVoUtil.getCode(d_Device.getId(),d_Device.getCumCode()));
+            m_Devices.add(m_Device);
+        }
+
+        HashMap<String, Object> ret = new HashMap<>();
+
+        ret.put("devices", m_Devices);
+
+        return CustomResult.success("初始成功",ret);
+
+    }
+
+    @Override
+    public CustomResult init_manage_baseinfo(String operater, String merchId,String deviceId) {
+
+        LumosSelective selective=new LumosSelective();
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("Device",merchId);
+        MerchDeviceVw d_Device = merchDeviceMapper.findOne(selective);
+
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+
+        return CustomResult.success("初始成功",ret);
+    }
 }

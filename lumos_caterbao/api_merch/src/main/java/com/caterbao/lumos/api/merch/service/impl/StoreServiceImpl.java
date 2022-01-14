@@ -76,20 +76,15 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public CustomResult init_manage(String operater, String merchId, String storeId) {
 
-        Page<?> page = PageHelper.startPage(1, 1024);
-
-
         LumosSelective selective=new LumosSelective();
         selective.setFields("Id,Name");
         selective.addWhere("MerchId",merchId);
 
         List<Store> d_Stores = storeMapper.find(selective);
-
         List<Object> m_Stores = new ArrayList<>();
 
         for (Store d_Store :
                 d_Stores) {
-
             HashMap<String, Object> m_Store = new HashMap<>();
             m_Store.put("id", d_Store.getId());
             m_Store.put("name", d_Store.getName());
@@ -119,7 +114,6 @@ public class StoreServiceImpl implements StoreService {
 
         ret.put("id",d_Store.getId());
         ret.put("name",d_Store.getName());
-
         ret.put("displayImgUrls",JsonUtil.toObject(d_Store.getDisplayImgUrls()));
         ret.put("contactName",d_Store.getContactName());
         ret.put("contactPhone",d_Store.getContactPhone());

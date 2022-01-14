@@ -188,7 +188,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public CustomResult init_edit(String operater, String merchId) {
+    public CustomResult init_edit(String operater, String merchId,String spuId) {
+
+        LumosSelective selective_PrdSpu=new LumosSelective();
+        selective_PrdSpu.setFields("Id,Name,CumCode,DisplayImgUrls,CreateTime");
+        selective_PrdSpu.addWhere("MerchId",merchId);
+        selective_PrdSpu.addWhere("SpuId",spuId);
+
+        PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective_PrdSpu);
+
+        LumosSelective selective_PrdSkus=new LumosSelective();
+        selective_PrdSkus.setFields("Id,Name,CumCode,DisplayImgUrls,CreateTime");
+        selective_PrdSkus.addWhere("MerchId",merchId);
+        selective_PrdSkus.addWhere("SpuId",spuId);
+
+        List<PrdSku> d_PrdSkus=prdSkuMapper.find(selective_PrdSkus);
+
+
         return  null;
     }
 

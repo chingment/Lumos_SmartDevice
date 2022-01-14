@@ -8,5 +8,8 @@ import org.springframework.stereotype.Service;
 public interface DeviceService {
     CustomResult init_bookers(String operater, String merchId);
     CustomResult bookers(String operater, String merchId, RopDeviceBookers rop);
+    CustomResult init_manage(String operater, String merchId,String deviceId);
+    CustomResult init_manage_baseinfo(String operater, String merchId,String deviceId);
+
 }
 

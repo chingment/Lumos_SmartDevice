@@ -77,7 +77,6 @@ export default {
       })[0]
       return reuslt
     }
-
   }
 }
 </script>

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PrdSkuMapper {
+    PrdSku findOne(LumosSelective selective);
     List<PrdSku> find(LumosSelective selective);
     long insert(PrdSku prdSku);
     long isExistCumCode(String id,String merchId,String cumCode);

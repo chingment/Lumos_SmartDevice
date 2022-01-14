@@ -16,7 +16,25 @@ export function bookers(data) {
   })
 }
 
+export function init_manage(params) {
+  return request({
+    url: '/device/init_manage',
+    method: 'get',
+    params
+  })
+}
+
+export function init_manage_baseinfo(params) {
+  return request({
+    url: '/device/init_manage_baseinfo',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   init_bookers: init_bookers,
-  bookers: bookers
+  bookers: bookers,
+  init_manage: init_manage,
+  init_manage_baseinfo: init_manage_baseinfo
 }

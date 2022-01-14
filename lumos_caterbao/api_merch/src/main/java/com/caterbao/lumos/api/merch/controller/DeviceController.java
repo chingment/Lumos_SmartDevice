@@ -29,4 +29,16 @@ public class DeviceController extends  BaseController  {
         return deviceService.bookers(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
+    @RequestMapping(value = "init_manage", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult init_manage(@RequestParam String id) {
+        return deviceService.init_manage(this.getCurrentUserId(), this.getCurrentMerchId(),id);
+    }
+
+    @RequestMapping(value = "init_manage_baseinfo", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult init_manage_baseinfo(@RequestParam String id) {
+        return deviceService.init_manage_baseinfo(this.getCurrentUserId(), this.getCurrentMerchId(),id);
+    }
+
 }
