@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-if="visible" :title="'选择门店'" width="800px" :visible.sync="visible" :before-close="onBeforeClose">
+  <el-dialog v-if="visible" :title="'选择门店绑定店铺'" width="800px" :visible.sync="visible" :before-close="onBeforeClose">
     <div id="shop_list" style="width:100%;height:600px">
       <div class="filter-container">
         <el-row :gutter="16">

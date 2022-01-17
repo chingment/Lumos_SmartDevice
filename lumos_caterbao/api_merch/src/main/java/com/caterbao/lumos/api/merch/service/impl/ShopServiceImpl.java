@@ -112,6 +112,7 @@ public class ShopServiceImpl implements ShopService {
             return CustomResult.fail("名称已经存在");
 
         d_Shop.setId(IdWork.generateGUID());
+        d_Shop.setAddress(rop.getAddress());
         d_Shop.setContactName(rop.getContactName());
         d_Shop.setContactPhone(rop.getContactPhone());
         d_Shop.setContactAddress(rop.getContactAddress());
@@ -131,7 +132,7 @@ public class ShopServiceImpl implements ShopService {
     public CustomResult init_edit(String operater, String merchId, String shopId) {
 
         LumosSelective selective=new LumosSelective();
-        selective.setFields("Id,Name,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
+        selective.setFields("Id,Name,Address,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
         selective.addWhere("ShopId",shopId);
         selective.addWhere("MerchId",merchId);
 
@@ -144,7 +145,7 @@ public class ShopServiceImpl implements ShopService {
 
         ret.put("id",d_Shop.getId());
         ret.put("name",d_Shop.getName());
-
+        ret.put("address",d_Shop.getAddress());
         ret.put("displayImgUrls",JsonUtil.toObject(d_Shop.getDisplayImgUrls()));
         ret.put("contactName",d_Shop.getContactName());
         ret.put("contactPhone",d_Shop.getContactPhone());
@@ -173,8 +174,9 @@ public class ShopServiceImpl implements ShopService {
         if(shopMapper.isExistName(d_Shop.getId(),merchId,rop.getName())>0)
             return CustomResult.fail("名称已经存在");
 
-        d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
 
+        d_Shop.setAddress(rop.getAddress());
+        d_Shop.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
         d_Shop.setContactName(rop.getContactName());
         d_Shop.setContactPhone(rop.getContactPhone());
         d_Shop.setContactAddress(rop.getContactAddress());

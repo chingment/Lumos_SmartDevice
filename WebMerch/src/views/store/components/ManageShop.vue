@@ -34,12 +34,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-if="dialogByDeviceIsVisible" :title="'设备管理'" width="800px" :visible.sync="dialogByDeviceIsVisible" @close="onList(listQuery)">
-      <div style="width:100%;height:600px">
-        <pane-device-bind :store-id="storeId" :shop-id="shopId" />
-      </div>
-    </el-dialog>
-
+    <pane-device-bind v-if="dialogByDeviceIsVisible" :visible.sync="dialogByDeviceIsVisible" :store-id="storeId" :shop-id="shopId" @onClose="onList" />
     <pane-shop-bind v-if="dialogByShopVisible" :visible.sync="dialogByShopVisible" :store-id="storeId" :select-method="onBindShop" />
 
   </div>
@@ -94,12 +89,12 @@ export default {
     init() {
       if (!isEmpty(this.storeId)) {
         this.listQuery.storeId = this.storeId
-        this.onList(this.listQuery)
+        this.onList()
       }
     },
-    onList(listQuery) {
+    onList() {
       this.loading = true
-      shops(listQuery).then(res => {
+      shops(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }
@@ -117,7 +112,7 @@ export default {
     },
     onBindShop(item) {
       this.dialogByShopVisible = false
-      this.onList(this.listQuery)
+      this.onList()
     },
     onUnBindShop(item) {
       MessageBox.confirm('确定要移除该门店？', '提示', {

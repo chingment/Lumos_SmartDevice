@@ -6,8 +6,8 @@
         <el-input v-model.trim="form.name" clearable style="max-width:500px" />
       </el-form-item>
       <el-form-item label="门店地址" prop="address">
-        <el-input v-model="form.address" clearable style="width:450px" />
-        <el-button type="text" @click="dialogIsShowBySelectAddressPoint=true">选择</el-button>
+        <el-input v-model="form.address" clearable style="width:500px" />
+        <el-button type="text" style="display:none" @click="dialogIsShowBySelectAddressPoint=true">选择</el-button>
       </el-form-item>
       <el-form-item label="联系人" prop="contactName">
         <el-input v-model="form.contactName" clearable style="width:200px" />
@@ -73,7 +73,7 @@ export default {
       },
       rules: {
         name: [{ required: true, min: 1, max: 30, message: '必填,且不能超过30个字符', trigger: 'change' }],
-        address: [{ required: true, min: 1, max: 512, message: '请选择' }],
+        address: [{ required: true, min: 1, max: 512, message: '必填' }],
         displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且最多4张', max: 4 }]
       },
       uploadImgHeaders: {},

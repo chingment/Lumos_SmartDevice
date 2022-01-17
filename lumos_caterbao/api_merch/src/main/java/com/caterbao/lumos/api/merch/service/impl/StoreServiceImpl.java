@@ -184,7 +184,7 @@ public class StoreServiceImpl implements StoreService {
 
 
         LumosSelective selective=new LumosSelective();
-        selective.setFields("Id,Name,DisplayImgUrls");
+        selective.setFields("Id,Name,Address,DisplayImgUrls");
         selective.addWhere("ShopName",rop.getShopName());
         selective.addWhere("MerchId",merchId);
         selective.addWhere("StoreId",rop.getStoreId());
@@ -201,6 +201,7 @@ public class StoreServiceImpl implements StoreService {
 
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());
+            item.put("address",d_Shop.getAddress());
             item.put("imgUrl", ImgVo.getMainImgUrl(d_Shop.getDisplayImgUrls()));
             items.add(item);
         }

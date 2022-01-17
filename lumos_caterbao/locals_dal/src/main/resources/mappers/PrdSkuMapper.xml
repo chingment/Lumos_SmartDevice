@@ -42,6 +42,7 @@
             <if test="salePrice != null">salePrice=#{salePrice},</if>
             <if test="specDes != null">specDes=#{specDes},</if>
             <if test="specIdx != null">specIdx=#{specIdx},</if>
+            <if test="isDelete != null">isDelete=#{isDelete},</if>
             <if test="mender != null">mender=#{mender},</if>
             <if test="mendTime != null">mendTime=#{mendTime}</if>
         </set>

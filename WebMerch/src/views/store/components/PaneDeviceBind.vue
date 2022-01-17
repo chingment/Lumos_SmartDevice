@@ -1,87 +1,33 @@
 <template>
-  <div id="shop_list">
-    <div class="filter-container">
-
-      <el-row :gutter="16">
-        <el-col :span="8" :xs="24" style="margin-bottom:20px">
-          <el-input v-model="listQueryByDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
-        </el-col>
-
-        <el-col :span="8" :xs="24" style="margin-bottom:20px">
-          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilterByDevices">
-            查询
-          </el-button>
-          <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="onDialogOpenByUnDevices()">
-            添加
-          </el-button>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="cur-tab">
-      <div class="it-name">
-        <span class="title">当前门店:</span><span class="name">{{ shopDetails.name }}</span>
-      </div>
-    </div>
-    <el-table
-      :key="listKeyByDevices"
-      v-loading="loadingByDevices"
-      :data="listDataByDevices.items"
-      fit
-      highlight-current-row
-      style="width: 100%;"
-    >
-      <el-table-column label="序号" prop="id" align="left" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.$index+1 }} </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="设备编码" align="left" min-width="30%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="自编码" align="left" min-width="70%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cumCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="right" width="200" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button type="text" size="mini" @click="onUnBindDevice(row)">
-            解绑
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination v-show="listDataByDevices.totalSize>0" :total="listDataByDevices.totalSize" :page.sync="listQueryByDevices.pageNum" :limit.sync="listQueryByDevices.pageSize" @pagination="onDevices" />
-
-    <el-dialog v-if="dialogVisibleByUnDevices" :title="'选择设备'" width="600px" :visible.sync="dialogVisibleByUnDevices" append-to-body>
-      <div style="width:100%;height:400px">
+  <el-dialog v-if="visible" :title="'门店设备管理'" width="800px" :visible.sync="visible" :before-close="onBeforeClose">
+    <div style="width:100%;height:600px">
+      <div id="device_list">
         <div class="filter-container">
+
           <el-row :gutter="16">
             <el-col :span="8" :xs="24" style="margin-bottom:20px">
-              <el-input v-model="listQueryByUnDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
+              <el-input v-model="listQueryByDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
             </el-col>
+
             <el-col :span="8" :xs="24" style="margin-bottom:20px">
-              <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onUnDevices">
+              <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilterByDevices">
                 查询
+              </el-button>
+              <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="onDialogOpenByUnDevices()">
+                添加
               </el-button>
             </el-col>
           </el-row>
-
         </div>
-
         <div class="cur-tab">
           <div class="it-name">
             <span class="title">当前门店:</span><span class="name">{{ shopDetails.name }}</span>
           </div>
         </div>
-
         <el-table
-          :key="listKeyByUnDevices"
-          v-loading="loadingByUnDevices"
-          :data="listDataByUnDevices.items"
+          :key="listKeyByDevices"
+          v-loading="loadingByDevices"
+          :data="listDataByDevices.items"
           fit
           highlight-current-row
           style="width: 100%;"
@@ -91,28 +37,86 @@
               <span>{{ scope.$index+1 }} </span>
             </template>
           </el-table-column>
-          <el-table-column label="设备编码" align="left" min-width="45%">
+          <el-table-column label="设备编码" align="left" min-width="30%">
             <template slot-scope="scope">
               <span>{{ scope.row.id }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="自编码" align="left" min-width="45%">
+          <el-table-column label="自编码" align="left" min-width="70%">
             <template slot-scope="scope">
               <span>{{ scope.row.cumCode }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="right" width="100" class-name="small-padding fixed-width">
+          <el-table-column label="操作" align="right" width="200" class-name="small-padding fixed-width">
             <template slot-scope="{row}">
-              <el-button type="text" size="mini" @click="onBindDevice(row)">
-                选择
+              <el-button type="text" size="mini" @click="onUnBindDevice(row)">
+                解绑
               </el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="listDataByUnDevices.totalSize>0" :total="listDataByUnDevices.totalSize" :page.sync="listQueryByUnDevices.pageNum" :limit.sync="listQueryByUnDevices.pageSize" @pagination="onUnDevices" />
+
+        <pagination v-show="listDataByDevices.totalSize>0" :total="listDataByDevices.totalSize" :page.sync="listQueryByDevices.pageNum" :limit.sync="listQueryByDevices.pageSize" @pagination="onDevices" />
+
+        <el-dialog v-if="dialogVisibleByUnDevices" :title="'选择设备绑定门店'" width="600px" :visible.sync="dialogVisibleByUnDevices" append-to-body>
+          <div style="width:100%;height:400px">
+            <div class="filter-container">
+              <el-row :gutter="16">
+                <el-col :span="8" :xs="24" style="margin-bottom:20px">
+                  <el-input v-model="listQueryByUnDevices.deviceCode" clearable style="width: 100%" placeholder="设备编码/自编码" class="filter-item" />
+                </el-col>
+                <el-col :span="8" :xs="24" style="margin-bottom:20px">
+                  <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onUnDevices">
+                    查询
+                  </el-button>
+                </el-col>
+              </el-row>
+
+            </div>
+
+            <div class="cur-tab">
+              <div class="it-name">
+                <span class="title">当前门店:</span><span class="name">{{ shopDetails.name }}</span>
+              </div>
+            </div>
+
+            <el-table
+              :key="listKeyByUnDevices"
+              v-loading="loadingByUnDevices"
+              :data="listDataByUnDevices.items"
+              fit
+              highlight-current-row
+              style="width: 100%;"
+            >
+              <el-table-column label="序号" prop="id" align="left" width="80">
+                <template slot-scope="scope">
+                  <span>{{ scope.$index+1 }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="设备编码" align="left" min-width="45%">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.id }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="自编码" align="left" min-width="45%">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.cumCode }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="right" width="100" class-name="small-padding fixed-width">
+                <template slot-scope="{row}">
+                  <el-button type="text" size="mini" @click="onBindDevice(row)">
+                    选择
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <pagination v-show="listDataByUnDevices.totalSize>0" :total="listDataByUnDevices.totalSize" :page.sync="listQueryByUnDevices.pageNum" :limit.sync="listQueryByUnDevices.pageSize" @pagination="onUnDevices" />
+          </div>
+        </el-dialog>
       </div>
-    </el-dialog>
-  </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -133,9 +137,13 @@ export default {
       type: String,
       default: ''
     },
-    selectMethod: {
+    onClose: {
       type: Function,
       default: null
+    },
+    visible: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -277,6 +285,10 @@ export default {
           this.loadingByDevices = false
         })
       })
+    },
+    onBeforeClose() {
+      this.$emit('onClose')
+      this.$emit('update:visible', false)
     }
 
   }

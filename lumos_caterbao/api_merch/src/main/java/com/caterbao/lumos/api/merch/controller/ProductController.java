@@ -38,6 +38,7 @@ public class ProductController extends  BaseController {
     public CustomResult init_edit(@RequestParam String id) {
         return productService.init_edit(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
+
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult add(@RequestBody RopProdcutEdit rop) {

@@ -14,6 +14,7 @@
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSpu" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from PrdSpu where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
+        <if test="where.IsDelete != null and where.IsDelete.length() > 0">and isDelete =#{where.IsDelete}</if>
     </select>
 
     <select id="isExistCumCode" resultType="java.lang.Long">
@@ -46,6 +47,7 @@
             <if test="displayImgUrls != null">displayImgUrls=#{displayImgUrls},</if>
             <if test="briefDes != null">briefDes=#{briefDes},</if>
             <if test="detailsDes != null">detailsDes=#{detailsDes},</if>
+            <if test="isDelete != null">isDelete=#{isDelete},</if>
             <if test="mender != null">mender=#{mender},</if>
             <if test="mendTime != null">mendTime=#{mendTime}</if>
         </set>

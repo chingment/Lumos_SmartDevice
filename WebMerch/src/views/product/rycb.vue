@@ -67,13 +67,10 @@
           <span>{{ row.skus[0].salePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="text" size="mini" @click="onEdit(row)">
             编辑
-          </el-button>
-          <el-button type="text" size="mini" @click="onDelete(row)">
-            加入回收站
           </el-button>
         </template>
       </el-table-column>
@@ -97,7 +94,7 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        isDelete: 0,
+        isDelete: 1,
         key: undefined
       },
       listKey: 's',

@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         LumosSelective selective_PrdSpu=new LumosSelective();
         selective_PrdSpu.setFields("Id,Name,CumCode,DisplayImgUrls,CreateTime");
         selective_PrdSpu.addWhere("MerchId",merchId);
-
+        selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
         List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
 
         List<Object> items=new ArrayList<>();
@@ -77,7 +77,6 @@ public class ProductServiceImpl implements ProductService {
             selective_PrdSku.setFields("Id,CumCode,BarCode,SalePrice,SpecDes");
             selective_PrdSku.addWhere("MerchId",merchId);
             selective_PrdSku.addWhere("SpuId",d_PrdSpu.getId());
-
             List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
 
             List<Object> skus=new ArrayList<>();
@@ -107,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
         return CustomResult.success("",ret);
     }
+
 
     @Override
     public CustomResult add(String operater, String merchId, RopProdcutAdd rop) {
@@ -326,9 +326,9 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setMender(operater);
             d_PrdSpu.setMendTime(CommonUtil.getDateTimeNow());
 
-            long r_PrdSpu_Upate = prdSpuMapper.update(d_PrdSpu);
+            long r_PrdSpu_Update = prdSpuMapper.update(d_PrdSpu);
 
-            if (r_PrdSpu_Upate <= 0) {
+            if (r_PrdSpu_Update <= 0) {
                 return CustomResult.fail("保存失败");
             }
 
@@ -380,6 +380,38 @@ public class ProductServiceImpl implements ProductService {
             if (CommonUtil.isEmpty(rop.getId()))
                 return CustomResult.fail("货号ID不能为空");
 
+
+            LumosSelective selective_PrdSpu=new LumosSelective();
+            selective_PrdSpu.setFields("Id,CumCode");
+            selective_PrdSpu.addWhere("MerchId",merchId);
+            selective_PrdSpu.addWhere("SpuId",rop.getId());
+            PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective_PrdSpu);
+
+            d_PrdSpu.setCumCode("backup_"+d_PrdSpu.getCumCode());
+            d_PrdSpu.setDelete(true);
+
+            long r_PrdSpu_Update=prdSpuMapper.update(d_PrdSpu);
+            if (r_PrdSpu_Update <= 0) {
+                return CustomResult.fail("保存失败");
+            }
+
+            LumosSelective selective_PrdSkus=new LumosSelective();
+            selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
+            selective_PrdSkus.addWhere("MerchId",merchId);
+            selective_PrdSkus.addWhere("SpuId",rop.getId());
+            List<PrdSku> d_PrdSkus=prdSkuMapper.find(selective_PrdSkus);
+
+            for (PrdSku d_PrdSku: d_PrdSkus ) {
+
+
+                d_PrdSku.setCumCode("backup_"+d_PrdSku.getCumCode());
+                d_PrdSku.setDelete(true);
+
+                long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
+                if (r_PrdSku_Update <= 0) {
+                    return CustomResult.fail("保存失败");
+                }
+            }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();

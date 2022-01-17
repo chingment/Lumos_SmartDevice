@@ -7,7 +7,7 @@
       </el-form-item>
       <el-form-item label="门店地址" prop="address">
         <el-input v-model="form.address" clearable style="width:450px" />
-        <el-button type="text" @click="dialogIsShowBySelectAddressPoint=true">选择</el-button>
+        <el-button type="text" style="display:none" @click="dialogIsShowBySelectAddressPoint=true">选择</el-button>
       </el-form-item>
       <el-form-item label="联系人" prop="contactName">
         <el-input v-model="form.contactName" clearable style="width:200px" />
@@ -64,6 +64,7 @@ export default {
       form: {
         id: '',
         name: '',
+        address: '',
         contactName: '',
         contactPhone: '',
         contactAddress: '',

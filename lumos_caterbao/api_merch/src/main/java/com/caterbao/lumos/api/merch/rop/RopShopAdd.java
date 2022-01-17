@@ -6,6 +6,7 @@ import java.util.List;
 
 public class RopShopAdd {
     private String name;
+    private String address;
     private List<ImgVo> displayImgUrls;
     private String contactName;
     private String contactPhone;
@@ -17,6 +18,14 @@ public class RopShopAdd {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<ImgVo> getDisplayImgUrls() {

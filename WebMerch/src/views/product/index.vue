@@ -6,6 +6,8 @@
           <el-menu-item-group>
             <template slot="title">商品库</template>
             <el-menu-item index="/product/list">商品列表</el-menu-item>
+            <el-menu-item index="/product/add">新建商品</el-menu-item>
+            <el-menu-item index="/product/rycb">回收站</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>

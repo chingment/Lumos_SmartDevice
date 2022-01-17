@@ -10,6 +10,7 @@ public class Shop {
     private String contactName;
     private String contactPhone;
     private String contactAddress;
+    private String address;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -69,6 +70,14 @@ public class Shop {
 
     public void setContactAddress(String contactAddress) {
         this.contactAddress = contactAddress;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getCreator() {
