@@ -67,9 +67,12 @@ export default {
       })
     },
     onChangeDropdown(id) {
-      this.activeId = id
-      this.activeDropdown = this.getActiveDropdown(id)
-      this.init()
+      this.$router.replace({
+        query: {
+          id: id,
+          tab: this.activeTab
+        }
+      })
     },
     getActiveDropdown(id) {
       const reuslt = this.dropdownOptions.filter((item) => {

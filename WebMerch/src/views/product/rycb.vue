@@ -18,9 +18,6 @@
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
             查询
           </el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="onAdd">
-            新建
-          </el-button>
         </el-col>
       </el-row>
     </div>

@@ -8,8 +8,15 @@
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl,
         ImeiId,Model,MacAddr,
-        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus from
-        MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
+        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus,
+        c.ShopId,
+        (select c1.name from Shop c1 where c1.id=c.ShopId) as  ShopName,
+        c.StoreId,
+        (select c2.name from Store c2 where c2.id=c.StoreId) as  StoreName
+         from
+        MerchDevice  a left join  Device b on a.DeviceId=b.Id left join
+        ShopDevice c on a.DeviceId=c.DeviceId and c.BindStatus=1
+         where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
         <if test="where.DeviceId != null and where.DeviceId.length() > 0">and a.DeviceId=#{where.DeviceId}</if>
     </select>
@@ -17,8 +24,15 @@
     <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl,
         ImeiId,Model,MacAddr,
-        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus from
-         MerchDevice  a left join  Device b on a.DeviceId=b.Id  where 1=1
+        b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus,
+        c.ShopId,
+        (select c1.name from Shop c1 where c1.id=c.ShopId) as  ShopName,
+        c.StoreId,
+        (select c2.name from Store c2 where c2.id=c.StoreId) as  StoreName
+        from
+        MerchDevice  a left join  Device b on a.DeviceId=b.Id left join
+        ShopDevice c on a.DeviceId=c.DeviceId and c.BindStatus=1
+        where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
         <if test="where.SceneMode != null and where.SceneMode.length() > 0">and b.SceneMode=#{where.SceneMode}</if>
         <if test="where.DeviceCode != null and where.DeviceCode.length() > 0">and (a.DeviceId like concat('%', #{where.DeviceCode}, '%') or a.CumCode like concat('%', #{where.DeviceCode}, '%') ) </if>

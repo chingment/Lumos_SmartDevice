@@ -4,6 +4,7 @@ package com.caterbao.lumos.locals.common;
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class CommonUtil {
     public  static String HelloWorld(){
@@ -48,4 +49,11 @@ public class CommonUtil {
 
     }
 
+    public static String toDateTime(Timestamp time){
+        if (null != time) {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+        } else {
+            return "";
+        }
+    }
 }

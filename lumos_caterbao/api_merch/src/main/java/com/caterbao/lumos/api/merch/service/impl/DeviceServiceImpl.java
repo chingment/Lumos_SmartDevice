@@ -2,6 +2,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
+import com.caterbao.lumos.api.merch.rop.model.FieldModel;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
@@ -43,6 +44,18 @@ public class DeviceServiceImpl implements DeviceService {
         return CustomResult.success("初始成功",ret);
     }
 
+    public FieldModel getStatus(){
+        FieldModel model=new FieldModel();
+
+        return model;
+    }
+
+    public String getBelongName(String storeName,String shopName) {
+        if (CommonUtil.isEmpty(shopName))
+            return "未绑定";
+        return storeName + "/" + shopName;
+    }
+
     @Override
     public CustomResult bookers(String operater, String merchId, RopDeviceBookers rop) {
 
@@ -56,19 +69,21 @@ public class DeviceServiceImpl implements DeviceService {
         selective_MerchDevice.addWhere("MerchId",merchId);
         selective_MerchDevice.addWhere("SceneMode","2");
         selective_MerchDevice.addWhere("DeviceCode",rop.getDeviceCode());
-        List<MerchDeviceVw> d_MerchDevices= merchDeviceMapper.find(selective_MerchDevice);
+        List<MerchDeviceVw> d_Devices= merchDeviceMapper.find(selective_MerchDevice);
 
         List<Object> items=new ArrayList<>();
 
-        for (MerchDeviceVw d_MerchDevice: d_MerchDevices ) {
+        for (MerchDeviceVw d_Device: d_Devices ) {
 
             HashMap<String, Object> item = new HashMap<>();
 
-            item.put("id", d_MerchDevice.getId());
-            item.put("cumCode", d_MerchDevice.getCumCode());
-            item.put("code", DeviceVoUtil.getCode(d_MerchDevice.getId(),d_MerchDevice.getCumCode()));
-            item.put("imgUrl", d_MerchDevice.getImgUrl());
-
+            item.put("id", d_Device.getId());
+            item.put("cumCode", d_Device.getCumCode());
+            item.put("code", DeviceVoUtil.getCode(d_Device.getId(),d_Device.getCumCode()));
+            item.put("imgUrl", d_Device.getImgUrl());
+            item.put("status",getStatus());
+            item.put("belongName",getBelongName(d_Device.getStoreName(),d_Device.getShopName()));
+            item.put("lastRunTime",CommonUtil.toDateTime(d_Device.getLastRunTime()));
             items.add(item);
         }
 
@@ -125,6 +140,7 @@ public class DeviceServiceImpl implements DeviceService {
         ret.put("appVerName",d_Device.getAppVerName());
         ret.put("sysVerName",d_Device.getSysVerName());
         ret.put("ctrlVerName",d_Device.getCtrlVerName());
+        ret.put("belongName",getBelongName(d_Device.getStoreName(),d_Device.getShopName()));
         return CustomResult.success("初始成功",ret);
     }
 

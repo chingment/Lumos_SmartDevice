@@ -24,17 +24,14 @@
           <div slot="header" class="it-header clearfix">
             <div class="left">
               <div class="circle-item">
-                <!-- <span :class="'icon-status icon-status-'+item.status.value" />
-                <span class="name">{{ item.code }}
-                  <span style="font-size:12px;"> ({{ item.status.text }})</span>
-                </span> -->
+                <div class="circle-item"> <span :class="'icon-status icon-status-'+item.status.value" /> <span class="name">{{ item.code }} <span style="font-size:12px;"> ({{ item.status.text }})</span></span></div>
               </div>
             </div>
             <div class="right">
               <el-button type="text" @click="onManage(item)">管理</el-button>
             </div>
           </div>
-          <!-- <div class="storeName" style="font-size:12px;white-space: nowrap">{{ item.shopName }} [{{ item.lastRequestTime }}]</div> -->
+          <div class="storeName" style="font-size:12px;white-space: nowrap">{{ item.belongName }}[{{ item.lastRunTime }}]</div>
           <div class="it-component">
             <div class="img"> <img :src="item.imgUrl" alt=""> </div>
             <div class="describe">
