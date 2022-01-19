@@ -5,7 +5,7 @@
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.DeviceMapper">
 
-    <select id="findByDeviceId" resultType="com.caterbao.lumos.locals.dal.pojo.Device"  parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.Device"  parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
         select  ${fields}  from Device  where  id =#{where.DeviceId}
     </select>
 

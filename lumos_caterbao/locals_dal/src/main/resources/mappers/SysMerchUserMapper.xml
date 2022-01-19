@@ -9,4 +9,16 @@
         <if test="where.UserId != null ">and UserId =#{where.UserId}</if>
     </select>
 
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchUserVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select b.id,b.userName,b.fullName,b.avatar,b.phoneNumber,b.email,b.isDisable, b.createTime from SysMerchUser a inner join SysUser b
+        on a.UserId=b.Id
+        where 1=1
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
+    </select>
+
+<!--    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.SysMerchUserMapper">-->
+<!--  insert into SysMerchUser(id,merchId,userId,isMaster)-->
+<!--  values(#{id},#{merchId},#{userId},#{isMaster})-->
+<!--    </insert>-->
+
 </mapper>

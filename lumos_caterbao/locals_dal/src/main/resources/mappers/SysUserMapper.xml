@@ -12,7 +12,7 @@
     </select>
 
     <select id="getMenusByUserId" resultType="com.caterbao.lumos.locals.dal.pojo.SysMenu" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-        select ${fields} from SysMenu where depth!=0
+        select ${fields} from SysMenu where depth!=0 order by Priority
     </select>
 
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.SysUser">

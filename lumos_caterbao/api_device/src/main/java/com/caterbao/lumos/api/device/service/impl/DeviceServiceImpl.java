@@ -10,8 +10,10 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.DeviceCabinetMapper;
 import com.caterbao.lumos.locals.dal.mapper.DeviceMapper;
+import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.Device;
 import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
+import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class DeviceServiceImpl implements DeviceService{
     @Autowired
     private DeviceCabinetMapper deviceCabinetMapper;
 
+    @Autowired
+    private MerchDeviceMapper merchDeviceMapper;
+
     @Override
     public CustomResult init(String operater, String merchId, RopDeviceInitData rop) {
 
@@ -36,23 +41,28 @@ public class DeviceServiceImpl implements DeviceService{
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return CustomResult.fail("设备编码为空");
 
-        LumosSelective device_Selective=new LumosSelective();
-        device_Selective.setFields("Id,CurMerchId,CurStoreId,CurShopId");
-        device_Selective.addWhere("DeviceId",rop.getDeviceId());
+        LumosSelective selective_Device=new LumosSelective();
+        selective_Device.setFields("Id,Name,SceneMode,VersionMode");
+        selective_Device.addWhere("DeviceId",rop.getDeviceId());
 
-        Device d_Device = deviceMapper.findOne(device_Selective);
+        Device d_Device = deviceMapper.findOne(selective_Device);
 
         if (d_Device == null)
             return CustomResult.fail("设备编码未注册");
 
-//        if (CommonUtil.isEmpty(d_Device.getCurMerchId()))
-//            return CustomResult.fail("设备未绑定商户");
-//
-//        if (CommonUtil.isEmpty(d_Device.getCurStoreId()))
-//            return CustomResult.fail("设备未绑定店铺");
-//
-//        if (CommonUtil.isEmpty(d_Device.getCurShopId()))
-//            return CustomResult.fail("设备未绑定门店");
+        LumosSelective selective_MerchDevice=new LumosSelective();
+        selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
+        selective_MerchDevice.addWhere("BindStatus","1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+
+        if (d_MerchDevice==null)
+            return CustomResult.fail("设备未绑定商户");
+
+        if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
+            return CustomResult.fail("设备未绑定店铺");
+
+        if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
+            return CustomResult.fail("设备未绑定门店");
 
 
         d_Device.setAppVerCode(rop.getAppVerCode());
@@ -63,12 +73,11 @@ public class DeviceServiceImpl implements DeviceService{
 
         deviceMapper.update(d_Device);
 
+        LumosSelective selective_Cabinet=new LumosSelective();
+        selective_Cabinet.setFields("CabinetId,Name,ComId,ComPrl,ComBaud,Layout,Priority");
+        selective_Cabinet.addWhere("DeviceId",rop.getDeviceId());
 
-        LumosSelective cabinet_Selective=new LumosSelective();
-        cabinet_Selective.setFields("Id,CurMerchId,CurStoreId,CurShopId");
-        cabinet_Selective.addWhere("DeviceId",rop.getDeviceId());
-
-        List<DeviceCabinet> d_Cabinets = deviceCabinetMapper.find(cabinet_Selective);
+        List<DeviceCabinet> d_Cabinets = deviceCabinetMapper.find(selective_Cabinet);
 
         RetDeviceInitData ret = new RetDeviceInitData();
 

@@ -42,6 +42,8 @@ public class OwnServiceImpl implements OwnService {
         if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
+
+
         RetOwnLogin ret=new RetOwnLogin();
         ret.setUserId(d_User.getId());
         ret.setUserName(d_User.getUserName());

@@ -19,6 +19,7 @@
          where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and a.MerchId=#{where.MerchId}</if>
         <if test="where.DeviceId != null and where.DeviceId.length() > 0">and a.DeviceId=#{where.DeviceId}</if>
+        <if test="where.BindStatus != null ">and a.BindStatus =#{where.BindStatus}</if>
     </select>
 
     <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchDeviceVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">

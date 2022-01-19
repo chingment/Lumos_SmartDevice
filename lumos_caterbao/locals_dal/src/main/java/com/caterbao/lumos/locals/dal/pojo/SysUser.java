@@ -9,6 +9,9 @@ public class SysUser {
     private String avatar;
     private String passwordHash;
     private String SecurityStamp;
+    private String phoneNumber;
+    private String email;
+    private Boolean isDisable;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -92,5 +95,29 @@ public class SysUser {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getDisable() {
+        return isDisable;
+    }
+
+    public void setDisable(Boolean disable) {
+        isDisable = disable;
     }
 }
