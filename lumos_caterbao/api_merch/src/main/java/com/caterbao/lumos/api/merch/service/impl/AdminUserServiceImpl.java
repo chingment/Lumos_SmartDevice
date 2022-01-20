@@ -122,7 +122,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         LumosSelective selective=new LumosSelective();
         selective.setFields("*");
         selective.addWhere("MerchId",merchId);
-
+        selective.addWhere("UserName",rop.getUserName());
         List<MerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
@@ -186,8 +186,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         try {
 
-            SysUser d_SysUser=new SysUser();
-            d_SysUser.setId(rop.getId());
+            LumosSelective selective_SysUser=new LumosSelective();
+            selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+            selective_SysUser.addWhere("UserId",rop.getId());
+
+            SysUser d_SysUser=sysUserMapper.findOne(selective_SysUser);
 
             if(!CommonUtil.isEmpty(rop.getPassword())) {
                 d_SysUser.setPasswordHash(PasswordUtil.encryBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp()));

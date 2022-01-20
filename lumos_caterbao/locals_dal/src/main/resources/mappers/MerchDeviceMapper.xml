@@ -42,6 +42,7 @@
     <select id="count" resultType="java.lang.Long" parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
         select count(Id) from MerchDevice where 1=1
         <if test="where.MerchId != null ">and MerchId =#{where.MerchId}</if>
+        <if test="where.DeviceId != null ">and DeviceId =#{where.DeviceId}</if>
         <if test="where.BindStatus != null ">and BindStatus =#{where.BindStatus}</if>
     </select>
 

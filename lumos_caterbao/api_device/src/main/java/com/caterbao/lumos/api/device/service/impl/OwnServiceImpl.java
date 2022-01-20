@@ -6,7 +6,10 @@ import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
+import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
+import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,12 @@ public class OwnServiceImpl implements OwnService {
     private SysUserMapper sysUserMapper;
 
     @Autowired
+    private SysMerchUserMapper sysMerchUserMapper;
+
+    @Autowired
+    private MerchDeviceMapper merchDeviceMapper;
+
+    @Autowired
     public OwnServiceImpl() {
     }
 
@@ -26,29 +35,49 @@ public class OwnServiceImpl implements OwnService {
 
         CustomResult result = new CustomResult();
 
-        LumosSelective selective=new LumosSelective();
-        selective.setFields("Id,PasswordHash,SecurityStamp");
-        selective.addWhere("UserName",rop.getUserName());
+        LumosSelective selective_SysUser=new LumosSelective();
+        selective_SysUser.setFields("Id,PasswordHash,SecurityStamp,IsDisable");
+        selective_SysUser.addWhere("UserName",rop.getUserName());
 
-        SysUser d_User = sysUserMapper.findOne(selective);
+        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
-        if (d_User == null)
+        if (d_SysUser == null)
             return CustomResult.fail("账号或密码错误");
 
-        String passwordHash = d_User.getPasswordHash();
+        String passwordHash = d_SysUser.getPasswordHash();
 
-        boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_User.getSecurityStamp(), passwordHash);
+        boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp(), passwordHash);
 
         if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
+        if(d_SysUser.getIsDisable())
+            return CustomResult.fail("该账号已被停用");
 
+        LumosSelective selective_SysMerchUser=new LumosSelective();
+        selective_SysMerchUser.setFields("UserId,MerchId");
+        selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
+
+        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+
+        if (d_SysMerchUser == null)
+            return CustomResult.fail("该账号未授权");
+
+        LumosSelective selective_MerchDevice=new LumosSelective();
+        selective_MerchDevice.addWhere("MerchId",d_SysMerchUser.getMerchId());
+        selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
+        selective_MerchDevice.addWhere("BindStatus","1");
+
+        long validCount= merchDeviceMapper.count(selective_MerchDevice);
+
+        if(validCount<=0)
+            return CustomResult.fail("该账号未授权");
 
         RetOwnLogin ret=new RetOwnLogin();
-        ret.setUserId(d_User.getId());
-        ret.setUserName(d_User.getUserName());
-        ret.setFullName(d_User.getFullName());
-        ret.setAvatar(d_User.getAvatar());
+        ret.setUserId(d_SysUser.getId());
+        ret.setUserName(d_SysUser.getUserName());
+        ret.setFullName(d_SysUser.getFullName());
+        ret.setAvatar(d_SysUser.getAvatar());
         return CustomResult.success("登录成功", ret);
     }
 
@@ -63,19 +92,19 @@ public class OwnServiceImpl implements OwnService {
 
         RetOwnGetInfo ret = new RetOwnGetInfo();
 
-        LumosSelective user_Selective=new LumosSelective();
-        user_Selective.setFields("Id,UserName,FullName,Avatar");
-        user_Selective.addWhere("UserId",rop.getUserId());
+        LumosSelective selective_SysUser=new LumosSelective();
+        selective_SysUser.setFields("Id,UserName,FullName,Avatar");
+        selective_SysUser.addWhere("UserId",rop.getUserId());
 
-        SysUser d_User = sysUserMapper.findOne(user_Selective);
+        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
-        if (d_User == null)
+        if (d_SysUser == null)
             return CustomResult.fail("信息不存在");
 
-        ret.setUserId(d_User.getId());
-        ret.setUserName(d_User.getUserName());
-        ret.setFullName(d_User.getFullName());
-        ret.setAvatar(d_User.getAvatar());
+        ret.setUserId(d_SysUser.getId());
+        ret.setUserName(d_SysUser.getUserName());
+        ret.setFullName(d_SysUser.getFullName());
+        ret.setAvatar(d_SysUser.getAvatar());
 
         return CustomResult.success("获取成功",ret);
     }
@@ -83,34 +112,33 @@ public class OwnServiceImpl implements OwnService {
     @Override
     public CustomResult saveInfo(String operater, RopOwnSaveInfo rop) {
 
-        LumosSelective user_Selective=new LumosSelective();
-        user_Selective.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
-        user_Selective.addWhere("UserId",rop.getUserName());
+        LumosSelective selective_SysUser = new LumosSelective();
+        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
+        selective_SysUser.addWhere("UserId", rop.getUserName());
 
-        SysUser d_User = sysUserMapper.findOne(user_Selective);
+        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
-        if (d_User == null)
+        if (d_SysUser == null)
             return CustomResult.fail("信息不存在");
 
-        d_User.setFullName(rop.getFullName());
-        d_User.setMender(d_User.getId());
-        d_User.setMendTime(CommonUtil.getDateTimeNow());
-        if(CommonUtil.isEmpty(rop.getPassword())) {
-            d_User.setPasswordHash(null);
-        }
-        else
-        {
-            d_User.setPasswordHash(PasswordUtil.encryBySHA256(rop.getPassword(),d_User.getSecurityStamp()));
+        d_SysUser.setFullName(rop.getFullName());
+        d_SysUser.setMender(d_SysUser.getId());
+        d_SysUser.setMendTime(CommonUtil.getDateTimeNow());
+        if (CommonUtil.isEmpty(rop.getPassword())) {
+            d_SysUser.setPasswordHash(null);
+        } else {
+            d_SysUser.setPasswordHash(PasswordUtil.encryBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp()));
         }
 
-        sysUserMapper.update(d_User);
+        if (sysUserMapper.update(d_SysUser) <= 0)
+            return CustomResult.fail("保存失败");
 
         RetOwnSaveInfo ret = new RetOwnSaveInfo();
 
-        ret.setUserId(d_User.getId());
-        ret.setUserName(d_User.getUserName());
-        ret.setFullName(d_User.getFullName());
-        ret.setAvatar(d_User.getAvatar());
+        ret.setUserId(d_SysUser.getId());
+        ret.setUserName(d_SysUser.getUserName());
+        ret.setFullName(d_SysUser.getFullName());
+        ret.setAvatar(d_SysUser.getAvatar());
 
         return CustomResult.success("保存成功", ret);
     }

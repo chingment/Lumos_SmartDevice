@@ -75,7 +75,7 @@ export default {
       loading: false,
       redirect: undefined,
       formByLoginAccount: {
-        userName: 'admin',
+        userName: 'demo',
         password: '123456'
       },
       rulesByLoginAccount: {

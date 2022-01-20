@@ -43,30 +43,33 @@ public class OwnServiceImpl implements OwnService {
     @Override
     public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
 
-        LumosSelective user_Selective=new LumosSelective();
-        user_Selective.setFields("Id,UserName,PasswordHash,SecurityStamp");
-        user_Selective.addWhere("UserName",rop.getUserName());
+        LumosSelective selective_SysUser=new LumosSelective();
+        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+        selective_SysUser.addWhere("UserName",rop.getUserName());
 
-        SysUser d_User = sysUserMapper.findOne(user_Selective);
+        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
-        if (d_User == null)
+        if (d_SysUser == null)
             return CustomResult.fail("账号或密码错误");
 
-        String passwordHash = d_User.getPasswordHash();
+        String passwordHash = d_SysUser.getPasswordHash();
 
-        boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_User.getSecurityStamp(), passwordHash);
+        boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp(), passwordHash);
 
         if (!isFlag)
             return CustomResult.fail("账号或密码错误");
 
-        LumosSelective merchUser_Selective=new LumosSelective();
-        merchUser_Selective.setFields("UserId,MerchId");
-        merchUser_Selective.addWhere("UserId",d_User.getId());
+        LumosSelective selective_SysMerchUser=new LumosSelective();
+        selective_SysMerchUser.setFields("UserId,MerchId");
+        selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
 
-        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(merchUser_Selective);
+        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
             return CustomResult.fail("该账号未授权");
+
+        if(d_SysUser.getIsDisable())
+            return CustomResult.fail("该账号已被停用");
 
         String token = IdWork.generateGUID();
 
@@ -74,8 +77,8 @@ public class OwnServiceImpl implements OwnService {
         ret.put("token", token);
 
         Map<String, Object> token_val = new HashMap<>();
-        token_val.put("id", d_User.getId());
-        token_val.put("userName", d_User.getUserName());
+        token_val.put("id", d_SysUser.getId());
+        token_val.put("userName", d_SysUser.getUserName());
         token_val.put("merchId", d_SysMerchUser.getMerchId());
 
         redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);

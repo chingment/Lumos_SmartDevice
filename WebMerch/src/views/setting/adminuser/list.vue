@@ -28,32 +28,32 @@
           <span>{{ scope.$index+1 }} </span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" prop="userName" align="left" min-width="20%">
+      <el-table-column label="用户名" prop="userName" align="left" min-width="15%">
         <template slot-scope="scope">
           <span>{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" prop="fullName" align="left" min-width="20%">
+      <el-table-column label="姓名" prop="fullName" align="left" min-width="15%">
         <template slot-scope="scope">
           <span>{{ scope.row.fullName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号码" prop="phoneNumber" align="left" min-width="10%">
+      <el-table-column label="手机号码" prop="phoneNumber" align="left" min-width="15%">
         <template slot-scope="scope">
           <span>{{ scope.row.phoneNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" prop="email" align="left" min-width="20%">
+      <el-table-column label="邮箱" prop="email" align="left" min-width="15%">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" align="left" min-width="15%">
+      <el-table-column label="状态" prop="status" align="left" min-width="10%">
         <template slot-scope="scope">
-          <el-tag :type="getIsDisableColor(scope.row.isDisable)">{{ scope.row.isDisable==true?"已停用":"正常" }}</el-tag>
+          <el-tag :type="getIsDisableColor(scope.row.isDisable)">{{ scope.row.isDisable==true?"停用":"正常" }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" prop="createTime" align="left" min-width="15%">
+      <el-table-column label="创建时间" prop="createTime" align="left" min-width="20%">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -118,7 +118,7 @@ export default {
         this.loading = false
       })
     },
-    onilter() {
+    onFilter() {
       this.listQuery.pageNum = 1
       this.onList()
     },

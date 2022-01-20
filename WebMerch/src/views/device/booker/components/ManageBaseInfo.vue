@@ -8,7 +8,7 @@
         <el-input v-show="isEdit" v-model.trim="form.cumCode" clearable />
         <span v-show="!isEdit">{{ temp.cumCode }}</span>
       </el-form-item>
-      <el-form-item label="所属门店">
+      <el-form-item label="归属">
         {{ temp.belongName }}
       </el-form-item>
       <el-form-item label="控制程序号">
