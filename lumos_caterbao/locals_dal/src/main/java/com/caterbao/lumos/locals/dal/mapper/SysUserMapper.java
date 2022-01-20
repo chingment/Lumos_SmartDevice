@@ -13,5 +13,7 @@ import java.util.List;
 public interface SysUserMapper {
     SysUser findOne(LumosSelective selective);
     List<SysMenu> getMenusByUserId(LumosSelective selective);
+    long isExistUserName(String userName);
     long update(SysUser sysUser);
+    long insert(SysUser sysUser);
 }

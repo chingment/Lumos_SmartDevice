@@ -11,4 +11,5 @@ import java.util.List;
 public interface SysMerchUserMapper {
     SysMerchUser findOne(LumosSelective selective);
     List<MerchUserVw> find(LumosSelective selective);
+    long insert(SysMerchUser sysMerchUser);
 }

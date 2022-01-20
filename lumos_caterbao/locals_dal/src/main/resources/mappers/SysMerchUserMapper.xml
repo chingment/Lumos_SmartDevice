@@ -16,9 +16,9 @@
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
     </select>
 
-<!--    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.SysMerchUserMapper">-->
-<!--  insert into SysMerchUser(id,merchId,userId,isMaster)-->
-<!--  values(#{id},#{merchId},#{userId},#{isMaster})-->
-<!--    </insert>-->
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.SysMerchUser">
+  insert into SysMerchUser(id,merchId,userId,isMaster)
+  values(#{id},#{merchId},#{userId},#{isMaster})
+    </insert>
 
 </mapper>

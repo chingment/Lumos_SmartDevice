@@ -8,7 +8,7 @@ public class SysUser {
     private String fullName;
     private String avatar;
     private String passwordHash;
-    private String SecurityStamp;
+    private String securityStamp;
     private String phoneNumber;
     private String email;
     private Boolean isDisable;
@@ -42,11 +42,11 @@ public class SysUser {
     }
 
     public String getSecurityStamp() {
-        return SecurityStamp;
+        return securityStamp;
     }
 
     public void setSecurityStamp(String securityStamp) {
-        SecurityStamp = securityStamp;
+        this.securityStamp = securityStamp;
     }
 
     public String getCreator() {
@@ -113,11 +113,11 @@ public class SysUser {
         this.email = email;
     }
 
-    public Boolean getDisable() {
+    public Boolean getIsDisable() {
         return isDisable;
     }
 
-    public void setDisable(Boolean disable) {
-        isDisable = disable;
+    public void setIsDisable(Boolean isDisable) {
+        this.isDisable = isDisable;
     }
 }

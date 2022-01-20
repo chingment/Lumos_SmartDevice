@@ -12,6 +12,6 @@ public interface AdminUserService {
     CustomResult init_add(String operater, String merchId);
     CustomResult add(String operater, String merchId, RopAdminUserAdd rop);
     CustomResult list(String operater, String merchId, RopAdminUserList rop);
-    CustomResult init_edit(String operater, String merchId, String shopId);
+    CustomResult init_edit(String operater, String merchId, String userId);
     CustomResult edit(String operater, String merchId, RopAdminUserEdit rop);
 }

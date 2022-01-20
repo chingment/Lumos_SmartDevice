@@ -8,11 +8,24 @@
       <el-form-item label="密码" prop="password">
         <el-input v-model="form.password" type="password" clearable />
       </el-form-item>
-      <el-form-item label="昵称" prop="nickName">
-        <el-input v-model="form.nickName" clearable />
-      </el-form-item>
       <el-form-item label="姓名" prop="fullName">
         <el-input v-model="form.fullName" clearable />
+      </el-form-item>
+      <el-form-item label="头像" prop="displayImgUrls" class="el-form-item-upload">
+        <el-input :value="form.avatar.toString()" style="display:none" />
+        <lm-upload
+          v-model="form.avatar"
+          list-type="picture-card"
+          :file-list="form.avatar"
+          :action="uploadImgServiceUrl"
+          :headers="uploadImgHeaders"
+          :data="{folder:'shop'}"
+          ext=".jpg,.png,.jpeg"
+          tip="图片500*500，格式（jpg,png）不超过4M"
+          :max-size="1024"
+          :sortable="true"
+          :limit="1"
+        />
       </el-form-item>
       <el-form-item label="手机号码" prop="phoneNumber">
         <el-input v-model="form.phoneNumber" clearable />
@@ -33,10 +46,13 @@ import { add, init_add } from '@/api/adminuser'
 import fromReg from '@/utils/formReg'
 import { goBack } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
+import LmUpload from '@/components/Upload/index.vue'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'SettingAdminUserAdd',
   components: {
-    PageHeader
+    PageHeader,
+    LmUpload
   },
   data() {
     return {
@@ -45,20 +61,23 @@ export default {
         userName: '',
         password: '',
         fullName: '',
-        nickName: '',
         phoneNumber: '',
-        email: ''
+        email: '',
+        avatar: []
       },
       rules: {
         userName: [{ required: true, message: '必填,且由3到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.userName }],
         password: [{ required: true, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
-        nickName: [{ required: true, message: '必填', trigger: 'change' }],
+        fullName: [{ required: true, message: '必填', trigger: 'change' }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
-      }
+      },
+      uploadImgHeaders: {},
+      uploadImgServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL
     }
   },
   created() {
+    this.uploadImgHeaders = { token: getToken() }
     this.init()
   },
   methods: {
@@ -82,7 +101,18 @@ export default {
             type: 'warning'
           }).then(() => {
             this.loading = true
-            add(this.form).then(res => {
+
+            var form = this.form
+            var _form = {
+              userName: form.userName,
+              password: form.password,
+              fullName: form.fullName,
+              phoneNumber: form.phoneNumber,
+              email: form.email,
+              avatar: form.avatar[0].url
+            }
+
+            add(_form).then(res => {
               this.loading = false
               if (res.code === this.$code_suc) {
                 this.$message.success(res.msg)

@@ -19,31 +19,24 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="头像" prop="avatar">
-        <el-input :value="form.avatar" style="display:none" />
-        <el-upload
-          ref="uploadImg"
-          :action="uploadImgServiceUrl"
-          list-type="picture-card"
-          :on-success="handleSuccessByAvatar"
-          :on-remove="handleRemoveByAvatar"
-          :on-error="handleErrorByAvatar"
-          :on-preview="handlePreviewByAvatar"
-          :file-list="uploadImglistByAvatar"
-          :limit="1"
-        >
-          <i class="el-icon-plus" />
-        </el-upload>
-        <el-dialog :visible.sync="uploadImgPreImgDialogVisibleByAvatar">
-          <img width="100%" :src="uploadImgPreImgDialogUrlByAvatar" alt="">
-        </el-dialog>
-        <div class="remark-tip"><span class="sign">*注</span>：格式为500*500</div>
-      </el-form-item>
-      <el-form-item label="昵称" prop="nickName">
-        <el-input v-model="form.nickName" clearable />
-      </el-form-item>
       <el-form-item label="姓名" prop="fullName">
         <el-input v-model="form.fullName" clearable />
+      </el-form-item>
+      <el-form-item label="头像" prop="displayImgUrls" class="el-form-item-upload">
+        <el-input :value="form.avatar.toString()" style="display:none" />
+        <lm-upload
+          v-model="form.avatar"
+          list-type="picture-card"
+          :file-list="form.avatar"
+          :action="uploadImgServiceUrl"
+          :headers="uploadImgHeaders"
+          :data="{folder:'shop'}"
+          ext=".jpg,.png,.jpeg"
+          tip="图片500*500，格式（jpg,png）不超过4M"
+          :max-size="1024"
+          :sortable="true"
+          :limit="1"
+        />
       </el-form-item>
       <el-form-item label="手机号码" prop="phoneNumber">
         <el-input v-model="form.phoneNumber" clearable />
@@ -51,25 +44,8 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" clearable />
       </el-form-item>
-      <el-form-item label="音视频">
-        <el-switch v-model="form.imIsUse" />
-      </el-form-item>
-      <el-form-item label="禁用">
+      <el-form-item label="停用">
         <el-switch v-model="form.isDisable" />
-      </el-form-item>
-      <el-form-item v-show="checkbox_group_role_options.length>0" label="角色">
-        <el-checkbox-group v-model="form.roleIds">
-          <el-checkbox v-for="option in checkbox_group_role_options" :key="option.id" style="display:block" :label="option.id">{{ option.label }}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="工作台">
-        <el-radio-group v-model="form.workBench">
-          <el-radio :label="1">商城</el-radio>
-          <el-radio :label="2">心晓</el-radio>
-        </el-radio-group>
-        <div>
-          <el-image :src="'http://file.17fanju.com/upload/WorkBench'+form.workBench+'.png'" />
-        </div>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -80,14 +56,17 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { edit, initEdit } from '@/api/adminuser'
+import { edit, init_edit } from '@/api/adminuser'
 import fromReg from '@/utils/formReg'
 import { getUrlParam, goBack } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
+import LmUpload from '@/components/Upload/index.vue'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'SettingAdminUserEdit',
   components: {
-    PageHeader
+    PageHeader,
+    LmUpload
   },
   data() {
     return {
@@ -98,65 +77,44 @@ export default {
         userName: '',
         password: '',
         fullName: '',
-        nickName: '',
         phoneNumber: '',
         email: '',
-        avatar: '',
-        orgIds: [],
-        roleIds: [],
-        imIsUse: false,
-        isDisable: false,
-        workBench: 1
+        avatar: [],
+        isDisable: false
       },
       rules: {
         password: [{ required: false, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
         avatar: [{ required: true, message: '必须上传' }],
-        nickName: [{ required: true, message: '必填', trigger: 'change' }],
-        orgIds: [{ required: true, message: '必选' }],
+        fullName: [{ required: true, message: '必填', trigger: 'change' }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
       },
-      cascader_org_props: { multiple: true, checkStrictly: true, emitPath: false },
-      cascader_org_options: [],
-      checkbox_group_role_options: [],
-      uploadImglistByAvatar: [],
-      uploadImgPreImgDialogUrlByAvatar: '',
-      uploadImgPreImgDialogVisibleByAvatar: false,
+      uploadImgHeaders: {},
       uploadImgServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL
     }
   },
   created() {
+    this.uploadImgHeaders = { token: getToken() }
     this.init()
   },
   methods: {
     init() {
       this.loading = true
       var id = getUrlParam('id')
-      initEdit({ id: id }).then(res => {
-        if (res.result === 1) {
+      init_edit({ id: id }).then(res => {
+        if (res.code === this.$code_suc) {
           var d = res.data
           this.form.id = d.id
           this.form.userName = d.userName
           this.form.fullName = d.fullName
-          this.form.nickName = d.nickName
           this.form.phoneNumber = d.phoneNumber
           this.form.email = d.email
-          this.form.orgIds = d.orgIds
-          this.form.roleIds = d.roleIds
-          this.form.imIsUse = d.imIsUse
-          this.form.avatar = d.avatar
+          this.form.avatar.push({ name: 'xx', url: d.avatar })
           this.form.isDisable = d.isDisable
-          this.form.workBench = d.workBench
-          this.cascader_org_options = d.orgs
-          this.checkbox_group_role_options = d.roles
-
-          if (d.avatar != null && d.avatar.length > 0) {
-            this.uploadImglistByAvatar.push({ name: 'xx', url: d.avatar })
-            var var1 = document.querySelector('.el-upload')
-            var1.style.display = 'none'
-          }
         }
         this.loading = false
+      }).catch(() => {
+        this.loading = true
       })
     },
     onSubmit() {
@@ -167,18 +125,25 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            edit(this.form).then(res => {
-              if (res.result === 1) {
-                this.$message({
-                  message: res.message,
-                  type: 'success'
-                })
-                goBack(this)
+            this.loading = true
+
+            var form = this.form
+            var _form = {
+              id: form.id,
+              password: form.password,
+              fullName: form.fullName,
+              phoneNumber: form.phoneNumber,
+              email: form.email,
+              avatar: form.avatar[0].url,
+              isDisable: form.isDisable
+            }
+
+            edit(_form).then(res => {
+              this.loading = false
+              if (res.code === this.$code_suc) {
+                this.$message.success(res.msg)
               } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
+                this.$message.error(res.msg)
               }
             })
           }).catch(() => {
@@ -195,28 +160,6 @@ export default {
         this.isOpenEditPassword = true
         this.rules.password[0].required = true
       }
-    },
-    cascader_org_change() {
-
-    },
-    handleRemoveByAvatar(file, fileList) {
-      this.uploadImglistByAvatar = fileList
-      this.form.avatar = ''
-      var var1 = document.querySelector('.el-upload')
-      var1.style.display = 'block'
-    },
-    handleSuccessByAvatar(response, file, fileList) {
-      this.uploadImglistByAvatar = fileList
-      this.form.avatar = file.response.data.url
-      var var1 = document.querySelector('.el-upload')
-      var1.style.display = 'none'
-    },
-    handleErrorByAvatar(errs, file, fileList) {
-      this.uploadImglistByAvatar = fileList
-    },
-    handlePreviewByAvatar(file) {
-      this.uploadImgPreImgDialogUrlByAvatar = file.url
-      this.uploadImgPreImgDialogVisibleByAvatar = true
     }
   }
 }
