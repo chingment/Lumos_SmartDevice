@@ -123,22 +123,22 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-#device_baseinfo{
-.el-form .el-form-item{
-  max-width: 600px;
-}
+#device_baseinfo {
+  .el-form .el-form-item {
+    max-width: 600px;
+  }
 
-.singlepic-device-banner{
-  width: 500px;
-  height: 47px;
-  line-height: 47px;
-  font-size: 16px;
-}
+  .singlepic-device-banner {
+    font-size: 16px;
+    line-height: 47px;
 
-.singlepic-uploader{
-  height: 62px;
-}
+    width: 500px;
+    height: 47px;
+  }
 
+  .singlepic-uploader {
+    height: 62px;
+  }
 }
 
 </style>

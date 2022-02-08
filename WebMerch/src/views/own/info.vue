@@ -138,24 +138,29 @@ export default {
 
 <style lang="scss" scoped>
 
-#profile_userinfo
-{
- padding: 10px;
-.line {
-  text-align: center;
-}
-.el-tree-node__expand-icon.is-leaf{
-  display: none;
+#profile_userinfo {
+  padding: 10px;
+
+  .line {
+    text-align: center;
+  }
+
+  .el-tree-node__expand-icon.is-leaf {
+    display: none;
+  }
+
+  .i-btn-save {
+    cursor: pointer;
+
+    color: #409eff;
+  }
+
+  .i-btn-cancle {
+    cursor: pointer;
+
+    color: #97a8be;
+  }
 }
 
-.i-btn-save{
-color: #409EFF;
-cursor: pointer;
-}
-.i-btn-cancle{
-color:#97a8be;
-cursor: pointer;
-}
-}
 </style>
 

@@ -140,71 +140,87 @@ export default {
 
 <style lang="scss" scoped>
 
-#store_shop{
+#store_shop {
+  .bm-view {
+    width: 100%;
+    height: 200px;
+    margin-top: 20px;
+  }
 
-.bm-view {
-  width: 100%;
-  height: 200px;
-  margin-top: 20px;
-}
-
-  .it-header{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  .it-header {
     position: relative;
-    height:20px ;
-    .left{
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 20px ;
+
+    .left {
+      display: block;
+      overflow: hidden;
+      align-items: center;
       flex: 1;
       justify-content: flex-start;
-      align-items: center;
-      display: block;
+
       height: 100%;
-    overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
-    .name{
-    padding: 0px 5px;
-    }
-    }
-    .right{
-      width: 100px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      .name {
+        padding: 0 5px;
+      }
     }
 
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      width: 100px;
+    }
   }
-  .it-component{
-    min-height: 100px;
+
+  .it-component {
     display: flex;
-    .img{
+
+    min-height: 100px;
+
+    .img {
       width: 120px;
       height: 120px;
 
-      img{
+      img {
         width: 100%;
         height: 100%;
       }
     }
 
-    .describe{
-      flex: 1;
-      padding: 5px;
+    .describe {
       font-size: 12px;
 
-      ul{
-        padding: 0px;
-        margin: 0px;
+      flex: 1;
+
+      padding: 5px;
+
+      ul {
+        margin: 0;
+        padding: 0;
+
         list-style: none;
-         li{
-           width: 100%;
-             text-align: right;
-        height: 26px;
-        line-height: 26px;
-      }
+
+        li {
+          line-height: 26px;
+
+          width: 100%;
+          height: 26px;
+
+          text-align: right;
+        }
       }
     }
   }
 }
+
 </style>

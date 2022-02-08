@@ -6,6 +6,10 @@ public class LumosSelective {
     private String fields;
     private HashMap<String,String> where;
 
+    public LumosSelective() {
+        this.where = new HashMap<>();
+    }
+
     public String getFields() {
         return fields;
     }

@@ -133,16 +133,19 @@ export default {
 
 <style  lang="scss"  scoped>
 
-#adminuser_add{
-   max-width: 600px;
-.line {
-  text-align: center;
+#adminuser_add {
+  max-width: 600px;
+
+  .line {
+    text-align: center;
+  }
+
+  .is-leaf {
+    display: none !important;
+
+    width: 0 !important;
+  }
 }
 
-.is-leaf{
-  display: none !important;
-  width: 0px !important;
-}
-}
 </style>
 

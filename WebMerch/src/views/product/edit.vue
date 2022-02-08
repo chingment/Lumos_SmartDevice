@@ -265,30 +265,34 @@ export default {
 <style lang="scss" scoped>
 
 #product_edit {
-
-.el-form .el-form-item{
-  max-width: 600px;
-}
+  .el-form .el-form-item {
+    max-width: 600px;
+  }
 
   .el-tag {
     margin-right: 10px;
   }
+
   .button-new-tag {
-    height: 32px;
     line-height: 30px;
+
+    height: 32px;
     padding-top: 0;
     padding-bottom: 0;
   }
+
   .input-new-tag {
     width: 90px;
     margin-right: 10px;
+
     vertical-align: bottom;
   }
 
-.el-alert--remark{
-  height: 30px;
-  padding: 0px;
+  .el-alert--remark {
+    height: 30px;
+    padding: 0;
+  }
 }
-}
+
 </style>
 

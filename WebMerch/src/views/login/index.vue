@@ -150,8 +150,8 @@ export default {
 
 <style lang="scss">
 
-$bg:#fff;
-$light_gray:#000;
+$bg: #fff;
+$light_gray: #000;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -162,85 +162,97 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-
   .el-input {
     display: inline-block;
-    height: 47px;
+
     width: 85%;
+    height: 47px;
 
     input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
       height: 47px;
+      padding: 12px 5px 12px 15px;
+
+      color: $light_gray;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+
+      -webkit-appearance: none;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0 1000px $bg inset !important;
+
         -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
     color: #454545;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, .1);
   }
 }
+
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
-    min-height: 100%;
-    width: 100%;
-    background-color: #2d3a4b;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    justify-items: center;
-    align-items: center;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
 
-  .login-box{
-    background: #fff;
+  width: 100%;
+  min-height: 100%;
+
+  background-color: #2d3a4b;
+
+  justify-items: center;
+
+  .login-box {
+    display: flex;
+
     border-radius: 5px;
-    display: flex;
+    background: #fff;
   }
 
-  .login-box-lf{
+  .login-box-lf {
+    .banner {
+      width: 100%;
+      height: 100%;
 
-     .banner{
-       border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        width: 100%;
-        height: 100%;
-     }
-  }
-
-    .login-box-rt{
-      padding: 36px 36px 0 36px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
     }
+  }
+
+  .login-box-rt {
+    padding: 36px 36px 0 36px;
+  }
 
   .login-form {
     position: relative;
+
+    overflow: hidden;
+
     width: 320px;
     max-width: 100%;
     margin: 0 auto;
-    overflow: hidden;
   }
 
   .tips {
     font-size: 14px;
-    color: #fff;
+
     margin-bottom: 10px;
+
+    color: #fff;
 
     span {
       &:first-of-type {
@@ -250,11 +262,14 @@ $light_gray:#eee;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
     display: inline-block;
+
+    width: 30px;
+    padding: 6px 5px 6px 15px;
+
+    vertical-align: middle;
+
+    color: $dark_gray;
   }
 
   .title-container {
@@ -262,20 +277,25 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      margin: 0px auto 40px auto;
-      text-align: center;
       font-weight: bold;
+
+      margin: 0 auto 40px auto;
+
+      text-align: center;
     }
   }
 
   .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
     font-size: 16px;
-    color: $dark_gray;
+
+    position: absolute;
+    top: 7px;
+    right: 10px;
+
     cursor: pointer;
     user-select: none;
+
+    color: $dark_gray;
   }
 
   .thirdparty-button {
@@ -290,4 +310,5 @@ $light_gray:#eee;
     }
   }
 }
+
 </style>

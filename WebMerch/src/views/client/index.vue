@@ -4,13 +4,8 @@
       <el-aside class="my-aside">
         <el-menu router :default-active="navActive">
           <el-menu-item-group>
-            <template slot="title">店铺</template>
-            <el-menu-item index="/store/list">店铺列表</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group>
-            <template slot="title">门店</template>
-            <el-menu-item index="/shop/list">门店列表</el-menu-item>
-            <el-menu-item index="/shop/add">新建门店</el-menu-item>
+            <template slot="title">客户信息</template>
+            <el-menu-item index="/client/borrower/list">借阅者</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>
@@ -22,12 +17,13 @@
     </el-container>
   </div>
 </template>
+
 <script>
 export default {
-  name: 'DeviceIndex',
+  name: 'ClientIndex',
   data() {
     return {
-      navActive: '',
+      navActive: '/clientuser/shop/list',
       isDesktop: this.$store.getters.isDesktop
     }
   },

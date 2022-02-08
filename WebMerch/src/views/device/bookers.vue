@@ -136,71 +136,88 @@ export default {
 
 <style lang="scss" scoped>
 
-#device_list{
-
-  .it-header{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+#device_list {
+  .it-header {
     position: relative;
-    height:20px ;
-    .left{
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 20px ;
+
+    .left {
+      display: block;
+      overflow: hidden;
+      align-items: center;
       flex: 1;
       justify-content: flex-start;
-      align-items: center;
-      display: block;
+
       height: 100%;
-    overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
-    .name{
-padding: 0 5px;
-    display: inline-block;
-    flex: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis
-    }
-    }
-    .right{
-      width: 100px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      .name {
+        display: inline-block;
+        overflow: hidden;
+        flex: 1;
+
+        padding: 0 5px;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
 
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      width: 100px;
+    }
   }
-  .it-component{
-    min-height: 100px;
+
+  .it-component {
     display: flex;
-    .img{
+
+    min-height: 100px;
+
+    .img {
       width: 120px;
       height: 120px;
 
-      img{
+      img {
         width: 100%;
         height: 100%;
       }
     }
 
-    .describe{
-      flex: 1;
-      padding: 0px;
+    .describe {
       font-size: 12px;
 
-      ul{
-        padding: 0px;
-        margin: 0px;
+      flex: 1;
+
+      padding: 0;
+
+      ul {
+        margin: 0;
+        padding: 0;
+
         list-style: none;
-         li{
-           width: 100%;
-           text-align: right;
-        height: 26px;
-        line-height: 26px;
-      }
+
+        li {
+          line-height: 26px;
+
+          width: 100%;
+          height: 26px;
+
+          text-align: right;
+        }
       }
     }
-
   }
 }
+
 </style>

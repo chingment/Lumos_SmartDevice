@@ -7,7 +7,7 @@
       </el-form-item>
       <el-form-item v-show="!isOpenEditPassword" label="密码">
         <span>********</span>
-        <span @click="openEditPassword()">修改</span>
+        <el-button type="text" @click="openEditPassword">修改</el-button>
       </el-form-item>
       <el-form-item v-show="isOpenEditPassword" label="密码" prop="password">
         <div style="display:flex">
@@ -15,7 +15,7 @@
             <el-input v-model="form.password" type="password" clearable />
           </div>
           <div style="width:50px;text-align: center;">
-            <span @click="openEditPassword()">取消</span>
+            <el-button type="text" @click="openEditPassword">取消</el-button>
           </div>
         </div>
       </el-form-item>
@@ -167,16 +167,17 @@ export default {
 
 <style lang="scss" scoped>
 
-#adminuser_edit
-{
-   max-width: 600px;
+#adminuser_edit {
+  max-width: 600px;
 
-.line {
-  text-align: center;
+  .line {
+    text-align: center;
+  }
+
+  .el-tree-node__expand-icon.is-leaf {
+    display: none;
+  }
 }
-.el-tree-node__expand-icon.is-leaf{
-  display: none;
-}
-}
+
 </style>
 
