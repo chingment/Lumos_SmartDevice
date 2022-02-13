@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-row :gutter="12">
         <el-col :xs="24" :sm="12" :lg="6" :xl="4" style="margin-bottom:20px">
-          <el-input v-model="listQuery.userName" style="width: 100%" placeholder="用户名" clearable class="filter-item" />
+          <el-input v-model="listQuery.cardNo" style="width: 100%" placeholder="卡号" clearable class="filter-item" />
         </el-col>
         <el-col :xs="24" :sm="12" :lg="6" :xl="4" style="margin-bottom:20px">
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
@@ -28,24 +28,14 @@
           <span>{{ scope.$index+1 }} </span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" prop="userName" align="left" min-width="15%">
+      <el-table-column label="卡号" prop="cardNo" align="left" min-width="15%">
         <template slot-scope="scope">
-          <span>{{ scope.row.userName }}</span>
+          <span>{{ scope.row.cardNo }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" prop="fullName" align="left" min-width="15%">
         <template slot-scope="scope">
           <span>{{ scope.row.fullName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="手机号码" prop="phoneNumber" align="left" min-width="15%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.phoneNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="邮箱" prop="email" align="left" min-width="15%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="status" align="left" min-width="10%">
@@ -73,11 +63,11 @@
 </template>
 
 <script>
-import { list } from '@/api/adminuser'
+import { list } from '@/api/iccard'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'SettingAdminUserList',
+  name: 'ClientIcCardList',
   components: { Pagination },
   data() {
     return {
@@ -124,12 +114,12 @@ export default {
     },
     onAdd() {
       this.$router.push({
-        path: '/setting/adminuser/add'
+        path: '/client/iccard/add'
       })
     },
     onEdit(item) {
       this.$router.push({
-        path: '/setting/adminuser/edit?id=' + item.id
+        path: '/client/iccard/edit?id=' + item.id
       })
     },
     getIsDisableColor(isDisable) {

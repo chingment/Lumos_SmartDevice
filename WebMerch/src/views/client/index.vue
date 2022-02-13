@@ -5,7 +5,7 @@
         <el-menu router :default-active="navActive">
           <el-menu-item-group>
             <template slot="title">客户信息</template>
-            <el-menu-item index="/client/borrower/list">借阅者</el-menu-item>
+            <el-menu-item index="/client/iccard/list">借阅卡</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>
