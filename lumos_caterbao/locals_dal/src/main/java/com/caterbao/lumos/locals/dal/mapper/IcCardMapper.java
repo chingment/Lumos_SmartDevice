@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface IcCardMapper {
     List<IcCard> find(LumosSelective selective);
+    IcCard findOne(LumosSelective selective);
 }

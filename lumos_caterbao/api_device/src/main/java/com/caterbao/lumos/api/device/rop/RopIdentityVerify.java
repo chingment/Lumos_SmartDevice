@@ -1,22 +1,31 @@
 package com.caterbao.lumos.api.device.rop;
 
 public class RopIdentityVerify {
-    private String type;
-    private String data;
+    private String deviceId;
+    private String dataType;//1 iccard
+    private String payLoad;
 
-    public String getType() {
-        return type;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getData() {
-        return data;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getPayLoad() {
+        return payLoad;
+    }
+
+    public void setPayLoad(String payLoad) {
+        this.payLoad = payLoad;
     }
 }

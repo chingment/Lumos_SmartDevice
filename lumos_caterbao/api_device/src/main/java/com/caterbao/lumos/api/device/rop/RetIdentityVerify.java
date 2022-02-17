@@ -1,17 +1,8 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RopIdentityBorrower {
-    private String deviceId;
+public class RetIdentityVerify {
     private String identityType;
     private String identityId;
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
 
     public String getIdentityType() {
         return identityType;
