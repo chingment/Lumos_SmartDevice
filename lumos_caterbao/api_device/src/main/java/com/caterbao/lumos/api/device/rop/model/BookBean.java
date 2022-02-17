@@ -8,6 +8,18 @@ public class BookBean {
     private String cumCode;
     private String rfId;
 
+    public BookBean(){
+
+    }
+
+    public BookBean(String skuId,String rfId,String name,String cumCode,String  imgUrl) {
+        this.skuId = skuId;
+        this.rfId = rfId;
+        this.name = name;
+        this.cumCode = cumCode;
+        this.imgUrl = imgUrl;
+    }
+
     public String getSkuId() {
         return skuId;
     }
