@@ -9,7 +9,7 @@
         select b.Id,a.CumCode,a.BindStatus,b.SceneMode,b.VersionMode,b.ImgUrl,
         ImeiId,Model,MacAddr,
         b.AppVerName,b.SysVerName,b.CtrlVerName,b.RunMode,b.LastRunTime,b.LastRunStatus,
-        c.ShopId,
+        c.ShopId,c.MerchId,
         (select c1.name from Shop c1 where c1.id=c.ShopId) as  ShopName,
         c.StoreId,
         (select c2.name from Store c2 where c2.id=c.StoreId) as  StoreName

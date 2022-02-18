@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.RetIdentityBorrower;
 import com.caterbao.lumos.api.device.rop.RetIdentityVerify;
-import com.caterbao.lumos.api.device.rop.RopIdentityBorrower;
+import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
 import com.caterbao.lumos.api.device.service.IdentityService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -27,7 +27,7 @@ public class IdentityServiceImpl implements IdentityService {
 
             LumosSelective selective_IcCard = new LumosSelective();
             selective_IcCard.setFields("*");
-            selective_IcCard.addWhere("CardNo", rop.getPayLoad());
+            selective_IcCard.addWhere("CardNo", rop.getPayload());
 
             IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
 
@@ -44,7 +44,7 @@ public class IdentityServiceImpl implements IdentityService {
     }
 
     @Override
-    public CustomResult borrower(String operater, RopIdentityBorrower rop) {
+    public CustomResult info(String operater, RopIdentityInfo rop) {
 
         RetIdentityBorrower ret=new RetIdentityBorrower();
 

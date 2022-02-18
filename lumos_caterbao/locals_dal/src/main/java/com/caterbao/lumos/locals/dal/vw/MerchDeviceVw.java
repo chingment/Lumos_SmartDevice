@@ -9,6 +9,7 @@ public class MerchDeviceVw {
     private int bindStatus;
     private int sceneMode;
     private int versionMode;
+    private String merchId;
     private String ShopId;
     private String ShopName;
     private String storeId;
@@ -69,6 +70,14 @@ public class MerchDeviceVw {
 
     public void setVersionMode(int versionMode) {
         this.versionMode = versionMode;
+    }
+
+    public String getMerchId() {
+        return merchId;
+    }
+
+    public void setMerchId(String merchId) {
+        this.merchId = merchId;
     }
 
     public String getShopId() {

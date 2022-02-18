@@ -3,7 +3,7 @@ package com.caterbao.lumos.api.device.rop;
 public class RopIdentityVerify {
     private String deviceId;
     private String dataType;//1 iccard
-    private String payLoad;
+    private String payload;
 
     public String getDeviceId() {
         return deviceId;
@@ -21,11 +21,11 @@ public class RopIdentityVerify {
         this.dataType = dataType;
     }
 
-    public String getPayLoad() {
-        return payLoad;
+    public String getPayload() {
+        return payload;
     }
 
-    public void setPayLoad(String payLoad) {
-        this.payLoad = payLoad;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 }

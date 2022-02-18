@@ -83,6 +83,7 @@ public class DeviceServiceImpl implements DeviceService{
 
         DeviceBean m_Device = new DeviceBean();
         m_Device.setDeviceId(d_Device.getId());
+        m_Device.setMerchId(d_MerchDevice.getMerchId());
         m_Device.setName(d_Device.getName());
         m_Device.setSceneMode(d_Device.getSceneMode());
         m_Device.setVersionMode(d_Device.getVersionMode());

@@ -36,7 +36,7 @@ public class OwnServiceImpl implements OwnService {
         CustomResult result = new CustomResult();
 
         LumosSelective selective_SysUser=new LumosSelective();
-        selective_SysUser.setFields("Id,PasswordHash,SecurityStamp,IsDisable");
+        selective_SysUser.setFields("Id,UserName,FullName,Avatar, PasswordHash,SecurityStamp,IsDisable");
         selective_SysUser.addWhere("UserName",rop.getUserName());
 
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
@@ -114,7 +114,7 @@ public class OwnServiceImpl implements OwnService {
 
         LumosSelective selective_SysUser = new LumosSelective();
         selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
-        selective_SysUser.addWhere("UserId", rop.getUserName());
+        selective_SysUser.addWhere("UserId", rop.getUserId());
 
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 

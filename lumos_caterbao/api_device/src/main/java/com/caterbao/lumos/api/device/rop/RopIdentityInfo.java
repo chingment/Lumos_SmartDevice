@@ -1,9 +1,10 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RopIdentityBorrower {
+public class RopIdentityInfo {
     private String deviceId;
     private String identityType;
     private String identityId;
+    private int sceneMode;
 
     public String getDeviceId() {
         return deviceId;
@@ -27,5 +28,13 @@ public class RopIdentityBorrower {
 
     public void setIdentityId(String identityId) {
         this.identityId = identityId;
+    }
+
+    public int getSceneMode() {
+        return sceneMode;
+    }
+
+    public void setSceneMode(int sceneMode) {
+        this.sceneMode = sceneMode;
     }
 }
