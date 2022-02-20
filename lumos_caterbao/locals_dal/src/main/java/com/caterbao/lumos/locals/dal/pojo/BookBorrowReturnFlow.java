@@ -21,7 +21,7 @@ public class BookBorrowReturnFlow {
     private String closeActionCode;
     private Timestamp closeActionTime;
     private String closeRfIds;
-    private int status;
+    private int status; //1 等待打开柜门 2 打开成功 3 打开失败 4 等待关闭门 5 关闭成功 6 关闭失败;
     private String creator;
     private Timestamp createTime;
     private String mender;

@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.device.rop.model.BookBean;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowMapper;
@@ -77,17 +78,24 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowReturnFlow.setOpenActionResult(rop.getActionResult());
         d_BookBorrowReturnFlow.setOpenActionCode(rop.getActionCode());
         d_BookBorrowReturnFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowReturnFlow.setOpenRfIds(rop.getRfIds());
-        d_BookBorrowReturnFlow.setStatus(2);
+        d_BookBorrowReturnFlow.setOpenRfIds(JsonUtil.getJson(rop.getRfIds()));
+        if (rop.getActionResult() == 1) {
+            d_BookBorrowReturnFlow.setStatus(2);
+        } else if (rop.getActionResult() == 2) {
+            d_BookBorrowReturnFlow.setStatus(3);
+        }
         d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
         d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
 
         if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
-            return CustomResult.fail("打开信息保存失败");
+            return CustomResult.fail("打开失败[1]");
+
+        if (rop.getActionResult() != 1)
+            return CustomResult.fail("打开失败[2]");
 
         RetBookerBorrowReturnOpenAction ret = new RetBookerBorrowReturnOpenAction();
         ret.setFlowId(rop.getFlowId());
-        return CustomResult.success("打开信息保存成功", ret);
+        return CustomResult.success("打开成功", ret);
     }
 
     @Override
@@ -98,13 +106,23 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
         d_BookBorrowReturnFlow.setCloseActionCode(rop.getActionCode());
         d_BookBorrowReturnFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowReturnFlow.setCloseRfIds(rop.getRfIds());
-        d_BookBorrowReturnFlow.setStatus(3);
+        d_BookBorrowReturnFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
+
+        if (rop.getActionResult() == 1) {
+            d_BookBorrowReturnFlow.setStatus(5);
+        }
+        else  if(rop.getActionResult()==2) {
+            d_BookBorrowReturnFlow.setStatus(6);
+        }
+
         d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
         d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
 
         if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
-            return CustomResult.fail("关闭信息保存失败");
+            return CustomResult.fail("关闭失败");
+
+        if (rop.getActionResult() != 1)
+            return CustomResult.fail("关闭失败[2]");
 
         RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
         ret.setFlowId(rop.getFlowId());
@@ -122,7 +140,7 @@ public class BookerServiceImpl implements BookerService {
         ret.setBorrowBooks(borrowBooks);
         ret.setReturnBooks(returnBooks);
 
-        return CustomResult.success("关闭信息保存成功", ret);
+        return CustomResult.success("关闭成功", ret);
     }
 
 }
