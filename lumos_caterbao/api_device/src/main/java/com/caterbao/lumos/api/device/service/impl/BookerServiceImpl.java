@@ -72,30 +72,42 @@ public class BookerServiceImpl implements BookerService {
     @Override
     public CustomResult borrowReturnOpenAction(String operater, RopBookerBorrowReturnOpenAction rop) {
 
-        RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+        BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
+        d_BookBorrowReturnFlow.setId(rop.getFlowId());
+        d_BookBorrowReturnFlow.setOpenActionResult(rop.getActionResult());
+        d_BookBorrowReturnFlow.setOpenActionCode(rop.getActionCode());
+        d_BookBorrowReturnFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowReturnFlow.setOpenRfIds(rop.getRfIds());
+        d_BookBorrowReturnFlow.setStatus(2);
+        d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
+        d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
 
+        if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
+            return CustomResult.fail("打开信息保存失败");
 
-        List<BookBean> borrowBooks=new ArrayList<>();
-
-        borrowBooks.add(new BookBean("1","1","安徒生童话故事","1","1"));
-        borrowBooks.add(new BookBean("1","1","这个杀手不太冷静","1","1"));
-
-
-        List<BookBean> returnBooks=new ArrayList<>();
-        returnBooks.add(new BookBean("1","1","西游记","1","1"));
-        returnBooks.add(new BookBean("1","1","红楼梦","1","1"));
-
-        ret.setBorrowBooks(borrowBooks);
-        ret.setReturnBooks(returnBooks);
-
-        return CustomResult.success("借还成功", ret);
+        RetBookerBorrowReturnOpenAction ret = new RetBookerBorrowReturnOpenAction();
+        ret.setFlowId(rop.getFlowId());
+        return CustomResult.success("打开信息保存成功", ret);
     }
 
     @Override
     public CustomResult borrowReturnCloseAction(String operater, RopBookerBorrowReturnCloseAction rop) {
 
-        RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+        BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
+        d_BookBorrowReturnFlow.setId(rop.getFlowId());
+        d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
+        d_BookBorrowReturnFlow.setCloseActionCode(rop.getActionCode());
+        d_BookBorrowReturnFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowReturnFlow.setCloseRfIds(rop.getRfIds());
+        d_BookBorrowReturnFlow.setStatus(3);
+        d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
+        d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
 
+        if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
+            return CustomResult.fail("关闭信息保存失败");
+
+        RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
+        ret.setFlowId(rop.getFlowId());
 
         List<BookBean> borrowBooks=new ArrayList<>();
 
@@ -110,7 +122,7 @@ public class BookerServiceImpl implements BookerService {
         ret.setBorrowBooks(borrowBooks);
         ret.setReturnBooks(returnBooks);
 
-        return CustomResult.success("借还成功", ret);
+        return CustomResult.success("关闭信息保存成功", ret);
     }
 
 }

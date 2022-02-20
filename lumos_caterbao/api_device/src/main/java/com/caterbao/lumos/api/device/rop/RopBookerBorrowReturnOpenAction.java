@@ -4,7 +4,7 @@ public class RopBookerBorrowReturnOpenAction {
     private String deviceId;
     private String flowId;
     private String actionCode;
-    private String actionResult;
+    private int actionResult;
     private String actionTime;
     private String rfIds;
 
@@ -32,11 +32,11 @@ public class RopBookerBorrowReturnOpenAction {
         this.actionCode = actionCode;
     }
 
-    public String getActionResult() {
+    public int getActionResult() {
         return actionResult;
     }
 
-    public void setActionResult(String actionResult) {
+    public void setActionResult(int actionResult) {
         this.actionResult = actionResult;
     }
 

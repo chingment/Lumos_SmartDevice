@@ -20,14 +20,17 @@
   values(#{id},#{merchId},#{storeId},#{shopId},#{deviceId},#{cabinetId},#{slotId},#{clientUserId},#{identityType},#{identityId},#{status},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow">
-        update Shop
+        update BookBorrowReturnFlow
         <set>
-            <if test="name != null">name=#{name},</if>
-            <if test="address != null">address=#{address},</if>
-            <if test="displayImgUrls != null">displayImgUrls=#{displayImgUrls},</if>
-            <if test="contactName != null">contactName=#{contactName},</if>
-            <if test="contactPhone != null">contactPhone=#{contactPhone},</if>
-            <if test="contactAddress != null">contactAddress=#{contactAddress},</if>
+            <if test="openActionResult != null">openActionResult=#{openActionResult},</if>
+            <if test="openActionCode != null">openActionCode=#{openActionCode},</if>
+            <if test="openActionTime != null">openActionTime=#{openActionTime},</if>
+            <if test="openRfIds != null">openRfIds=#{openRfIds},</if>
+            <if test="closeActionResult != null">closeActionResult=#{closeActionResult},</if>
+            <if test="closeActionCode != null">closeActionCode=#{closeActionCode},</if>
+            <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
+            <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
+            <if test="status != null">status=#{status},</if>
             <if test="mender != null">mender=#{mender},</if>
             <if test="mendTime != null">mendTime=#{mendTime}</if>
         </set>
