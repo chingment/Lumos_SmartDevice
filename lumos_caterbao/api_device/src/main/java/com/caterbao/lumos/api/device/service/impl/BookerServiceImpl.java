@@ -8,15 +8,22 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowBookMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowMapper;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowBook;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class BookerServiceImpl implements BookerService {
@@ -25,7 +32,17 @@ public class BookerServiceImpl implements BookerService {
     private BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper;
 
     @Autowired
+    private BookBorrowReturnFlowBookMapper bookBorrowReturnFlowBookMapper;
+
+    @Autowired
     private MerchDeviceMapper merchDeviceMapper;
+
+    @Autowired
+    private PlatformTransactionManager platformTransactionManager;
+    @Autowired
+    private TransactionDefinition transactionDefinition;
+
+    private Lock lock = new ReentrantLock();
 
     @Override
     public CustomResult borrowReturnCreateFlow(String operater, RopBookerBorrowReturnCreateFlow rop) {
@@ -101,46 +118,118 @@ public class BookerServiceImpl implements BookerService {
     @Override
     public CustomResult borrowReturnCloseAction(String operater, RopBookerBorrowReturnCloseAction rop) {
 
-        BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
-        d_BookBorrowReturnFlow.setId(rop.getFlowId());
-        d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
-        d_BookBorrowReturnFlow.setCloseActionCode(rop.getActionCode());
-        d_BookBorrowReturnFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowReturnFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
+        lock.lock();
+        TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
 
-        if (rop.getActionResult() == 1) {
-            d_BookBorrowReturnFlow.setStatus(5);
+        try {
+
+            LumosSelective selective_BookBorrowReturnFlow = new LumosSelective();
+            selective_BookBorrowReturnFlow.setFields("*");
+            selective_BookBorrowReturnFlow.addWhere("BookBorrowReturnFlowId", rop.getFlowId());
+
+            //查找借还流程
+            BookBorrowReturnFlow d_BookBorrowReturnFlow = bookBorrowReturnFlowMapper.findOne(selective_BookBorrowReturnFlow);
+            if (d_BookBorrowReturnFlow == null) {
+                lock.unlock();
+                return CustomResult.fail("关闭失败[1]");
+            }
+
+            d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
+            d_BookBorrowReturnFlow.setCloseActionCode(rop.getActionCode());
+            d_BookBorrowReturnFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
+            d_BookBorrowReturnFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
+
+            if (rop.getActionResult() == 1) {
+                d_BookBorrowReturnFlow.setStatus(5);
+            } else if (rop.getActionResult() == 2) {
+                d_BookBorrowReturnFlow.setStatus(6);
+            }
+
+            d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
+            d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
+
+            if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0) {
+                lock.unlock();
+                return CustomResult.fail("关闭失败[2]");
+            }
+
+            if (rop.getActionResult() != 1) {
+                lock.unlock();
+                return CustomResult.fail("关闭失败[3]");
+            }
+
+
+            List<String> open_RfIds = (List<String>) JsonUtil.toObject(d_BookBorrowReturnFlow.getOpenRfIds());
+
+            List<String> close_RfIds = (List<String>) JsonUtil.toObject(d_BookBorrowReturnFlow.getCloseRfIds());
+
+            List<String> borrow_RfIds = new ArrayList<>();
+
+            for (int i = 0; i < open_RfIds.size(); i++) {
+                if (!close_RfIds.contains(open_RfIds.get(i))) {
+                    borrow_RfIds.add(open_RfIds.get(i));
+                }
+            }
+
+            List<String> return_RfIds = new ArrayList<>();
+
+            for (int i = 0; i < close_RfIds.size(); i++) {
+                if (!open_RfIds.contains(close_RfIds.get(i))) {
+                    return_RfIds.add(close_RfIds.get(i));
+                }
+            }
+
+            //借阅的书籍
+            for (String borrow_RfId : borrow_RfIds) {
+
+                LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
+                selective_BookBorrowReturnFlowBook.setFields("*");
+                selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
+                selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
+
+                BookBorrowReturnFlowBook bookBorrowReturnFlowBook =bookBorrowReturnFlowBookMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(bookBorrowReturnFlowBook==null) {
+                    bookBorrowReturnFlowBook = new BookBorrowReturnFlowBook();
+                    bookBorrowReturnFlowBook.setId(IdWork.generateGUID());
+                    bookBorrowReturnFlowBook.setFlowId(d_BookBorrowReturnFlow.getId());
+                    bookBorrowReturnFlowBook.setSkuRfId(borrow_RfId);
+                    bookBorrowReturnFlowBook.setBorrowTime(CommonUtil.getDateTimeNow());
+                    bookBorrowReturnFlowBook.setCreator(IdWork.generateGUID());
+                    bookBorrowReturnFlowBook.setCreateTime(CommonUtil.getDateTimeNow());
+
+                    if (bookBorrowReturnFlowBookMapper.insert(bookBorrowReturnFlowBook) <= 0) {
+                        lock.unlock();
+                        return CustomResult.fail("关闭失败[4]");
+                    }
+                }
+            }
+
+
+            RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
+            ret.setFlowId(rop.getFlowId());
+
+            List<BookBean> borrowBooks = new ArrayList<>();
+
+            borrowBooks.add(new BookBean("1", "1", "安徒生童话故事", "1", "1"));
+            borrowBooks.add(new BookBean("1", "1", "这个杀手不太冷静", "1", "1"));
+
+
+            List<BookBean> returnBooks = new ArrayList<>();
+            returnBooks.add(new BookBean("1", "1", "西游记", "1", "1"));
+            returnBooks.add(new BookBean("1", "1", "红楼梦", "1", "1"));
+
+            ret.setBorrowBooks(borrowBooks);
+            ret.setReturnBooks(returnBooks);
+
+            platformTransactionManager.commit(transaction);
+            lock.unlock();
+            return  CustomResult.success("保存成功");
+        } catch (Exception e) {
+            platformTransactionManager.rollback(transaction);
+            e.printStackTrace();
+            lock.unlock();
+            return CustomResult.fail("保存失败,服务器异常");
         }
-        else  if(rop.getActionResult()==2) {
-            d_BookBorrowReturnFlow.setStatus(6);
-        }
-
-        d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
-        d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
-
-        if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
-            return CustomResult.fail("关闭失败");
-
-        if (rop.getActionResult() != 1)
-            return CustomResult.fail("关闭失败[2]");
-
-        RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
-        ret.setFlowId(rop.getFlowId());
-
-        List<BookBean> borrowBooks=new ArrayList<>();
-
-        borrowBooks.add(new BookBean("1","1","安徒生童话故事","1","1"));
-        borrowBooks.add(new BookBean("1","1","这个杀手不太冷静","1","1"));
-
-
-        List<BookBean> returnBooks=new ArrayList<>();
-        returnBooks.add(new BookBean("1","1","西游记","1","1"));
-        returnBooks.add(new BookBean("1","1","红楼梦","1","1"));
-
-        ret.setBorrowBooks(borrowBooks);
-        ret.setReturnBooks(returnBooks);
-
-        return CustomResult.success("关闭成功", ret);
     }
 
 }

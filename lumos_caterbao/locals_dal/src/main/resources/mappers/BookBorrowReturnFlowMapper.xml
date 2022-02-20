@@ -5,9 +5,8 @@
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowMapper">
 
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
-        select  ${fields} from Shop where 1=1
-        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
-        <if test="where.ShopId != null">and Id =#{where.ShopId}</if>
+        select  ${fields} from BookBorrowReturnFlow where 1=1
+        <if test="where.BookBorrowReturnFlowId != null">and Id =#{where.BookBorrowReturnFlowId}</if>
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from Shop where 1=1
@@ -22,11 +21,11 @@
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow">
         update BookBorrowReturnFlow
         <set>
-            <if test="openActionResult != null">openActionResult=#{openActionResult},</if>
+            <if test="openActionResult != 0">openActionResult=#{openActionResult},</if>
             <if test="openActionCode != null">openActionCode=#{openActionCode},</if>
             <if test="openActionTime != null">openActionTime=#{openActionTime},</if>
             <if test="openRfIds != null">openRfIds=#{openRfIds},</if>
-            <if test="closeActionResult != null">closeActionResult=#{closeActionResult},</if>
+            <if test="closeActionResult != 0">closeActionResult=#{closeActionResult},</if>
             <if test="closeActionCode != null">closeActionCode=#{closeActionCode},</if>
             <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
             <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
