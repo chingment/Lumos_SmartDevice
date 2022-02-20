@@ -48,7 +48,7 @@ public class IdentityServiceImpl implements IdentityService {
 
         RetIdentityBorrower ret=new RetIdentityBorrower();
 
-        if(rop.getIdentityType().equals("1")) {
+        if(rop.getIdentityType()==1) {
 
             LumosSelective selective_IcCard = new LumosSelective();
             selective_IcCard.setFields("*");

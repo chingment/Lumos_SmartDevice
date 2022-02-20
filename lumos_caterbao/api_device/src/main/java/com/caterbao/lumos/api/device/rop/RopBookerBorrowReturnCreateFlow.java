@@ -1,10 +1,11 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RopIdentityInfo {
+public class RopBookerBorrowReturnCreateFlow {
     private String deviceId;
+    private String cabinetId;
+    private String slotId;
     private int identityType;
     private String identityId;
-    private int sceneMode;
 
     public String getDeviceId() {
         return deviceId;
@@ -12,6 +13,22 @@ public class RopIdentityInfo {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getCabinetId() {
+        return cabinetId;
+    }
+
+    public void setCabinetId(String cabinetId) {
+        this.cabinetId = cabinetId;
+    }
+
+    public String getSlotId() {
+        return slotId;
+    }
+
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
     }
 
     public int getIdentityType() {
@@ -28,13 +45,5 @@ public class RopIdentityInfo {
 
     public void setIdentityId(String identityId) {
         this.identityId = identityId;
-    }
-
-    public int getSceneMode() {
-        return sceneMode;
-    }
-
-    public void setSceneMode(int sceneMode) {
-        this.sceneMode = sceneMode;
     }
 }
