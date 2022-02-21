@@ -20,8 +20,12 @@ import java.util.List;
 @Service
 public class IcCardServiceImpl implements IcCardService {
 
-    @Autowired
     private IcCardMapper icCardMapper;
+
+    @Autowired(required = false)
+    public void setIcCardMapper(IcCardMapper icCardMapper) {
+        this.icCardMapper = icCardMapper;
+    }
 
     @Override
     public CustomResult list(String operater, String merchId, RopIcCardList rop) {

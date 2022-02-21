@@ -15,8 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class IdentityServiceImpl implements IdentityService {
 
-    @Autowired
     private IcCardMapper icCardMapper;
+
+    @Autowired(required = false)
+    public void setIcCardMapper(IcCardMapper icCardMapper) {
+        this.icCardMapper = icCardMapper;
+    }
 
     @Override
     public CustomResult verify(String operater, RopIdentityVerify rop) {

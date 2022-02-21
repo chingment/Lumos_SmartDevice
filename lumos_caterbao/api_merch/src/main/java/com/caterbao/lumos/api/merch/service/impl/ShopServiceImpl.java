@@ -24,11 +24,18 @@ import java.util.List;
 @Service
 public class ShopServiceImpl implements ShopService {
 
-    @Autowired
     private ShopMapper shopMapper;
-
-    @Autowired
     private ShopDeviceMapper shopDeviceMapper;
+
+    @Autowired(required = false)
+    public void setShopMapper(ShopMapper shopMapper) {
+        this.shopMapper = shopMapper;
+    }
+
+    @Autowired(required = false)
+    public void setShopDeviceMapper(ShopDeviceMapper shopDeviceMapper) {
+        this.shopDeviceMapper = shopDeviceMapper;
+    }
 
     @Override
     public CustomResult list(String operater, String merchId, RopShopList rop) {

@@ -35,16 +35,30 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private PrdSpuMapper prdSpuMapper;
-
-    @Autowired
     private PrdSkuMapper prdSkuMapper;
-
-    @Autowired
     private PlatformTransactionManager platformTransactionManager;
-    @Autowired
     private TransactionDefinition transactionDefinition;
+
+    @Autowired(required = false)
+    public void setPrdSpuMapper(PrdSpuMapper prdSpuMapper) {
+        this.prdSpuMapper = prdSpuMapper;
+    }
+
+    @Autowired(required = false)
+    public void setPrdSkuMapper(PrdSkuMapper prdSkuMapper) {
+        this.prdSkuMapper = prdSkuMapper;
+    }
+
+    @Autowired(required = false)
+    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
+        this.platformTransactionManager = platformTransactionManager;
+    }
+
+    @Autowired(required = false)
+    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
+        this.transactionDefinition = transactionDefinition;
+    }
 
     private Lock lock = new ReentrantLock();
 

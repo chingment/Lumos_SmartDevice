@@ -23,14 +23,24 @@ import java.util.List;
 @Service
 public class DeviceServiceImpl implements DeviceService{
 
-    @Autowired
     private DeviceMapper deviceMapper;
-
-    @Autowired
     private DeviceCabinetMapper deviceCabinetMapper;
-
-    @Autowired
     private MerchDeviceMapper merchDeviceMapper;
+
+    @Autowired(required = false)
+    public void setDeviceMapper(DeviceMapper deviceMapper) {
+        this.deviceMapper = deviceMapper;
+    }
+
+    @Autowired(required = false)
+    public void setDeviceCabinetMapper(DeviceCabinetMapper deviceCabinetMapper) {
+        this.deviceCabinetMapper = deviceCabinetMapper;
+    }
+
+    @Autowired(required = false)
+    public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
+        this.merchDeviceMapper = merchDeviceMapper;
+    }
 
     @Override
     public CustomResult init(String operater, String merchId, RopDeviceInitData rop) {

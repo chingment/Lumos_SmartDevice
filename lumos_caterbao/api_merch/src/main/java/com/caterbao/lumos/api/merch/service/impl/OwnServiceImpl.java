@@ -27,17 +27,23 @@ import java.util.concurrent.TimeUnit;
 
 public class OwnServiceImpl implements OwnService {
 
-    @Autowired
     private SysUserMapper sysUserMapper;
-
-    @Autowired
     private SysMerchUserMapper sysMerchUserMapper;
-
-    @Autowired
     private  RedisTemplate redisTemplate;
 
-    @Autowired
-    public OwnServiceImpl() {
+    @Autowired(required = false)
+    public void setSysUserMapper(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setSysMerchUserMapper(SysMerchUserMapper sysMerchUserMapper) {
+        this.sysMerchUserMapper = sysMerchUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
     }
 
     @Override

@@ -23,8 +23,16 @@ import java.util.List;
 @Service
 public class DeviceServiceImpl implements DeviceService {
 
-    @Autowired
     private MerchDeviceMapper merchDeviceMapper;
+
+    @Autowired(required = false)
+    public MerchDeviceMapper getMerchDeviceMapper() {
+        return merchDeviceMapper;
+    }
+
+    public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
+        this.merchDeviceMapper = merchDeviceMapper;
+    }
 
     @Override
     public CustomResult init_bookers(String operater, String merchId) {

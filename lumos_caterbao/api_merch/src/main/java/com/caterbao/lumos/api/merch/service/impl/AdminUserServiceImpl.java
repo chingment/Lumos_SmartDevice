@@ -31,15 +31,30 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
 
-    @Autowired
     private SysUserMapper sysUserMapper;
-    @Autowired
     private SysMerchUserMapper sysMerchUserMapper;
-
-    @Autowired
     private PlatformTransactionManager platformTransactionManager;
-    @Autowired
     private TransactionDefinition transactionDefinition;
+
+    @Autowired(required = false)
+    public void setSysUserMapper(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setSysMerchUserMapper(SysMerchUserMapper sysMerchUserMapper) {
+        this.sysMerchUserMapper = sysMerchUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
+        this.platformTransactionManager = platformTransactionManager;
+    }
+
+    @Autowired(required = false)
+    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
+        this.transactionDefinition = transactionDefinition;
+    }
 
     private Lock lock = new ReentrantLock();
 

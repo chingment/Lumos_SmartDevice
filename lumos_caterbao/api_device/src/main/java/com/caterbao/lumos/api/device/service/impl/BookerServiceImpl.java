@@ -28,19 +28,36 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class BookerServiceImpl implements BookerService {
 
-    @Autowired
     private BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper;
-
-    @Autowired
     private BookBorrowReturnFlowDataMapper bookBorrowReturnFlowDataMapper;
-
-    @Autowired
     private MerchDeviceMapper merchDeviceMapper;
+    private PlatformTransactionManager platformTransactionManager;
+    private TransactionDefinition transactionDefinition;
+
+    @Autowired(required = false)
+    public void setBookBorrowReturnFlowMapper(BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper) {
+        this.bookBorrowReturnFlowMapper = bookBorrowReturnFlowMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookBorrowReturnFlowDataMapper(BookBorrowReturnFlowDataMapper bookBorrowReturnFlowDataMapper) {
+        this.bookBorrowReturnFlowDataMapper = bookBorrowReturnFlowDataMapper;
+    }
+
+    @Autowired(required = false)
+    public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
+        this.merchDeviceMapper = merchDeviceMapper;
+    }
 
     @Autowired
-    private PlatformTransactionManager platformTransactionManager;
+    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
+        this.platformTransactionManager = platformTransactionManager;
+    }
+
     @Autowired
-    private TransactionDefinition transactionDefinition;
+    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
+        this.transactionDefinition = transactionDefinition;
+    }
 
     private Lock lock = new ReentrantLock();
 
@@ -79,7 +96,6 @@ public class BookerServiceImpl implements BookerService {
 
         if (bookBorrowReturnFlowMapper.insert(d_BookBorrowReturnFlow) <= 0)
             return CustomResult.fail("流程创建失败");
-
 
         RetBookerBorrowReturnCreateFlow ret = new RetBookerBorrowReturnCreateFlow();
         ret.setFlowId(d_BookBorrowReturnFlow.getId());
@@ -187,18 +203,18 @@ public class BookerServiceImpl implements BookerService {
                 selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
-                BookBorrowReturnFlowData bookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
-                if(bookBorrowReturnFlowData ==null) {
-                    bookBorrowReturnFlowData = new BookBorrowReturnFlowData();
-                    bookBorrowReturnFlowData.setId(IdWork.generateGUID());
-                    bookBorrowReturnFlowData.setFlowId(d_BookBorrowReturnFlow.getId());
-                    bookBorrowReturnFlowData.setClientUserId(d_BookBorrowReturnFlow.getClientUserId());
-                    bookBorrowReturnFlowData.setSkuRfId(borrow_RfId);
-                    bookBorrowReturnFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
-                    bookBorrowReturnFlowData.setCreator(IdWork.generateGUID());
-                    bookBorrowReturnFlowData.setCreateTime(CommonUtil.getDateTimeNow());
+                BookBorrowReturnFlowData d_BookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(d_BookBorrowReturnFlowData ==null) {
+                    d_BookBorrowReturnFlowData = new BookBorrowReturnFlowData();
+                    d_BookBorrowReturnFlowData.setId(IdWork.generateGUID());
+                    d_BookBorrowReturnFlowData.setFlowId(d_BookBorrowReturnFlow.getId());
+                    d_BookBorrowReturnFlowData.setClientUserId(d_BookBorrowReturnFlow.getClientUserId());
+                    d_BookBorrowReturnFlowData.setSkuRfId(borrow_RfId);
+                    d_BookBorrowReturnFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrowReturnFlowData.setCreator(IdWork.generateGUID());
+                    d_BookBorrowReturnFlowData.setCreateTime(CommonUtil.getDateTimeNow());
 
-                    if (bookBorrowReturnFlowDataMapper.insert(bookBorrowReturnFlowData) <= 0) {
+                    if (bookBorrowReturnFlowDataMapper.insert(d_BookBorrowReturnFlowData) <= 0) {
                         lock.unlock();
                         return CustomResult.fail("关闭失败[4]");
                     }

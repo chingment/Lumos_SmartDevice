@@ -22,14 +22,24 @@ import java.util.List;
 @Service
 public class StoreServiceImpl implements StoreService {
 
-    @Autowired
     private StoreMapper storeMapper;
-
-    @Autowired
     private StoreShopMapper storeShopMapper;
-
-    @Autowired
     private ShopDeviceMapper shopDeviceMapper;
+
+    @Autowired(required = false)
+    public void setStoreMapper(StoreMapper storeMapper) {
+        this.storeMapper = storeMapper;
+    }
+
+    @Autowired(required = false)
+    public void setStoreShopMapper(StoreShopMapper storeShopMapper) {
+        this.storeShopMapper = storeShopMapper;
+    }
+
+    @Autowired(required = false)
+    public void setShopDeviceMapper(ShopDeviceMapper shopDeviceMapper) {
+        this.shopDeviceMapper = shopDeviceMapper;
+    }
 
     @Override
     public CustomResult list(String operater, String merchId, RopStoreList rop) {
