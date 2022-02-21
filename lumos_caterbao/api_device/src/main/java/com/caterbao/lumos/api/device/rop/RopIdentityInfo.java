@@ -2,9 +2,18 @@ package com.caterbao.lumos.api.device.rop;
 
 public class RopIdentityInfo {
     private String deviceId;
+    private String clientUserId;
     private int identityType;
     private String identityId;
     private int sceneMode;
+
+    public String getClientUserId() {
+        return clientUserId;
+    }
+
+    public void setClientUserId(String clientUserId) {
+        this.clientUserId = clientUserId;
+    }
 
     public String getDeviceId() {
         return deviceId;

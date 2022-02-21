@@ -34,6 +34,7 @@ public class IdentityServiceImpl implements IdentityService {
             if (d_IcCard == null)
                 return CustomResult.fail("验证失败");
 
+            ret.setClientUserId("1");
             ret.setIdentityType("1");
             ret.setIdentityId(d_IcCard.getId());
 

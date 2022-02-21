@@ -8,11 +8,11 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowBookMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowDataMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowMapper;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow;
-import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowBook;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowData;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class BookerServiceImpl implements BookerService {
     private BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper;
 
     @Autowired
-    private BookBorrowReturnFlowBookMapper bookBorrowReturnFlowBookMapper;
+    private BookBorrowReturnFlowDataMapper bookBorrowReturnFlowDataMapper;
 
     @Autowired
     private MerchDeviceMapper merchDeviceMapper;
@@ -70,9 +70,9 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowReturnFlow.setDeviceId(rop.getDeviceId());
         d_BookBorrowReturnFlow.setCabinetId(rop.getCabinetId());
         d_BookBorrowReturnFlow.setSlotId(rop.getSlotId());
+        d_BookBorrowReturnFlow.setClientUserId(rop.getClientUserId());
         d_BookBorrowReturnFlow.setIdentityType(rop.getIdentityType());
         d_BookBorrowReturnFlow.setIdentityId(rop.getIdentityId());
-        d_BookBorrowReturnFlow.setClientUserId("");
         d_BookBorrowReturnFlow.setStatus(1);
         d_BookBorrowReturnFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookBorrowReturnFlow.setCreator(IdWork.generateGUID());
@@ -187,17 +187,18 @@ public class BookerServiceImpl implements BookerService {
                 selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
-                BookBorrowReturnFlowBook bookBorrowReturnFlowBook =bookBorrowReturnFlowBookMapper.findOne(selective_BookBorrowReturnFlowBook);
-                if(bookBorrowReturnFlowBook==null) {
-                    bookBorrowReturnFlowBook = new BookBorrowReturnFlowBook();
-                    bookBorrowReturnFlowBook.setId(IdWork.generateGUID());
-                    bookBorrowReturnFlowBook.setFlowId(d_BookBorrowReturnFlow.getId());
-                    bookBorrowReturnFlowBook.setSkuRfId(borrow_RfId);
-                    bookBorrowReturnFlowBook.setBorrowTime(CommonUtil.getDateTimeNow());
-                    bookBorrowReturnFlowBook.setCreator(IdWork.generateGUID());
-                    bookBorrowReturnFlowBook.setCreateTime(CommonUtil.getDateTimeNow());
+                BookBorrowReturnFlowData bookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(bookBorrowReturnFlowData ==null) {
+                    bookBorrowReturnFlowData = new BookBorrowReturnFlowData();
+                    bookBorrowReturnFlowData.setId(IdWork.generateGUID());
+                    bookBorrowReturnFlowData.setFlowId(d_BookBorrowReturnFlow.getId());
+                    bookBorrowReturnFlowData.setClientUserId(d_BookBorrowReturnFlow.getClientUserId());
+                    bookBorrowReturnFlowData.setSkuRfId(borrow_RfId);
+                    bookBorrowReturnFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
+                    bookBorrowReturnFlowData.setCreator(IdWork.generateGUID());
+                    bookBorrowReturnFlowData.setCreateTime(CommonUtil.getDateTimeNow());
 
-                    if (bookBorrowReturnFlowBookMapper.insert(bookBorrowReturnFlowBook) <= 0) {
+                    if (bookBorrowReturnFlowDataMapper.insert(bookBorrowReturnFlowData) <= 0) {
                         lock.unlock();
                         return CustomResult.fail("关闭失败[4]");
                     }

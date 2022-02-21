@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>com.caterbao.lumos.locals</groupId>
-    <artifactId>dal</artifactId>
+    <artifactId>biz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>locals_dal</name>
+    <name>locals_biz</name>
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
@@ -40,6 +40,5 @@
             <version>3.0.1</version>
         </dependency>
     </dependencies>
-
 
 </project>
