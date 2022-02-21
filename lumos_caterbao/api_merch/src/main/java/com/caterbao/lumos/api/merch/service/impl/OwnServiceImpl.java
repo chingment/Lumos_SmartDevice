@@ -47,7 +47,10 @@ public class OwnServiceImpl implements OwnService {
     }
 
     @Override
-    public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
+    public CustomResult<Object> loginByAccount(RopOwnLoginByAccount rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
 
         LumosSelective selective_SysUser=new LumosSelective();
         selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
@@ -56,14 +59,14 @@ public class OwnServiceImpl implements OwnService {
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
         if (d_SysUser == null)
-            return CustomResult.fail("账号或密码错误");
+            return result.fail("账号或密码错误");
 
         String passwordHash = d_SysUser.getPasswordHash();
 
         boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp(), passwordHash);
 
         if (!isFlag)
-            return CustomResult.fail("账号或密码错误");
+            return result.fail("账号或密码错误");
 
         LumosSelective selective_SysMerchUser=new LumosSelective();
         selective_SysMerchUser.setFields("UserId,MerchId");
@@ -72,10 +75,10 @@ public class OwnServiceImpl implements OwnService {
         SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
-            return CustomResult.fail("该账号未授权");
+            return result.fail("该账号未授权");
 
         if(d_SysUser.getIsDisable())
-            return CustomResult.fail("该账号已被停用");
+            return result.fail("该账号已被停用");
 
         String token = IdWork.generateGUID();
 
@@ -89,13 +92,15 @@ public class OwnServiceImpl implements OwnService {
 
         redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);
 
-        return CustomResult.success("登录成功", ret);
+        return result.success("登录成功", ret);
 
     }
 
 
     @Override
-    public CustomResult getInfo(String operater,String userId) {
+    public CustomResult<Object> getInfo(String operater,String userId) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         RetOwnGetInfo ret = new RetOwnGetInfo();
 
@@ -126,6 +131,6 @@ public class OwnServiceImpl implements OwnService {
 
         ret.setMenus(r_Menus);
 
-        return CustomResult.success("获取成功", ret);
+        return result.success("获取成功", ret);
     }
 }

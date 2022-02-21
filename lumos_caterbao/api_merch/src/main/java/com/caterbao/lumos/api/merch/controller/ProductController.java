@@ -23,31 +23,31 @@ public class ProductController extends  BaseController {
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult list(@RequestBody RopProductList rop) {
+    public CustomResult<Object> list(@RequestBody RopProductList rop) {
         return productService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult add(@RequestBody RopProdcutAdd rop) {
+    public CustomResult<Object> add(@RequestBody RopProdcutAdd rop) {
         return productService.add(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "init_edit", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_edit(@RequestParam String id) {
+    public CustomResult<Object> init_edit(@RequestParam String id) {
         return productService.init_edit(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult add(@RequestBody RopProdcutEdit rop) {
+    public CustomResult<Object> add(@RequestBody RopProdcutEdit rop) {
         return productService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult delete(@RequestBody RopProdcutDelete rop) {
+    public CustomResult<Object> delete(@RequestBody RopProdcutDelete rop) {
         return productService.delete(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

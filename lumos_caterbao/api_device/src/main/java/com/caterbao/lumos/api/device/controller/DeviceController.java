@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.device.controller;
 
 
+import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
 import com.caterbao.lumos.api.device.service.DeviceService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -20,7 +21,7 @@ public class DeviceController extends BaseController{
 
     @RequestMapping(value = "initData", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult initData(@RequestBody RopDeviceInitData rop){
+    public CustomResult<RetDeviceInitData> initData(@RequestBody RopDeviceInitData rop){
         return deviceService.init(this.getCurrentUserId(),this.getCurrentMerchId(),rop);
     }
 

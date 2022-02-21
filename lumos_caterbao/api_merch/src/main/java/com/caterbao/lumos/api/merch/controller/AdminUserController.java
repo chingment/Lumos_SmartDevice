@@ -22,31 +22,31 @@ public class AdminUserController extends  BaseController  {
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult list(@RequestBody RopAdminUserList rop) {
+    public CustomResult<Object> list(@RequestBody RopAdminUserList rop) {
         return adminUserService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "init_add", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_add() {
+    public CustomResult<Object> init_add() {
         return adminUserService.init_add(this.getCurrentUserId(), this.getCurrentMerchId());
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult add(@RequestBody RopAdminUserAdd rop) {
+    public CustomResult<Object> add(@RequestBody RopAdminUserAdd rop) {
         return adminUserService.add(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "init_edit", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_edit(@RequestParam String id) {
+    public CustomResult<Object> init_edit(@RequestParam String id) {
         return adminUserService.init_edit(this.getCurrentUserId(), this.getCurrentMerchId(), id);
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult edit(@RequestBody RopAdminUserEdit rop) {
+    public CustomResult<Object> edit(@RequestBody RopAdminUserEdit rop) {
         return adminUserService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

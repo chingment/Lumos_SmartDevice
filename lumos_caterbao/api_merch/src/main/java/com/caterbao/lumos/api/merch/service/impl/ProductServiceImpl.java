@@ -63,7 +63,9 @@ public class ProductServiceImpl implements ProductService {
     private Lock lock = new ReentrantLock();
 
     @Override
-    public CustomResult list(String operater, String merchId, RopProductList rop) {
+    public CustomResult<Object> list(String operater, String merchId, RopProductList rop) {
+        CustomResult<Object> result = new CustomResult<>();
+
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
@@ -119,29 +121,30 @@ public class ProductServiceImpl implements ProductService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
     }
 
 
     @Override
-    public CustomResult add(String operater, String merchId, RopProdcutAdd rop) {
+    public CustomResult<Object> add(String operater, String merchId, RopProdcutAdd rop) {
+        CustomResult<Object> result = new CustomResult<>();
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
-        CustomResult result = new CustomResult();
+
         try {
             if (CommonUtil.isEmpty(rop.getCumCode())) {
                 lock.unlock();
-                return CustomResult.fail("货号不能为空");
+                return result.fail("货号不能为空");
             }
 
             if (CommonUtil.isEmpty(rop.getName())) {
                 lock.unlock();
-                return CustomResult.fail("名称不能为空");
+                return result.fail("名称不能为空");
             }
 
             if (prdSpuMapper.isExistCumCode(null, merchId, rop.getCumCode()) > 0) {
                 lock.unlock();
-                return CustomResult.fail("货号已经存在");
+                return result.fail("货号已经存在");
             }
 
             PrdSpu d_PrdSpu = new PrdSpu();
@@ -166,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
             if (r_PrdSpu_Insert <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             for (SkuModel sku : rop.getSkus()) {
@@ -174,12 +177,12 @@ public class ProductServiceImpl implements ProductService {
 
                 if (CommonUtil.isEmpty(sku.getCumCode())) {
                     lock.unlock();
-                    return CustomResult.fail("编码不能为空");
+                    return result.fail("编码不能为空");
                 }
 
                 if (prdSkuMapper.isExistCumCode(null, merchId, sku.getCumCode()) > 0) {
                     lock.unlock();
-                    return CustomResult.fail("编码已经存在");
+                    return result.fail("编码已经存在");
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
@@ -200,24 +203,24 @@ public class ProductServiceImpl implements ProductService {
                 long r_PrdSku_Insert = prdSkuMapper.insert(d_PrdSku);
                 if (r_PrdSku_Insert <= 0) {
                     lock.unlock();
-                    return CustomResult.fail("保存失败");
+                    return result.fail("保存失败");
                 }
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功");
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
             e.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 
     @Override
-    public CustomResult init_edit(String operater, String merchId,String spuId) {
-
+    public CustomResult<Object> init_edit(String operater, String merchId,String spuId) {
+        CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective_PrdSpu=new LumosSelective();
         selective_PrdSpu.setFields("Id,Name,CumCode,KindId1,KindId2,KindId3,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
         selective_PrdSpu.addWhere("MerchId",merchId);
@@ -265,28 +268,29 @@ public class ProductServiceImpl implements ProductService {
 
         ret.put("skus",m_Skus);
 
-        return CustomResult.success("初始成功",ret);
+        return result.success("初始成功",ret);
     }
 
     @Override
-    public CustomResult edit(String operater, String merchId, RopProdcutEdit rop) {
+    public CustomResult<Object> edit(String operater, String merchId, RopProdcutEdit rop) {
+        CustomResult<Object> result = new CustomResult<>();
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
-        CustomResult result = new CustomResult();
+
         try {
             if (CommonUtil.isEmpty(rop.getCumCode())) {
                 lock.unlock();
-                return CustomResult.fail("货号不能为空");
+                return result.fail("货号不能为空");
             }
 
             if (CommonUtil.isEmpty(rop.getName())) {
                 lock.unlock();
-                return CustomResult.fail("名称不能为空");
+                return result.fail("名称不能为空");
             }
 
             if (prdSpuMapper.isExistCumCode(rop.getId(), merchId, rop.getCumCode()) > 0) {
                 lock.unlock();
-                return CustomResult.fail("货号已经存在");
+                return result.fail("货号已经存在");
             }
 
             PrdSpu d_PrdSpu = new PrdSpu();
@@ -359,19 +363,19 @@ public class ProductServiceImpl implements ProductService {
 
             if (r_PrdSpu_Update <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             for (SkuModel sku : rop.getSkus()) {
 
                 if (CommonUtil.isEmpty(sku.getCumCode())) {
                     lock.unlock();
-                    return CustomResult.fail("编码不能为空");
+                    return result.fail("编码不能为空");
                 }
 
                 if (prdSkuMapper.isExistCumCode(sku.getId(), merchId, sku.getCumCode()) > 0) {
                     lock.unlock();
-                    return CustomResult.fail("编码已经存在");
+                    return result.fail("编码已经存在");
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
@@ -389,30 +393,30 @@ public class ProductServiceImpl implements ProductService {
                 long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
                 if (r_PrdSku_Update <= 0) {
                     lock.unlock();
-                    return CustomResult.fail("保存失败");
+                    return result.fail("保存失败");
                 }
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功");
         } catch (Exception ex) {
             platformTransactionManager.rollback(transaction);
             ex.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 
     @Override
-    public CustomResult delete(String operater, String merchId, RopProdcutDelete rop) {
+    public CustomResult<Object> delete(String operater, String merchId, RopProdcutDelete rop) {
+        CustomResult<Object> result = new CustomResult<>();
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
-        CustomResult result = new CustomResult();
         try {
             if (CommonUtil.isEmpty(rop.getId())) {
                 lock.unlock();
-                return CustomResult.fail("货号ID不能为空");
+                return result.fail("货号ID不能为空");
             }
 
 
@@ -428,7 +432,7 @@ public class ProductServiceImpl implements ProductService {
             long r_PrdSpu_Update=prdSpuMapper.update(d_PrdSpu);
             if (r_PrdSpu_Update <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             LumosSelective selective_PrdSkus=new LumosSelective();
@@ -446,18 +450,18 @@ public class ProductServiceImpl implements ProductService {
                 long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
                 if (r_PrdSku_Update <= 0) {
                     lock.unlock();
-                    return CustomResult.fail("保存失败");
+                    return result.fail("保存失败");
                 }
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功");
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
             e.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 }

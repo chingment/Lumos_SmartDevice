@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AdService {
-    CustomResult spaces(String operater, String merchId, RopAdSpaces rop);
-    CustomResult release(String operater, String merchId, RopAdRelease rop);
-    CustomResult contents(String operater, String merchId, RopAdContents rop);
+    CustomResult<Object>  spaces(String operater, String merchId, RopAdSpaces rop);
+    CustomResult<Object>  release(String operater, String merchId, RopAdRelease rop);
+    CustomResult<Object>  contents(String operater, String merchId, RopAdContents rop);
 }

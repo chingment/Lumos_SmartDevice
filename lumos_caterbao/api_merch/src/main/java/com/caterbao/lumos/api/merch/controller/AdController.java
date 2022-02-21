@@ -20,7 +20,7 @@ public class AdController extends  BaseController  {
 
     @RequestMapping(value = "spaces", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult spaces(@RequestBody RopAdSpaces rop) {
+    public CustomResult<Object> spaces(@RequestBody RopAdSpaces rop) {
         return adService.spaces(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

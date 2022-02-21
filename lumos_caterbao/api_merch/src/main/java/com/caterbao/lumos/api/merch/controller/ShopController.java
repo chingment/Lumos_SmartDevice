@@ -18,49 +18,49 @@ public class ShopController extends  BaseController {
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult list(@RequestBody RopShopList rop) {
+    public CustomResult<Object> list(@RequestBody RopShopList rop) {
         return shopService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "details", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult details(@RequestParam String id) {
+    public CustomResult<Object> details(@RequestParam String id) {
         return shopService.details(this.getCurrentUserId(), this.getCurrentMerchId(), id);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult add(@RequestBody RopShopAdd rop) {
+    public CustomResult<Object> add(@RequestBody RopShopAdd rop) {
         return shopService.add(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "init_edit", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_edit(@RequestParam String id) {
+    public CustomResult<Object> init_edit(@RequestParam String id) {
         return shopService.init_edit(this.getCurrentUserId(), this.getCurrentMerchId(), id);
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult edit(@RequestBody RopShopEdit rop) {
+    public CustomResult<Object> edit(@RequestBody RopShopEdit rop) {
         return shopService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "devices", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult devices(@RequestBody RopShopDevices rop) {
+    public CustomResult<Object> devices(@RequestBody RopShopDevices rop) {
         return shopService.devices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "unDevices", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult unDevices(@RequestBody RopShopDevices rop) {
+    public CustomResult<Object> unDevices(@RequestBody RopShopDevices rop) {
         return shopService.unDevices(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "bindDevice", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult bindDevice(@RequestBody RopShopBindDevice rop) {
+    public CustomResult<Object> bindDevice(@RequestBody RopShopBindDevice rop) {
         return shopService.bindDevice(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 

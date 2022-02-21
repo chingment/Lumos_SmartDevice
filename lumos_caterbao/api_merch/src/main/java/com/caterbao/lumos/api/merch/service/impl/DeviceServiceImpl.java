@@ -26,30 +26,27 @@ public class DeviceServiceImpl implements DeviceService {
     private MerchDeviceMapper merchDeviceMapper;
 
     @Autowired(required = false)
-    public MerchDeviceMapper getMerchDeviceMapper() {
-        return merchDeviceMapper;
-    }
-
     public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
         this.merchDeviceMapper = merchDeviceMapper;
     }
 
     @Override
-    public CustomResult init_bookers(String operater, String merchId) {
+    public CustomResult<Object> init_bookers(String operater, String merchId) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        LumosSelective selective_DeviceCount = new LumosSelective();
+        selective_DeviceCount.addWhere("MerchId", merchId);
 
 
-        LumosSelective selective_DeviceCount=new LumosSelective();
-        selective_DeviceCount.addWhere("MerchId",merchId);
+        long deviceCount = merchDeviceMapper.count(selective_DeviceCount);
+
+        HashMap<String, Object> ret = new HashMap<>();
+
+        ret.put("deviceCount", deviceCount);
 
 
-        long deviceCount=merchDeviceMapper.count(selective_DeviceCount);
-
-        HashMap<String,Object> ret=new HashMap<>();
-
-        ret.put("deviceCount",deviceCount);
-
-
-        return CustomResult.success("初始成功",ret);
+        return result.success("初始成功", ret);
     }
 
     public FieldModel getStatus(){
@@ -65,7 +62,9 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public CustomResult bookers(String operater, String merchId, RopDeviceBookers rop) {
+    public CustomResult<Object> bookers(String operater, String merchId, RopDeviceBookers rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
@@ -103,12 +102,13 @@ public class DeviceServiceImpl implements DeviceService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
     }
 
     @Override
-    public CustomResult init_manage(String operater, String merchId,String deviceId) {
+    public CustomResult<Object> init_manage(String operater, String merchId,String deviceId) {
 
+        CustomResult<Object> result = new CustomResult<>();
 
         LumosSelective selective=new LumosSelective();
         selective.addWhere("MerchId",merchId);
@@ -128,12 +128,14 @@ public class DeviceServiceImpl implements DeviceService {
 
         ret.put("devices", m_Devices);
 
-        return CustomResult.success("初始成功",ret);
+        return result.success("初始成功",ret);
 
     }
 
     @Override
-    public CustomResult init_manage_baseinfo(String operater, String merchId,String deviceId) {
+    public CustomResult<Object> init_manage_baseinfo(String operater, String merchId,String deviceId) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         LumosSelective selective=new LumosSelective();
         selective.addWhere("MerchId",merchId);
@@ -149,16 +151,17 @@ public class DeviceServiceImpl implements DeviceService {
         ret.put("sysVerName",d_Device.getSysVerName());
         ret.put("ctrlVerName",d_Device.getCtrlVerName());
         ret.put("belongName",getBelongName(d_Device.getStoreName(),d_Device.getShopName()));
-        return CustomResult.success("初始成功",ret);
+        return result.success("初始成功",ret);
     }
 
     @Override
-    public CustomResult edit(String operater, String merchId, RopDeviceEdit rop) {
+    public CustomResult<Object> edit(String operater, String merchId, RopDeviceEdit rop) {
 
+        CustomResult<Object> result = new CustomResult<>();
 
         if(!CommonUtil.isEmpty(rop.getCumCode())) {
             if (merchDeviceMapper.isExistCumCode(rop.getId(), merchId, rop.getCumCode()) > 0) {
-                return CustomResult.fail("自编码已经存在");
+                return result.fail("自编码已经存在");
             }
         }
 
@@ -171,9 +174,9 @@ public class DeviceServiceImpl implements DeviceService {
         long r_MerchDevice_Update = merchDeviceMapper.update(d_MerchDevice);
 
         if (r_MerchDevice_Update > 0) {
-            return CustomResult.success("保存成功");
+            return result.success("保存成功");
         }
 
-        return CustomResult.fail("保存失败");
+        return result.fail("保存失败");
     }
 }

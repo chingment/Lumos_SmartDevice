@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RetIdentityBorrower {
+public class RetIdentityInfo {
     private String signName;
     private String cardNo;
     private int canBorrowQuantity;

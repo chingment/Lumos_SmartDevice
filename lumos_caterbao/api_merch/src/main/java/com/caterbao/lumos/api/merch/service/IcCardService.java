@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface IcCardService {
-    CustomResult list(String operater, String merchId, RopIcCardList rop);
+    CustomResult<Object>  list(String operater, String merchId, RopIcCardList rop);
 }

@@ -1,9 +1,7 @@
 package com.caterbao.lumos.api.device.controller;
 
 
-import com.caterbao.lumos.api.device.rop.RopBookerBorrowReturnCloseAction;
-import com.caterbao.lumos.api.device.rop.RopBookerBorrowReturnCreateFlow;
-import com.caterbao.lumos.api.device.rop.RopBookerBorrowReturnOpenAction;
+import com.caterbao.lumos.api.device.rop.*;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +20,19 @@ public class BookerController extends BaseController{
 
     @RequestMapping(value = "borrowreturn/createflow", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult borrowReturnCreateflow(@RequestBody RopBookerBorrowReturnCreateFlow rop){
+    public CustomResult<RetBookerBorrowReturnCreateFlow> borrowReturnCreateflow(@RequestBody RopBookerBorrowReturnCreateFlow rop){
         return bookerService.borrowReturnCreateFlow(this.getCurrentUserId(),rop);
     }
 
     @RequestMapping(value = "borrowreturn/openaction", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult borrowReturnOpenAction(@RequestBody RopBookerBorrowReturnOpenAction rop){
+    public CustomResult<RetBookerBorrowReturnOpenAction>  borrowReturnOpenAction(@RequestBody RopBookerBorrowReturnOpenAction rop){
         return bookerService.borrowReturnOpenAction(this.getCurrentUserId(),rop);
     }
 
     @RequestMapping(value = "borrowreturn/closeaction", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult borrowReturnCloseAction(@RequestBody RopBookerBorrowReturnCloseAction rop){
+    public CustomResult<RetBookerBorrowReturnCloseAction>  borrowReturnCloseAction(@RequestBody RopBookerBorrowReturnCloseAction rop){
         return bookerService.borrowReturnCloseAction(this.getCurrentUserId(),rop);
     }
 }

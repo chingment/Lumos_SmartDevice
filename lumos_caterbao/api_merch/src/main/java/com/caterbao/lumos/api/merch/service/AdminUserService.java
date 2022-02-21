@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AdminUserService {
 
-    CustomResult init_add(String operater, String merchId);
-    CustomResult add(String operater, String merchId, RopAdminUserAdd rop);
-    CustomResult list(String operater, String merchId, RopAdminUserList rop);
-    CustomResult init_edit(String operater, String merchId, String userId);
-    CustomResult edit(String operater, String merchId, RopAdminUserEdit rop);
+    CustomResult<Object> init_add(String operater, String merchId);
+    CustomResult<Object>  add(String operater, String merchId, RopAdminUserAdd rop);
+    CustomResult<Object>  list(String operater, String merchId, RopAdminUserList rop);
+    CustomResult<Object>  init_edit(String operater, String merchId, String userId);
+    CustomResult<Object>  edit(String operater, String merchId, RopAdminUserEdit rop);
 }

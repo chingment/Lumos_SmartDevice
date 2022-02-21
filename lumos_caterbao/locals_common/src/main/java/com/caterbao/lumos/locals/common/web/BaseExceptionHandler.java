@@ -1,6 +1,7 @@
 package com.caterbao.lumos.locals.common.web;
 
 
+import com.caterbao.lumos.locals.common.CumstomResultUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,14 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomResult IllegalArgumentException(IllegalArgumentException ex) {
         logger.error("BAD_REQUEST",ex);
-        return CustomResult.exception("BAD_REQUEST");
+        return CumstomResultUtil.exception("BAD_REQUEST");
     }
 
     @ExceptionHandler(value = { NoHandlerFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public CustomResult noHandlerFoundException(Exception ex) {
         logger.error("请求不存在",ex);
-        return CustomResult.exception("请求不存在");
+        return CumstomResultUtil.exception("请求不存在");
     }
 
     @ExceptionHandler(value = { Exception.class })
@@ -39,6 +40,6 @@ public class BaseExceptionHandler {
         logger.error("服务器内部错误",ex);
 
 
-        return CustomResult.exception("服务器内部错误");
+        return CumstomResultUtil.exception("服务器内部错误");
     }
 }

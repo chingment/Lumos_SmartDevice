@@ -27,8 +27,8 @@ public class FileController extends  BaseController {
 
     @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult upload(MultipartFile file,HttpServletRequest request) throws IOException {
-
+    public CustomResult<Object> upload(MultipartFile file,HttpServletRequest request) throws IOException {
+        CustomResult<Object> result = new CustomResult<>();
         try {
 
             String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
@@ -64,12 +64,12 @@ public class FileController extends  BaseController {
             ret.put("url",  access_path);
             ret.put("name", newFileName);
 
-            return CustomResult.success("上传成功", ret);
+            return result.success("上传成功", ret);
 
         }
         catch (Exception ex){
             logger.error("上传服务发生异常",ex);
-            return CustomResult.fail("上传服务发生异常");
+            return result.fail("上传服务发生异常");
         }
     }
 }

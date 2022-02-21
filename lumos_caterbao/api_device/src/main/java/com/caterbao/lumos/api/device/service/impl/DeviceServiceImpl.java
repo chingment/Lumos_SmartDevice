@@ -43,13 +43,15 @@ public class DeviceServiceImpl implements DeviceService{
     }
 
     @Override
-    public CustomResult init(String operater, String merchId, RopDeviceInitData rop) {
+    public CustomResult<RetDeviceInitData> init(String operater, String merchId, RopDeviceInitData rop)  {
+
+        CustomResult<RetDeviceInitData> result=new CustomResult<>();
 
         if (rop == null)
-            return CustomResult.fail("初始化数据对象为空");
+            return result.fail("初始化数据对象为空");
 
         if (CommonUtil.isEmpty(rop.getDeviceId()))
-            return CustomResult.fail("设备编码为空");
+            return result.fail("设备编码为空");
 
         LumosSelective selective_Device=new LumosSelective();
         selective_Device.setFields("Id,Name,SceneMode,VersionMode");
@@ -58,7 +60,7 @@ public class DeviceServiceImpl implements DeviceService{
         Device d_Device = deviceMapper.findOne(selective_Device);
 
         if (d_Device == null)
-            return CustomResult.fail("设备编码未注册");
+            return result.fail("设备编码未注册");
 
         LumosSelective selective_MerchDevice=new LumosSelective();
         selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
@@ -66,14 +68,13 @@ public class DeviceServiceImpl implements DeviceService{
         MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
 
         if (d_MerchDevice==null)
-            return CustomResult.fail("设备未绑定商户");
+            return result.fail("设备未绑定商户");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
-            return CustomResult.fail("设备未绑定店铺");
+            return result.fail("设备未绑定店铺");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
-            return CustomResult.fail("设备未绑定门店");
-
+            return result.fail("设备未绑定门店");
 
         d_Device.setAppVerCode(rop.getAppVerCode());
         d_Device.setAppVerName(rop.getAppVerName());
@@ -123,6 +124,6 @@ public class DeviceServiceImpl implements DeviceService{
 
         ret.setCustomData(customData);
 
-        return CustomResult.success("获取成功", ret);
+        return result.success("获取成功", ret);
     }
 }

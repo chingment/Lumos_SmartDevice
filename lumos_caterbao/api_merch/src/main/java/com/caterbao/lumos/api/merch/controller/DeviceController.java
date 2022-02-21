@@ -20,30 +20,30 @@ public class DeviceController extends  BaseController  {
 
     @RequestMapping(value = "init_bookers", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_bookers() {
+    public CustomResult<Object> init_bookers() {
         return deviceService.init_bookers(this.getCurrentUserId(), this.getCurrentMerchId());
     }
 
     @RequestMapping(value = "bookers", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult bookers(@RequestBody RopDeviceBookers rop) {
+    public CustomResult<Object> bookers(@RequestBody RopDeviceBookers rop) {
         return deviceService.bookers(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
     @RequestMapping(value = "init_manage", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_manage(@RequestParam String id) {
+    public CustomResult<Object> init_manage(@RequestParam String id) {
         return deviceService.init_manage(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
     @RequestMapping(value = "init_manage_baseinfo", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult init_manage_baseinfo(@RequestParam String id) {
+    public CustomResult<Object> init_manage_baseinfo(@RequestParam String id) {
         return deviceService.init_manage_baseinfo(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult edit(@RequestBody RopDeviceEdit rop) {
+    public CustomResult<Object> edit(@RequestBody RopDeviceEdit rop) {
         return deviceService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 

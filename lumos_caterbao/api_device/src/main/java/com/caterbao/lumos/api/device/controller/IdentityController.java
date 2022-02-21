@@ -1,5 +1,7 @@
 package com.caterbao.lumos.api.device.controller;
 
+import com.caterbao.lumos.api.device.rop.RetIdentityInfo;
+import com.caterbao.lumos.api.device.rop.RetIdentityVerify;
 import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
 import com.caterbao.lumos.api.device.service.IdentityService;
@@ -20,13 +22,13 @@ public class IdentityController extends BaseController{
 
     @RequestMapping(value = "verify", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult verify(@RequestBody RopIdentityVerify rop){
+    public CustomResult<RetIdentityVerify> verify(@RequestBody RopIdentityVerify rop){
         return identityService.verify(this.getCurrentUserId(),rop);
     }
 
     @RequestMapping(value = "info", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult info(@RequestBody RopIdentityInfo rop) {
+    public CustomResult<RetIdentityInfo> info(@RequestBody RopIdentityInfo rop) {
         return identityService.info(this.getCurrentUserId(), rop);
     }
 }

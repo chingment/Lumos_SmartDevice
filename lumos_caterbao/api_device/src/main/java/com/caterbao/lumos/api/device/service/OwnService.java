@@ -1,14 +1,11 @@
 package com.caterbao.lumos.api.device.service;
 
-import com.caterbao.lumos.api.device.rop.RopOwnGetInfo;
-import com.caterbao.lumos.api.device.rop.RopOwnLoginByAccount;
-import com.caterbao.lumos.api.device.rop.RopOwnLogout;
-import com.caterbao.lumos.api.device.rop.RopOwnSaveInfo;
+import com.caterbao.lumos.api.device.rop.*;
 import com.caterbao.lumos.locals.common.CustomResult;
 
 public interface OwnService {
-    CustomResult loginByAccount(RopOwnLoginByAccount rop);
-    CustomResult logout(String operater,RopOwnLogout rop);
-    CustomResult getInfo(String operater, RopOwnGetInfo rop);
-    CustomResult saveInfo(String operater, RopOwnSaveInfo rop);
+    CustomResult<RetOwnLogin> loginByAccount(RopOwnLoginByAccount rop);
+    CustomResult<RetOwnLogout> logout(String operater,RopOwnLogout rop);
+    CustomResult<RetOwnGetInfo> getInfo(String operater, RopOwnGetInfo rop);
+    CustomResult<RetOwnSaveInfo> saveInfo(String operater, RopOwnSaveInfo rop);
 }

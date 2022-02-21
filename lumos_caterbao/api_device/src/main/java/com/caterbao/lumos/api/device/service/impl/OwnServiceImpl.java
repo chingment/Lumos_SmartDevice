@@ -37,9 +37,9 @@ public class OwnServiceImpl implements OwnService {
     }
 
     @Override
-    public CustomResult loginByAccount(RopOwnLoginByAccount rop) {
+    public CustomResult<RetOwnLogin> loginByAccount(RopOwnLoginByAccount rop) {
 
-        CustomResult result = new CustomResult();
+        CustomResult<RetOwnLogin> result = new CustomResult<>();
 
         LumosSelective selective_SysUser=new LumosSelective();
         selective_SysUser.setFields("Id,UserName,FullName,Avatar, PasswordHash,SecurityStamp,IsDisable");
@@ -48,17 +48,17 @@ public class OwnServiceImpl implements OwnService {
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
         if (d_SysUser == null)
-            return CustomResult.fail("账号或密码错误");
+            return result.fail("账号或密码错误");
 
         String passwordHash = d_SysUser.getPasswordHash();
 
         boolean isFlag = PasswordUtil.veriflyBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp(), passwordHash);
 
         if (!isFlag)
-            return CustomResult.fail("账号或密码错误");
+            return result.fail("账号或密码错误");
 
         if(d_SysUser.getIsDisable())
-            return CustomResult.fail("该账号已被停用");
+            return result.fail("该账号已被停用");
 
         LumosSelective selective_SysMerchUser=new LumosSelective();
         selective_SysMerchUser.setFields("UserId,MerchId");
@@ -67,7 +67,7 @@ public class OwnServiceImpl implements OwnService {
         SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
-            return CustomResult.fail("该账号未授权");
+            return result.fail("该账号未授权");
 
         LumosSelective selective_MerchDevice=new LumosSelective();
         selective_MerchDevice.addWhere("MerchId",d_SysMerchUser.getMerchId());
@@ -77,26 +77,27 @@ public class OwnServiceImpl implements OwnService {
         long validCount= merchDeviceMapper.count(selective_MerchDevice);
 
         if(validCount<=0)
-            return CustomResult.fail("该账号未授权");
+            return result.fail("该账号未授权");
 
         RetOwnLogin ret=new RetOwnLogin();
         ret.setUserId(d_SysUser.getId());
         ret.setUserName(d_SysUser.getUserName());
         ret.setFullName(d_SysUser.getFullName());
         ret.setAvatar(d_SysUser.getAvatar());
-        return CustomResult.success("登录成功", ret);
+        return result.success("登录成功", ret);
     }
 
     @Override
-    public CustomResult logout(String operater, RopOwnLogout rop) {
+    public CustomResult<RetOwnLogout> logout(String operater, RopOwnLogout rop) {
+        CustomResult<RetOwnLogout> reslut=new CustomResult<>();
         RetOwnLogout ret = new RetOwnLogout();
-        return CustomResult.success("退出成功",ret);
+        return reslut.success("退出成功",ret);
     }
 
     @Override
-    public CustomResult getInfo(String operater, RopOwnGetInfo rop) {
+    public CustomResult<RetOwnGetInfo> getInfo(String operater, RopOwnGetInfo rop) {
 
-        RetOwnGetInfo ret = new RetOwnGetInfo();
+        CustomResult<RetOwnGetInfo> result=new CustomResult<>();
 
         LumosSelective selective_SysUser=new LumosSelective();
         selective_SysUser.setFields("Id,UserName,FullName,Avatar");
@@ -105,18 +106,23 @@ public class OwnServiceImpl implements OwnService {
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
         if (d_SysUser == null)
-            return CustomResult.fail("信息不存在");
+            return result.fail("信息不存在");
+
+        RetOwnGetInfo ret = new RetOwnGetInfo();
 
         ret.setUserId(d_SysUser.getId());
         ret.setUserName(d_SysUser.getUserName());
         ret.setFullName(d_SysUser.getFullName());
         ret.setAvatar(d_SysUser.getAvatar());
 
-        return CustomResult.success("获取成功",ret);
+        return result.success("获取成功",ret);
     }
 
     @Override
-    public CustomResult saveInfo(String operater, RopOwnSaveInfo rop) {
+    public CustomResult<RetOwnSaveInfo> saveInfo(String operater, RopOwnSaveInfo rop) {
+
+        CustomResult<RetOwnSaveInfo> result=new CustomResult<>();
+
 
         LumosSelective selective_SysUser = new LumosSelective();
         selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
@@ -125,7 +131,7 @@ public class OwnServiceImpl implements OwnService {
         SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
 
         if (d_SysUser == null)
-            return CustomResult.fail("信息不存在");
+            return result.fail("信息不存在");
 
         d_SysUser.setFullName(rop.getFullName());
         d_SysUser.setMender(d_SysUser.getId());
@@ -137,7 +143,7 @@ public class OwnServiceImpl implements OwnService {
         }
 
         if (sysUserMapper.update(d_SysUser) <= 0)
-            return CustomResult.fail("保存失败");
+            return result.fail("保存失败");
 
         RetOwnSaveInfo ret = new RetOwnSaveInfo();
 
@@ -146,6 +152,6 @@ public class OwnServiceImpl implements OwnService {
         ret.setFullName(d_SysUser.getFullName());
         ret.setAvatar(d_SysUser.getAvatar());
 
-        return CustomResult.success("保存成功", ret);
+        return result.success("保存成功", ret);
     }
 }

@@ -19,25 +19,25 @@ public class OwnController extends BaseController{
 
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop){
+    public CustomResult<RetOwnLogin> loginByAccount(@RequestBody RopOwnLoginByAccount rop){
         return ownService.loginByAccount(rop);
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult logout(@RequestBody RopOwnLogout rop){
+    public CustomResult<RetOwnLogout> logout(@RequestBody RopOwnLogout rop){
         return ownService.logout(this.getCurrentUserId(), rop);
     }
 
     @RequestMapping(value = "getInfo", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult getInfo(@RequestBody RopOwnGetInfo rop){
+    public CustomResult<RetOwnGetInfo> getInfo(@RequestBody RopOwnGetInfo rop){
         return ownService.getInfo(this.getCurrentUserId(), rop);
     }
 
     @RequestMapping(value = "saveInfo", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult saveInfo(@RequestBody RopOwnSaveInfo rop){
+    public CustomResult<RetOwnSaveInfo>  saveInfo(@RequestBody RopOwnSaveInfo rop){
         return ownService.saveInfo(this.getCurrentUserId(), rop);
     }
 }

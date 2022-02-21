@@ -35,45 +35,66 @@ public class CustomResult<T>  {
         this.data = data;
     }
 
-    public static CustomResult set(Integer code, String msg, Object object) {
-        CustomResult result = new CustomResult();
-        result.setCode(code);
-        result.setMsg(msg);
-        result.setData(object);
-        return result;
+    public CustomResult<T> fail(String msg) {
+        this.msg = msg;
+        this.code = 2000;
+        this.data = null;
+        return this;
     }
 
-    public static CustomResult success() {
-        return CustomResult.set(1000,"成功",null);
+    public CustomResult<T> success(String msg) {
+        this.msg = msg;
+        this.code = 1000;
+        this.data = null;
+        return this;
     }
 
-    public static CustomResult success(String msg) {
-        return CustomResult.set(1000,msg,null);
+    public CustomResult<T> success(String msg, T data) {
+        this.msg = msg;
+        this.code = 1000;
+        this.data = data;
+        return this;
     }
 
-    public static CustomResult success(String msg, Object object) {
-        return CustomResult.set(1000,msg,object);
-    }
-
-    public static CustomResult success(Object object) {
-        return CustomResult.set(1000,"成功",object);
-    }
-
-    public static CustomResult fail(String msg) {
-        return CustomResult.set(2000,msg,null);
-    }
-
-    public static CustomResult exception() {
-        return CustomResult.set(3000,"异常",null);
-    }
-
-    public static CustomResult exception(String msg) {
-        return CustomResult.set(3000,msg,null);
-    }
-
-    public static CustomResult exception(Object object) {
-        return CustomResult.set(3000,"异常",object);
-    }
+//    public static CustomResult set(Integer code, String msg, Object object) {
+//        CustomResult result = new CustomResult();
+//        result.setCode(code);
+//        result.setMsg(msg);
+//        result.setData(object);
+//        return result;
+//    }
+//
+//    public static CustomResult success() {
+//        return CustomResult.set(1000,"成功",null);
+//    }
+//
+//    public static CustomResult success(String msg) {
+//        return CustomResult.set(1000,msg,null);
+//    }
+//
+//    public static CustomResult success(String msg, Object object) {
+//        return CustomResult.set(1000,msg,object);
+//    }
+//
+//    public static CustomResult success(Object object) {
+//        return CustomResult.set(1000,"成功",object);
+//    }
+//
+//    public static CustomResult fail(String msg) {
+//        return CustomResult.set(2000,msg,null);
+//    }
+//
+//    public static CustomResult exception() {
+//        return CustomResult.set(3000,"异常",null);
+//    }
+//
+//    public static CustomResult exception(String msg) {
+//        return CustomResult.set(3000,msg,null);
+//    }
+//
+//    public static CustomResult exception(Object object) {
+//        return CustomResult.set(3000,"异常",object);
+//    }
 
     public String toJSONString() {
         try {

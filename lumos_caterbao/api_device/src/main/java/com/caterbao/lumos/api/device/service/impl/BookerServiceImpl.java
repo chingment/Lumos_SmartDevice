@@ -33,6 +33,7 @@ public class BookerServiceImpl implements BookerService {
     private MerchDeviceMapper merchDeviceMapper;
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
+    private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
     public void setBookBorrowReturnFlowMapper(BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper) {
@@ -59,10 +60,10 @@ public class BookerServiceImpl implements BookerService {
         this.transactionDefinition = transactionDefinition;
     }
 
-    private Lock lock = new ReentrantLock();
-
     @Override
-    public CustomResult borrowReturnCreateFlow(String operater, RopBookerBorrowReturnCreateFlow rop) {
+    public CustomResult<RetBookerBorrowReturnCreateFlow> borrowReturnCreateFlow(String operater, RopBookerBorrowReturnCreateFlow rop) {
+
+        CustomResult<RetBookerBorrowReturnCreateFlow> result=new CustomResult<>();
 
         LumosSelective selective_MerchDevice=new LumosSelective();
         selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
@@ -70,13 +71,13 @@ public class BookerServiceImpl implements BookerService {
         MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
 
         if (d_MerchDevice==null)
-            return CustomResult.fail("设备未绑定商户");
+            return result.fail("设备未绑定商户");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
-            return CustomResult.fail("设备未绑定店铺");
+            return result.fail("设备未绑定店铺");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
-            return CustomResult.fail("设备未绑定门店");
+            return result.fail("设备未绑定门店");
 
         BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
 
@@ -95,16 +96,18 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowReturnFlow.setCreator(IdWork.generateGUID());
 
         if (bookBorrowReturnFlowMapper.insert(d_BookBorrowReturnFlow) <= 0)
-            return CustomResult.fail("流程创建失败");
+            return result.fail("流程创建失败");
 
         RetBookerBorrowReturnCreateFlow ret = new RetBookerBorrowReturnCreateFlow();
         ret.setFlowId(d_BookBorrowReturnFlow.getId());
 
-        return CustomResult.success("流程创建成功", ret);
+        return result.success("流程创建成功", ret);
     }
 
     @Override
-    public CustomResult borrowReturnOpenAction(String operater, RopBookerBorrowReturnOpenAction rop) {
+    public CustomResult<RetBookerBorrowReturnOpenAction>  borrowReturnOpenAction(String operater, RopBookerBorrowReturnOpenAction rop) {
+
+        CustomResult<RetBookerBorrowReturnOpenAction> result=new CustomResult<>();
 
         BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
         d_BookBorrowReturnFlow.setId(rop.getFlowId());
@@ -121,18 +124,21 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
 
         if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
-            return CustomResult.fail("打开失败[1]");
+            return result.fail("打开失败[1]");
 
         if (rop.getActionResult() != 1)
-            return CustomResult.fail("打开失败[2]");
+            return result.fail("打开失败[2]");
 
         RetBookerBorrowReturnOpenAction ret = new RetBookerBorrowReturnOpenAction();
         ret.setFlowId(rop.getFlowId());
-        return CustomResult.success("打开成功", ret);
+        return result.success("打开成功", ret);
     }
 
     @Override
-    public CustomResult borrowReturnCloseAction(String operater, RopBookerBorrowReturnCloseAction rop) {
+    public CustomResult<RetBookerBorrowReturnCloseAction>  borrowReturnCloseAction(String operater, RopBookerBorrowReturnCloseAction rop) {
+
+        CustomResult<RetBookerBorrowReturnCloseAction> result=new CustomResult<>();
+
 
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
@@ -147,7 +153,7 @@ public class BookerServiceImpl implements BookerService {
             BookBorrowReturnFlow d_BookBorrowReturnFlow = bookBorrowReturnFlowMapper.findOne(selective_BookBorrowReturnFlow);
             if (d_BookBorrowReturnFlow == null) {
                 lock.unlock();
-                return CustomResult.fail("关闭失败[1]");
+                return result.fail("关闭失败[1]");
             }
 
             d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
@@ -166,12 +172,12 @@ public class BookerServiceImpl implements BookerService {
 
             if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0) {
                 lock.unlock();
-                return CustomResult.fail("关闭失败[2]");
+                return result.fail("关闭失败[2]");
             }
 
             if (rop.getActionResult() != 1) {
                 lock.unlock();
-                return CustomResult.fail("关闭失败[3]");
+                return result.fail("关闭失败[3]");
             }
 
 
@@ -216,7 +222,7 @@ public class BookerServiceImpl implements BookerService {
 
                     if (bookBorrowReturnFlowDataMapper.insert(d_BookBorrowReturnFlowData) <= 0) {
                         lock.unlock();
-                        return CustomResult.fail("关闭失败[4]");
+                        return result.fail("关闭失败[4]");
                     }
                 }
             }
@@ -240,12 +246,12 @@ public class BookerServiceImpl implements BookerService {
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功",ret);
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
             e.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 

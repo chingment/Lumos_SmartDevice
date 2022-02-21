@@ -10,11 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class BaseController {
 
-    @Autowired
     private HttpServletRequest request;
+    private RedisTemplate redisTemplate;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public String getCurrentUserId() {
 

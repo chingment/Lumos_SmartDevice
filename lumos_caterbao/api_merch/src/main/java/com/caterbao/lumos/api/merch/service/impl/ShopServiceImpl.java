@@ -38,8 +38,8 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public CustomResult list(String operater, String merchId, RopShopList rop) {
-
+    public CustomResult<Object> list(String operater, String merchId, RopShopList rop) {
+        CustomResult<Object> result = new CustomResult<>();
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
@@ -74,13 +74,13 @@ public class ShopServiceImpl implements ShopService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
 
     }
 
     @Override
-    public CustomResult details(String operater, String merchId, String shopId) {
-
+    public CustomResult<Object> details(String operater, String merchId, String shopId) {
+        CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective=new LumosSelective();
         selective.setFields("Id,Name,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
         selective.addWhere("ShopId",shopId);
@@ -98,25 +98,25 @@ public class ShopServiceImpl implements ShopService {
         ret.put("contactPhone",d_Shop.getContactPhone());
         ret.put("contactAddress",d_Shop.getContactAddress());
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
 
     }
 
     @Override
-    public CustomResult add(String operater, String merchId, RopShopAdd rop) {
-
+    public CustomResult<Object> add(String operater, String merchId, RopShopAdd rop) {
+        CustomResult<Object> result = new CustomResult<>();
         if(CommonUtil.isEmpty(merchId))
-            return CustomResult.fail("商户编号不能为空");
+            return result.fail("商户编号不能为空");
 
         if(CommonUtil.isEmpty(rop.getName()))
-            return CustomResult.fail("名称不能为空");
+            return result.fail("名称不能为空");
 
         Shop d_Shop = new Shop();
         d_Shop.setMerchId(merchId);
         d_Shop.setName(rop.getName());
 
         if(shopMapper.isExistName(null,merchId,rop.getName())>0)
-            return CustomResult.fail("名称已经存在");
+            return result.fail("名称已经存在");
 
         d_Shop.setId(IdWork.generateGUID());
         d_Shop.setAddress(rop.getAddress());
@@ -130,14 +130,14 @@ public class ShopServiceImpl implements ShopService {
         long r_Shop_Insert = shopMapper.insert(d_Shop);
 
         if(r_Shop_Insert>0)
-            return CustomResult.success("保存成功");
+            return result.success("保存成功");
 
-        return CustomResult.success("保存失败");
+        return result.success("保存失败");
     }
 
     @Override
     public CustomResult init_edit(String operater, String merchId, String shopId) {
-
+        CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective=new LumosSelective();
         selective.setFields("Id,Name,Address,DisplayImgUrls,ContactName,ContactPhone,ContactAddress");
         selective.addWhere("ShopId",shopId);
@@ -146,7 +146,7 @@ public class ShopServiceImpl implements ShopService {
         Shop d_Shop = shopMapper.findOne(selective);
 
         if (d_Shop == null)
-           return CustomResult.fail("初始失败");
+           return result.fail("初始失败");
         
         HashMap<String,Object> ret=new HashMap<>();
 
@@ -158,12 +158,12 @@ public class ShopServiceImpl implements ShopService {
         ret.put("contactPhone",d_Shop.getContactPhone());
         ret.put("contactAddress",d_Shop.getContactAddress());
 
-        return CustomResult.success("初始成功",ret);
+        return result.success("初始成功",ret);
     }
 
     @Override
-    public CustomResult edit(String operater, String merchId, RopShopEdit rop) {
-
+    public CustomResult<Object> edit(String operater, String merchId, RopShopEdit rop) {
+        CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective=new LumosSelective();
         selective.setFields("*");
         selective.addWhere("ShopId",rop.getId());
@@ -172,14 +172,14 @@ public class ShopServiceImpl implements ShopService {
         Shop d_Shop = shopMapper.findOne(selective);
 
         if (d_Shop == null)
-            return CustomResult.fail("数据不存在");
+            return result.fail("数据不存在");
 
 
         d_Shop.setName(rop.getName());
         d_Shop.setMerchId(merchId);
 
         if(shopMapper.isExistName(d_Shop.getId(),merchId,rop.getName())>0)
-            return CustomResult.fail("名称已经存在");
+            return result.fail("名称已经存在");
 
 
         d_Shop.setAddress(rop.getAddress());
@@ -192,14 +192,14 @@ public class ShopServiceImpl implements ShopService {
 
         long r_Shop_Update = shopMapper.update(d_Shop);
         if (r_Shop_Update>0)
-            return CustomResult.success("保存成功");
+            return result.success("保存成功");
 
-        return CustomResult.success("保存失败");
+        return result.success("保存失败");
     }
 
     @Override
-    public CustomResult devices(String operater, String merchId, RopShopDevices rop) {
-
+    public CustomResult<Object> devices(String operater, String merchId, RopShopDevices rop) {
+        CustomResult<Object> result = new CustomResult<>();
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
@@ -235,13 +235,13 @@ public class ShopServiceImpl implements ShopService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
 
     }
 
     @Override
-    public CustomResult unDevices(String operater, String merchId, RopShopDevices rop) {
-
+    public CustomResult<Object> unDevices(String operater, String merchId, RopShopDevices rop) {
+        CustomResult<Object> result = new CustomResult<>();
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
@@ -275,14 +275,14 @@ public class ShopServiceImpl implements ShopService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
 
     }
 
     @Override
     @Transactional
-    public CustomResult bindDevice(String operater, String merchId, RopShopBindDevice rop) {
-
+    public CustomResult<Object> bindDevice(String operater, String merchId, RopShopBindDevice rop) {
+        CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective=new LumosSelective();
         selective.setFields("*");
         selective.addWhere("MerchId",merchId);
@@ -311,14 +311,14 @@ public class ShopServiceImpl implements ShopService {
             shopDeviceMapper.update(d_ShopDevice);
         }
 
-        return CustomResult.success("绑定成功");
+        return result.success("绑定成功");
 
     }
 
     @Override
     @Transactional
-    public CustomResult unBindDevice(String operater, String merchId, RopShopBindDevice rop) {
-
+    public CustomResult<Object> unBindDevice(String operater, String merchId, RopShopBindDevice rop) {
+        CustomResult<Object> result = new CustomResult<>();
         ShopDevice d_ShopDevice = new ShopDevice();
         d_ShopDevice.setMerchId(merchId);
         d_ShopDevice.setStoreId(rop.getStoreId());
@@ -329,7 +329,7 @@ public class ShopServiceImpl implements ShopService {
         d_ShopDevice.setMendTime(CommonUtil.getDateTimeNow());
         shopDeviceMapper.update(d_ShopDevice);
 
-        return CustomResult.success("解绑成功");
+        return result.success("解绑成功");
 
     }
 }

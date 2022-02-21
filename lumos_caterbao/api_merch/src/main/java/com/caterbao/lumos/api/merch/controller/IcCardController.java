@@ -19,7 +19,7 @@ public class IcCardController extends  BaseController  {
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult list(@RequestBody RopIcCardList rop) {
+    public CustomResult<Object> list(@RequestBody RopIcCardList rop) {
         return icCardService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

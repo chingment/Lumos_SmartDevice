@@ -20,26 +20,28 @@ public class OwnController extends  BaseController {
 
     @RequestMapping(value = "loginByAccount", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult loginByAccount(@RequestBody RopOwnLoginByAccount rop) {
+    public CustomResult<Object> loginByAccount(@RequestBody RopOwnLoginByAccount rop) {
         return ownService.loginByAccount(rop);
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult logout(){
-        return CustomResult.success("成功");
+    public CustomResult<Object> logout(){
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("成功");
     }
 
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult getInfo() {
+    public CustomResult<Object> getInfo() {
         return  ownService.getInfo(getCurrentUserId(),getCurrentUserId());
     }
 
     @RequestMapping(value = "checkPermission", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult checkPermission(RopOwnCheckPermission rop){
-        return CustomResult.success("成功");
+    public CustomResult<Object> checkPermission(RopOwnCheckPermission rop){
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("成功");
     }
 
 }

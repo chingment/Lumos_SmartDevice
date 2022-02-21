@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.device.service.impl;
 
-import com.caterbao.lumos.api.device.rop.RetIdentityBorrower;
+import com.caterbao.lumos.api.device.rop.RetIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RetIdentityVerify;
 import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
@@ -23,9 +23,10 @@ public class IdentityServiceImpl implements IdentityService {
     }
 
     @Override
-    public CustomResult verify(String operater, RopIdentityVerify rop) {
+    public CustomResult<RetIdentityVerify> verify(String operater, RopIdentityVerify rop) {
 
-        RetIdentityVerify ret = new RetIdentityVerify();
+        CustomResult<RetIdentityVerify> result = new CustomResult<>();
+
 
         if (rop.getDataType().equals("1")) {
 
@@ -36,24 +37,25 @@ public class IdentityServiceImpl implements IdentityService {
             IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
 
             if (d_IcCard == null)
-                return CustomResult.fail("验证失败");
+                return result.fail("验证失败");
+
+            RetIdentityVerify ret = new RetIdentityVerify();
 
             ret.setClientUserId("1");
             ret.setIdentityType("1");
             ret.setIdentityId(d_IcCard.getId());
 
-            return CustomResult.success("验证成功",ret);
+            return result.success("验证成功", ret);
         }
 
-        return CustomResult.fail("验证失败");
+        return result.fail("验证失败");
     }
 
     @Override
-    public CustomResult info(String operater, RopIdentityInfo rop) {
+    public CustomResult<RetIdentityInfo> info(String operater, RopIdentityInfo rop) {
+        CustomResult<RetIdentityInfo> result = new CustomResult<>();
 
-        RetIdentityBorrower ret=new RetIdentityBorrower();
-
-        if(rop.getIdentityType()==1) {
+        if (rop.getIdentityType() == 1) {
 
             LumosSelective selective_IcCard = new LumosSelective();
             selective_IcCard.setFields("*");
@@ -61,7 +63,9 @@ public class IdentityServiceImpl implements IdentityService {
 
             IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
             if (d_IcCard == null)
-                return CustomResult.fail("获取失败");
+                return result.fail("获取失败");
+
+            RetIdentityInfo ret = new RetIdentityInfo();
 
             ret.setSignName(d_IcCard.getFullName());
             ret.setCardNo(d_IcCard.getCardNo());
@@ -69,10 +73,10 @@ public class IdentityServiceImpl implements IdentityService {
             ret.setBorrowedQuantity(1);
             ret.setFine(10);
 
-            return CustomResult.success("获取成功", ret);
+            return result.success("获取成功", ret);
         }
 
-        return CustomResult.fail("获取失败");
+        return result.fail("获取失败");
     }
 
 }

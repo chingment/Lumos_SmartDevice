@@ -27,7 +27,10 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private AdSpaceMapper adSpaceMapper;
 
-   public CustomResult spaces(String operater, String merchId, RopAdSpaces rop){
+   public CustomResult<Object>  spaces(String operater, String merchId, RopAdSpaces rop){
+
+       CustomResult<Object> result = new CustomResult<>();
+
        int pageNum = rop.getPageNum();
        int pageSize = rop.getPageSize();
 
@@ -62,12 +65,12 @@ public class AdServiceImpl implements AdService {
        ret.setTotalSize(total);
        ret.setItems(items);
 
-       return CustomResult.success("",ret);
+       return result.success("",ret);
     }
-    public   CustomResult release(String operater, String merchId, RopAdRelease rop){
+    public   CustomResult<Object> release(String operater, String merchId, RopAdRelease rop){
         return  null;
     }
-    public  CustomResult contents(String operater, String merchId, RopAdContents rop){
+    public  CustomResult<Object> contents(String operater, String merchId, RopAdContents rop){
         return  null;
     }
 }

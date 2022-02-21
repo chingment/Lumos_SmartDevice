@@ -59,18 +59,21 @@ public class AdminUserServiceImpl implements AdminUserService {
     private Lock lock = new ReentrantLock();
 
     @Override
-    public CustomResult init_add(String operater, String merchId) {
-        return CustomResult.success("");
+    public CustomResult<Object>  init_add(String operater, String merchId) {
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("");
     }
 
     @Override
-    public CustomResult add(String operater, String merchId, RopAdminUserAdd rop) {
+    public CustomResult<Object>  add(String operater, String merchId, RopAdminUserAdd rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         if(CommonUtil.isEmpty(rop.getUserName()))
-            return CustomResult.fail("用户名不能为空");
+            return result.fail("用户名不能为空");
 
         if(CommonUtil.isEmpty(rop.getUserName()))
-            return CustomResult.fail("密码不能为空");
+            return result.fail("密码不能为空");
 
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
@@ -79,7 +82,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
             if(sysUserMapper.isExistUserName(rop.getUserName())>0) {
                 lock.unlock();
-                return CustomResult.fail("用户名已经存在");
+                return result.fail("用户名已经存在");
             }
 
             SysUser d_SysUser=new SysUser();
@@ -98,7 +101,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
             if (r_SysUser_Insert <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             SysMerchUser d_SysMerchUser=new SysMerchUser();
@@ -110,23 +113,25 @@ public class AdminUserServiceImpl implements AdminUserService {
 
             if (r_MerchUser_Insert <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功");
         }
         catch (Exception ex) {
             platformTransactionManager.rollback(transaction);
             ex.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 
     @Override
-    public CustomResult list(String operater, String merchId, RopAdminUserList rop) {
+    public CustomResult<Object> list(String operater, String merchId, RopAdminUserList rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
@@ -165,11 +170,13 @@ public class AdminUserServiceImpl implements AdminUserService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
     }
 
     @Override
-    public CustomResult init_edit(String operater, String merchId, String userId) {
+    public CustomResult<Object> init_edit(String operater, String merchId, String userId) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         LumosSelective selective_SysUser = new LumosSelective();
         selective_SysUser.setFields("Id,UserName,FullName,PhoneNumber,Email,Avatar,IsDisable");
@@ -187,14 +194,16 @@ public class AdminUserServiceImpl implements AdminUserService {
         ret.put("avatar",d_SysUser.getAvatar());
         ret.put("isDisable",d_SysUser.getIsDisable());
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
     }
 
     @Override
-    public CustomResult edit(String operater, String merchId, RopAdminUserEdit rop) {
+    public CustomResult<Object> edit(String operater, String merchId, RopAdminUserEdit rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         if(CommonUtil.isEmpty(rop.getId()))
-            return CustomResult.fail("用户Id不能为空");
+            return result.fail("用户Id不能为空");
 
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
@@ -222,18 +231,18 @@ public class AdminUserServiceImpl implements AdminUserService {
 
             if (r_SysUser_Update <= 0) {
                 lock.unlock();
-                return CustomResult.fail("保存失败");
+                return result.fail("保存失败");
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  CustomResult.success("保存成功");
+            return  result.success("保存成功");
         }
         catch (Exception ex) {
             platformTransactionManager.rollback(transaction);
             ex.printStackTrace();
             lock.unlock();
-            return CustomResult.fail("保存失败,服务器异常");
+            return result.fail("保存失败,服务器异常");
         }
     }
 }

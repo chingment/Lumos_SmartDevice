@@ -28,7 +28,9 @@ public class IcCardServiceImpl implements IcCardService {
     }
 
     @Override
-    public CustomResult list(String operater, String merchId, RopIcCardList rop) {
+    public CustomResult<Object> list(String operater, String merchId, RopIcCardList rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
 
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
@@ -65,7 +67,7 @@ public class IcCardServiceImpl implements IcCardService {
         ret.setTotalSize(total);
         ret.setItems(items);
 
-        return CustomResult.success("",ret);
+        return result.success("",ret);
     }
 
 }
