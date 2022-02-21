@@ -14,6 +14,7 @@ import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowData;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -139,7 +140,6 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerBorrowReturnCloseAction> result=new CustomResult<>();
 
-
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
 
@@ -181,23 +181,31 @@ public class BookerServiceImpl implements BookerService {
             }
 
 
-            List<String> open_RfIds = (List<String>) JsonUtil.toObject(d_BookBorrowReturnFlow.getOpenRfIds());
+            List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowReturnFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
 
-            List<String> close_RfIds = (List<String>) JsonUtil.toObject(d_BookBorrowReturnFlow.getCloseRfIds());
+            List<String> close_RfIds =JsonUtil.toObject(d_BookBorrowReturnFlow.getCloseRfIds(),new TypeReference<List<String>>() {});
 
             List<String> borrow_RfIds = new ArrayList<>();
 
-            for (int i = 0; i < open_RfIds.size(); i++) {
-                if (!close_RfIds.contains(open_RfIds.get(i))) {
-                    borrow_RfIds.add(open_RfIds.get(i));
+            if(open_RfIds!=null) {
+                for (String open_rfId : open_RfIds) {
+                    if (close_RfIds != null) {
+                        if (!close_RfIds.contains(open_rfId)) {
+                            borrow_RfIds.add(open_rfId);
+                        }
+                    }
                 }
             }
 
             List<String> return_RfIds = new ArrayList<>();
 
-            for (int i = 0; i < close_RfIds.size(); i++) {
-                if (!open_RfIds.contains(close_RfIds.get(i))) {
-                    return_RfIds.add(close_RfIds.get(i));
+            if(close_RfIds!=null) {
+                for (String close_rfId : close_RfIds) {
+                    if(open_RfIds!=null) {
+                        if (!open_RfIds.contains(close_rfId)) {
+                            return_RfIds.add(close_rfId);
+                        }
+                    }
                 }
             }
 

@@ -14,6 +14,7 @@ import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.Device;
 import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
+import com.caterbao.lumos.locals.biz.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,15 @@ public class DeviceServiceImpl implements DeviceService{
         this.merchDeviceMapper = merchDeviceMapper;
     }
 
+    @Autowired
+    private ProductService productService;
+
+
     @Override
     public CustomResult<RetDeviceInitData> init(String operater, String merchId, RopDeviceInitData rop)  {
+
+
+        productService.getRfIdSkuInfo();
 
         CustomResult<RetDeviceInitData> result=new CustomResult<>();
 
