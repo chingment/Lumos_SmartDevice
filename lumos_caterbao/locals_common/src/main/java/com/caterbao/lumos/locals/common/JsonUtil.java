@@ -76,10 +76,17 @@ public class JsonUtil<T> {
     }
 
     public static <T> T toObject(String json, TypeReference<?> typeReference)
-            throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return (T) (typeReference.getType().equals(String.class) ? json
-                : objectMapper.readValue(json, typeReference));
+        {
+            try {
+
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                return (T) (typeReference.getType().equals(String.class) ? json
+                        : objectMapper.readValue(json, typeReference));
+            }catch (Exception ex)
+            {
+                return  null;
+            }
 
     }
 }

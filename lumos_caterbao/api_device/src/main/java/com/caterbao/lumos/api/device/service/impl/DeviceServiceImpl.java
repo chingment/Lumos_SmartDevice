@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
 import com.caterbao.lumos.api.device.rop.model.CabinetBean;
 import com.caterbao.lumos.api.device.rop.model.DeviceBean;
 import com.caterbao.lumos.api.device.service.DeviceService;
+import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -14,7 +15,6 @@ import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.Device;
 import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
-import com.caterbao.lumos.locals.biz.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,14 +44,11 @@ public class DeviceServiceImpl implements DeviceService{
     }
 
     @Autowired
-    private ProductService productService;
-
+    private CacheFactory cacheFactory;
 
     @Override
     public CustomResult<RetDeviceInitData> init(String operater, String merchId, RopDeviceInitData rop)  {
 
-
-        productService.getRfIdSkuInfo();
 
         CustomResult<RetDeviceInitData> result=new CustomResult<>();
 

@@ -49,6 +49,14 @@ public class CommonUtil {
 
     }
 
+    public static boolean isEmpty(Object str) {
+        if (str == null)
+            return true;
+
+        return false;
+
+    }
+
     public static String toDateTime(Timestamp time){
         if (null != time) {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);

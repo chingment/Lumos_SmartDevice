@@ -3,6 +3,8 @@ package com.caterbao.lumos.api.device.service.impl;
 import com.caterbao.lumos.api.device.rop.*;
 import com.caterbao.lumos.api.device.rop.model.BookBean;
 import com.caterbao.lumos.api.device.service.BookerService;
+import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
@@ -34,6 +36,8 @@ public class BookerServiceImpl implements BookerService {
     private MerchDeviceMapper merchDeviceMapper;
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
+    private CacheFactory cacheFactory;
+
     private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
@@ -59,6 +63,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired
     public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
         this.transactionDefinition = transactionDefinition;
+    }
+
+    @Autowired
+    public void setCacheFactory(CacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 
     @Override
@@ -212,6 +221,8 @@ public class BookerServiceImpl implements BookerService {
             //借阅的书籍
             for (String borrow_RfId : borrow_RfIds) {
 
+                SkuInfo r_Sku=cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowReturnFlow.getMerchId(),borrow_RfId);
+
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
                 selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
@@ -224,6 +235,10 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowReturnFlowData.setFlowId(d_BookBorrowReturnFlow.getId());
                     d_BookBorrowReturnFlowData.setClientUserId(d_BookBorrowReturnFlow.getClientUserId());
                     d_BookBorrowReturnFlowData.setSkuRfId(borrow_RfId);
+                    d_BookBorrowReturnFlowData.setSkuId(r_Sku.getId());
+                    d_BookBorrowReturnFlowData.setSkuName(r_Sku.getName());
+                    d_BookBorrowReturnFlowData.setSkuCumCode(r_Sku.getCumCode());
+                    d_BookBorrowReturnFlowData.setSkuImgUrl(r_Sku.getImgUrl());
                     d_BookBorrowReturnFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
                     d_BookBorrowReturnFlowData.setCreator(IdWork.generateGUID());
                     d_BookBorrowReturnFlowData.setCreateTime(CommonUtil.getDateTimeNow());
