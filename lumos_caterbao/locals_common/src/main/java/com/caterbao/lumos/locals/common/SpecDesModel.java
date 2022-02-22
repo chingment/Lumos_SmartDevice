@@ -1,4 +1,4 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.locals.common;
 
 import java.util.ArrayList;
 import java.util.List;

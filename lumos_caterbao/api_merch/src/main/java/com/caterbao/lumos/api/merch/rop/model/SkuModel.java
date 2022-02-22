@@ -1,5 +1,7 @@
 package com.caterbao.lumos.api.merch.rop.model;
 
+import com.caterbao.lumos.locals.common.SpecDesModel;
+
 import java.util.List;
 
 public class SkuModel {

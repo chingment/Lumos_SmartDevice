@@ -1,4 +1,4 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.locals.common;
 
 public class SpecItemValueModel {
     private String name;

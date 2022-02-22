@@ -5,10 +5,8 @@ import com.caterbao.lumos.api.merch.rop.RopProdcutDelete;
 import com.caterbao.lumos.api.merch.rop.RopProdcutEdit;
 import com.caterbao.lumos.api.merch.rop.RopProductList;
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
-import com.caterbao.lumos.api.merch.rop.model.SpecDesModel;
-import com.caterbao.lumos.api.merch.rop.model.SpecItemModel;
-import com.caterbao.lumos.api.merch.rop.model.SpecItemValueModel;
 import com.caterbao.lumos.api.merch.service.ProductService;
+import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -23,14 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -39,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
     private PrdSkuMapper prdSkuMapper;
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
+    private CacheFactory cacheFactory;
 
     @Autowired(required = false)
     public void setPrdSpuMapper(PrdSpuMapper prdSpuMapper) {
@@ -58,6 +56,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired(required = false)
     public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
         this.transactionDefinition = transactionDefinition;
+    }
+
+    @Autowired(required = false)
+    public void setCacheFactory(CacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 
     private Lock lock = new ReentrantLock();
@@ -399,6 +402,9 @@ public class ProductServiceImpl implements ProductService {
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
+
+            cacheFactory.getProduct().removeSpuInfo(merchId,rop.getId());
+
             return  result.success("保存成功");
         } catch (Exception ex) {
             platformTransactionManager.rollback(transaction);

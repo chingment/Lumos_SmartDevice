@@ -21,6 +21,11 @@
         </dependency>
         <dependency>
             <groupId>com.caterbao.lumos.locals</groupId>
+            <artifactId>biz</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caterbao.lumos.locals</groupId>
             <artifactId>dal</artifactId>
             <version>${project.version}</version>
         </dependency>

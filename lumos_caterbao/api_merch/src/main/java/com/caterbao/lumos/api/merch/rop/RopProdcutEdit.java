@@ -1,7 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
-import com.caterbao.lumos.api.merch.rop.model.SpecItemModel;
 import com.caterbao.lumos.locals.common.ImgVo;
 
 import java.util.List;
