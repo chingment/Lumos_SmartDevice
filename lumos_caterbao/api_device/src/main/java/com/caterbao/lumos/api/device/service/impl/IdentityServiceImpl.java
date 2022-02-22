@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.device.rop.RetIdentityVerify;
 import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
 import com.caterbao.lumos.api.device.service.IdentityService;
+import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
@@ -12,14 +13,23 @@ import com.caterbao.lumos.locals.dal.pojo.IcCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+
 @Service
 public class IdentityServiceImpl implements IdentityService {
 
     private IcCardMapper icCardMapper;
+    private com.caterbao.lumos.locals.biz.service.BookerService bookerService;
 
     @Autowired(required = false)
     public void setIcCardMapper(IcCardMapper icCardMapper) {
         this.icCardMapper = icCardMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookerService(com.caterbao.lumos.locals.biz.service.BookerService bookerService) {
+        this.bookerService = bookerService;
     }
 
     @Override
@@ -51,6 +61,7 @@ public class IdentityServiceImpl implements IdentityService {
         return result.fail("验证失败");
     }
 
+
     @Override
     public CustomResult<RetIdentityInfo> info(String operater, RopIdentityInfo rop) {
         CustomResult<RetIdentityInfo> result = new CustomResult<>();
@@ -67,11 +78,22 @@ public class IdentityServiceImpl implements IdentityService {
 
             RetIdentityInfo ret = new RetIdentityInfo();
 
-            ret.setSignName(d_IcCard.getFullName());
-            ret.setCardNo(d_IcCard.getCardNo());
-            ret.setCanBorrowQuantity(2);
-            ret.setBorrowedQuantity(1);
-            ret.setFine(10);
+            ret.setSceneMode(rop.getSceneMode());
+
+            HashMap<String, Object> info = new HashMap<>();
+
+            info.put("signName", d_IcCard.getFullName());
+            info.put("cardNo", d_IcCard.getCardNo());
+
+            info.put("canBorrowQuantity", 2);
+            info.put("borrowedQuantity", 1);
+
+            BookerCalculateOverdueFineResult  reuslt_fine = bookerService.CalculateOverdueFine(rop.getClientUserId());
+
+            info.put("overdueFine", reuslt_fine.getOverdueFine());
+            info.put("borrowBooks", reuslt_fine.getBorrowBooks());
+
+            ret.setInfo(info);
 
             return result.success("获取成功", ret);
         }

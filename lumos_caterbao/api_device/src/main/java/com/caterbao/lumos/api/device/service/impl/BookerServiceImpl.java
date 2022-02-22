@@ -38,6 +38,7 @@ public class BookerServiceImpl implements BookerService {
     private TransactionDefinition transactionDefinition;
     private CacheFactory cacheFactory;
 
+    
     private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
@@ -273,8 +274,6 @@ public class BookerServiceImpl implements BookerService {
 
                 }
             }
-
-
 
             RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
             ret.setFlowId(rop.getFlowId());

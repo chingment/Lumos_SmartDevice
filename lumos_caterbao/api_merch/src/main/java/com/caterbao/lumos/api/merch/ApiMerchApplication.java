@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.caterbao.lumos")
 @EnableCaching
 @MapperScan("com.caterbao.lumos.locals.dal.mapper")
 public class ApiMerchApplication {

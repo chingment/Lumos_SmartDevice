@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.merch.rop.model.MenuModel;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.common.PasswordUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -90,7 +91,7 @@ public class OwnServiceImpl implements OwnService {
         token_val.put("userName", d_SysUser.getUserName());
         token_val.put("merchId", d_SysMerchUser.getMerchId());
 
-        redisTemplate.opsForValue().set("token:" + token, token_val, 1, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set("token:" + token, JsonUtil.getJson(token_val), 1, TimeUnit.HOURS);
 
         return result.success("登录成功", ret);
 
