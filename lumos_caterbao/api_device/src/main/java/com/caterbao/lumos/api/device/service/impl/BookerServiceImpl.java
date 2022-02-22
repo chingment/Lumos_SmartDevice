@@ -218,13 +218,14 @@ public class BookerServiceImpl implements BookerService {
                 }
             }
 
-            //借阅的书籍
+            //借书
             for (String borrow_RfId : borrow_RfIds) {
 
                 SkuInfo r_Sku=cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowReturnFlow.getMerchId(),borrow_RfId);
 
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
+                selective_BookBorrowReturnFlowBook.addWhere("MerchId",d_BookBorrowReturnFlow.getMerchId());
                 selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
@@ -249,6 +250,30 @@ public class BookerServiceImpl implements BookerService {
                     }
                 }
             }
+
+            //还书
+            for (String return_RfId : return_RfIds) {
+
+                LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
+                selective_BookBorrowReturnFlowBook.setFields("*");
+                selective_BookBorrowReturnFlowBook.addWhere("MerchId",d_BookBorrowReturnFlow.getMerchId());
+                selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", return_RfId);
+                BookBorrowReturnFlowData d_BookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(d_BookBorrowReturnFlowData !=null) {
+
+                    d_BookBorrowReturnFlowData.setReturnFlowId(rop.getFlowId());
+                    d_BookBorrowReturnFlowData.setReturnTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrowReturnFlowData.setMender(IdWork.generateGUID());
+                    d_BookBorrowReturnFlowData.setMendTime(CommonUtil.getDateTimeNow());
+
+                    if (bookBorrowReturnFlowDataMapper.update(d_BookBorrowReturnFlowData) <= 0) {
+                        lock.unlock();
+                        return result.fail("关闭失败[4]");
+                    }
+
+                }
+            }
+
 
 
             RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();

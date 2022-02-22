@@ -20,6 +20,8 @@ public class BookBorrowReturnFlowData {
     private String skuCumCode;
     private String skuRfId;
     private Timestamp borrowTime;
+    private Timestamp returnTime;
+    private String returnFlowId;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -159,6 +161,22 @@ public class BookBorrowReturnFlowData {
 
     public void setBorrowTime(Timestamp borrowTime) {
         this.borrowTime = borrowTime;
+    }
+
+    public Timestamp getReturnTime() {
+        return returnTime;
+    }
+
+    public void setReturnTime(Timestamp returnTime) {
+        this.returnTime = returnTime;
+    }
+
+    public String getReturnFlowId() {
+        return returnFlowId;
+    }
+
+    public void setReturnFlowId(String returnFlowId) {
+        this.returnFlowId = returnFlowId;
     }
 
     public String getCreator() {

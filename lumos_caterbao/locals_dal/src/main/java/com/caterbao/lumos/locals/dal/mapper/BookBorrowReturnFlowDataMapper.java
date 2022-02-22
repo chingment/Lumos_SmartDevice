@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface BookBorrowReturnFlowDataMapper {
     BookBorrowReturnFlowData findOne(LumosSelective selective);
     long insert(BookBorrowReturnFlowData bookBorrowReturnFlowData);
+    long update(BookBorrowReturnFlowData bookBorrowReturnFlowData);
 }
