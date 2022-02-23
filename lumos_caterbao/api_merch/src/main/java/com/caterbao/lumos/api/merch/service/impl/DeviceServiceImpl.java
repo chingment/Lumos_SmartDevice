@@ -90,7 +90,7 @@ public class DeviceServiceImpl implements DeviceService {
             item.put("imgUrl", d_Device.getImgUrl());
             item.put("status",getStatus());
             item.put("belongName",getBelongName(d_Device.getStoreName(),d_Device.getShopName()));
-            item.put("lastRunTime",CommonUtil.toDateTime(d_Device.getLastRunTime()));
+            item.put("lastRunTime",CommonUtil.toDateTimeStr(d_Device.getLastRunTime()));
             items.add(item);
         }
 

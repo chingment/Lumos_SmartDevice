@@ -9,6 +9,6 @@
     </select>
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.AdSpace" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from AdSpace where 1=1
-        <if test="where.AdSpaceId != null">and Id =#{where.AdSpaceId}</if>
+        <if test="where.SpaceId != null">and Id =#{where.SpaceId}</if>
     </select>
 </mapper>

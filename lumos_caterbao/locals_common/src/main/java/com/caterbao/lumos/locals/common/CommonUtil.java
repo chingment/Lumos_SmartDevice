@@ -5,6 +5,7 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CommonUtil {
     public  static String HelloWorld(){
@@ -57,11 +58,34 @@ public class CommonUtil {
 
     }
 
-    public static String toDateTime(Timestamp time){
+    public static String toDateTimeStr(Timestamp time){
         if (null != time) {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
         } else {
             return "";
+        }
+    }
+
+    public static String toDateStr(Timestamp time){
+        if (null != time) {
+            return new SimpleDateFormat("yyyy-MM-dd").format(time);
+        } else {
+            return "";
+        }
+    }
+
+    public static Timestamp toDateTimestamp(String time){
+        try {
+            SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(
+                    "yyyy-MM-dd");
+            Date lFromDate1 = datetimeFormatter1.parse(time);
+            System.out.println("gpsdate :" + lFromDate1);
+            Timestamp fromTS1 = new Timestamp(lFromDate1.getTime());
+
+            return fromTS1;
+
+        } catch (Exception ex){
+            return null;
         }
     }
 }

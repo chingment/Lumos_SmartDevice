@@ -16,17 +16,49 @@
       :on-error="onElError"
       :on-change="onElChange"
       :list-type="elListType"
-      :on-preview="pictureCardPreview"
       :class="{elExceed:checkLimit}"
     >
-      <i v-if="isImage" class="el-icon-plus" />
+      <i class="el-icon-plus" />
 
-      <el-button v-else size="small" type="primary">点击上传</el-button>
+      <div slot="file" slot-scope="{file}">
+        <img
+          v-if="isImage(file.name)"
+          class="el-upload-list__item-thumbnail"
+          :src="file.url"
+          alt=""
+        >
+        <video
+          v-else-if="isVideo(file.name)"
+          :src="file.url"
+          class="el-upload-list__item-thumbnail"
+          controls="controls"
+        />
+        <span class="el-upload-list__item-actions">
+          <span
+            class="el-upload-list__item-preview"
+            @click="onFileUploadPreview(file)"
+          >
+            <i class="el-icon-zoom-in" />
+          </span>
+          <span
+            class="el-upload-list__item-delete"
+            @click="onElRemove(file)"
+          >
+            <i class="el-icon-delete" />
+          </span>
+        </span>
+      </div>
+
       <div v-if="tip!=''&&edit" slot="tip" class="el-upload__tip"><span class="sign">*注</span>{{ tip }}</div>
 
     </el-upload>
-    <el-dialog v-if="isImage" :visible.sync="dialogVisible" size="tiny">
-      <img width="100%" :src="dialogImageUrl" alt="">
+    <el-dialog :visible.sync="dialogVisible" size="tiny">
+      <img v-if="isImage(dialogFileName)" width="100%" :src="dialogFileUrl" alt="">
+      <video
+        v-else-if="isVideo(dialogFileName)"
+        :src="dialogFileUrl"
+        controls="controls"
+      />
     </el-dialog>
   </div>
 </template>
@@ -74,7 +106,8 @@ export default {
   },
   data: function() {
     return {
-      dialogImageUrl: '',
+      dialogFileUrl: '',
+      dialogFileName: '',
       dialogVisible: false,
       elAction: this.action,
       elSortable: this.sortable,
@@ -91,9 +124,6 @@ export default {
     checkLimit: function() {
       // console.log(this.elLimit > 0 && this.elCount >= this.elLimit)
       return (this.elLimit > 0 && this.elCount >= this.elLimit)
-    },
-    isImage: function() {
-      return this.elListType === 'picture-card'
     }
   },
   watch: {
@@ -124,7 +154,11 @@ export default {
           }, 100)
         }
       }
+    },
+    ext: function(val, oldval) {
+      this.elExt = val
     }
+
   },
   created: function() {
     this.elCount = this.elFileList.length
@@ -145,6 +179,7 @@ export default {
     beforeElUpload: function(file) {
       console.log('beforeUpload')
       var ext = this.elExt
+      console.log(ext)
       var maxSize = this.elMaxSize
       var isOkExt = ext.indexOf(file.name.substring(file.name.lastIndexOf('.'))) >= 0
       if (!isOkExt) {
@@ -205,17 +240,34 @@ export default {
     onElExceed: function(files, fileList) {
       this.$message.error('只能上传' + this.elLimit + '个文件!')
     },
-    pictureCardPreview: function(file) {
-      this.dialogImageUrl = file.url
+    onFileUploadPreview: function(file) {
+      this.dialogFileName = file.name
+      this.dialogFileUrl = file.url
       this.dialogVisible = true
     },
     uploadCardCheckShow() {
+      if (typeof this.$refs.uploadImg === 'undefined') { return }
       var uploadcard = this.$refs.uploadImg.$el.querySelectorAll('.el-upload--picture-card')
       if (this.elFileList.length === this.elLimit) {
         uploadcard[0].style.display = 'none'
       } else {
         uploadcard[0].style.display = 'inline-block'
       }
+    },
+    isImage(filename) {
+      if (filename.indexOf('png') > -1) {
+        return true
+      } else if (filename.indexOf('jpg') > -1) {
+        return true
+      } else if (filename.indexOf('jpeg') > -1) {
+        return true
+      }
+      return false
+    },
+    isVideo(filename) {
+      if (filename.indexOf('mp4') > -1) { return true }
+
+      return false
     }
   }
 }

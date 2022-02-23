@@ -30,10 +30,10 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="text" size="mini" @click="onRelease(row)">
+          <el-button type="text" size="mini" @click="onCreativeAdd(row)">
             发布
           </el-button>
-          <el-button type="text" size="mini" @click="onContents(row)">
+          <el-button type="text" size="mini" @click="onCreatives(row)">
             发布记录
           </el-button>
         </template>
@@ -91,14 +91,14 @@ export default {
         this.loading = false
       })
     },
-    onRelease(item) {
+    onCreativeAdd(item) {
       this.$router.push({
-        path: '/oprcenter/ad/release?id=' + item.id
+        path: '/oprcenter/ad/creative/add?spaceId=' + item.id
       })
     },
-    onContents(item) {
+    onCreatives(item) {
       this.$router.push({
-        path: '/oprcenter/ad/contents?id=' + item.id
+        path: '/oprcenter/ad/creatives?spaceId=' + item.id
       })
     }
   }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.AdCreativeMapper">
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.AdCreative" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from AdCreative where 1=1
+        <if test="where.SpaceId != null">and SpaceId =#{where.SpaceId}</if>
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+    </select>
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.AdCreative" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from AdCreative where 1=1
+        <if test="where.CreativeId != null">and Id =#{where.CreativeId}</if>
+    </select>
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.AdCreative">
+  insert into AdCreative(id,merchId,spaceId,title,fileUrl,priority,
+  status,startTime,endTime,creator,createTime)
+  values(#{id},#{merchId},#{spaceId},#{title},#{fileUrl},#{priority},
+  #{status},#{startTime},#{endTime},#{creator},#{createTime}
+  )
+    </insert>
+</mapper>

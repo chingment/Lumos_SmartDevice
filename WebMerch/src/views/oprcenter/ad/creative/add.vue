@@ -3,10 +3,26 @@
     <page-header />
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="所属版位">
-        {{ temp.adSpaceName }}
+        {{ form.spaceName }}
       </el-form-item>
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" clearable />
+      </el-form-item>
+      <el-form-item label="文件" prop="fileUrls" class="el-form-item-upload">
+        <el-input :value="form.fileUrls.toString()" style="display:none" />
+        <lm-upload
+          v-model="form.fileUrls"
+          list-type="picture-card"
+          :file-list="form.fileUrls"
+          :action="uploadFileServiceUrl"
+          :headers="uploadFileHeaders"
+          :data="{folder:'ad'}"
+          :ext="form.spaceSupportFormat"
+          :tip="form.spaceDescription"
+          :max-size="1024"
+          :sortable="true"
+          :limit="1"
+        />
       </el-form-item>
       <el-form-item label="有效期" prop="validDate">
         <el-date-picker
@@ -28,56 +44,57 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { release, initRelease } from '@/api/ad'
+import { creativeAdd, init_creative_add } from '@/api/ad'
 import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
+import { getToken } from '@/utils/auth'
+import LmUpload from '@/components/Upload/index.vue'
 export default {
-  name: 'OperationCenterAdspaceRelease',
+  name: 'OprCenterAdRelease',
   components: {
-    PageHeader
+    PageHeader,
+    LmUpload
   },
   data() {
     return {
       loading: false,
-      temp: {
-        adSpaceName: '',
-        adSpaceDescription: '',
-        adSpaceSupportFormat: '',
-        belongs: [],
-        fileType: ''
-      },
       form: {
-        adSpaceId: 0,
+        spaceId: 0,
+        spaceName: '',
+        spaceDescription: '',
+        spaceSupportFormat: '',
         title: '',
-        belongIds: [],
         validDate: [],
         fileUrls: []
       },
       rules: {
         title: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         fileUrls: [{ type: 'array', required: true, message: '至多上传一个文件', max: 1 }],
-        belongIds: [{ type: 'array', required: true, message: '至少选择一个对象', min: 1 }],
         validDate: [{ type: 'array', required: true, message: '请选择有效期' }]
-      }
+      },
+      uploadFileHeaders: {},
+      uploadFileServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL
     }
   },
   created() {
-    // this.init()
+    this.uploadFileHeaders = { token: getToken() }
+    this.init()
   },
   methods: {
     init() {
       this.loading = true
-      var id = getUrlParam('id')
+      var spaceId = getUrlParam('spaceId')
 
-      initRelease({ adSpaceId: id }).then(res => {
-        if (res.result === 1) {
+      init_creative_add({ spaceId: spaceId }).then(res => {
+        if (res.code === this.$code_suc) {
           var d = res.data
-          this.form.adSpaceId = d.adSpaceId
-          this.temp.adSpaceName = d.adSpaceName
-          this.temp.adSpaceDescription = d.adSpaceDescription
-          this.temp.adSpaceSupportFormat = d.adSpaceSupportFormat
-          this.temp.belongs = d.belongs
+          this.form.spaceId = d.spaceId
+          this.form.spaceName = d.spaceName
+          this.form.spaceDescription = d.spaceDescription
+          this.form.spaceSupportFormat = d.spaceSupportFormat
         }
+        this.loading = false
+      }).catch(() => {
         this.loading = false
       })
     },
@@ -89,20 +106,20 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            release(this.form).then(res => {
-              if (res.result === 1) {
-                this.$message({
-                  message: res.message,
-                  type: 'success'
-                })
+            var _form = {
+              spaceId: this.form.spaceId,
+              title: this.form.title,
+              validDate: this.form.validDate,
+              fileUrl: this.form.fileUrls[0].url
+            }
+            creativeAdd(_form).then(res => {
+              if (res.code === this.$code_suc) {
+                this.$message.success(res.msg)
                 this.$router.push({
-                  path: '/operationcenter/ad/contents?id=' + this.form.adSpaceId
+                  path: '/oprcenter/ad/creatives?spaceId=' + this.form.spaceId
                 })
               } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
+                this.$message.error(res.msg)
               }
             })
           })

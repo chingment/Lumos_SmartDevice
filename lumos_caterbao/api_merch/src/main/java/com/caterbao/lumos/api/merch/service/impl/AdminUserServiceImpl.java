@@ -158,7 +158,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             item.put("phoneNumber",d_MerchUser.getPhoneNumber());
             item.put("isDisable",d_MerchUser.isDisable());
             item.put("email",d_MerchUser.getEmail());
-            item.put("createTime", CommonUtil.toDateTime(d_MerchUser.getCreateTime()));
+            item.put("createTime", CommonUtil.toDateTimeStr(d_MerchUser.getCreateTime()));
             items.add(item);
         }
 

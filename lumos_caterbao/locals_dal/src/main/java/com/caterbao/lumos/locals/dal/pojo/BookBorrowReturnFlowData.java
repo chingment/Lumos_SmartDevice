@@ -19,6 +19,7 @@ public class BookBorrowReturnFlowData {
     private String skuImgUrl;
     private String skuCumCode;
     private String skuRfId;
+    private int borrowSeq;
     private Timestamp borrowTime;
     private Timestamp returnTime;
     private String returnFlowId;
@@ -153,6 +154,14 @@ public class BookBorrowReturnFlowData {
 
     public void setSkuRfId(String skuRfId) {
         this.skuRfId = skuRfId;
+    }
+
+    public int getBorrowSeq() {
+        return borrowSeq;
+    }
+
+    public void setBorrowSeq(int borrowSeq) {
+        this.borrowSeq = borrowSeq;
     }
 
     public Timestamp getBorrowTime() {

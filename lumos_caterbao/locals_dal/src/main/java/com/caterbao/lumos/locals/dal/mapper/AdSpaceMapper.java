@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AdSpaceMapper {
+    AdSpace findOne(LumosSelective selective);
     List<AdSpace> find(LumosSelective selective);
 }

@@ -37,15 +37,9 @@ public class BookerServiceImpl implements BookerService {
         List<BookerBorrowBook> bookerBorrowBooks = new ArrayList<>();
         float sumSverdueFine=0;
         for (int i = 0; i < d_BookBorrowReturnFlowDatas.size(); i++) {
-
-
-
             BookBorrowReturnFlowData d_BookBorrowReturnFlowData = d_BookBorrowReturnFlowDatas.get(i);
-
-            BookerBorrowBook bookerBorrowBook = CalculateOverdueFine(i,d_BookBorrowReturnFlowData);
-
+            BookerBorrowBook bookerBorrowBook = CalculateOverdueFine(d_BookBorrowReturnFlowData);
             sumSverdueFine += bookerBorrowBook.getOverdueFine();
-
             bookerBorrowBooks.add(bookerBorrowBook);
         }
 
@@ -55,7 +49,7 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public BookerBorrowBook CalculateOverdueFine(int num,BookBorrowReturnFlowData bookBorrowReturnFlowData) {
+    public BookerBorrowBook CalculateOverdueFine(BookBorrowReturnFlowData bookBorrowReturnFlowData) {
         BookerBorrowBook bookerBorrowBook = new BookerBorrowBook();
 
         bookerBorrowBook.setSkuId(bookBorrowReturnFlowData.getSkuId());
@@ -63,7 +57,7 @@ public class BookerServiceImpl implements BookerService {
         bookerBorrowBook.setName(bookBorrowReturnFlowData.getSkuName());
         bookerBorrowBook.setCumCode(bookBorrowReturnFlowData.getSkuCumCode());
         bookerBorrowBook.setImgUrl(bookBorrowReturnFlowData.getSkuImgUrl());
-        bookerBorrowBook.setBorrowTime(CommonUtil.toDateTime(bookBorrowReturnFlowData.getBorrowTime()));
+        bookerBorrowBook.setBorrowTime(CommonUtil.toDateTimeStr(bookBorrowReturnFlowData.getBorrowTime()));
 
         long l = CommonUtil.getDateTimeNow().getTime() - bookBorrowReturnFlowData.getBorrowTime().getTime();
         long diffDay = l / (24 * 60 * 60 * 1000);
@@ -76,7 +70,7 @@ public class BookerServiceImpl implements BookerService {
             status = new FieldModel(1, "借阅中");
         } else if (diffDay > 3 && diffDay <= 30) {
             status = new FieldModel(2, "逾期借阅");
-            if (num <= 2) {
+            if (bookBorrowReturnFlowData.getBorrowSeq() <= 2) {
                 overdueFine = (diffDay - 3) * 0.5f;
             } else {
                 overdueFine = (diffDay - 3) * 1f;
@@ -88,7 +82,6 @@ public class BookerServiceImpl implements BookerService {
 
         bookerBorrowBook.setStatus(status);
         bookerBorrowBook.setOverdueFine(overdueFine);
-
 
         return bookerBorrowBook;
     }

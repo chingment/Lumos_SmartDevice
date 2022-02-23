@@ -55,7 +55,7 @@ public class IcCardServiceImpl implements IcCardService {
             item.put("fullName",d_IcCard.getFullName());
             item.put("cardNo",d_IcCard.getCardNo());
             item.put("isDisable",d_IcCard.getDisable());
-            item.put("createTime", CommonUtil.toDateTime(d_IcCard.getCreateTime()));
+            item.put("createTime", CommonUtil.toDateTimeStr(d_IcCard.getCreateTime()));
             items.add(item);
         }
 
