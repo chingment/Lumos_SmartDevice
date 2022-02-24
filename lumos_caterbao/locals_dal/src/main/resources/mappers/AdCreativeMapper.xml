@@ -19,4 +19,18 @@
   #{status},#{startTime},#{endTime},#{creator},#{createTime}
   )
     </insert>
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.AdCreative">
+        update AdCreative
+        <set>
+            <if test="title != null">title=#{title},</if>
+            <if test="fileUrl != null">fileUrl=#{fileUrl},</if>
+            <if test="priority != null">priority=#{priority},</if>
+            <if test="status != null">status=#{status},</if>
+            <if test="startTime != null">startTime=#{startTime},</if>
+            <if test="endTime != null">endTime=#{endTime},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

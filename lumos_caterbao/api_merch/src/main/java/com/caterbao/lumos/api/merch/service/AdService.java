@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.service;
 
 import com.caterbao.lumos.api.merch.rop.RopAdCreativeAdd;
+import com.caterbao.lumos.api.merch.rop.RopAdCreativeEdit;
 import com.caterbao.lumos.api.merch.rop.RopAdCreatives;
 import com.caterbao.lumos.api.merch.rop.RopAdSpaces;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -13,4 +14,6 @@ public interface AdService {
     CustomResult<Object>  creatives(String operater, String merchId, RopAdCreatives rop);
     CustomResult<Object>  initCreativeAdd(String operater, String merchId, String spaceId);
     CustomResult<Object>  creativeAdd(String operater, String merchId, RopAdCreativeAdd rop);
+    CustomResult<Object>  initCreativeEdit(String operater, String merchId, String creativeId);
+    CustomResult<Object>  creativeEdit(String operater, String merchId, RopAdCreativeEdit rop);
 }

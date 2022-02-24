@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
 import com.caterbao.lumos.api.merch.rop.RopAdCreativeAdd;
+import com.caterbao.lumos.api.merch.rop.RopAdCreativeEdit;
 import com.caterbao.lumos.api.merch.rop.RopAdCreatives;
 import com.caterbao.lumos.api.merch.rop.RopAdSpaces;
 import com.caterbao.lumos.api.merch.service.AdService;
@@ -48,5 +49,18 @@ public class AdController extends  BaseController  {
     @ResponseBody
     public CustomResult<Object> creativeAdd(@RequestBody RopAdCreativeAdd rop) {
         return adService.creativeAdd(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "init_creative_edit", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> init_creative_edit(@RequestParam String id) {
+        return adService.initCreativeEdit(this.getCurrentUserId(), this.getCurrentMerchId(), id);
+    }
+
+
+    @RequestMapping(value = "creativeEdit", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> creativeEdit(@RequestBody RopAdCreativeEdit rop) {
+        return adService.creativeEdit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 }

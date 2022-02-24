@@ -2,6 +2,7 @@ package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
+import com.caterbao.lumos.api.device.rop.model.AdBean;
 import com.caterbao.lumos.api.device.rop.model.CabinetBean;
 import com.caterbao.lumos.api.device.rop.model.DeviceBean;
 import com.caterbao.lumos.api.device.service.DeviceService;
@@ -127,8 +128,21 @@ public class DeviceServiceImpl implements DeviceService{
 
         HashMap<String, Object> customData = new HashMap<>();
 
+        customData.put("ads",getAds(d_MerchDevice.getMerchId(),d_MerchDevice.getId()));
+
         ret.setCustomData(customData);
 
         return result.success("获取成功", ret);
     }
+
+
+
+    private HashMap<String, AdBean> getAds(String merchId,String deviceId) {
+        HashMap<String, AdBean> ads = new HashMap<>();
+
+
+
+        return ads;
+    }
+
 }

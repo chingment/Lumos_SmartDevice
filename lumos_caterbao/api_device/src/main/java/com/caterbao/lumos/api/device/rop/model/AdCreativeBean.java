@@ -2,24 +2,24 @@ package com.caterbao.lumos.api.device.rop.model;
 
 import java.io.Serializable;
 
-public class AdCreatviceBean implements Serializable {
+public class AdCreativeBean implements Serializable {
 
-    private String dataType;
-    private String dataUrl;
+    private String fileType;
+    private String fileUrl;
 
-    public String getDataType() {
-        return dataType;
+    public String getFileType() {
+        return fileType;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
-    public String getDataUrl() {
-        return dataUrl;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setDataUrl(String dataUrl) {
-        this.dataUrl = dataUrl;
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }
