@@ -21,14 +21,15 @@
       <i class="el-icon-plus" />
 
       <div slot="file" slot-scope="{file}">
+
         <img
-          v-if="isImage(file.name)"
+          v-if="isImage(file.url)"
           class="el-upload-list__item-thumbnail"
           :src="file.url"
           alt=""
         >
         <video
-          v-else-if="isVideo(file.name)"
+          v-else-if="isVideo(file.url)"
           :src="file.url"
           class="el-upload-list__item-thumbnail"
           controls="controls"
@@ -228,9 +229,20 @@ export default {
       console.log(event)
       this.onProgress(event, file, fileList)
     },
-    onElRemove: function(file, fileList) {
-      this.elCount = fileList.length
-      this.elFileList = fileList
+    onElRemove: function(file) {
+      var fileList = this.elFileList
+      if (fileList != null) {
+        if (fileList.length > 0) {
+          for (var i = 0; i < fileList.length; i++) {
+            if (fileList[i].url === file.url) {
+              fileList.splice(i, 1)
+            }
+          }
+        }
+      }
+
+      // this.elCount = fileList.length
+      // this.elFileList = fileList
       this.uploadCardCheckShow()
       this.onRemove(file, fileList)
     },

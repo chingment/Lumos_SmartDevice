@@ -79,7 +79,7 @@
       </el-table-column>
       <el-table-column label="操作" align="right" width="80" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="text" size="mini">
+          <el-button type="text" size="mini" @click="onCreativeEdit(row)">
             编辑
           </el-button>
         </template>
@@ -150,6 +150,11 @@ export default {
     onCreativeAdd() {
       this.$router.push({
         path: '/oprcenter/ad/creative/add?spaceId=' + this.listQuery.spaceId
+      })
+    },
+    onCreativeEdit(item) {
+      this.$router.push({
+        path: '/oprcenter/ad/creative/edit?id=' + item.id
       })
     },
     isImage(filename) {
