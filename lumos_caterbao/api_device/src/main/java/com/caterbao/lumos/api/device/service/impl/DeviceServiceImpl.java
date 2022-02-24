@@ -3,6 +3,7 @@ package com.caterbao.lumos.api.device.service.impl;
 import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
 import com.caterbao.lumos.api.device.rop.model.AdBean;
+import com.caterbao.lumos.api.device.rop.model.AdCreativeBean;
 import com.caterbao.lumos.api.device.rop.model.CabinetBean;
 import com.caterbao.lumos.api.device.rop.model.DeviceBean;
 import com.caterbao.lumos.api.device.service.DeviceService;
@@ -10,6 +11,7 @@ import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
+import com.caterbao.lumos.locals.dal.mapper.AdCreativeMapper;
 import com.caterbao.lumos.locals.dal.mapper.DeviceCabinetMapper;
 import com.caterbao.lumos.locals.dal.mapper.DeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
@@ -19,6 +21,7 @@ import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class DeviceServiceImpl implements DeviceService{
     private DeviceMapper deviceMapper;
     private DeviceCabinetMapper deviceCabinetMapper;
     private MerchDeviceMapper merchDeviceMapper;
+    private AdCreativeMapper adCreativeMapper;
 
     @Autowired(required = false)
     public void setDeviceMapper(DeviceMapper deviceMapper) {
@@ -44,8 +48,10 @@ public class DeviceServiceImpl implements DeviceService{
         this.merchDeviceMapper = merchDeviceMapper;
     }
 
-    @Autowired
-    private CacheFactory cacheFactory;
+    @Autowired(required = false)
+    public void setAdCreativeMapper(AdCreativeMapper adCreativeMapper) {
+        this.adCreativeMapper = adCreativeMapper;
+    }
 
     @Override
     public CustomResult<RetDeviceInitData> init(String operater, String merchId, RopDeviceInitData rop)  {
@@ -137,12 +143,21 @@ public class DeviceServiceImpl implements DeviceService{
 
 
 
-    private HashMap<String, AdBean> getAds(String merchId,String deviceId) {
-        HashMap<String, AdBean> ads = new HashMap<>();
+    private HashMap<String, List<AdCreativeBean>> getAds(String merchId,String deviceId) {
+        HashMap<String, List<AdCreativeBean>> ads = new HashMap<>();
 
+        List<AdCreativeBean> creatives=new ArrayList<>();
 
+        AdCreativeBean creative1=new AdCreativeBean();
 
-        return ads;
+        creative1.setFileType("video");
+        creative1.setFileUrl("http");
+
+        creatives.add(creative1);
+
+        ads.put("101",creatives);
+
+        return  ads;
     }
 
 }
