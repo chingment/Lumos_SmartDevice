@@ -11,10 +11,9 @@ import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.AdCreativeMapper;
-import com.caterbao.lumos.locals.dal.mapper.DeviceCabinetMapper;
-import com.caterbao.lumos.locals.dal.mapper.DeviceMapper;
-import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.mapper.*;
+import com.caterbao.lumos.locals.dal.pojo.AdCreative;
+import com.caterbao.lumos.locals.dal.pojo.AdSpace;
 import com.caterbao.lumos.locals.dal.pojo.Device;
 import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
@@ -31,6 +30,7 @@ public class DeviceServiceImpl implements DeviceService{
     private DeviceMapper deviceMapper;
     private DeviceCabinetMapper deviceCabinetMapper;
     private MerchDeviceMapper merchDeviceMapper;
+    private AdSpaceMapper adSpaceMapper;
     private AdCreativeMapper adCreativeMapper;
 
     @Autowired(required = false)
@@ -51,6 +51,11 @@ public class DeviceServiceImpl implements DeviceService{
     @Autowired(required = false)
     public void setAdCreativeMapper(AdCreativeMapper adCreativeMapper) {
         this.adCreativeMapper = adCreativeMapper;
+    }
+
+    @Autowired(required = false)
+    public void setAdSpaceMapper(AdSpaceMapper adSpaceMapper) {
+        this.adSpaceMapper = adSpaceMapper;
     }
 
     @Override
@@ -143,21 +148,49 @@ public class DeviceServiceImpl implements DeviceService{
 
 
 
-    private HashMap<String, List<AdCreativeBean>> getAds(String merchId,String deviceId) {
-        HashMap<String, List<AdCreativeBean>> ads = new HashMap<>();
+    private HashMap<String, AdBean> getAds(String merchId,String deviceId) {
+        HashMap<String, AdBean> ads = new HashMap<>();
 
-        List<AdCreativeBean> creatives=new ArrayList<>();
+        String[] spaceIds = new String[]{"101"};
 
-        AdCreativeBean creative1=new AdCreativeBean();
+        LumosSelective selective_AdSpace = new LumosSelective();
+        selective_AdSpace.setFields("*");
+        selective_AdSpace.addWhere("MerchId", merchId);
+        selective_AdSpace.addWhere("SpaceIds", spaceIds);
 
-        creative1.setFileType("video");
-        creative1.setFileUrl("http");
+        List<AdSpace> d_AdSpaces = adSpaceMapper.find(selective_AdSpace);
 
-        creatives.add(creative1);
 
-        ads.put("101",creatives);
+        for (AdSpace d_AdSpace : d_AdSpaces) {
+            AdBean ad = new AdBean();
+            ad.setSpaceId(d_AdSpace.getId());
+            ad.setName(d_AdSpace.getName());
 
-        return  ads;
+            LumosSelective selective_AdCreative = new LumosSelective();
+            selective_AdCreative.setFields("*");
+            selective_AdCreative.addWhere("MerchId", merchId);
+            selective_AdCreative.addWhere("SpaceId", d_AdSpace.getId());
+            selective_AdCreative.addWhere("Status", "1");
+            selective_AdCreative.addWhere("StartTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
+            selective_AdCreative.addWhere("EndTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
+            List<AdCreative> d_AdCreatives = adCreativeMapper.find(selective_AdCreative);
+
+            List<AdCreativeBean> m_AdCreatives = new ArrayList<>();
+            for (AdCreative d_AdCreative : d_AdCreatives) {
+
+                AdCreativeBean m_AdCreative = new AdCreativeBean();
+
+                m_AdCreative.setFileUrl("http://file.17fanju.com/upload/test.mp4");
+
+                m_AdCreatives.add(m_AdCreative);
+            }
+
+            ad.setCreatives(m_AdCreatives);
+
+            ads.put(d_AdSpace.getId(), ad);
+        }
+
+        return ads;
     }
 
 }

@@ -7,6 +7,7 @@
         select ${fields} from AdCreative where 1=1
         <if test="where.SpaceId != null">and SpaceId =#{where.SpaceId}</if>
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.Status != null">and Status =#{where.Status}</if>
     </select>
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.AdCreative" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from AdCreative where 1=1

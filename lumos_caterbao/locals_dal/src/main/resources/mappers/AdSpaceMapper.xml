@@ -6,6 +6,11 @@
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.AdSpace" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from AdSpace where 1=1
         <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
+        <if test="where.SpaceIds != null"> and id in
+            <foreach collection="where.SpaceIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.AdSpace" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from AdSpace where 1=1

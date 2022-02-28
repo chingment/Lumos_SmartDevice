@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class LumosSelective {
     private String fields;
-    private HashMap<String,String> where;
+    private HashMap<String,Object> where;
 
     public LumosSelective() {
         this.where = new HashMap<>();
@@ -18,15 +18,24 @@ public class LumosSelective {
         this.fields = fields;
     }
 
-    public HashMap<String, String> getWhere() {
+    public HashMap<String, Object> getWhere() {
         return where;
     }
 
-    public void setWhere(HashMap<String, String> where) {
+    public void setWhere(HashMap<String, Object> where) {
         this.where = where;
     }
 
     public void addWhere(String key,String val){
+        if(where==null) {
+            where = new HashMap<>();
+        }
+        if(!where.containsKey(key)){
+            where.put(key,val);
+        }
+    }
+
+    public void addWhere(String key,String[] val){
         if(where==null) {
             where = new HashMap<>();
         }
