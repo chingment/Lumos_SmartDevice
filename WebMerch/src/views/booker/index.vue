@@ -6,6 +6,11 @@
           <el-menu-item-group>
             <template slot="title">借阅</template>
             <el-menu-item index="/booker/borrow/list">借阅记录</el-menu-item>
+            <el-menu-item index="/booker/renew/list">续借记录</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group>
+            <template slot="title">设备</template>
+            <el-menu-item index="/booker/cabinet/feedback">开柜反馈</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>

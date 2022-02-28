@@ -24,8 +24,8 @@
           v-model="form.displayImgUrls"
           list-type="picture-card"
           :file-list="form.displayImgUrls"
-          :action="uploadImgServiceUrl"
-          :headers="uploadImgHeaders"
+          :action="uploadFileServiceUrl"
+          :headers="uploadFileHeaders"
           :data="{folder:'shop'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
@@ -76,8 +76,8 @@ export default {
         address: [{ required: true, min: 1, max: 512, message: '必填' }],
         displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且最多4张', max: 4 }]
       },
-      uploadImgHeaders: {},
-      uploadImgServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL,
+      uploadFileHeaders: {},
+      uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL,
       dialogIsShowBySelectAddressPoint: false,
       isDesktop: this.$store.getters.isDesktop
     }
@@ -86,7 +86,7 @@ export default {
 
   },
   created() {
-    this.uploadImgHeaders = { token: getToken() }
+    this.uploadFileHeaders = { token: getToken() }
   },
   methods: {
     onSave() {

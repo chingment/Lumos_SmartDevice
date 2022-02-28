@@ -28,8 +28,8 @@
           v-model="form.avatar"
           list-type="picture-card"
           :file-list="form.avatar"
-          :action="uploadImgServiceUrl"
-          :headers="uploadImgHeaders"
+          :action="uploadFileServiceUrl"
+          :headers="uploadFileHeaders"
           :data="{folder:'shop'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
@@ -89,12 +89,12 @@ export default {
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
       },
-      uploadImgHeaders: {},
-      uploadImgServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL
+      uploadFileHeaders: {},
+      uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL
     }
   },
   created() {
-    this.uploadImgHeaders = { token: getToken() }
+    this.uploadFileHeaders = { token: getToken() }
     this.init()
   },
   methods: {

@@ -10,11 +10,11 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowDataMapper;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowReturnFlowMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
-import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlow;
-import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowData;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class BookerServiceImpl implements BookerService {
 
-    private BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper;
-    private BookBorrowReturnFlowDataMapper bookBorrowReturnFlowDataMapper;
+    private BookBorrowFlowMapper bookBorrowFlowMapper;
+    private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
     private MerchDeviceMapper merchDeviceMapper;
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
@@ -42,13 +42,13 @@ public class BookerServiceImpl implements BookerService {
     private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
-    public void setBookBorrowReturnFlowMapper(BookBorrowReturnFlowMapper bookBorrowReturnFlowMapper) {
-        this.bookBorrowReturnFlowMapper = bookBorrowReturnFlowMapper;
+    public void setBookBorrowFlowMapper(BookBorrowFlowMapper bookBorrowFlowMapper) {
+        this.bookBorrowFlowMapper = bookBorrowFlowMapper;
     }
 
     @Autowired(required = false)
-    public void setBookBorrowReturnFlowDataMapper(BookBorrowReturnFlowDataMapper bookBorrowReturnFlowDataMapper) {
-        this.bookBorrowReturnFlowDataMapper = bookBorrowReturnFlowDataMapper;
+    public void setBookBorrowFlowDataMapper(BookBorrowFlowDataMapper bookBorrowFlowDataMapper) {
+        this.bookBorrowFlowDataMapper = bookBorrowFlowDataMapper;
     }
 
     @Autowired(required = false)
@@ -90,27 +90,27 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
             return result.fail("设备未绑定门店");
 
-        BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
+        BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
 
-        d_BookBorrowReturnFlow.setId(IdWork.generateGUID());
-        d_BookBorrowReturnFlow.setMerchId(d_MerchDevice.getMerchId());
-        d_BookBorrowReturnFlow.setStoreId(d_MerchDevice.getStoreId());
-        d_BookBorrowReturnFlow.setShopId(d_MerchDevice.getShopId());
-        d_BookBorrowReturnFlow.setDeviceId(rop.getDeviceId());
-        d_BookBorrowReturnFlow.setCabinetId(rop.getCabinetId());
-        d_BookBorrowReturnFlow.setSlotId(rop.getSlotId());
-        d_BookBorrowReturnFlow.setClientUserId(rop.getClientUserId());
-        d_BookBorrowReturnFlow.setIdentityType(rop.getIdentityType());
-        d_BookBorrowReturnFlow.setIdentityId(rop.getIdentityId());
-        d_BookBorrowReturnFlow.setStatus(1);
-        d_BookBorrowReturnFlow.setCreateTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowReturnFlow.setCreator(IdWork.generateGUID());
+        d_BookBorrowFlow.setId(IdWork.generateGUID());
+        d_BookBorrowFlow.setMerchId(d_MerchDevice.getMerchId());
+        d_BookBorrowFlow.setStoreId(d_MerchDevice.getStoreId());
+        d_BookBorrowFlow.setShopId(d_MerchDevice.getShopId());
+        d_BookBorrowFlow.setDeviceId(rop.getDeviceId());
+        d_BookBorrowFlow.setCabinetId(rop.getCabinetId());
+        d_BookBorrowFlow.setSlotId(rop.getSlotId());
+        d_BookBorrowFlow.setClientUserId(rop.getClientUserId());
+        d_BookBorrowFlow.setIdentityType(rop.getIdentityType());
+        d_BookBorrowFlow.setIdentityId(rop.getIdentityId());
+        d_BookBorrowFlow.setStatus(1);
+        d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setCreator(IdWork.generateGUID());
 
-        if (bookBorrowReturnFlowMapper.insert(d_BookBorrowReturnFlow) <= 0)
+        if (bookBorrowFlowMapper.insert(d_BookBorrowFlow) <= 0)
             return result.fail("流程创建失败");
 
         RetBookerBorrowReturnCreateFlow ret = new RetBookerBorrowReturnCreateFlow();
-        ret.setFlowId(d_BookBorrowReturnFlow.getId());
+        ret.setFlowId(d_BookBorrowFlow.getId());
 
         return result.success("流程创建成功", ret);
     }
@@ -120,21 +120,21 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerBorrowReturnOpenAction> result=new CustomResult<>();
 
-        BookBorrowReturnFlow d_BookBorrowReturnFlow = new BookBorrowReturnFlow();
-        d_BookBorrowReturnFlow.setId(rop.getFlowId());
-        d_BookBorrowReturnFlow.setOpenActionResult(rop.getActionResult());
-        d_BookBorrowReturnFlow.setOpenActionCode(rop.getActionCode());
-        d_BookBorrowReturnFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowReturnFlow.setOpenRfIds(JsonUtil.getJson(rop.getRfIds()));
+        BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
+        d_BookBorrowFlow.setId(rop.getFlowId());
+        d_BookBorrowFlow.setOpenActionResult(rop.getActionResult());
+        d_BookBorrowFlow.setOpenActionCode(rop.getActionCode());
+        d_BookBorrowFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setOpenRfIds(JsonUtil.getJson(rop.getRfIds()));
         if (rop.getActionResult() == 1) {
-            d_BookBorrowReturnFlow.setStatus(2);
+            d_BookBorrowFlow.setStatus(2);
         } else if (rop.getActionResult() == 2) {
-            d_BookBorrowReturnFlow.setStatus(3);
+            d_BookBorrowFlow.setStatus(3);
         }
-        d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
-        d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setMender(IdWork.generateGUID());
+        d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
 
-        if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0)
+        if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0)
             return result.fail("打开失败[1]");
 
         if (rop.getActionResult() != 1)
@@ -160,27 +160,27 @@ public class BookerServiceImpl implements BookerService {
             selective_BookBorrowReturnFlow.addWhere("BookBorrowReturnFlowId", rop.getFlowId());
 
             //查找借还流程
-            BookBorrowReturnFlow d_BookBorrowReturnFlow = bookBorrowReturnFlowMapper.findOne(selective_BookBorrowReturnFlow);
-            if (d_BookBorrowReturnFlow == null) {
+            BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowReturnFlow);
+            if (d_BookBorrowFlow == null) {
                 lock.unlock();
                 return result.fail("关闭失败[1]");
             }
 
-            d_BookBorrowReturnFlow.setCloseActionResult(rop.getActionResult());
-            d_BookBorrowReturnFlow.setCloseActionCode(rop.getActionCode());
-            d_BookBorrowReturnFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-            d_BookBorrowReturnFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
+            d_BookBorrowFlow.setCloseActionResult(rop.getActionResult());
+            d_BookBorrowFlow.setCloseActionCode(rop.getActionCode());
+            d_BookBorrowFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
+            d_BookBorrowFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
 
             if (rop.getActionResult() == 1) {
-                d_BookBorrowReturnFlow.setStatus(5);
+                d_BookBorrowFlow.setStatus(5);
             } else if (rop.getActionResult() == 2) {
-                d_BookBorrowReturnFlow.setStatus(6);
+                d_BookBorrowFlow.setStatus(6);
             }
 
-            d_BookBorrowReturnFlow.setMender(IdWork.generateGUID());
-            d_BookBorrowReturnFlow.setMendTime(CommonUtil.getDateTimeNow());
+            d_BookBorrowFlow.setMender(IdWork.generateGUID());
+            d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
 
-            if (bookBorrowReturnFlowMapper.update(d_BookBorrowReturnFlow) <= 0) {
+            if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0) {
                 lock.unlock();
                 return result.fail("关闭失败[2]");
             }
@@ -191,9 +191,9 @@ public class BookerServiceImpl implements BookerService {
             }
 
 
-            List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowReturnFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
+            List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
 
-            List<String> close_RfIds =JsonUtil.toObject(d_BookBorrowReturnFlow.getCloseRfIds(),new TypeReference<List<String>>() {});
+            List<String> close_RfIds =JsonUtil.toObject(d_BookBorrowFlow.getCloseRfIds(),new TypeReference<List<String>>() {});
 
             List<String> borrow_RfIds = new ArrayList<>();
 
@@ -222,30 +222,41 @@ public class BookerServiceImpl implements BookerService {
             //借书
             for (String borrow_RfId : borrow_RfIds) {
 
-                SkuInfo r_Sku=cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowReturnFlow.getMerchId(),borrow_RfId);
+                SkuInfo r_Sku=cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowFlow.getMerchId(),borrow_RfId);
 
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
-                selective_BookBorrowReturnFlowBook.addWhere("MerchId",d_BookBorrowReturnFlow.getMerchId());
+                selective_BookBorrowReturnFlowBook.addWhere("MerchId", d_BookBorrowFlow.getMerchId());
                 selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
-                BookBorrowReturnFlowData d_BookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
-                if(d_BookBorrowReturnFlowData ==null) {
-                    d_BookBorrowReturnFlowData = new BookBorrowReturnFlowData();
-                    d_BookBorrowReturnFlowData.setId(IdWork.generateGUID());
-                    d_BookBorrowReturnFlowData.setFlowId(d_BookBorrowReturnFlow.getId());
-                    d_BookBorrowReturnFlowData.setClientUserId(d_BookBorrowReturnFlow.getClientUserId());
-                    d_BookBorrowReturnFlowData.setSkuRfId(borrow_RfId);
-                    d_BookBorrowReturnFlowData.setSkuId(r_Sku.getId());
-                    d_BookBorrowReturnFlowData.setSkuName(r_Sku.getName());
-                    d_BookBorrowReturnFlowData.setSkuCumCode(r_Sku.getCumCode());
-                    d_BookBorrowReturnFlowData.setSkuImgUrl(r_Sku.getImgUrl());
-                    d_BookBorrowReturnFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
-                    d_BookBorrowReturnFlowData.setCreator(IdWork.generateGUID());
-                    d_BookBorrowReturnFlowData.setCreateTime(CommonUtil.getDateTimeNow());
+                BookBorrowFlowData d_BookBorrowFlowData = bookBorrowFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(d_BookBorrowFlowData ==null) {
+                    d_BookBorrowFlowData = new BookBorrowFlowData();
+                    d_BookBorrowFlowData.setId(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setMerchId(d_BookBorrowFlow.getMerchId());
+                    d_BookBorrowFlowData.setStoreId(d_BookBorrowFlow.getStoreId());
+                    d_BookBorrowFlowData.setShopId(d_BookBorrowFlow.getShopId());
+                    d_BookBorrowFlowData.setDeviceId(d_BookBorrowFlow.getDeviceId());
+                    d_BookBorrowFlowData.setCabinetId(d_BookBorrowFlow.getCabinetId());
+                    d_BookBorrowFlowData.setSlotId(d_BookBorrowFlow.getSlotId());
+                    d_BookBorrowFlowData.setFlowId(d_BookBorrowFlow.getId());
+                    d_BookBorrowFlowData.setIdentityType(d_BookBorrowFlow.getIdentityType());
+                    d_BookBorrowFlowData.setIdentityId(d_BookBorrowFlow.getIdentityId());
+                    d_BookBorrowFlowData.setClientUserId(d_BookBorrowFlow.getClientUserId());
+                    d_BookBorrowFlowData.setSkuRfId(borrow_RfId);
+                    d_BookBorrowFlowData.setSkuId(r_Sku.getId());
+                    d_BookBorrowFlowData.setSkuName(r_Sku.getName());
+                    d_BookBorrowFlowData.setSkuCumCode(r_Sku.getCumCode());
+                    d_BookBorrowFlowData.setSkuImgUrl(r_Sku.getImgUrl());
+                    d_BookBorrowFlowData.setBorrowSeq(0);
+                    d_BookBorrowFlowData.setBorrowWay(1);
+                    d_BookBorrowFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrowFlowData.setBorrowStatus(1);
+                    d_BookBorrowFlowData.setCreator(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setCreateTime(CommonUtil.getDateTimeNow());
 
-                    if (bookBorrowReturnFlowDataMapper.insert(d_BookBorrowReturnFlowData) <= 0) {
+                    if (bookBorrowFlowDataMapper.insert(d_BookBorrowFlowData) <= 0) {
                         lock.unlock();
                         return result.fail("关闭失败[4]");
                     }
@@ -257,17 +268,18 @@ public class BookerServiceImpl implements BookerService {
 
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
-                selective_BookBorrowReturnFlowBook.addWhere("MerchId",d_BookBorrowReturnFlow.getMerchId());
+                selective_BookBorrowReturnFlowBook.addWhere("MerchId", d_BookBorrowFlow.getMerchId());
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", return_RfId);
-                BookBorrowReturnFlowData d_BookBorrowReturnFlowData = bookBorrowReturnFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
-                if(d_BookBorrowReturnFlowData !=null) {
+                BookBorrowFlowData d_BookBorrowFlowData = bookBorrowFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
+                if(d_BookBorrowFlowData !=null) {
 
-                    d_BookBorrowReturnFlowData.setReturnFlowId(rop.getFlowId());
-                    d_BookBorrowReturnFlowData.setReturnTime(CommonUtil.getDateTimeNow());
-                    d_BookBorrowReturnFlowData.setMender(IdWork.generateGUID());
-                    d_BookBorrowReturnFlowData.setMendTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrowFlowData.setReturnWay(1);
+                    d_BookBorrowFlowData.setReturnFlowId(rop.getFlowId());
+                    d_BookBorrowFlowData.setReturnTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrowFlowData.setMender(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setMendTime(CommonUtil.getDateTimeNow());
 
-                    if (bookBorrowReturnFlowDataMapper.update(d_BookBorrowReturnFlowData) <= 0) {
+                    if (bookBorrowFlowDataMapper.update(d_BookBorrowFlowData) <= 0) {
                         lock.unlock();
                         return result.fail("关闭失败[4]");
                     }

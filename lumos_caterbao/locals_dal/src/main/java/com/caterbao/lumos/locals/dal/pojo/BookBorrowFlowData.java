@@ -2,7 +2,7 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookBorrowReturnFlowData {
+public class BookBorrowFlowData {
     private String id;
     private String flowId;
     private String merchId;
@@ -20,7 +20,10 @@ public class BookBorrowReturnFlowData {
     private String skuCumCode;
     private String skuRfId;
     private int borrowSeq;
+    private int borrowWay;
     private Timestamp borrowTime;
+    private int borrowStatus;
+    private int returnWay;
     private Timestamp returnTime;
     private String returnFlowId;
     private String creator;
@@ -218,5 +221,29 @@ public class BookBorrowReturnFlowData {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public int getBorrowWay() {
+        return borrowWay;
+    }
+
+    public void setBorrowWay(int borrowWay) {
+        this.borrowWay = borrowWay;
+    }
+
+    public int getReturnWay() {
+        return returnWay;
+    }
+
+    public void setReturnWay(int returnWay) {
+        this.returnWay = returnWay;
+    }
+
+    public int getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(int borrowStatus) {
+        this.borrowStatus = borrowStatus;
     }
 }

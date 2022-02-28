@@ -2,7 +2,7 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookBorrowReturnFlow {
+public class BookBorrowFlow {
     private String id;
     private String merchId;
     private String storeId;

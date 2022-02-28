@@ -73,7 +73,7 @@ export default {
         validDate: [{ type: 'array', required: true, message: '请选择有效期' }]
       },
       uploadFileHeaders: {},
-      uploadFileServiceUrl: process.env.VUE_APP_UPLOADIMGSERVICE_URL
+      uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL
     }
   },
   created() {

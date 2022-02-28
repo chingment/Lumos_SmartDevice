@@ -3,9 +3,14 @@ package com.caterbao.lumos.locals.biz.service;
 
 import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
-import com.caterbao.lumos.locals.dal.pojo.BookBorrowReturnFlowData;
+import com.caterbao.lumos.locals.common.FieldModel;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
 
 public interface BookerService {
     BookerCalculateOverdueFineResult CalculateOverdueFine(String clientUserId);
-    BookerBorrowBook CalculateOverdueFine(BookBorrowReturnFlowData bookBorrowReturnFlowData);
+    BookerBorrowBook CalculateOverdueFine(BookBorrowFlowData bookBorrowFlowData);
+    FieldModel getBorrowWay(int way);
+    FieldModel getReturnWay(int way);
+    FieldModel getIdentityType(int type);
+    FieldModel getBorrowStatus(int stauts);
 }
