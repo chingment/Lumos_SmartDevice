@@ -92,7 +92,7 @@ public class BookerServiceImpl implements BookerService {
 
         BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
 
-        d_BookBorrowFlow.setId(IdWork.generateGUID());
+        d_BookBorrowFlow.setId(IdWork.buildLongId());
         d_BookBorrowFlow.setMerchId(d_MerchDevice.getMerchId());
         d_BookBorrowFlow.setStoreId(d_MerchDevice.getStoreId());
         d_BookBorrowFlow.setShopId(d_MerchDevice.getShopId());
@@ -104,7 +104,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowFlow.setIdentityId(rop.getIdentityId());
         d_BookBorrowFlow.setStatus(1);
         d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowFlow.setCreator(IdWork.generateGUID());
+        d_BookBorrowFlow.setCreator(IdWork.buildGuId());
 
         if (bookBorrowFlowMapper.insert(d_BookBorrowFlow) <= 0)
             return result.fail("流程创建失败");
@@ -131,7 +131,7 @@ public class BookerServiceImpl implements BookerService {
         } else if (rop.getActionResult() == 2) {
             d_BookBorrowFlow.setStatus(3);
         }
-        d_BookBorrowFlow.setMender(IdWork.generateGUID());
+        d_BookBorrowFlow.setMender(IdWork.buildGuId());
         d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
 
         if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0)
@@ -177,7 +177,7 @@ public class BookerServiceImpl implements BookerService {
                 d_BookBorrowFlow.setStatus(6);
             }
 
-            d_BookBorrowFlow.setMender(IdWork.generateGUID());
+            d_BookBorrowFlow.setMender(IdWork.buildGuId());
             d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
 
             if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0) {
@@ -220,9 +220,11 @@ public class BookerServiceImpl implements BookerService {
             }
 
             //借书
-            for (String borrow_RfId : borrow_RfIds) {
+            for (int i=0;i< borrow_RfIds.size() ; i++) {
 
-                SkuInfo r_Sku=cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowFlow.getMerchId(),borrow_RfId);
+                String borrow_RfId=borrow_RfIds.get(i);
+
+                SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookBorrowFlow.getMerchId(), borrow_RfId);
 
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
@@ -231,9 +233,9 @@ public class BookerServiceImpl implements BookerService {
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
                 BookBorrowFlowData d_BookBorrowFlowData = bookBorrowFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
-                if(d_BookBorrowFlowData ==null) {
+                if (d_BookBorrowFlowData == null) {
                     d_BookBorrowFlowData = new BookBorrowFlowData();
-                    d_BookBorrowFlowData.setId(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setId(String.valueOf(d_BookBorrowFlow.getId())+String.valueOf(i));
                     d_BookBorrowFlowData.setMerchId(d_BookBorrowFlow.getMerchId());
                     d_BookBorrowFlowData.setStoreId(d_BookBorrowFlow.getStoreId());
                     d_BookBorrowFlowData.setShopId(d_BookBorrowFlow.getShopId());
@@ -253,7 +255,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setBorrowWay(1);
                     d_BookBorrowFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
                     d_BookBorrowFlowData.setBorrowStatus(1);
-                    d_BookBorrowFlowData.setCreator(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setCreator(IdWork.buildGuId());
                     d_BookBorrowFlowData.setCreateTime(CommonUtil.getDateTimeNow());
 
                     if (bookBorrowFlowDataMapper.insert(d_BookBorrowFlowData) <= 0) {
@@ -276,7 +278,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setReturnWay(1);
                     d_BookBorrowFlowData.setReturnFlowId(rop.getFlowId());
                     d_BookBorrowFlowData.setReturnTime(CommonUtil.getDateTimeNow());
-                    d_BookBorrowFlowData.setMender(IdWork.generateGUID());
+                    d_BookBorrowFlowData.setMender(IdWork.buildGuId());
                     d_BookBorrowFlowData.setMendTime(CommonUtil.getDateTimeNow());
 
                     if (bookBorrowFlowDataMapper.update(d_BookBorrowFlowData) <= 0) {

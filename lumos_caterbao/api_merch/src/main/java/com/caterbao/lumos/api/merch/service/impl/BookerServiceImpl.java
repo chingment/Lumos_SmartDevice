@@ -53,7 +53,7 @@ public class BookerServiceImpl implements BookerService {
         int pageSize = rop.getPageSize();
 
 
-        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"BorrowTime DESC");
 
 
         LumosSelective selective=new LumosSelective();
@@ -112,7 +112,7 @@ public class BookerServiceImpl implements BookerService {
         int pageSize = rop.getPageSize();
 
 
-        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
 
         LumosSelective selective=new LumosSelective();

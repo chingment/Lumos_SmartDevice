@@ -241,7 +241,7 @@ public class StoreServiceImpl implements StoreService {
 
         if(d_StoreShop==null) {
             d_StoreShop = new StoreShop();
-            d_StoreShop.setId(IdWork.generateGUID());
+            d_StoreShop.setId(IdWork.buildGuId());
             d_StoreShop.setMerchId(merchId);
             d_StoreShop.setStoreId(rop.getStoreId());
             d_StoreShop.setShopId(rop.getShopId());

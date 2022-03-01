@@ -118,7 +118,7 @@ public class ShopServiceImpl implements ShopService {
         if(shopMapper.isExistName(null,merchId,rop.getName())>0)
             return result.fail("名称已经存在");
 
-        d_Shop.setId(IdWork.generateGUID());
+        d_Shop.setId(IdWork.buildGuId());
         d_Shop.setAddress(rop.getAddress());
         d_Shop.setContactName(rop.getContactName());
         d_Shop.setContactPhone(rop.getContactPhone());
@@ -294,7 +294,7 @@ public class ShopServiceImpl implements ShopService {
 
         if(d_ShopDevice==null) {
             d_ShopDevice = new ShopDevice();
-            d_ShopDevice.setId(IdWork.generateGUID());
+            d_ShopDevice.setId(IdWork.buildGuId());
             d_ShopDevice.setMerchId(merchId);
             d_ShopDevice.setStoreId(rop.getStoreId());
             d_ShopDevice.setShopId(rop.getShopId());

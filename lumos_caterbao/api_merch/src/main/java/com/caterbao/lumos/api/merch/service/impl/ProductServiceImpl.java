@@ -179,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             PrdSpu d_PrdSpu = new PrdSpu();
-            d_PrdSpu.setId(IdWork.generateGUID());
+            d_PrdSpu.setId(IdWork.buildGuId());
             d_PrdSpu.setMerchId(merchId);
             d_PrdSpu.setName(rop.getName());
             d_PrdSpu.setPyIdx(CommonUtil.getPyIdxChar(rop.getName()));
@@ -215,7 +215,7 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
-                d_PrdSku.setId(IdWork.generateGUID());
+                d_PrdSku.setId(IdWork.buildGuId());
                 d_PrdSku.setMerchId(merchId);
                 d_PrdSku.setSpuId(d_PrdSpu.getId());
                 d_PrdSku.setName(d_PrdSpu.getName());

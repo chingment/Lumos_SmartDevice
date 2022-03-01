@@ -81,7 +81,7 @@ public class OwnServiceImpl implements OwnService {
         if(d_SysUser.getIsDisable())
             return result.fail("该账号已被停用");
 
-        String token = IdWork.generateGUID();
+        String token = IdWork.buildGuId();
 
         Map<String, Object> ret = new HashMap<>();
         ret.put("token", token);

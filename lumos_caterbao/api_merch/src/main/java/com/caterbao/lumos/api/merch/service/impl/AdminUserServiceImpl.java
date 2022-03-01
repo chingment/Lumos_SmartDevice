@@ -86,9 +86,9 @@ public class AdminUserServiceImpl implements AdminUserService {
             }
 
             SysUser d_SysUser=new SysUser();
-            d_SysUser.setId(IdWork.generateGUID());
+            d_SysUser.setId(IdWork.buildGuId());
             d_SysUser.setUserName(rop.getUserName());
-            d_SysUser.setSecurityStamp(IdWork.generateGUID());
+            d_SysUser.setSecurityStamp(IdWork.buildGuId());
             d_SysUser.setPasswordHash(PasswordUtil.encryBySHA256(rop.getPassword(),d_SysUser.getSecurityStamp()));
             d_SysUser.setFullName(rop.getFullName());
             d_SysUser.setPhoneNumber(rop.getPhoneNumber());
@@ -105,7 +105,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             }
 
             SysMerchUser d_SysMerchUser=new SysMerchUser();
-            d_SysMerchUser.setId(IdWork.generateGUID());
+            d_SysMerchUser.setId(IdWork.buildGuId());
             d_SysMerchUser.setMaster(false);
             d_SysMerchUser.setMerchId(merchId);
             d_SysMerchUser.setUserId(d_SysUser.getId());

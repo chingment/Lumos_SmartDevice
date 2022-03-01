@@ -173,7 +173,7 @@ public class AdServiceImpl implements AdService {
         CustomResult<Object> result = new CustomResult<>();
 
         AdCreative d_AdCreative=new AdCreative();
-        d_AdCreative.setId(IdWork.generateGUID());
+        d_AdCreative.setId(IdWork.buildGuId());
         d_AdCreative.setMerchId(merchId);
         d_AdCreative.setSpaceId(rop.getSpaceId());
         d_AdCreative.setTitle(rop.getTitle());
