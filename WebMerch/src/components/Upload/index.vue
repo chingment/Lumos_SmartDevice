@@ -138,6 +138,9 @@ export default {
     },
     fileList: {
       handler(newName, oldName) {
+        if (newName == null) {
+          newName = []
+        }
         this.elFileList = newName
 
         if (!this.edit) {

@@ -1,7 +1,6 @@
 <template>
   <div id="product_edit">
     <page-header />
-
     <el-steps :active="active" finish-status="success" align-center>
       <el-step title="商品信息" />
       <el-step title="规格属性" />
@@ -193,58 +192,11 @@ export default {
         if (res.code === this.$code_suc) {
           var d = res.data
           this.optionsSysKinds = d.sysKinds
-          d.detailsDes = d.detailsDes == null ? [] : d.detailsDes
           this.form = d
         }
         this.loading = false
       }).catch(() => {
         this.loading = false
-      })
-    },
-    onSubmit() {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          for (var i = 0; i < this.form.skus.length; i++) {
-            var strName = '规格 '
-
-            for (var j = 0; j < this.form.skus[i].specDes.length; j++) {
-              strName += this.form.skus[i].specDes[j].value + ' '
-            }
-
-            if (strLen(this.form.skus[i].cumCode) <= 0 || strLen(this.form.skus[i].cumCode) > 30) {
-              this.$message(strName + '的编码不能为空，且不能超过30个字符')
-              return false
-            }
-
-            if (strLen(this.form.skus[i].barCode) > 30) {
-              this.$message(strName + '的条形码不能超过30个字符')
-              return false
-            }
-
-            if (!isMoney(this.form.skus[i].salePrice)) {
-              this.$message(strName + '的价格格式必须为:xx.xx,eg: 88.88')
-              return false
-            }
-          }
-
-          MessageBox.confirm('确定要保存', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            edit(this.form).then(res => {
-              this.loading = false
-              if (res.code === this.$code_suc) {
-                this.$message.success(res.msg)
-              } else {
-                this.$message.error(res.msg)
-              }
-            }).catch(() => {
-              this.loading = false
-            })
-          })
-        }
       })
     },
     onCharTagsDel(tag) {

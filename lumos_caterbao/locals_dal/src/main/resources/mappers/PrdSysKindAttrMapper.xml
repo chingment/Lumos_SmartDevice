@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSysKindAttrMapper">
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSysKindAttr" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from PrdSysKindAttr where 1=1
+        <if test="where.KindId != null">and KindId =#{where.KindId}</if>
+        <if test="where.IsUse != null">and IsUse =#{where.IsUse}</if>
+        order by priority
+    </select>
+</mapper>

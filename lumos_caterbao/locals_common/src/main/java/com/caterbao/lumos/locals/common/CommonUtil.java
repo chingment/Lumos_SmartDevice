@@ -103,6 +103,16 @@ public class CommonUtil {
         return newStr;
     }
 
+    public static String arr2Str(List<String> strList ){
+
+        if(isEmpty(strList))
+            return null;
+
+        String newStr = strList.stream().map(String::valueOf).collect(Collectors.joining(","));
+
+        return newStr;
+    }
+
     public static List<Integer> intStr2Arr(String str){
         if(isEmpty(str))
             return  null;

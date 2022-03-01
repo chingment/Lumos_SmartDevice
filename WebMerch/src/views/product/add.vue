@@ -81,6 +81,15 @@
 
       <div v-show="active===1">
         <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
+
+          <!-- <el-form-item
+            v-for="(item,x) in sysKindAttrs"
+            :key="x"
+            :label="item.name"
+          >
+            <el-input clearable  />
+          </el-form-item> -->
+
           <el-form-item v-show="!isOpenAddMultiSpecs" label="默认销售价" prop="singleSkuSalePrice">
             <el-input v-model="form.singleSkuSalePrice" clearable style="width:160px">
               <template slot="prepend">￥</template>
@@ -93,6 +102,7 @@
             />
 
           </el-form-item>
+
           <el-form-item label="属性" style="max-width:1000px">
             <el-checkbox v-model="isOpenAddMultiSpecs">多规格</el-checkbox>
           </el-form-item>
@@ -254,7 +264,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { add, init_add } from '@/api/product'
+import { add, init_add, getSysKindAttrs } from '@/api/product'
 import fromReg from '@/utils/formReg'
 import { goBack, strLen, isMoney } from '@/utils/commonUtil'
 import LmUpload from '@/components/Upload/index.vue'
@@ -309,6 +319,7 @@ export default {
       charTagsInputValue: '',
       active: 0,
       skus: [],
+      sysKindAttrs: [],
       uploadFileHeaders: {},
       uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL
     }
@@ -505,7 +516,21 @@ export default {
         this.$refs['form0'].validate((valid) => {
           if (!valid) return
 
-          this.active += 1
+          this.loading = true
+          getSysKindAttrs({ ids: '' }).then(res => {
+            if (res.code === this.$code_suc) {
+              var d = res.data
+
+              this.sysKindAttrs = d.attrs
+
+              this.active += 1
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
         })
       } else if (this.active === 1) {
         this.$refs['form1'].validate((valid) => {

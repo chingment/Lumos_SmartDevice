@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SysPrdKindMapper {
+public interface PrdSysKindMapper {
     List<PrdSysKindTreeVw> tree();
+
     PrdSysKind find(LumosSelective selective);
+
+    List<PrdSysKind> findParentById(int id);
 }

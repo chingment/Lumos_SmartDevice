@@ -7,10 +7,17 @@ import com.caterbao.lumos.api.merch.rop.RopProductList;
 import com.caterbao.lumos.locals.common.CustomResult;
 
 public interface ProductService {
-    CustomResult<Object>  list(String operater, String merchId, RopProductList rop);
-    CustomResult<Object>  init_add(String operater, String merchId);
-    CustomResult<Object>  add(String operater, String merchId, RopProdcutAdd rop);
-    CustomResult<Object>  delete(String operater, String merchId, RopProdcutDelete rop);
-    CustomResult<Object>  init_edit(String operater, String merchId,String spuId);
-    CustomResult<Object>  edit(String operater, String merchId, RopProdcutEdit rop);
+    CustomResult<Object> list(String operater, String merchId, RopProductList rop);
+
+    CustomResult<Object> init_add(String operater, String merchId);
+
+    CustomResult<Object> add(String operater, String merchId, RopProdcutAdd rop);
+
+    CustomResult<Object> delete(String operater, String merchId, RopProdcutDelete rop);
+
+    CustomResult<Object> init_edit(String operater, String merchId, String spuId);
+
+    CustomResult<Object> edit(String operater, String merchId, RopProdcutEdit rop);
+
+    CustomResult<Object> getSysKindAttrs(String operater, String merchId, String kindIds);
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysPrdKindMapper">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSysKindMapper">
     <resultMap type="com.caterbao.lumos.locals.dal.vw.PrdSysKindTreeVw" id="treeResultMap">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
@@ -28,4 +28,23 @@
             left join PrdSysKind m3 on m2.id=m3.pId
         where m1.pId=0
     </select>
+
+    <select id="findParentById" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSysKind" >
+        <![CDATA[
+        SELECT T2.*
+        FROM (
+        SELECT
+        @r AS _id,
+        (SELECT @r := pId FROM PrdSysKind WHERE id = _id) AS pId,
+        @l := @l + 1 AS lvl
+        FROM
+        (SELECT @r := #{id}, @l := 0) vars,
+        PrdSysKind h
+        WHERE @r <> 0) T1
+        JOIN PrdSysKind T2
+        ON T1._id = T2.id
+        ]]>
+    </select>
+
+
 </mapper>

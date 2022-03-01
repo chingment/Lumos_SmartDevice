@@ -12,9 +12,12 @@ import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper;
 import com.caterbao.lumos.locals.dal.mapper.PrdSpuMapper;
-import com.caterbao.lumos.locals.dal.mapper.SysPrdKindMapper;
+import com.caterbao.lumos.locals.dal.mapper.PrdSysKindAttrMapper;
+import com.caterbao.lumos.locals.dal.mapper.PrdSysKindMapper;
 import com.caterbao.lumos.locals.dal.pojo.PrdSku;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
+import com.caterbao.lumos.locals.dal.pojo.PrdSysKind;
+import com.caterbao.lumos.locals.dal.pojo.PrdSysKindAttr;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,8 @@ public class ProductServiceImpl implements ProductService {
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
     private CacheFactory cacheFactory;
-    private SysPrdKindMapper sysPrdKindMapper;
+    private PrdSysKindMapper prdSysKindMapper;
+    private PrdSysKindAttrMapper prdSysKindAttrMapper;
 
     @Autowired(required = false)
     public void setPrdSpuMapper(PrdSpuMapper prdSpuMapper) {
@@ -66,8 +70,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Autowired(required = false)
-    public void setSysPrdKindMapper(SysPrdKindMapper sysPrdKindMapper) {
-        this.sysPrdKindMapper = sysPrdKindMapper;
+    public void setPrdSysKindMapper(PrdSysKindMapper prdSysKindMapper) {
+        this.prdSysKindMapper = prdSysKindMapper;
+    }
+
+    @Autowired(required = false)
+    public void setPrdSysKindAttrMapper(PrdSysKindAttrMapper prdSysKindAttrMapper) {
+        this.prdSysKindAttrMapper = prdSysKindAttrMapper;
     }
 
     private Lock lock = new ReentrantLock();
@@ -83,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
         Page<?> page = PageHelper.startPage(pageNum, pageSize);
 
         LumosSelective selective_PrdSpu=new LumosSelective();
-        selective_PrdSpu.setFields("Id,Name,CumCode,DisplayImgUrls,CreateTime");
+        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,DisplayImgUrls,CreateTime");
         selective_PrdSpu.addWhere("MerchId",merchId);
         selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
         List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
@@ -141,7 +150,7 @@ public class ProductServiceImpl implements ProductService {
         HashMap<String,Object> ret=new HashMap<>();
 
 
-        ret.put("sysKinds",sysPrdKindMapper.tree());
+        ret.put("sysKinds", prdSysKindMapper.tree());
 
         return result.success("初始成功",ret);
     }
@@ -282,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ret.put("skus",m_Skus);
-        ret.put("sysKinds",sysPrdKindMapper.tree());
+        ret.put("sysKinds", prdSysKindMapper.tree());
         return result.success("初始成功",ret);
     }
 
@@ -448,7 +457,7 @@ public class ProductServiceImpl implements ProductService {
             long r_PrdSpu_Update=prdSpuMapper.update(d_PrdSpu);
             if (r_PrdSpu_Update <= 0) {
                 lock.unlock();
-                return result.fail("保存失败");
+                return result.fail("回收失败");
             }
 
             LumosSelective selective_PrdSkus=new LumosSelective();
@@ -466,24 +475,67 @@ public class ProductServiceImpl implements ProductService {
                 long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
                 if (r_PrdSku_Update <= 0) {
                     lock.unlock();
-                    return result.fail("保存失败");
+                    return result.fail("回收失败");
                 }
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  result.success("保存成功");
+            return  result.success("回收成功");
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
             e.printStackTrace();
             lock.unlock();
-            return result.fail("保存失败,服务器异常");
+            return result.fail("回收失败,服务器异常");
         }
     }
 
+    @Override
+    public CustomResult<Object> getSysKindAttrs(String operater, String merchId, String ids) {
+        CustomResult<Object> result = new CustomResult<>();
+
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("KindId", "1713");
+        selective.addWhere("IsUse", "1");
+
+        List<PrdSysKindAttr> d_PrdSysKindAttrs = prdSysKindAttrMapper.find(selective);
+
+        List<Object> attrs = new ArrayList<>();
+
+        for (PrdSysKindAttr d_PrdSysKindAttr : d_PrdSysKindAttrs) {
+            HashMap<String, Object> attr = new HashMap<>();
+            attr.put("id", d_PrdSysKindAttr.getId());
+            attr.put("name", d_PrdSysKindAttr.getName());
+            attrs.add(attr);
+        }
+
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("attrs", attrs);
+        return result.success("", ret);
+    }
 
     private FieldModel getSysKinds(String sysKinds) {
-        FieldModel model = new FieldModel("1,2,3", "图书");
+        FieldModel model = new FieldModel();
+
+        List<Integer> sysKindIds = CommonUtil.intStr2Arr(sysKinds);
+
+        if (sysKindIds == null)
+            return model;
+
+        if (sysKindIds.size() == 0)
+            return model;
+
+        int id = sysKindIds.get(sysKindIds.size() - 1);
+
+        List<PrdSysKind> d_PrdSysKinds = prdSysKindMapper.findParentById(id);
+
+        List<String> names = new ArrayList<>();
+        for (PrdSysKind d_PrdSysKind : d_PrdSysKinds) {
+            names.add(d_PrdSysKind.getName());
+        }
+
+        model.setText(CommonUtil.arr2Str(names));
 
         return model;
     }

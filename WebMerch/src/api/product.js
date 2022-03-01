@@ -48,11 +48,20 @@ export function init_edit(params) {
   })
 }
 
+export function getSysKindAttrs(params) {
+  return request({
+    url: '/product/getSysKindAttrs',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   list: list,
   init_add: init_add,
   add: add,
   init_edit: init_edit,
   edit: edit,
-  del: del
+  del: del,
+  getSysKindAttrs: getSysKindAttrs
 }

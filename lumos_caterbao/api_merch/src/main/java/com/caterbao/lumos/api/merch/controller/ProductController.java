@@ -56,4 +56,10 @@ public class ProductController extends  BaseController {
     public CustomResult<Object> delete(@RequestBody RopProdcutDelete rop) {
         return productService.delete(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
+
+    @RequestMapping(value = "getSysKindAttrs", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> getSysKindAttrs(@RequestParam String ids) {
+        return productService.getSysKindAttrs(this.getCurrentUserId(), this.getCurrentMerchId(), ids);
+    }
 }
