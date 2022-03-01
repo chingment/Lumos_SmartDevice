@@ -9,7 +9,7 @@ import java.util.List;
 public class RopProdcutAdd {
     private String name;
     private String cumCode;
-    private List<Integer> kindIds;
+    private List<Integer> sysKindIds;
     private List<String> charTags;
     private List<ImgVo> detailsDes;
     private List<ImgVo> displayImgUrls;
@@ -33,12 +33,12 @@ public class RopProdcutAdd {
         this.cumCode = cumCode;
     }
 
-    public List<Integer> getKindIds() {
-        return kindIds;
+    public List<Integer> getSysKindIds() {
+        return sysKindIds;
     }
 
-    public void setKindIds(List<Integer> kindIds) {
-        this.kindIds = kindIds;
+    public void setSysKindIds(List<Integer> sysKindIds) {
+        this.sysKindIds = sysKindIds;
     }
 
     public List<String> getCharTags() {

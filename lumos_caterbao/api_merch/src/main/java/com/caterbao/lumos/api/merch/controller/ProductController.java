@@ -27,6 +27,12 @@ public class ProductController extends  BaseController {
         return productService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
+    @RequestMapping(value = "init_add", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> init_add() {
+        return productService.init_add(this.getCurrentUserId(), this.getCurrentMerchId());
+    }
+
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult<Object> add(@RequestBody RopProdcutAdd rop) {

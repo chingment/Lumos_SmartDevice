@@ -5,7 +5,11 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonUtil {
     public  static String HelloWorld(){
@@ -87,5 +91,31 @@ public class CommonUtil {
         } catch (Exception ex){
             return null;
         }
+    }
+
+    public static String intArr2Str(List<Integer> strList ){
+
+        if(isEmpty(strList))
+            return null;
+
+        String newStr = strList.stream().map(String::valueOf).collect(Collectors.joining(","));
+
+        return newStr;
+    }
+
+    public static List<Integer> intStr2Arr(String str){
+        if(isEmpty(str))
+            return  null;
+
+
+        List<String> result = Arrays.asList(str.split(","));
+
+        List<Integer> result2=new ArrayList<>();
+
+        for (String t1: result  ) {
+            result2.add(Integer.valueOf(t1));
+        }
+
+        return  result2;
     }
 }

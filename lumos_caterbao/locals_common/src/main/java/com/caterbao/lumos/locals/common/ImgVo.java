@@ -3,9 +3,10 @@ package com.caterbao.lumos.locals.common;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ImgVo {
+public class ImgVo implements Serializable {
     private String name;
     private String url;
 

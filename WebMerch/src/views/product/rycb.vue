@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="分类" align="left" width="200">
         <template slot-scope="{row}">
-          <span>ss</span>
+          <span>{{ row.sysKinds.text }}</span>
         </template>
       </el-table-column>
       <el-table-column label="默认销售价" align="left" width="110">

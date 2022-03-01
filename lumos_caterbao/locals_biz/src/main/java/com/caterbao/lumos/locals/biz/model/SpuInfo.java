@@ -16,7 +16,7 @@ public class SpuInfo implements Serializable {
     private String pyIdx;
     private List<String> charTags;
     private String briefDes;
-    private List<String> detailsDes;
+    private List<ImgVo> detailsDes;
     private List<SpecItemModel> specItems;
     private List<SpecIdxSkuModel> specIdxSkus;
 
@@ -84,11 +84,11 @@ public class SpuInfo implements Serializable {
         this.briefDes = briefDes;
     }
 
-    public List<String> getDetailsDes() {
+    public List<ImgVo> getDetailsDes() {
         return detailsDes;
     }
 
-    public void setDetailsDes(List<String> detailsDes) {
+    public void setDetailsDes(List<ImgVo> detailsDes) {
         this.detailsDes = detailsDes;
     }
 

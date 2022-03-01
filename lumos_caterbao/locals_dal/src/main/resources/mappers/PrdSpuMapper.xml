@@ -25,10 +25,8 @@
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSpu">
-  insert into PrdSpu(id,name,merchId,cumCode,kindId1,
-  kindId2,kindId3,pyIdx,charTags,isDelete,specItems,displayImgUrls,briefDes,detailsDes,creator,createTime)
-  values(#{id},#{name},#{merchId},#{cumCode},#{kindId1},
-  #{kindId2},#{kindId3},#{pyIdx},#{charTags},#{isDelete},#{specItems},#{displayImgUrls},#{briefDes}
+  insert into PrdSpu(id,name,merchId,cumCode,sysKindIds,pyIdx,charTags,isDelete,specItems,displayImgUrls,briefDes,detailsDes,creator,createTime)
+  values(#{id},#{name},#{merchId},#{cumCode},#{sysKindIds},#{pyIdx},#{charTags},#{isDelete},#{specItems},#{displayImgUrls},#{briefDes}
   ,#{detailsDes},#{creator},#{createTime}
   )
     </insert>
@@ -38,9 +36,7 @@
         <set>
             <if test="name != null">name=#{name},</if>
             <if test="cumCode != null">cumCode=#{cumCode},</if>
-            <if test="kindId1 != null">kindId1=#{kindId1},</if>
-            <if test="kindId2 != null">kindId2=#{kindId2},</if>
-            <if test="kindId3 != null">kindId3=#{kindId3},</if>
+            <if test="sysKindIds != null">sysKindIds=#{sysKindIds},</if>
             <if test="pyIdx != null">pyIdx=#{pyIdx},</if>
             <if test="charTags != null">charTags=#{charTags},</if>
             <if test="specItems != null">specItems=#{specItems},</if>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.SysPrdKindMapper">
+    <resultMap type="com.caterbao.lumos.locals.dal.vw.PrdSysKindTreeVw" id="treeResultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="children" ofType="com.caterbao.lumos.locals.dal.vw.PrdSysKindTreeVw">
+            <id column="id2" property="id"/>
+            <result column="name2" property="name"/>
+            <collection property="children" ofType="com.caterbao.lumos.locals.dal.vw.PrdSysKindTreeVw">
+                <id column="id3" property="id"/>
+                <result column="name3" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="tree" resultMap="treeResultMap">
+        select
+            m1.id as id,
+            m1.name as name,
+            m2.id as id2,
+            m2.name as name2,
+            m3.id as id3,
+            m3.name as name3
+        from PrdSysKind m1
+            left join PrdSysKind m2 on m1.id=m2.pId
+            left join PrdSysKind m3 on m2.id=m3.pId
+        where m1.pId=0
+    </select>
+</mapper>

@@ -12,6 +12,7 @@ import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper;
 import com.caterbao.lumos.locals.dal.mapper.PrdSpuMapper;
+import com.caterbao.lumos.locals.dal.mapper.SysPrdKindMapper;
 import com.caterbao.lumos.locals.dal.pojo.PrdSku;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
 import com.github.pagehelper.Page;
@@ -37,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
     private CacheFactory cacheFactory;
+    private SysPrdKindMapper sysPrdKindMapper;
 
     @Autowired(required = false)
     public void setPrdSpuMapper(PrdSpuMapper prdSpuMapper) {
@@ -61,6 +63,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired(required = false)
     public void setCacheFactory(CacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
+    }
+
+    @Autowired(required = false)
+    public void setSysPrdKindMapper(SysPrdKindMapper sysPrdKindMapper) {
+        this.sysPrdKindMapper = sysPrdKindMapper;
     }
 
     private Lock lock = new ReentrantLock();
@@ -92,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
             item.put("name",d_PrdSpu.getName());
             item.put("cumCode",d_PrdSpu.getCumCode());
             item.put("imgUrl", ImgVo.getMainImgUrl(d_PrdSpu.getDisplayImgUrls()));
-
+            item.put("sysKinds",getSysKinds(d_PrdSpu.getSysKindIds()));
             LumosSelective selective_PrdSku=new LumosSelective();
             selective_PrdSku.setFields("Id,CumCode,BarCode,SalePrice,SpecDes");
             selective_PrdSku.addWhere("MerchId",merchId);
@@ -127,6 +134,18 @@ public class ProductServiceImpl implements ProductService {
         return result.success("",ret);
     }
 
+    @Override
+    public CustomResult<Object> init_add(String operater, String merchId) {
+        CustomResult<Object> result = new CustomResult<>();
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+
+        ret.put("sysKinds",sysPrdKindMapper.tree());
+
+        return result.success("初始成功",ret);
+    }
+
 
     @Override
     public CustomResult<Object> add(String operater, String merchId, RopProdcutAdd rop) {
@@ -155,9 +174,7 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setMerchId(merchId);
             d_PrdSpu.setName(rop.getName());
             d_PrdSpu.setPyIdx(CommonUtil.getPyIdxChar(rop.getName()));
-            d_PrdSpu.setKindId1(rop.getKindIds().get(0));
-            d_PrdSpu.setKindId2(rop.getKindIds().get(1));
-            d_PrdSpu.setKindId3(rop.getKindIds().get(2));
+            d_PrdSpu.setSysKindIds(CommonUtil.intArr2Str(rop.getSysKindIds()));
             d_PrdSpu.setCumCode(rop.getCumCode());
             d_PrdSpu.setCharTags(JsonUtil.getJson(rop.getCharTags()));
             d_PrdSpu.setBriefDes(rop.getBriefDes());
@@ -225,7 +242,7 @@ public class ProductServiceImpl implements ProductService {
     public CustomResult<Object> init_edit(String operater, String merchId,String spuId) {
         CustomResult<Object> result = new CustomResult<>();
         LumosSelective selective_PrdSpu=new LumosSelective();
-        selective_PrdSpu.setFields("Id,Name,CumCode,KindId1,KindId2,KindId3,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
+        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
         selective_PrdSpu.addWhere("MerchId",merchId);
         selective_PrdSpu.addWhere("SpuId",spuId);
 
@@ -243,12 +260,7 @@ public class ProductServiceImpl implements ProductService {
         ret.put("name",d_PrdSpu.getName());
         ret.put("cumCode",d_PrdSpu.getCumCode());
         ret.put("isUnityUpdate",false);
-        List<Integer> kindIds=new ArrayList<>();
-        kindIds.add(d_PrdSpu.getKindId1());
-        kindIds.add(d_PrdSpu.getKindId2());
-        kindIds.add(d_PrdSpu.getKindId3());
-
-        ret.put("kindIds",kindIds);
+        ret.put("sysKindIds",CommonUtil.intStr2Arr(d_PrdSpu.getSysKindIds()));
         ret.put("specItems",JsonUtil.toObject(d_PrdSpu.getSpecItems()));
         ret.put("displayImgUrls",JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls()));
         ret.put("charTags",JsonUtil.toObject(d_PrdSpu.getCharTags()));
@@ -270,7 +282,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ret.put("skus",m_Skus);
-
+        ret.put("sysKinds",sysPrdKindMapper.tree());
         return result.success("初始成功",ret);
     }
 
@@ -300,9 +312,7 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setId(rop.getId());
             d_PrdSpu.setName(rop.getName());
             d_PrdSpu.setPyIdx(CommonUtil.getPyIdxChar(rop.getName()));
-            d_PrdSpu.setKindId1(rop.getKindIds().get(0));
-            d_PrdSpu.setKindId2(rop.getKindIds().get(1));
-            d_PrdSpu.setKindId3(rop.getKindIds().get(2));
+            d_PrdSpu.setSysKindIds(CommonUtil.intArr2Str(rop.getSysKindIds()));
             d_PrdSpu.setCumCode(rop.getCumCode());
             d_PrdSpu.setCharTags(JsonUtil.getJson(rop.getCharTags()));
             d_PrdSpu.setBriefDes(rop.getBriefDes());
@@ -470,4 +480,12 @@ public class ProductServiceImpl implements ProductService {
             return result.fail("保存失败,服务器异常");
         }
     }
+
+
+    private FieldModel getSysKinds(String sysKinds) {
+        FieldModel model = new FieldModel("1,2,3", "图书");
+
+        return model;
+    }
+
 }

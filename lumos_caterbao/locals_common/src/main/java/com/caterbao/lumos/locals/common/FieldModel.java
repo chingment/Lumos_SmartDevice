@@ -1,23 +1,23 @@
 package com.caterbao.lumos.locals.common;
 
 public class FieldModel {
-    private int value;
+    private Object value;
     private String text;
 
     public FieldModel(){
 
     }
 
-    public  FieldModel(int value,String text) {
+    public  FieldModel(Object value,String text) {
         this.value = value;
         this.text = text;
     }
 
-    public int getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

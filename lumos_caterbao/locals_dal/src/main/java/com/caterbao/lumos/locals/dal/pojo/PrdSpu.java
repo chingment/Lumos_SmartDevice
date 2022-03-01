@@ -6,9 +6,7 @@ public class PrdSpu {
     private String id;
     private String merchId;
     private String cumCode;
-    private int kindId1;
-    private int kindId2;
-    private int kindId3;
+    private String sysKindIds;
     private String name;
     private String pyIdx;
     private String charTags;
@@ -46,28 +44,12 @@ public class PrdSpu {
         this.cumCode = cumCode;
     }
 
-    public int getKindId1() {
-        return kindId1;
+    public String getSysKindIds() {
+        return sysKindIds;
     }
 
-    public void setKindId1(int kindId1) {
-        this.kindId1 = kindId1;
-    }
-
-    public int getKindId2() {
-        return kindId2;
-    }
-
-    public void setKindId2(int kindId2) {
-        this.kindId2 = kindId2;
-    }
-
-    public int getKindId3() {
-        return kindId3;
-    }
-
-    public void setKindId3(int kindId3) {
-        this.kindId3 = kindId3;
+    public void setSysKindIds(String sysKindIds) {
+        this.sysKindIds = sysKindIds;
     }
 
     public String getName() {

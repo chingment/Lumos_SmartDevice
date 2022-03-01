@@ -8,6 +8,14 @@ export function list(data) {
   })
 }
 
+export function init_add(params) {
+  return request({
+    url: '/product/init_add',
+    method: 'get',
+    params
+  })
+}
+
 export function add(data) {
   return request({
     url: '/product/add',
@@ -42,6 +50,7 @@ export function init_edit(params) {
 
 export default {
   list: list,
+  init_add: init_add,
   add: add,
   init_edit: init_edit,
   edit: edit,
