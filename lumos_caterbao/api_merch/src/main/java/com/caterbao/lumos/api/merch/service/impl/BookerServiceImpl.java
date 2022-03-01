@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopBookerBorrowList;
+import com.caterbao.lumos.api.merch.rop.RopBookerDeviceFeedback;
 import com.caterbao.lumos.api.merch.rop.RopBookerRenewList;
 import com.caterbao.lumos.api.merch.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
@@ -8,6 +9,8 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -21,10 +24,16 @@ import java.util.List;
 @Service
 public class BookerServiceImpl implements BookerService {
 
+    private BookBorrowFlowMapper bookBorrowFlowMapper;;
+
     private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
 
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
 
+    @Autowired
+    public void setBookBorrowFlowMapper(BookBorrowFlowMapper bookBorrowFlowMapper) {
+        this.bookBorrowFlowMapper = bookBorrowFlowMapper;
+    }
 
     @Autowired
     public void setBookBorrowFlowDataMapper(BookBorrowFlowDataMapper bookBorrowFlowDataMapper) {
@@ -94,4 +103,56 @@ public class BookerServiceImpl implements BookerService {
     public CustomResult<Object> renewList(String operater, String merchId, RopBookerRenewList rop) {
         return null;
     }
+
+    @Override
+    public CustomResult<Object> deviceFeedback(String operater, String merchId, RopBookerDeviceFeedback rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+
+        selective.addWhere("MerchId",merchId);
+
+        List<BookBorrowFlow> d_BookBorrowFlows = bookBorrowFlowMapper.find(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (BookBorrowFlow  d_BookBorrowFlow :
+                d_BookBorrowFlows ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_BookBorrowFlow.getId());
+            item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlow.getIdentityType()));
+            item.put("clientUserId","");
+            item.put("clientFullName","");
+            item.put("cabinetId",d_BookBorrowFlow.getCabinetId());
+            item.put("slotId",d_BookBorrowFlow.getSlotId());
+            item.put("openActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getOpenActionTime()));
+            item.put("openActionCode",d_BookBorrowFlow.getOpenActionCode());
+            item.put("openActionResult",d_BookBorrowFlow.getOpenActionResult());
+            item.put("closeActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getCloseActionTime()));
+            item.put("closeActionCode",d_BookBorrowFlow.getCloseActionCode());
+            item.put("closeActionResult",d_BookBorrowFlow.getCloseActionResult());
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return result.success("",ret);
+    }
+
 }

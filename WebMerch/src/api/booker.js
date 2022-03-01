@@ -8,6 +8,15 @@ export function borrowList(data) {
   })
 }
 
+export function deviceFeedback(data) {
+  return request({
+    url: '/booker/device/feedback',
+    method: 'post',
+    data
+  })
+}
+
 export default {
-  borrowList: borrowList
+  borrowList: borrowList,
+  deviceFeedback: deviceFeedback
 }

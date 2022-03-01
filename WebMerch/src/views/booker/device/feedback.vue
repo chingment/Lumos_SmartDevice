@@ -22,12 +22,7 @@
     >
       <el-table-column label="业务号" fixed="left" align="left" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.flowId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="书名" align="left" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.skuName }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="借阅者" align="left" width="120">
@@ -40,29 +35,29 @@
           <span>{{ scope.row.identityType.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="借阅方式" align="left" width="120">
+      <el-table-column label="开柜时间" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowWay.text }}</span>
+          <span>{{ scope.row.openActionTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="借阅时间" align="left" width="160">
+      <el-table-column label="开柜结果" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowTime }}</span>
+          <span>{{ scope.row.openActionResult }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="归还方式" align="left" width="120">
+      <el-table-column label="关柜时间" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowWay.text }}</span>
+          <span>{{ scope.row.closeActionTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="归还时间" align="left" mwidth="160">
+      <el-table-column label="关柜结果" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.returnTime }}</span>
+          <span>{{ scope.row.closeActionResult }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" fixed="right" align="left" width="120">
         <template slot-scope="scope">
-          <el-tag :type="getBorrowStatusColor(scope.row.borrowStatus.value)">{{ scope.row.borrowStatus.text }}</el-tag>
+          <span>{{ scope.row.closeActionResult }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
@@ -80,11 +75,11 @@
 </template>
 
 <script>
-import { borrowList } from '@/api/booker'
+import { deviceFeedback } from '@/api/booker'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'BookerBorrowList',
+  name: 'BookerDeviceFeedback',
   components: { Pagination },
   data() {
     return {
@@ -115,7 +110,7 @@ export default {
     onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      borrowList(this.listQuery).then(res => {
+      deviceFeedback(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }
