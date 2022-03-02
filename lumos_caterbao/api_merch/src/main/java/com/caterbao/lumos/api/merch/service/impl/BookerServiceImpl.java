@@ -7,6 +7,7 @@ import com.caterbao.lumos.api.merch.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PageResult;
+import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
@@ -75,6 +76,7 @@ public class BookerServiceImpl implements BookerService {
             item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlowData.getIdentityType()));
             item.put("clientUserId","");
             item.put("clientFullName","");
+            item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlowData.getDeviceId(),d_BookBorrowFlowData.getDeviceCumCode()));
             item.put("skuCumCode",d_BookBorrowFlowData.getSkuCumCode());
             item.put("skuName",d_BookBorrowFlowData.getSkuName());
             item.put("borrowWay",bizBookerService.getBorrowWay(d_BookBorrowFlowData.getBorrowWay()));
@@ -133,6 +135,7 @@ public class BookerServiceImpl implements BookerService {
             item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlow.getIdentityType()));
             item.put("clientUserId","");
             item.put("clientFullName","");
+            item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlow.getDeviceId(),d_BookBorrowFlow.getDeviceCumCode()));
             item.put("cabinetId",d_BookBorrowFlow.getCabinetId());
             item.put("slotId",d_BookBorrowFlow.getSlotId());
             item.put("openActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getOpenActionTime()));

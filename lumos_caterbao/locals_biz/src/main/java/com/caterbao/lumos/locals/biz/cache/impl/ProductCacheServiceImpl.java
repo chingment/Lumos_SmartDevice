@@ -13,12 +13,15 @@ import com.caterbao.lumos.locals.dal.pojo.PrdSkuRfId;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -243,16 +246,33 @@ class ProductCacheServiceImpl implements ProductCacheService {
 
         SpuInfo r_Spu = getSpuInfo(merchId, spuId);
 
-        if(r_Spu!=null) {
+        if (r_Spu != null) {
             if (r_Spu.getSpecIdxSkus() != null) {
-                for (SpecIdxSkuModel specIdxSku: r_Spu.getSpecIdxSkus()  ) {
+                for (SpecIdxSkuModel specIdxSku : r_Spu.getSpecIdxSkus()) {
                     redisTemplate.opsForHash().delete(CACHE_KEY_SKU_INFO_PRE + ":" + merchId, specIdxSku.getSkuId());
-                    //redisTemplate.opsForHash().get(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId,"*:*:"+specIdxSku.getSkuId());
+
+
+                    Cursor<Map.Entry<Object,Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*:*:"+specIdxSku.getSkuId()).build());
+                    while (cursor.hasNext()){
+                        Map.Entry<Object,Object> entry = cursor.next();
+                        redisTemplate.opsForHash().delete(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId,entry.getKey());
+                    }
+
+
+
                 }
             }
         }
 
         redisTemplate.opsForHash().delete(CACHE_KEY_SPU_INFO_PRE + ":" + merchId, spuId);
-        //redisTemplate.opsForHash().delete(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId,"*:*:"+spuId);
+
+
+        Cursor<Map.Entry<Object,Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*:*:"+spuId).build());
+        while (cursor.hasNext()){
+            Map.Entry<Object,Object> entry = cursor.next();
+            redisTemplate.opsForHash().delete(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId,entry.getKey());
+        }
+
+
     }
 }

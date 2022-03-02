@@ -9,6 +9,7 @@ public class BookBorrowFlowData {
     private String storeId;
     private String shopId;
     private String deviceId;
+    private String deviceCumCode;
     private String cabinetId;
     private String slotId;
     private String clientUserId;
@@ -77,6 +78,14 @@ public class BookBorrowFlowData {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getDeviceCumCode() {
+        return deviceCumCode;
+    }
+
+    public void setDeviceCumCode(String deviceCumCode) {
+        this.deviceCumCode = deviceCumCode;
     }
 
     public String getCabinetId() {

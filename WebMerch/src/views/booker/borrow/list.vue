@@ -1,16 +1,48 @@
 <template>
   <div id="adminuser_list">
     <div class="filter-container">
-      <el-row :gutter="12">
-        <el-col :xs="24" :sm="12" :lg="6" :xl="4" style="margin-bottom:20px">
-          <el-input v-model="listQuery.deviceCode" style="width: 100%" placeholder="卡号" clearable class="filter-item" />
-        </el-col>
-        <el-col :xs="24" :sm="12" :lg="6" :xl="4" style="margin-bottom:20px">
-          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
-            查询
-          </el-button>
-        </el-col>
-      </el-row>
+      <el-form ref="form" label-width="120px" class="query-box">
+        <el-form-item label="业务号">
+          <el-input v-model="listQuery.flowId" clearable placeholder="业务号" style="max-width: 300px;" class="filter-item" />
+        </el-form-item>
+        <el-form-item label="书名">
+          <el-input v-model="listQuery.shuName" clearable placeholder="书名" style="max-width: 300px;" class="filter-item" />
+        </el-form-item>
+        <el-form-item label="设备">
+          <el-input v-model="listQuery.deviceCode" clearable placeholder="设备编码" style="max-width: 300px;" class="filter-item" />
+        </el-form-item>
+        <el-form-item label="借阅时间">
+          <el-date-picker
+            v-model="listQuery.borrowTimeArea"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            align="right"
+            style="max-width: 400px;"
+          />
+        </el-form-item>
+        <el-form-item label="归还时间">
+          <el-date-picker
+            v-model="listQuery.returnTimeArea"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            align="right"
+            style="max-width: 400px;"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            @click="onFilter"
+          >查 询</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <el-table
       :key="listKey"
@@ -20,7 +52,7 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="业务号" fixed="left" align="left" width="100">
+      <el-table-column label="业务号" fixed="left" align="left" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.flowId }}</span>
         </template>
@@ -33,6 +65,11 @@
       <el-table-column label="借阅者" align="left" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.clientFullName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备编码" align="left" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.deviceCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="身份验证" align="left" width="120">
@@ -92,7 +129,11 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        deviceCode: undefined
+        deviceCode: undefined,
+        flowId: '',
+        skuName: '',
+        borrowTimeArea: ['', ''],
+        returnTimeArea: ['', '']
       },
       listKey: 's',
       listData: {
@@ -101,6 +142,33 @@ export default {
         pageSize: 0,
         totalPages: 0,
         totalSize: 0
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
       },
       isDesktop: this.$store.getters.isDesktop
     }

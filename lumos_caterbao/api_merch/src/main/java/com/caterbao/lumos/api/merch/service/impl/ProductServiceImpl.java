@@ -495,16 +495,21 @@ public class ProductServiceImpl implements ProductService {
             platformTransactionManager.commit(transaction);
             lock.unlock();
 
-            cacheFactory.getProduct().removeSpuInfo(merchId,rop.getId());
-            cacheFactory.getProduct().getSpuInfo(merchId,rop.getId());
-
-            return  result.success("保存成功");
+            result=result.success("保存成功");
         } catch (Exception ex) {
             platformTransactionManager.rollback(transaction);
             ex.printStackTrace();
             lock.unlock();
-            return result.fail("保存失败,服务器异常");
+            result = result.fail("保存失败,服务器异常");
         }
+
+        if(result.getCode()==1000) {
+            cacheFactory.getProduct().removeSpuInfo(merchId, rop.getId());
+            cacheFactory.getProduct().getSpuInfo(merchId, rop.getId());
+        }
+
+        return  result;
+
     }
 
     @Override

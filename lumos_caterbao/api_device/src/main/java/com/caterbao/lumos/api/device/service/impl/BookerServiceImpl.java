@@ -97,6 +97,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowFlow.setStoreId(d_MerchDevice.getStoreId());
         d_BookBorrowFlow.setShopId(d_MerchDevice.getShopId());
         d_BookBorrowFlow.setDeviceId(rop.getDeviceId());
+        d_BookBorrowFlow.setDeviceCumCode(d_MerchDevice.getCumCode());
         d_BookBorrowFlow.setCabinetId(rop.getCabinetId());
         d_BookBorrowFlow.setSlotId(rop.getSlotId());
         d_BookBorrowFlow.setClientUserId(rop.getClientUserId());
@@ -240,6 +241,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setStoreId(d_BookBorrowFlow.getStoreId());
                     d_BookBorrowFlowData.setShopId(d_BookBorrowFlow.getShopId());
                     d_BookBorrowFlowData.setDeviceId(d_BookBorrowFlow.getDeviceId());
+                    d_BookBorrowFlowData.setDeviceCumCode(d_BookBorrowFlow.getDeviceCumCode());
                     d_BookBorrowFlowData.setCabinetId(d_BookBorrowFlow.getCabinetId());
                     d_BookBorrowFlowData.setSlotId(d_BookBorrowFlow.getSlotId());
                     d_BookBorrowFlowData.setFlowId(d_BookBorrowFlow.getId());
