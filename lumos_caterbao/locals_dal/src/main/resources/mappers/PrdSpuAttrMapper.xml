@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.PrdSpuAttrMapper">
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.PrdSpuAttr" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from PrdSpuAttr where 1=1
+        <if test="where.SpuId != null">and SpuId =#{where.SpuId}</if>
+    </select>
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSpuAttr">
+  insert into PrdSpuAttr(id,spuId,kindId,attrId,attrValue)
+  values(#{id},#{spuId},#{kindId},#{attrId},#{attrValue})
+    </insert>
+    <delete id="deleteBySpuId" >
+delete  from PrdSpuAttr where SpuId=#{SpuId}
+    </delete>
+</mapper>

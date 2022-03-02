@@ -65,6 +65,20 @@
       </div>
       <div v-show="active===1">
         <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
+
+          <el-form-item
+            v-for="(sysKindAttr,index) in form.sysKindAttrs"
+            :key="index"
+            :label="sysKindAttr.name"
+            :prop="'sysKindAttrs.' + index + '.value'"
+            :rules="getAttrsRules(sysKindAttr)"
+          >
+            <el-input
+              v-model="sysKindAttr.value"
+              clearable
+            />
+          </el-form-item>
+
           <el-form-item label="规格商品" style="max-width:1000px">
             <table class="list-tb" cellpadding="0" cellspacing="0">
               <thead>
@@ -137,7 +151,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { edit, init_edit } from '@/api/product'
+import { edit, init_edit, getSysKindAttrs } from '@/api/product'
 import { strLen, isMoney } from '@/utils/commonUtil'
 import LmUpload from '@/components/Upload/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
@@ -158,7 +172,8 @@ export default {
         specItems: [],
         briefDes: '',
         displayImgUrls: [],
-        skus: []
+        skus: [],
+        sysKindAttrs: []
       },
       rules0: {
         name: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
@@ -242,7 +257,37 @@ export default {
         this.$refs['form0'].validate((valid) => {
           if (!valid) return
 
-          this.active += 1
+          this.loading = true
+          getSysKindAttrs({ ids: '' }).then(res => {
+            if (res.code === this.$code_suc) {
+              var d = res.data
+
+              var attrs = d.attrs
+              if (attrs == null) {
+                attrs = []
+              } else {
+                var sysKindAttrs = this.form.sysKindAttrs
+                if (sysKindAttrs != null && sysKindAttrs.length > 0) {
+                  for (var i = 0; i < sysKindAttrs.length; i++) {
+                    for (var j = 0; j < attrs.length; j++) {
+                      if (sysKindAttrs[i].id === attrs[j].id) {
+                        attrs[j].value = sysKindAttrs[i].value
+                      }
+                    }
+                  }
+                }
+              }
+
+              this.form.sysKindAttrs = attrs
+
+              this.active += 1
+            } else {
+              this.$message.error(res.msg)
+            }
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
         })
       } else if (this.active === 1) {
         this.$refs['form1'].validate((valid) => {
@@ -295,6 +340,9 @@ export default {
           })
         })
       }
+    },
+    getAttrsRules(item) {
+      return { required: item.required, message: item.name + '不能超过' + item.max + '个字符', trigger: 'blur', min: item.min, max: item.max }
     }
   }
 }

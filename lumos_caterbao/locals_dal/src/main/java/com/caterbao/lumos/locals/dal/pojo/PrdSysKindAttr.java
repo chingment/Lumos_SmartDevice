@@ -6,6 +6,9 @@ public class PrdSysKindAttr {
     private int kindId;
     private boolean isUse;
     private int priority;
+    private boolean required;
+    private int min;
+    private int max;
 
     public int getId() {
         return id;
@@ -45,5 +48,29 @@ public class PrdSysKindAttr {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
     }
 }

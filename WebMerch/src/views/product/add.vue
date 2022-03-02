@@ -82,13 +82,18 @@
       <div v-show="active===1">
         <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
 
-          <!-- <el-form-item
-            v-for="(item,x) in sysKindAttrs"
-            :key="x"
-            :label="item.name"
+          <el-form-item
+            v-for="(sysKindAttr,index) in form.sysKindAttrs"
+            :key="index"
+            :label="sysKindAttr.name"
+            :prop="'sysKindAttrs.' + index + '.value'"
+            :rules="getAttrsRules(sysKindAttr)"
           >
-            <el-input clearable  />
-          </el-form-item> -->
+            <el-input
+              v-model="sysKindAttr.value"
+              clearable
+            />
+          </el-form-item>
 
           <el-form-item v-show="!isOpenAddMultiSpecs" label="默认销售价" prop="singleSkuSalePrice">
             <el-input v-model="form.singleSkuSalePrice" clearable style="width:160px">
@@ -288,7 +293,8 @@ export default {
         singleSkuCumCode: '',
         singleSkuBarCode: '',
         singleSkuSalePrice: 0,
-        singleSkuSpecDes: ''
+        singleSkuSpecDes: '',
+        sysKindAttrs: []
       },
       rules0: {
         name: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
@@ -296,7 +302,7 @@ export default {
         singleSkuCumCode: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         singleSkuBarCode: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         sysKindIds: [{ type: 'array', required: true, message: '请选择一个商品分类', min: 1, max: 3 }],
-        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }],
+        displayImgUrls: [{ type: 'array', required: false, message: '至少上传一张,且必须少于5张', max: 4 }],
         charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }]
       },
       rules1: {
@@ -319,7 +325,6 @@ export default {
       charTagsInputValue: '',
       active: 0,
       skus: [],
-      sysKindAttrs: [],
       uploadFileHeaders: {},
       uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL
     }
@@ -521,7 +526,23 @@ export default {
             if (res.code === this.$code_suc) {
               var d = res.data
 
-              this.sysKindAttrs = d.attrs
+              var attrs = d.attrs
+              if (attrs == null) {
+                attrs = []
+              } else {
+                var sysKindAttrs = this.form.sysKindAttrs
+                if (sysKindAttrs != null && sysKindAttrs.length > 0) {
+                  for (var i = 0; i < sysKindAttrs.length; i++) {
+                    for (var j = 0; j < attrs.length; j++) {
+                      if (sysKindAttrs[i].id === attrs[j].id) {
+                        attrs[j].value = sysKindAttrs[i].value
+                      }
+                    }
+                  }
+                }
+              }
+
+              this.form.sysKindAttrs = attrs
 
               this.active += 1
             } else {
@@ -594,6 +615,7 @@ export default {
           _form.specItems = this.multiSpecsItems
           _form.charTags = this.form.charTags
           _form.skus = this.skus
+          _form.sysKindAttrs = this.form.sysKindAttrs
 
           MessageBox.confirm('确定要保存', '提示', {
             confirmButtonText: '确定',
@@ -615,6 +637,9 @@ export default {
           })
         })
       }
+    },
+    getAttrsRules(item) {
+      return { required: item.required, message: item.name + '不能超过' + item.max + '个字符', trigger: 'blur', min: item.min, max: item.max }
     }
   }
 }

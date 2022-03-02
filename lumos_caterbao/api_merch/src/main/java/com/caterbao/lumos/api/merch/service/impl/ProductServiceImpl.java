@@ -4,20 +4,15 @@ import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
 import com.caterbao.lumos.api.merch.rop.RopProdcutDelete;
 import com.caterbao.lumos.api.merch.rop.RopProdcutEdit;
 import com.caterbao.lumos.api.merch.rop.RopProductList;
+import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper;
-import com.caterbao.lumos.locals.dal.mapper.PrdSpuMapper;
-import com.caterbao.lumos.locals.dal.mapper.PrdSysKindAttrMapper;
-import com.caterbao.lumos.locals.dal.mapper.PrdSysKindMapper;
-import com.caterbao.lumos.locals.dal.pojo.PrdSku;
-import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
-import com.caterbao.lumos.locals.dal.pojo.PrdSysKind;
-import com.caterbao.lumos.locals.dal.pojo.PrdSysKindAttr;
+import com.caterbao.lumos.locals.dal.mapper.*;
+import com.caterbao.lumos.locals.dal.pojo.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     private PrdSpuMapper prdSpuMapper;
     private PrdSkuMapper prdSkuMapper;
+    private PrdSpuAttrMapper prdSpuAttrMapper;
     private PlatformTransactionManager platformTransactionManager;
     private TransactionDefinition transactionDefinition;
     private CacheFactory cacheFactory;
@@ -77,6 +73,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired(required = false)
     public void setPrdSysKindAttrMapper(PrdSysKindAttrMapper prdSysKindAttrMapper) {
         this.prdSysKindAttrMapper = prdSysKindAttrMapper;
+    }
+
+    @Autowired(required = false)
+    public void setPrdSpuAttrMapper(PrdSpuAttrMapper prdSpuAttrMapper) {
+        this.prdSpuAttrMapper = prdSpuAttrMapper;
     }
 
     private Lock lock = new ReentrantLock();
@@ -201,6 +202,23 @@ public class ProductServiceImpl implements ProductService {
                 return result.fail("保存失败");
             }
 
+            //
+            List<KindAttrModel> sysKindAttrs=rop.getSysKindAttrs();
+            if(sysKindAttrs!=null) {
+                for (KindAttrModel attr : sysKindAttrs) {
+                    PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
+                    d_PrdSpuAttr.setId(IdWork.buildLongId());
+                    d_PrdSpuAttr.setKindId(attr.getKindId());
+                    d_PrdSpuAttr.setSpuId(d_PrdSpu.getId());
+                    d_PrdSpuAttr.setAttrId(attr.getId());
+                    d_PrdSpuAttr.setAttrValue(attr.getValue());
+                    if (prdSpuAttrMapper.insert(d_PrdSpuAttr) <= 0) {
+                        lock.unlock();
+                        return result.fail("保存失败");
+                    }
+                }
+            }
+
             for (SkuModel sku : rop.getSkus()) {
 
 
@@ -250,49 +268,83 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CustomResult<Object> init_edit(String operater, String merchId,String spuId) {
         CustomResult<Object> result = new CustomResult<>();
-        LumosSelective selective_PrdSpu=new LumosSelective();
+        LumosSelective selective_PrdSpu = new LumosSelective();
         selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
-        selective_PrdSpu.addWhere("MerchId",merchId);
-        selective_PrdSpu.addWhere("SpuId",spuId);
+        selective_PrdSpu.addWhere("MerchId", merchId);
+        selective_PrdSpu.addWhere("SpuId", spuId);
 
-        PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective_PrdSpu);
+        PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
 
-        LumosSelective selective_PrdSkus=new LumosSelective();
+        LumosSelective selective_PrdSkus = new LumosSelective();
         selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
-        selective_PrdSkus.addWhere("MerchId",merchId);
-        selective_PrdSkus.addWhere("SpuId",spuId);
+        selective_PrdSkus.addWhere("MerchId", merchId);
+        selective_PrdSkus.addWhere("SpuId", spuId);
 
-        List<PrdSku> d_PrdSkus=prdSkuMapper.find(selective_PrdSkus);
+        List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSkus);
 
-        HashMap<String,Object> ret=new HashMap<>();
-        ret.put("id",d_PrdSpu.getId());
-        ret.put("name",d_PrdSpu.getName());
-        ret.put("cumCode",d_PrdSpu.getCumCode());
-        ret.put("isUnityUpdate",false);
-        ret.put("sysKindIds",CommonUtil.intStr2Arr(d_PrdSpu.getSysKindIds()));
-        ret.put("specItems",JsonUtil.toObject(d_PrdSpu.getSpecItems()));
-        ret.put("displayImgUrls",JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls()));
-        ret.put("charTags",JsonUtil.toObject(d_PrdSpu.getCharTags()));
-        ret.put("briefDes",d_PrdSpu.getBriefDes());
-        ret.put("detailsDes",JsonUtil.toObject(d_PrdSpu.getDetailsDes()));
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("id", d_PrdSpu.getId());
+        ret.put("name", d_PrdSpu.getName());
+        ret.put("cumCode", d_PrdSpu.getCumCode());
+        ret.put("isUnityUpdate", false);
+        ret.put("sysKindIds", CommonUtil.intStr2Arr(d_PrdSpu.getSysKindIds()));
+        ret.put("specItems", JsonUtil.toObject(d_PrdSpu.getSpecItems()));
+        ret.put("displayImgUrls", JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls()));
+        ret.put("charTags", JsonUtil.toObject(d_PrdSpu.getCharTags()));
+        ret.put("briefDes", d_PrdSpu.getBriefDes());
+        ret.put("detailsDes", JsonUtil.toObject(d_PrdSpu.getDetailsDes()));
 
-        List<Object> m_Skus=new ArrayList<>();
+        List<Object> m_Skus = new ArrayList<>();
 
-        for (PrdSku d_PrdSku: d_PrdSkus ) {
+        for (PrdSku d_PrdSku : d_PrdSkus) {
 
             HashMap<String, Object> m_Sku = new HashMap<>();
             m_Sku.put("id", d_PrdSku.getId());
             m_Sku.put("cumCode", d_PrdSku.getCumCode());
-            m_Sku.put("salePrice",d_PrdSku.getSalePrice());
-            m_Sku.put("barCode",d_PrdSku.getBarCode());
-            m_Sku.put("isOffSell",false);
-            m_Sku.put("specDes",JsonUtil.toObject(d_PrdSku.getSpecDes()));
+            m_Sku.put("salePrice", d_PrdSku.getSalePrice());
+            m_Sku.put("barCode", d_PrdSku.getBarCode());
+            m_Sku.put("isOffSell", false);
+            m_Sku.put("specDes", JsonUtil.toObject(d_PrdSku.getSpecDes()));
             m_Skus.add(m_Sku);
         }
 
-        ret.put("skus",m_Skus);
+        ret.put("skus", m_Skus);
+
+        LumosSelective selective_PrdSpuAttrs = new LumosSelective();
+        selective_PrdSpuAttrs.setFields("*");
+        selective_PrdSpuAttrs.addWhere("SpuId", spuId);
+
+        List<Object> m_SysKindAttrs = new ArrayList<>();
+
+        List<PrdSpuAttr> d_PrdSpuAttrs = prdSpuAttrMapper.find(selective_PrdSpuAttrs);
+
+        for (PrdSpuAttr d_PrdSpuAttr : d_PrdSpuAttrs) {
+
+            LumosSelective selective_PrdSysKindAttrs = new LumosSelective();
+            selective_PrdSysKindAttrs.setFields("*");
+            selective_PrdSysKindAttrs.addWhere("AttrId",String.valueOf(d_PrdSpuAttr.getAttrId()));
+
+            PrdSysKindAttr d_PrdSysKindAttr = prdSysKindAttrMapper.findOne(selective_PrdSysKindAttrs);
+
+            if (d_PrdSysKindAttr != null) {
+                HashMap<String, Object> m_SysKindAttr = new HashMap<>();
+                m_SysKindAttr.put("id", d_PrdSpuAttr.getAttrId());
+                m_SysKindAttr.put("name", d_PrdSysKindAttr.getName());
+                m_SysKindAttr.put("kindId", d_PrdSpuAttr.getKindId());
+                m_SysKindAttr.put("value", d_PrdSpuAttr.getAttrValue());
+                m_SysKindAttr.put("min",d_PrdSysKindAttr.getMin());
+                m_SysKindAttr.put("max",d_PrdSysKindAttr.getMax());
+                m_SysKindAttr.put("required",d_PrdSysKindAttr.isRequired());
+                m_SysKindAttrs.add(m_SysKindAttr);
+            }
+
+        }
+
+        ret.put("sysKindAttrs", m_SysKindAttrs);
+
         ret.put("sysKinds", prdSysKindMapper.tree());
-        return result.success("初始成功",ret);
+
+        return result.success("初始成功", ret);
     }
 
     @Override
@@ -328,8 +380,26 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
             d_PrdSpu.setDetailsDes(JsonUtil.getJson(rop.getDetailsDes()));
 
-            List<SpecItemModel> specItems=new ArrayList<>();
 
+            prdSpuAttrMapper.deleteBySpuId(d_PrdSpu.getId());
+
+            List<KindAttrModel> sysKindAttrs=rop.getSysKindAttrs();
+            if(sysKindAttrs!=null) {
+                for (KindAttrModel attr : sysKindAttrs) {
+                    PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
+                    d_PrdSpuAttr.setId(IdWork.buildLongId());
+                    d_PrdSpuAttr.setKindId(attr.getKindId());
+                    d_PrdSpuAttr.setSpuId(d_PrdSpu.getId());
+                    d_PrdSpuAttr.setAttrId(attr.getId());
+                    d_PrdSpuAttr.setAttrValue(attr.getValue());
+                    if (prdSpuAttrMapper.insert(d_PrdSpuAttr) <= 0) {
+                        lock.unlock();
+                        return result.fail("保存失败");
+                    }
+                }
+            }
+
+            List<SpecItemModel> specItems=new ArrayList<>();
 
             for (SkuModel sku: rop.getSkus()) {
                 for (SpecDesModel specDes : sku.getSpecDes()) {
@@ -506,7 +576,12 @@ public class ProductServiceImpl implements ProductService {
         for (PrdSysKindAttr d_PrdSysKindAttr : d_PrdSysKindAttrs) {
             HashMap<String, Object> attr = new HashMap<>();
             attr.put("id", d_PrdSysKindAttr.getId());
+            attr.put("kindId", 1713);
             attr.put("name", d_PrdSysKindAttr.getName());
+            attr.put("min", d_PrdSysKindAttr.getMin());
+            attr.put("max", d_PrdSysKindAttr.getMax());
+            attr.put("required", d_PrdSysKindAttr.isRequired());
+            attr.put("value", null);
             attrs.add(attr);
         }
 

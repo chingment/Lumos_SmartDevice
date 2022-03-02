@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
+import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
 import com.caterbao.lumos.locals.common.ImgVo;
 import com.caterbao.lumos.locals.common.SpecItemModel;
 
@@ -16,6 +17,7 @@ public class RopProdcutAdd {
     private List<SpecItemModel> specItems;
     private List<SkuModel> skus;
     private String briefDes;
+    private List<KindAttrModel> sysKindAttrs;
 
     public String getName() {
         return name;
@@ -87,5 +89,13 @@ public class RopProdcutAdd {
 
     public void setBriefDes(String briefDes) {
         this.briefDes = briefDes;
+    }
+
+    public List<KindAttrModel> getSysKindAttrs() {
+        return sysKindAttrs;
+    }
+
+    public void setSysKindAttrs(List<KindAttrModel> sysKindAttrs) {
+        this.sysKindAttrs = sysKindAttrs;
     }
 }

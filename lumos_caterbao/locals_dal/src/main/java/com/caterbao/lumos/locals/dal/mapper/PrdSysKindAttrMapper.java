@@ -10,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface PrdSysKindAttrMapper {
+    PrdSysKindAttr findOne(LumosSelective selective);
     List<PrdSysKindAttr> find(LumosSelective selective);
 }
