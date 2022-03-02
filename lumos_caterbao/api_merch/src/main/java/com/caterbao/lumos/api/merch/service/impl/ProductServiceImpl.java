@@ -256,6 +256,9 @@ public class ProductServiceImpl implements ProductService {
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
+
+            cacheFactory.getProduct().getSpuInfo(merchId,d_PrdSpu.getId());
+
             return  result.success("保存成功");
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
@@ -493,6 +496,7 @@ public class ProductServiceImpl implements ProductService {
             lock.unlock();
 
             cacheFactory.getProduct().removeSpuInfo(merchId,rop.getId());
+            cacheFactory.getProduct().getSpuInfo(merchId,rop.getId());
 
             return  result.success("保存成功");
         } catch (Exception ex) {

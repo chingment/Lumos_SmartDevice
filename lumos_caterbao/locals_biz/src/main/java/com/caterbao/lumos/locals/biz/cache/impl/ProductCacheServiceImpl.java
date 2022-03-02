@@ -19,14 +19,16 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 class ProductCacheServiceImpl implements ProductCacheService {
 
     private String CACHE_KEY_SKU_RFID_PRE="prd_sku_rfid";
     private String CACHE_KEY_SKU_INFO_PRE="prd_sku_info";
+    private String CACHE_KEY_SKU_SKEY_PRE="prd_sku_skey";
     private String CACHE_KEY_SPU_INFO_PRE="prd_spu_info";
-
+    private String CACHE_KEY_SPU_SKEY_PRE="prd_spu_skey";
     private PrdSkuMapper prdSkuMapper;
     private PrdSpuMapper prdSpuMapper;
     private PrdSkuRfIdMapper prdSkuRfIdMapper;
@@ -112,7 +114,14 @@ class ProductCacheServiceImpl implements ProductCacheService {
             if (d_PrdSku == null)
                 return skuInfo;
 
-            SpuInfo r_SpuInfo=getSpuInfo(merchId,d_PrdSku.getSpuId());
+            LumosSelective selective_PrdSpu = new LumosSelective();
+            selective_PrdSpu.setFields("*");
+            selective_PrdSpu.addWhere("MerchId", merchId);
+            selective_PrdSpu.addWhere("SpuId", d_PrdSku.getSpuId());
+            PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
+
+            if (d_PrdSpu == null)
+                return skuInfo;
 
             skuInfo.setId(d_PrdSku.getId());
             skuInfo.setName(d_PrdSku.getName());
@@ -121,7 +130,32 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo.setSpuId(d_PrdSku.getSpuId());
             skuInfo.setBarCode(d_PrdSku.getBarCode());
             skuInfo.setCumCode(d_PrdSku.getCumCode());
-            skuInfo.setImgUrl(r_SpuInfo.getDisplayImgUrls().get(0).getUrl());
+
+            List<ImgVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<ImgVo>>() {
+            });
+            if (displayImgUrls != null && displayImgUrls.size() > 0) {
+                skuInfo.setImgUrl(displayImgUrls.get(0).getUrl());
+            }
+
+            skuInfo.setSpecIdx(d_PrdSku.getSpecIdx());
+
+
+            if (!CommonUtil.isEmpty(skuInfo.getPyIdx())) {
+                redisTemplate.opsForHash().put(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, "BR:" + skuInfo.getBarCode()+":"+skuId, skuId);
+            }
+
+            if (!CommonUtil.isEmpty(skuInfo.getPyIdx())) {
+                redisTemplate.opsForHash().put(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, "PY:" + skuInfo.getPyIdx()+":"+skuId, skuId);
+            }
+
+            if (!CommonUtil.isEmpty(skuInfo.getName())) {
+                redisTemplate.opsForHash().put(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, "NA:" + skuInfo.getName()+":"+skuId, skuId);
+            }
+
+            if (!CommonUtil.isEmpty(skuInfo.getCumCode())) {
+                redisTemplate.opsForHash().put(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, "CC:" + skuInfo.getCumCode()+":"+skuId, skuId);
+            }
+
 
             redisTemplate.opsForHash().put(CACHE_KEY_SKU_INFO_PRE + ":" + merchId, skuId, JsonUtil.getJson(skuInfo));
 
@@ -129,7 +163,6 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo = JsonUtil.toObject(r_SkuInfo.toString(), new TypeReference<SkuInfo>() {
             });
         }
-
 
         return skuInfo;
     }
@@ -171,6 +204,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
                 List<SpecIdxSkuModel> specIdxSkus = new ArrayList<>();
 
                 for (PrdSku prdSku : d_PrdSkus) {
+                    SkuInfo r_SkuInfo = getSkuInfo(merchId, prdSku.getId());
                     SpecIdxSkuModel specIdxSku = new SpecIdxSkuModel();
                     specIdxSku.setSkuId(prdSku.getId());
                     specIdxSku.setSpecIdx(prdSku.getSpecIdx());
@@ -178,6 +212,18 @@ class ProductCacheServiceImpl implements ProductCacheService {
                 }
 
                 spuInfo.setSpecIdxSkus(specIdxSkus);
+            }
+
+            if(!CommonUtil.isEmpty(spuInfo.getPyIdx())){
+                redisTemplate.opsForHash().put(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, "PY:"+spuInfo.getPyIdx()+":"+spuId, spuId);
+            }
+
+            if(!CommonUtil.isEmpty(spuInfo.getName())){
+                redisTemplate.opsForHash().put(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, "NA:"+spuInfo.getName()+":"+spuId, spuId);
+            }
+
+            if(!CommonUtil.isEmpty(spuInfo.getCumCode())){
+                redisTemplate.opsForHash().put(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, "CC:"+spuInfo.getCumCode()+":"+spuId, spuId);
             }
 
             redisTemplate.opsForHash().put(CACHE_KEY_SPU_INFO_PRE + ":" + merchId, spuId, JsonUtil.getJson(spuInfo));
@@ -191,6 +237,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
         return spuInfo;
     }
 
+
     @Override
     public void removeSpuInfo(String merchId,String spuId) {
 
@@ -200,10 +247,12 @@ class ProductCacheServiceImpl implements ProductCacheService {
             if (r_Spu.getSpecIdxSkus() != null) {
                 for (SpecIdxSkuModel specIdxSku: r_Spu.getSpecIdxSkus()  ) {
                     redisTemplate.opsForHash().delete(CACHE_KEY_SKU_INFO_PRE + ":" + merchId, specIdxSku.getSkuId());
+                    //redisTemplate.opsForHash().get(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId,"*:*:"+specIdxSku.getSkuId());
                 }
-
             }
         }
+
         redisTemplate.opsForHash().delete(CACHE_KEY_SPU_INFO_PRE + ":" + merchId, spuId);
+        //redisTemplate.opsForHash().delete(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId,"*:*:"+spuId);
     }
 }

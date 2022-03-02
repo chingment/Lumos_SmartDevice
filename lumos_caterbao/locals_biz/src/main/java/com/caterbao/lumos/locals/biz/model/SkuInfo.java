@@ -10,6 +10,7 @@ public class SkuInfo  implements Serializable {
     private String barCode;
     private String pyIdx;
     private String imgUrl;
+    private String specIdx;
     private float salePrice;
 
     public String getId() {
@@ -74,5 +75,13 @@ public class SkuInfo  implements Serializable {
 
     public void setSalePrice(float salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public String getSpecIdx() {
+        return specIdx;
+    }
+
+    public void setSpecIdx(String specIdx) {
+        this.specIdx = specIdx;
     }
 }
