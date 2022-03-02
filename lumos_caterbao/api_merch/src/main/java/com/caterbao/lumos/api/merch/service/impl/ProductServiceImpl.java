@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         int pageSize = rop.getPageSize();
 
 
-        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
         LumosSelective selective_PrdSpu=new LumosSelective();
         selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,DisplayImgUrls,CreateTime");
