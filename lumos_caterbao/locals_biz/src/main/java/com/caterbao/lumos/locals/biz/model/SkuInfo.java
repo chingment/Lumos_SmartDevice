@@ -1,6 +1,9 @@
 package com.caterbao.lumos.locals.biz.model;
 
+import com.caterbao.lumos.locals.common.SpecDesModel;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class SkuInfo  implements Serializable {
     private String id;
@@ -11,6 +14,7 @@ public class SkuInfo  implements Serializable {
     private String pyIdx;
     private String imgUrl;
     private String specIdx;
+    private List<SpecDesModel> specDes;
     private float salePrice;
 
     public String getId() {
@@ -83,5 +87,13 @@ public class SkuInfo  implements Serializable {
 
     public void setSpecIdx(String specIdx) {
         this.specIdx = specIdx;
+    }
+
+    public List<SpecDesModel> getSpecDes() {
+        return specDes;
+    }
+
+    public void setSpecDes(List<SpecDesModel> specDes) {
+        this.specDes = specDes;
     }
 }

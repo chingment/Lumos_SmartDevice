@@ -134,7 +134,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo.setSpuId(d_PrdSku.getSpuId());
             skuInfo.setBarCode(d_PrdSku.getBarCode());
             skuInfo.setCumCode(d_PrdSku.getCumCode());
-
+            skuInfo.setSpecDes(JsonUtil.toObject(d_PrdSku.getSpecDes(),new TypeReference<List<SpecDesModel>>() {}));
             List<ImgVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<ImgVo>>() {
             });
             if (displayImgUrls != null && displayImgUrls.size() > 0) {
@@ -197,7 +197,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             spuInfo.setDetailsDes(JsonUtil.toObject(d_PrdSpu.getDetailsDes(), new TypeReference<List<ImgVo>>() {}));
             spuInfo.setDisplayImgUrls(JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<ImgVo>>() {}));
             spuInfo.setSpecItems(JsonUtil.toObject(d_PrdSpu.getSpecItems(), new TypeReference<List<SpecItemModel>>() {}));
-
+            spuInfo.setSysKindIds(d_PrdSpu.getSysKindIds());
             LumosSelective selective_PrdSku = new LumosSelective();
             selective_PrdSku.setFields("*");
             selective_PrdSku.addWhere("MerchId", merchId);

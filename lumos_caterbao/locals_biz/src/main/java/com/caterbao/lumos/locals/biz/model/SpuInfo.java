@@ -12,7 +12,7 @@ public class SpuInfo implements Serializable {
     private String cumCode;
     private String name;
     private List<ImgVo>  displayImgUrls;
-    private List<Integer> kindId;
+    private String sysKindIds;
     private String pyIdx;
     private List<String> charTags;
     private String briefDes;
@@ -52,12 +52,12 @@ public class SpuInfo implements Serializable {
         this.displayImgUrls = displayImgUrls;
     }
 
-    public List<Integer> getKindId() {
-        return kindId;
+    public String getSysKindIds() {
+        return sysKindIds;
     }
 
-    public void setKindId(List<Integer> kindId) {
-        this.kindId = kindId;
+    public void setSysKindIds(String sysKindIds) {
+        this.sysKindIds = sysKindIds;
     }
 
     public String getPyIdx() {

@@ -2,6 +2,7 @@ package com.caterbao.lumos.locals.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -81,6 +82,7 @@ public class JsonUtil<T> {
 
 
                 ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
                 return (T) (typeReference.getType().equals(String.class) ? json
                         : objectMapper.readValue(json, typeReference));
             }catch (Exception ex)

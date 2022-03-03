@@ -8,6 +8,7 @@ import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.biz.model.SpuInfo;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
@@ -272,43 +273,49 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CustomResult<Object> init_edit(String operater, String merchId,String spuId) {
         CustomResult<Object> result = new CustomResult<>();
-        LumosSelective selective_PrdSpu = new LumosSelective();
-        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
-        selective_PrdSpu.addWhere("MerchId", merchId);
-        selective_PrdSpu.addWhere("SpuId", spuId);
 
-        PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
+        SpuInfo r_SpuInfo = cacheFactory.getProduct().getSpuInfo(merchId,spuId);
 
-        LumosSelective selective_PrdSkus = new LumosSelective();
-        selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
-        selective_PrdSkus.addWhere("MerchId", merchId);
-        selective_PrdSkus.addWhere("SpuId", spuId);
+        //LumosSelective selective_PrdSpu = new LumosSelective();
+        //selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
+        //selective_PrdSpu.addWhere("MerchId", merchId);
+        //selective_PrdSpu.addWhere("SpuId", spuId);
 
-        List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSkus);
+        //PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
+
+        //LumosSelective selective_PrdSkus = new LumosSelective();
+        //selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
+        //selective_PrdSkus.addWhere("MerchId", merchId);
+        //selective_PrdSkus.addWhere("SpuId", spuId);
+
+        //List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSkus);
 
         HashMap<String, Object> ret = new HashMap<>();
-        ret.put("id", d_PrdSpu.getId());
-        ret.put("name", d_PrdSpu.getName());
-        ret.put("cumCode", d_PrdSpu.getCumCode());
+        ret.put("id", r_SpuInfo.getId());
+        ret.put("name", r_SpuInfo.getName());
+        ret.put("cumCode", r_SpuInfo.getCumCode());
         ret.put("isUnityUpdate", false);
-        ret.put("sysKindIds", CommonUtil.intStr2Arr(d_PrdSpu.getSysKindIds()));
-        ret.put("specItems", JsonUtil.toObject(d_PrdSpu.getSpecItems()));
-        ret.put("displayImgUrls", JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls()));
-        ret.put("charTags", JsonUtil.toObject(d_PrdSpu.getCharTags()));
-        ret.put("briefDes", d_PrdSpu.getBriefDes());
-        ret.put("detailsDes", JsonUtil.toObject(d_PrdSpu.getDetailsDes()));
+        ret.put("sysKindIds", CommonUtil.intStr2Arr(r_SpuInfo.getSysKindIds()));
+        ret.put("specItems", r_SpuInfo.getSpecItems());
+        ret.put("displayImgUrls", r_SpuInfo.getDisplayImgUrls());
+        ret.put("charTags", r_SpuInfo.getCharTags());
+        ret.put("briefDes", r_SpuInfo.getBriefDes());
+        ret.put("detailsDes", r_SpuInfo.getDetailsDes());
 
         List<Object> m_Skus = new ArrayList<>();
 
-        for (PrdSku d_PrdSku : d_PrdSkus) {
+        List<SpecIdxSkuModel> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
+        for (SpecIdxSkuModel specIdxSku : specIdxSkus) {
+
+            SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(merchId, specIdxSku.getSkuId());
 
             HashMap<String, Object> m_Sku = new HashMap<>();
-            m_Sku.put("id", d_PrdSku.getId());
-            m_Sku.put("cumCode", d_PrdSku.getCumCode());
-            m_Sku.put("salePrice", d_PrdSku.getSalePrice());
-            m_Sku.put("barCode", d_PrdSku.getBarCode());
+            m_Sku.put("id", r_SkuInfo.getId());
+            m_Sku.put("cumCode", r_SkuInfo.getCumCode());
+            m_Sku.put("salePrice", r_SkuInfo.getSalePrice());
+            m_Sku.put("barCode", r_SkuInfo.getBarCode());
             m_Sku.put("isOffSell", false);
-            m_Sku.put("specDes", JsonUtil.toObject(d_PrdSku.getSpecDes()));
+            m_Sku.put("specDes", r_SkuInfo.getSpecDes());
             m_Skus.add(m_Sku);
         }
 
@@ -326,7 +333,7 @@ public class ProductServiceImpl implements ProductService {
 
             LumosSelective selective_PrdSysKindAttrs = new LumosSelective();
             selective_PrdSysKindAttrs.setFields("*");
-            selective_PrdSysKindAttrs.addWhere("AttrId",String.valueOf(d_PrdSpuAttr.getAttrId()));
+            selective_PrdSysKindAttrs.addWhere("AttrId", String.valueOf(d_PrdSpuAttr.getAttrId()));
 
             PrdSysKindAttr d_PrdSysKindAttr = prdSysKindAttrMapper.findOne(selective_PrdSysKindAttrs);
 
@@ -336,9 +343,9 @@ public class ProductServiceImpl implements ProductService {
                 m_SysKindAttr.put("name", d_PrdSysKindAttr.getName());
                 m_SysKindAttr.put("kindId", d_PrdSpuAttr.getKindId());
                 m_SysKindAttr.put("value", d_PrdSpuAttr.getAttrValue());
-                m_SysKindAttr.put("min",d_PrdSysKindAttr.getMin());
-                m_SysKindAttr.put("max",d_PrdSysKindAttr.getMax());
-                m_SysKindAttr.put("required",d_PrdSysKindAttr.isRequired());
+                m_SysKindAttr.put("min", d_PrdSysKindAttr.getMin());
+                m_SysKindAttr.put("max", d_PrdSysKindAttr.getMax());
+                m_SysKindAttr.put("required", d_PrdSysKindAttr.isRequired());
                 m_SysKindAttrs.add(m_SysKindAttr);
             }
 
