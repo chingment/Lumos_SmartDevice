@@ -86,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public CustomResult<Object> list(String operater, String merchId, RopProductList rop) {
+
         CustomResult<Object> result = new CustomResult<>();
 
         int pageNum = rop.getPageNum();
@@ -95,42 +96,44 @@ public class ProductServiceImpl implements ProductService {
         Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
         LumosSelective selective_PrdSpu=new LumosSelective();
-        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,DisplayImgUrls,CreateTime");
+        selective_PrdSpu.setFields("Id,MerchId,CreateTime");
         selective_PrdSpu.addWhere("MerchId",merchId);
         selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
         List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
 
         List<Object> items=new ArrayList<>();
 
-        for (PrdSpu d_PrdSpu:
-                d_PrdSpus ) {
+        for (PrdSpu d_PrdSpu: d_PrdSpus ) {
 
             HashMap<String,Object> item=new HashMap<>();
 
-            item.put("id",d_PrdSpu.getId());
-            item.put("name",d_PrdSpu.getName());
-            item.put("cumCode",d_PrdSpu.getCumCode());
-            item.put("imgUrl", ImgVo.getMainImgUrl(d_PrdSpu.getDisplayImgUrls()));
-            item.put("sysKinds",getSysKinds(d_PrdSpu.getSysKindIds()));
-            LumosSelective selective_PrdSku=new LumosSelective();
-            selective_PrdSku.setFields("Id,CumCode,BarCode,SalePrice,SpecDes");
-            selective_PrdSku.addWhere("MerchId",merchId);
-            selective_PrdSku.addWhere("SpuId",d_PrdSpu.getId());
-            List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
+            SpuInfo r_SpuInfo=cacheFactory.getProduct().getSpuInfo(d_PrdSpu.getMerchId(),d_PrdSpu.getId());
 
-            List<Object> skus=new ArrayList<>();
+            item.put("id",r_SpuInfo.getId());
+            item.put("name",r_SpuInfo.getName());
+            item.put("cumCode",r_SpuInfo.getCumCode());
+            item.put("imgUrl", r_SpuInfo.getDisplayImgUrls().get(0).getUrl());
+            item.put("sysKinds",getSysKinds(r_SpuInfo.getSysKindIds()));
 
-            for (PrdSku d_PrdSku: d_PrdSkus ) {
-                HashMap<String,Object> item_sku=new HashMap<>();
-                item_sku.put("id",d_PrdSku.getId());
-                item_sku.put("cumCode",d_PrdSku.getCumCode());
-                item_sku.put("barCode",d_PrdSku.getBarCode());
-                item_sku.put("salePrice",d_PrdSku.getSalePrice());
-                item_sku.put("specDes",d_PrdSku.getSpecDes());
-                skus.add(item_sku);
+            List<Object> m_Skus=new ArrayList<>();
+
+
+            List<SpecIdxSkuModel> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
+            for (SpecIdxSkuModel specIdxSku : specIdxSkus) {
+
+                SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(merchId, specIdxSku.getSkuId());
+
+                HashMap<String, Object> m_Sku = new HashMap<>();
+                m_Sku.put("id", r_SkuInfo.getId());
+                m_Sku.put("cumCode", r_SkuInfo.getCumCode());
+                m_Sku.put("salePrice", r_SkuInfo.getSalePrice());
+                m_Sku.put("barCode", r_SkuInfo.getBarCode());
+                m_Sku.put("isOffSell", false);
+                m_Sku.put("specDes", r_SkuInfo.getSpecDes());
+                m_Skus.add(m_Sku);
             }
 
-            item.put("skus",skus);
+            item.put("skus",m_Skus);
 
             items.add(item);
         }
@@ -144,6 +147,66 @@ public class ProductServiceImpl implements ProductService {
         ret.setItems(items);
 
         return result.success("",ret);
+
+
+//        CustomResult<Object> result = new CustomResult<>();
+//
+//        int pageNum = rop.getPageNum();
+//        int pageSize = rop.getPageSize();
+//
+//
+//        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
+//
+//        LumosSelective selective_PrdSpu=new LumosSelective();
+//        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,DisplayImgUrls,CreateTime");
+//        selective_PrdSpu.addWhere("MerchId",merchId);
+//        selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
+//        List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
+//
+//        List<Object> items=new ArrayList<>();
+//
+//        for (PrdSpu d_PrdSpu:
+//                d_PrdSpus ) {
+//
+//            HashMap<String,Object> item=new HashMap<>();
+//
+//            item.put("id",d_PrdSpu.getId());
+//            item.put("name",d_PrdSpu.getName());
+//            item.put("cumCode",d_PrdSpu.getCumCode());
+//            item.put("imgUrl", ImgVo.getMainImgUrl(d_PrdSpu.getDisplayImgUrls()));
+//            item.put("sysKinds",getSysKinds(d_PrdSpu.getSysKindIds()));
+//            LumosSelective selective_PrdSku=new LumosSelective();
+//            selective_PrdSku.setFields("Id,CumCode,BarCode,SalePrice,SpecDes");
+//            selective_PrdSku.addWhere("MerchId",merchId);
+//            selective_PrdSku.addWhere("SpuId",d_PrdSpu.getId());
+//            List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
+//
+//            List<Object> skus=new ArrayList<>();
+//
+//            for (PrdSku d_PrdSku: d_PrdSkus ) {
+//                HashMap<String,Object> item_sku=new HashMap<>();
+//                item_sku.put("id",d_PrdSku.getId());
+//                item_sku.put("cumCode",d_PrdSku.getCumCode());
+//                item_sku.put("barCode",d_PrdSku.getBarCode());
+//                item_sku.put("salePrice",d_PrdSku.getSalePrice());
+//                item_sku.put("specDes",d_PrdSku.getSpecDes());
+//                skus.add(item_sku);
+//            }
+//
+//            item.put("skus",skus);
+//
+//            items.add(item);
+//        }
+//
+//        long total = page.getTotal();
+//        PageResult<Object> ret = new PageResult<>();
+//        ret.setPageNum(pageNum);
+//        ret.setPageSize(pageSize);
+//        ret.setTotalPages(page.getPages());
+//        ret.setTotalSize(total);
+//        ret.setItems(items);
+//
+//        return result.success("",ret);
     }
 
     @Override

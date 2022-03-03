@@ -252,14 +252,11 @@ class ProductCacheServiceImpl implements ProductCacheService {
                 for (SpecIdxSkuModel specIdxSku : r_Spu.getSpecIdxSkus()) {
                     redisTemplate.opsForHash().delete(CACHE_KEY_SKU_INFO_PRE + ":" + merchId, specIdxSku.getSkuId());
 
-
                     Cursor<Map.Entry<Object,Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*:*:"+specIdxSku.getSkuId()).build());
                     while (cursor.hasNext()){
                         Map.Entry<Object,Object> entry = cursor.next();
                         redisTemplate.opsForHash().delete(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId,entry.getKey());
                     }
-
-
 
                 }
             }
