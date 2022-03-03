@@ -1,5 +1,7 @@
 package com.caterbao.lumos.api.merch.controller;
 
+import com.caterbao.lumos.api.merch.rop.RopOwnChangePassword;
+import com.caterbao.lumos.api.merch.rop.RopOwnLogout;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnCheckPermission;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
@@ -26,9 +28,8 @@ public class OwnController extends  BaseController {
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult<Object> logout(){
-        CustomResult<Object> result = new CustomResult<>();
-        return result.success("成功");
+    public CustomResult<Object> logout(RopOwnLogout rop){
+        return  ownService.logout(getCurrentUserId(),rop);
     }
 
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
@@ -42,6 +43,12 @@ public class OwnController extends  BaseController {
     public CustomResult<Object> checkPermission(RopOwnCheckPermission rop){
         CustomResult<Object> result = new CustomResult<>();
         return result.success("成功");
+    }
+
+    @RequestMapping(value = "changePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> changePassword(@RequestBody RopOwnChangePassword rop){
+        return  ownService.changePassword(getCurrentUserId(),rop);
     }
 
 }

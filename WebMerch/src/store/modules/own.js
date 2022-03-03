@@ -64,13 +64,16 @@ const actions = {
 
   // user logout
   logout({ commit }, state) {
+    console.log('c')
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', '')
-      removeToken()
-      logout().then(res => {
+      logout(state).then(res => {
+        console.log('b')
+        commit('SET_TOKEN', '')
+        removeToken()
         resolve(res)
+      }).catch(error => {
+        reject(error)
       })
-      router.resetRouter()
     })
   },
 

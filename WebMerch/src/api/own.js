@@ -16,10 +16,11 @@ export function getInfo(params) {
   })
 }
 
-export function logout() {
+export function logout(data) {
   return request({
     url: '/own/logout',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
@@ -28,5 +29,12 @@ export function checkPermission(params) {
     url: '/own/checkPermission',
     method: 'get',
     params: params
+  })
+}
+export function changePassword(data) {
+  return request({
+    url: '/own/changePassword',
+    method: 'post',
+    data
   })
 }

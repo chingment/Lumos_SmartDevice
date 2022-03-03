@@ -15,7 +15,7 @@
             <span style="display:block;" @click="itemClick(child)"> {{ child.title }}</span>
           </el-dropdown-item>
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出</span>
+            <span style="display:block;" @click="onLogout">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -27,8 +27,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import { removeToken } from '@/utils/auth'
-import { getToken } from '@/utils/auth'
+import { removeToken, getToken } from '@/utils/auth'
 import { isExternal } from '@/utils/validate'
 import { getNavBars } from '@/utils/ownResource'
 
@@ -57,15 +56,13 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      this.$store.dispatch('own/logout', {}).then((res) => {
+    onLogout() {
+      this.$store.dispatch('own/logout', { token: getToken() }).then((res) => {
+        console.log('a')
+        var redirect = encodeURIComponent(this.$route.fullPath)
+        this.$router.push({ path: '/login?redirect=' + redirect })
       }).catch(() => {
       })
-
-      removeToken()
-
-      var redirect = encodeURIComponent(this.$route.fullPath)
-      this.$router.push({ path: '/login?redirect=' + redirect })
     },
     getAvatar(avatar) {
       if (avatar == null) { return 'http://file.17fanju.com/Upload/Avatar_default.png' }

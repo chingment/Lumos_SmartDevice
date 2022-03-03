@@ -16,7 +16,7 @@
         </div>
         <div v-else style="display:flex;max-width:300px">
           <div style="flex:1">
-            <el-input v-model="form_change_pwd.password" type="password" />
+            <el-input v-model="form_change_pwd.newPassword" type="password" />
           </div>
           <div style="width:90px;text-align: center;">
             <span class="i-btn-save" @click="onSavePassword()"> 保存</span>
@@ -45,6 +45,7 @@ import store from '@/store'
 import { MessageBox } from 'element-ui'
 import { changePassword } from '@/api/own'
 import fromReg from '@/utils/formReg'
+import { isEmpty } from '@/utils/commonUtil'
 export default {
   name: 'ProfileUserInfo',
   data() {
@@ -59,7 +60,7 @@ export default {
         roleNames: ''
       },
       form_change_pwd: {
-        password: ''
+        newPassword: ''
       }
     }
   },
@@ -88,13 +89,11 @@ export default {
       this.userInfo.roleNames = roleNames
     },
     onSavePassword() {
-      if (this.form_change_pwd.password == null || this.form_change_pwd.password == undefined || this.form_change_pwd.password == '') {
+      if (isEmpty(fromReg.password)) {
         this.$message('密码不能为空')
-
         return
-      } else if (!this.form_change_pwd.password.match(fromReg.password)) {
+      } else if (!this.form_change_pwd.newPassword.match(fromReg.password)) {
         this.$message('密码且由6到20个数字、英文字母或下划线组成')
-
         return
       }
 
@@ -103,25 +102,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        var data = { password: this.form_change_pwd.password }
+        var data = { newPassword: this.form_change_pwd.newPassword }
         this.loading = true
         changePassword(data).then(res => {
-          if (res.result === 1) {
-            this.$message({
-              message: res.message,
-              type: 'success'
-            })
+          if (res.code === this.$code_suc) {
+            this.$message.success(res.msg)
             this.isOpenEditPassword = false
           } else {
-            this.$message({
-              message: res.message,
-              type: 'error'
-            })
+            this.$message.error(res.msg)
           }
-
           this.loading = false
         })
       }).catch(() => {
+        this.loading = false
       })
     },
     onOpenEditPassword() {

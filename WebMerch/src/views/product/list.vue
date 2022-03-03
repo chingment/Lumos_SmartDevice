@@ -10,6 +10,7 @@
             placeholder="商品名称/编码/条形码/首拼音母"
             clearable
             style="width: 100%"
+            :trigger-on-focus="false"
             @select="onFilter"
             @keyup.enter.native="onFilter"
             @clear="onFilter"
@@ -88,7 +89,7 @@
 import { MessageBox } from 'element-ui'
 import { list, del, searchSpu } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
+import { isEmpty } from '@/utils/commonUtil'
 export default {
   name: 'ProductList',
   components: { Pagination },
@@ -166,6 +167,7 @@ export default {
       })
     },
     onSearchSpu(queryString, cb) {
+      if (isEmpty(queryString)) { return }
       searchSpu({ key: queryString }).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data

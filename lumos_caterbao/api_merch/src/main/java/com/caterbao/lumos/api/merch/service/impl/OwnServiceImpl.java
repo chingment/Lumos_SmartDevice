@@ -1,7 +1,10 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RetOwnGetInfo;
+import com.caterbao.lumos.api.merch.rop.RopOwnChangePassword;
+import com.caterbao.lumos.api.merch.rop.RopOwnLogout;
 import com.caterbao.lumos.api.merch.rop.model.MenuModel;
+import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
 import com.caterbao.lumos.api.merch.service.OwnService;
@@ -97,7 +100,6 @@ public class OwnServiceImpl implements OwnService {
 
     }
 
-
     @Override
     public CustomResult<Object> getInfo(String operater,String userId) {
 
@@ -133,5 +135,41 @@ public class OwnServiceImpl implements OwnService {
         ret.setMenus(r_Menus);
 
         return result.success("获取成功", ret);
+    }
+
+    @Override
+    public CustomResult<Object> logout(String operater, RopOwnLogout rop) {
+        CustomResult<Object> result = new CustomResult<>();
+
+
+        redisTemplate.delete("token:" + rop.getToken());
+
+        return result.success("退出成功");
+    }
+
+    @Override
+    public CustomResult<Object> changePassword(String operater, RopOwnChangePassword rop) {
+        CustomResult<Object> result = new CustomResult<>();
+
+        if (CommonUtil.isEmpty(rop.getNewPassword())) {
+            return result.fail("新密码不能为空");
+        }
+
+        LumosSelective selective_SysUser = new LumosSelective();
+        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+        selective_SysUser.addWhere("UserId", operater);
+
+        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+
+        if (d_SysUser == null)
+            return result.fail("保存失败");
+
+        d_SysUser.setPasswordHash(PasswordUtil.encryBySHA256(rop.getNewPassword(),d_SysUser.getSecurityStamp()));
+
+        if (sysUserMapper.update(d_SysUser) <= 0) {
+            return result.fail("保存失败");
+        }
+
+        return result.success("保存成功");
     }
 }
