@@ -17,8 +17,8 @@
         <if test="where.ClientUserId != null">and ClientUserId =#{where.ClientUserId}</if>
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData">
-  insert into BookBorrowFlowData(id,merchId,storeId,shopId,deviceId,cabinetId,slotId,flowId,clientUserId,identityType,identityId,skuId,skuName,skuImgUrl,skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,borrowStatus,creator,createTime)
-  values(#{id},#{merchId},#{storeId},#{shopId},#{deviceId},#{cabinetId},#{slotId},#{flowId},#{clientUserId},#{identityType},#{identityId},#{skuId},#{skuName},#{skuImgUrl},#{skuCumCode},#{skuRfId},#{borrowSeq},#{borrowTime},#{borrowWay},#{borrowStatus},#{creator},#{createTime})
+  insert into BookBorrowFlowData(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,cabinetId,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,borrowStatus,creator,createTime)
+  values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{cabinetId},#{slotId},#{flowId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{skuId},#{skuName},#{skuImgUrl},#{skuCumCode},#{skuRfId},#{borrowSeq},#{borrowTime},#{borrowWay},#{borrowStatus},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData">
         update BookBorrowFlowData

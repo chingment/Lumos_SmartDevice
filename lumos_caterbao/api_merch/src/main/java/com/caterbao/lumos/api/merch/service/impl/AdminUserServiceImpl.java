@@ -59,6 +59,52 @@ public class AdminUserServiceImpl implements AdminUserService {
     private Lock lock = new ReentrantLock();
 
     @Override
+    public CustomResult<Object> list(String operater, String merchId, RopAdminUserList rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("UserName",rop.getUserName());
+        List<MerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (MerchUserVw d_MerchUser:
+                d_MerchUsers ) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            item.put("id",d_MerchUser.getId());
+            item.put("fullName",d_MerchUser.getFullName());
+            item.put("userName",d_MerchUser.getUserName());
+            item.put("phoneNumber",d_MerchUser.getPhoneNumber());
+            item.put("isDisable",d_MerchUser.isDisable());
+            item.put("email",d_MerchUser.getEmail());
+            item.put("createTime", CommonUtil.toDateTimeStr(d_MerchUser.getCreateTime()));
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return result.success("",ret);
+    }
+
+
+    @Override
     public CustomResult<Object>  init_add(String operater, String merchId) {
         CustomResult<Object> result = new CustomResult<>();
         return result.success("");
@@ -126,51 +172,6 @@ public class AdminUserServiceImpl implements AdminUserService {
             lock.unlock();
             return result.fail("保存失败,服务器异常");
         }
-    }
-
-    @Override
-    public CustomResult<Object> list(String operater, String merchId, RopAdminUserList rop) {
-
-        CustomResult<Object> result = new CustomResult<>();
-
-        int pageNum = rop.getPageNum();
-        int pageSize = rop.getPageSize();
-
-
-        Page<?> page = PageHelper.startPage(pageNum, pageSize);
-
-        LumosSelective selective=new LumosSelective();
-        selective.setFields("*");
-        selective.addWhere("MerchId",merchId);
-        selective.addWhere("UserName",rop.getUserName());
-        List<MerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
-
-        List<Object> items=new ArrayList<>();
-
-        for (MerchUserVw d_MerchUser:
-                d_MerchUsers ) {
-
-            HashMap<String,Object> item=new HashMap<>();
-
-            item.put("id",d_MerchUser.getId());
-            item.put("fullName",d_MerchUser.getFullName());
-            item.put("userName",d_MerchUser.getUserName());
-            item.put("phoneNumber",d_MerchUser.getPhoneNumber());
-            item.put("isDisable",d_MerchUser.isDisable());
-            item.put("email",d_MerchUser.getEmail());
-            item.put("createTime", CommonUtil.toDateTimeStr(d_MerchUser.getCreateTime()));
-            items.add(item);
-        }
-
-        long total = page.getTotal();
-        PageResult<Object> ret = new PageResult<>();
-        ret.setPageNum(pageNum);
-        ret.setPageSize(pageSize);
-        ret.setTotalPages(page.getPages());
-        ret.setTotalSize(total);
-        ret.setItems(items);
-
-        return result.success("",ret);
     }
 
     @Override

@@ -16,4 +16,5 @@ public interface SysUserMapper {
     long isExistUserName(String userName);
     long update(SysUser sysUser);
     long insert(SysUser sysUser);
+    String getFullNameById(String id);
 }

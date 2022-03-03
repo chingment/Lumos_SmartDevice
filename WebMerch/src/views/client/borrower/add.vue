@@ -42,14 +42,13 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { add, init_add } from '@/api/adminuser'
+import { add, init_add } from '@/api/borrower'
 import fromReg from '@/utils/formReg'
 import { goBack } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
 import LmUpload from '@/components/Upload/index.vue'
 import { getToken } from '@/utils/auth'
 export default {
-  name: 'SettingAdminUserAdd',
   components: {
     PageHeader,
     LmUpload

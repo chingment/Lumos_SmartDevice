@@ -6,8 +6,11 @@ public class BookBorrowFlowData {
     private String id;
     private String flowId;
     private String merchId;
+    private String merchName;
     private String storeId;
+    private String storeName;
     private String shopId;
+    private String shopName;
     private String deviceId;
     private String deviceCumCode;
     private String cabinetId;
@@ -15,6 +18,7 @@ public class BookBorrowFlowData {
     private String clientUserId;
     private int identityType;
     private String identityId;
+    private String identityName;
     private String skuId;
     private String skuName;
     private String skuImgUrl;
@@ -254,5 +258,37 @@ public class BookBorrowFlowData {
 
     public void setBorrowStatus(int borrowStatus) {
         this.borrowStatus = borrowStatus;
+    }
+
+    public String getMerchName() {
+        return merchName;
+    }
+
+    public void setMerchName(String merchName) {
+        this.merchName = merchName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getIdentityName() {
+        return identityName;
+    }
+
+    public void setIdentityName(String identityName) {
+        this.identityName = identityName;
     }
 }

@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 public class IcCard {
     private String id;
     private String merchId;
+    private String clientUserId;
     private String fullName;
     private String cardNo;
-    private String cardPwd;
+    private String cardPwdHash;
+    private String securityStamp;
     private int cardType;
     private Boolean isDisable;
     private String creator;
@@ -47,12 +49,12 @@ public class IcCard {
         this.cardNo = cardNo;
     }
 
-    public String getCardPwd() {
-        return cardPwd;
+    public String getCardPwdHash() {
+        return cardPwdHash;
     }
 
-    public void setCardPwd(String cardPwd) {
-        this.cardPwd = cardPwd;
+    public void setCardPwdHash(String cardPwdHash) {
+        this.cardPwdHash = cardPwdHash;
     }
 
     public int getCardType() {
@@ -101,5 +103,21 @@ public class IcCard {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public String getClientUserId() {
+        return clientUserId;
+    }
+
+    public void setClientUserId(String clientUserId) {
+        this.clientUserId = clientUserId;
+    }
+
+    public String getSecurityStamp() {
+        return securityStamp;
+    }
+
+    public void setSecurityStamp(String securityStamp) {
+        this.securityStamp = securityStamp;
     }
 }

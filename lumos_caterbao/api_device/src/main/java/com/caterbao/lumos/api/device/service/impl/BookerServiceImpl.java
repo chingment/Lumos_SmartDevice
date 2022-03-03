@@ -10,11 +10,10 @@ import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
-import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.mapper.*;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
+import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class BookerServiceImpl implements BookerService {
 
+    private SysUserMapper sysUserMapper;
+    private IcCardMapper icCardMapper;
     private BookBorrowFlowMapper bookBorrowFlowMapper;
     private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
     private MerchDeviceMapper merchDeviceMapper;
@@ -54,6 +55,16 @@ public class BookerServiceImpl implements BookerService {
     @Autowired(required = false)
     public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
         this.merchDeviceMapper = merchDeviceMapper;
+    }
+
+    @Autowired(required = false)
+    public void setSysUserMapper(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setIcCardMapper(IcCardMapper icCardMapper) {
+        this.icCardMapper = icCardMapper;
     }
 
     @Autowired
@@ -94,8 +105,11 @@ public class BookerServiceImpl implements BookerService {
 
         d_BookBorrowFlow.setId(IdWork.buildLongId());
         d_BookBorrowFlow.setMerchId(d_MerchDevice.getMerchId());
+        d_BookBorrowFlow.setMerchName(d_MerchDevice.getMerchName());
         d_BookBorrowFlow.setStoreId(d_MerchDevice.getStoreId());
+        d_BookBorrowFlow.setStoreName(d_MerchDevice.getStoreName());
         d_BookBorrowFlow.setShopId(d_MerchDevice.getShopId());
+        d_BookBorrowFlow.setShopName(d_MerchDevice.getShopName());
         d_BookBorrowFlow.setDeviceId(rop.getDeviceId());
         d_BookBorrowFlow.setDeviceCumCode(d_MerchDevice.getCumCode());
         d_BookBorrowFlow.setCabinetId(rop.getCabinetId());
@@ -103,6 +117,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowFlow.setClientUserId(rop.getClientUserId());
         d_BookBorrowFlow.setIdentityType(rop.getIdentityType());
         d_BookBorrowFlow.setIdentityId(rop.getIdentityId());
+        d_BookBorrowFlow.setIdentityName(getIdentityName(rop.getIdentityType(),rop.getIdentityId()));
         d_BookBorrowFlow.setStatus(1);
         d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookBorrowFlow.setCreator(IdWork.buildGuId());
@@ -156,12 +171,12 @@ public class BookerServiceImpl implements BookerService {
 
         try {
 
-            LumosSelective selective_BookBorrowReturnFlow = new LumosSelective();
-            selective_BookBorrowReturnFlow.setFields("*");
-            selective_BookBorrowReturnFlow.addWhere("BookBorrowReturnFlowId", rop.getFlowId());
+            LumosSelective selective_BookBorrowFlow = new LumosSelective();
+            selective_BookBorrowFlow.setFields("*");
+            selective_BookBorrowFlow.addWhere("FlowId", rop.getFlowId());
 
             //查找借还流程
-            BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowReturnFlow);
+            BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowFlow);
             if (d_BookBorrowFlow == null) {
                 lock.unlock();
                 return result.fail("关闭失败[1]");
@@ -238,8 +253,11 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData = new BookBorrowFlowData();
                     d_BookBorrowFlowData.setId(String.valueOf(d_BookBorrowFlow.getId())+String.valueOf(i));
                     d_BookBorrowFlowData.setMerchId(d_BookBorrowFlow.getMerchId());
+                    d_BookBorrowFlowData.setMerchName(d_BookBorrowFlow.getMerchName());
                     d_BookBorrowFlowData.setStoreId(d_BookBorrowFlow.getStoreId());
+                    d_BookBorrowFlowData.setStoreName(d_BookBorrowFlow.getStoreName());
                     d_BookBorrowFlowData.setShopId(d_BookBorrowFlow.getShopId());
+                    d_BookBorrowFlowData.setShopName(d_BookBorrowFlow.getShopName());
                     d_BookBorrowFlowData.setDeviceId(d_BookBorrowFlow.getDeviceId());
                     d_BookBorrowFlowData.setDeviceCumCode(d_BookBorrowFlow.getDeviceCumCode());
                     d_BookBorrowFlowData.setCabinetId(d_BookBorrowFlow.getCabinetId());
@@ -247,6 +265,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setFlowId(d_BookBorrowFlow.getId());
                     d_BookBorrowFlowData.setIdentityType(d_BookBorrowFlow.getIdentityType());
                     d_BookBorrowFlowData.setIdentityId(d_BookBorrowFlow.getIdentityId());
+                    d_BookBorrowFlowData.setIdentityName(d_BookBorrowFlow.getIdentityName());
                     d_BookBorrowFlowData.setClientUserId(d_BookBorrowFlow.getClientUserId());
                     d_BookBorrowFlowData.setSkuRfId(borrow_RfId);
                     d_BookBorrowFlowData.setSkuId(r_Sku.getId());
@@ -316,6 +335,18 @@ public class BookerServiceImpl implements BookerService {
             lock.unlock();
             return result.fail("保存失败,服务器异常");
         }
+    }
+
+    private String getIdentityName(int type,String id) {
+        String name = "";
+
+        if (type == 1) {
+            name = sysUserMapper.getFullNameById(id);
+        } else if (type == 2) {
+            name = icCardMapper.getFullNameById(id);
+        }
+
+        return name;
     }
 
 }

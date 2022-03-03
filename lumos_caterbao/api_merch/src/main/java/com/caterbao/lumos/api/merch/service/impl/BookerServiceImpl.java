@@ -74,8 +74,8 @@ public class BookerServiceImpl implements BookerService {
             item.put("id",d_BookBorrowFlowData.getId());
             item.put("flowId",d_BookBorrowFlowData.getFlowId());
             item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlowData.getIdentityType()));
-            item.put("clientUserId","");
-            item.put("clientFullName","");
+            item.put("identityId",d_BookBorrowFlowData.getIdentityId());
+            item.put("identityName",d_BookBorrowFlowData.getIdentityName());
             item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlowData.getDeviceId(),d_BookBorrowFlowData.getDeviceCumCode()));
             item.put("skuCumCode",d_BookBorrowFlowData.getSkuCumCode());
             item.put("skuName",d_BookBorrowFlowData.getSkuName());
@@ -133,8 +133,8 @@ public class BookerServiceImpl implements BookerService {
 
             item.put("id",d_BookBorrowFlow.getId());
             item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlow.getIdentityType()));
-            item.put("clientUserId","");
-            item.put("clientFullName","");
+            item.put("identityId",d_BookBorrowFlow.getIdentityId());
+            item.put("identityName",d_BookBorrowFlow.getIdentityName());
             item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlow.getDeviceId(),d_BookBorrowFlow.getDeviceCumCode()));
             item.put("cabinetId",d_BookBorrowFlow.getCabinetId());
             item.put("slotId",d_BookBorrowFlow.getSlotId());

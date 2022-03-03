@@ -5,11 +5,24 @@
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.IcCardMapper">
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.IcCard" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from IcCard where 1=1
-        <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
+        <if test="where.ClientUserId != null and where.ClientUserId.length() > 0">and ClientUserId=#{where.ClientUserId}</if>
     </select>
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.IcCard" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from IcCard where 1=1
         <if test="where.IcCardId != null">and Id =#{where.IcCardId}</if>
         <if test="where.CardNo != null">and Id =#{where.CardNo}</if>
+    </select>
+    <select id="isExistCardNo" resultType="java.lang.Long">
+        select count(*) from IcCard where 1=1
+        <if test="id != null and id.length() > 0"> and id!=#{id} </if>
+        <if test="cardNo != null and cardNo.length() > 0"> and cardNo=#{cardNo} </if>
+        <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
+    </select>
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.IcCard">
+  insert into IcCard(id,merchId,clientUserId,fullName,cardNo,cardPwdHash,securityStamp,cardType,isDisable,creator,createTime)
+  values(#{id},#{merchId},#{clientUserId},#{fullName},#{cardNo},#{cardPwdHash},#{securityStamp},#{cardType},#{isDisable},#{creator},#{createTime})
+    </insert>
+    <select id="getFullNameById" resultType="java.lang.String" >
+        select fullName from IcCard where id=#{id}
     </select>
 </mapper>

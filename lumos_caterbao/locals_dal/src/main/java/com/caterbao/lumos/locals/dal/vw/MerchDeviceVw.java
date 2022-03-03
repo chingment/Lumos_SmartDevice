@@ -10,6 +10,7 @@ public class MerchDeviceVw {
     private int sceneMode;
     private int versionMode;
     private String merchId;
+    private String merchName;
     private String ShopId;
     private String ShopName;
     private String storeId;
@@ -182,5 +183,13 @@ public class MerchDeviceVw {
 
     public void setLastRunStatus(int lastRunStatus) {
         this.lastRunStatus = lastRunStatus;
+    }
+
+    public String getMerchName() {
+        return merchName;
+    }
+
+    public void setMerchName(String merchName) {
+        this.merchName = merchName;
     }
 }

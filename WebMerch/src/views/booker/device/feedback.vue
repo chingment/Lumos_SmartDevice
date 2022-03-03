@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="借阅者" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.clientFullName }}</span>
+          <span>{{ scope.row.identityName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">

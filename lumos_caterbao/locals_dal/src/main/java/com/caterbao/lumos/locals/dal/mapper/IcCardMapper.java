@@ -10,4 +10,7 @@ import java.util.List;
 public interface IcCardMapper {
     List<IcCard> find(LumosSelective selective);
     IcCard findOne(LumosSelective selective);
+    long isExistCardNo(String id,String merchId,String cardNo);
+    long insert(IcCard icCard);
+    String getFullNameById(String id);
 }

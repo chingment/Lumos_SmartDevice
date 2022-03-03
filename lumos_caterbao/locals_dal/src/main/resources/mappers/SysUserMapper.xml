@@ -39,4 +39,8 @@
         select count(*) from SysUser where userName=#{userName}
     </select>
 
+    <select id="getFullNameById" resultType="java.lang.String" >
+        select fullName from SysUser where id=#{id}
+    </select>
+
 </mapper>

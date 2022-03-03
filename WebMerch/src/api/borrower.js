@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function list(data) {
   return request({
-    url: '/iccard/list',
+    url: '/borrower/list',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function list(data) {
 
 export function add(data) {
   return request({
-    url: '/iccard/add',
+    url: '/borrower/add',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    url: '/iccard/edit',
+    url: '/borrower/edit',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function edit(data) {
 
 export function init_add(params) {
   return request({
-    url: '/iccard/init_add',
+    url: '/borrower/init_add',
     method: 'get',
     params
   })
@@ -34,7 +34,7 @@ export function init_add(params) {
 
 export function init_edit(params) {
   return request({
-    url: '/iccard/init_edit',
+    url: '/borrower/init_edit',
     method: 'get',
     params
   })

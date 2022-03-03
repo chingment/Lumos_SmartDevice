@@ -22,7 +22,7 @@
       <el-form-item label="姓名" prop="fullName">
         <el-input v-model="form.fullName" clearable />
       </el-form-item>
-      <el-form-item label="头像" prop="displayImgUrls" class="el-form-item-upload">
+      <el-form-item label="头像" prop="avatar" class="el-form-item-upload">
         <el-input :value="form.avatar.toString()" style="display:none" />
         <lm-upload
           v-model="form.avatar"
@@ -30,7 +30,7 @@
           :file-list="form.avatar"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'shop'}"
+          :data="{folder:'avatar'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
           :max-size="1024"

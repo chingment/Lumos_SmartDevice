@@ -1,17 +1,22 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
-import com.caterbao.lumos.api.merch.rop.RopIcCardList;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.IcCardService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PageResult;
+import com.caterbao.lumos.locals.common.PasswordUtil;
+import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
 import com.caterbao.lumos.locals.dal.pojo.IcCard;
+import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
+import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,4 +75,31 @@ public class IcCardServiceImpl implements IcCardService {
         return result.success("",ret);
     }
 
+    @Override
+    public CustomResult<Object>  init_add(String operater, String merchId) {
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("");
+    }
+
+    @Override
+    public CustomResult<Object>  add(String operater, String merchId, RopIcCardAdd rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        return result.success("");
+    }
+
+    @Override
+    public CustomResult<Object> init_edit(String operater, String merchId, String userId) {
+
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("");
+    }
+
+    @Override
+    public CustomResult<Object> edit(String operater, String merchId, RopIcCardEdit rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+        return result.success("");
+    }
 }
