@@ -58,7 +58,6 @@ export default {
     },
     onLogout() {
       this.$store.dispatch('own/logout', { token: getToken() }).then((res) => {
-        console.log('a')
         var redirect = encodeURIComponent(this.$route.fullPath)
         this.$router.push({ path: '/login?redirect=' + redirect })
       }).catch(() => {

@@ -7,6 +7,7 @@
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.SysMerchUser" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from SysMerchUser where 1=1
         <if test="where.UserId != null ">and UserId =#{where.UserId}</if>
+
     </select>
 
     <select id="find" resultType="com.caterbao.lumos.locals.dal.vw.MerchUserVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
@@ -14,6 +15,7 @@
         on a.UserId=b.Id
         where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and isMaster =#{where.IsMaster}</if>
         <if test="where.UserName != null and where.UserName.length() > 0">and b.UserName like concat('%', #{where.UserName}, '%')   </if>
     </select>
 

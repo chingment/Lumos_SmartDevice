@@ -29,7 +29,6 @@ export default {
   },
   created() {
     this.navActive = this.$route.path
-    console.log(this.$route)
   },
   methods: {
 

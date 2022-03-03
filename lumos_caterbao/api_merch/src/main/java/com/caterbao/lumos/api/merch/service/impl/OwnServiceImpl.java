@@ -141,8 +141,9 @@ public class OwnServiceImpl implements OwnService {
     public CustomResult<Object> logout(String operater, RopOwnLogout rop) {
         CustomResult<Object> result = new CustomResult<>();
 
-
-        redisTemplate.delete("token:" + rop.getToken());
+        if (rop != null) {
+            redisTemplate.delete("token:" + rop.getToken());
+        }
 
         return result.success("退出成功");
     }

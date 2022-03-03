@@ -64,10 +64,8 @@ const actions = {
 
   // user logout
   logout({ commit }, state) {
-    console.log('c')
     return new Promise((resolve, reject) => {
       logout(state).then(res => {
-        console.log('b')
         commit('SET_TOKEN', '')
         removeToken()
         resolve(res)

@@ -73,6 +73,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         selective.setFields("*");
         selective.addWhere("MerchId",merchId);
         selective.addWhere("UserName",rop.getUserName());
+        selective.addWhere("IsMaster","0");
         List<MerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
 
         List<Object> items=new ArrayList<>();

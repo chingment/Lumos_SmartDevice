@@ -130,7 +130,7 @@ export default {
   watch: {
     elFileList: {
       handler(newName, oldName) {
-        console.log(newName)
+        // console.log(newName)
         this.uploadCardCheckShow()
         this.$emit('input', newName)// 传值给父组件, 让父组件监听到这个变化
       },

@@ -32,7 +32,7 @@
         <template slot-scope="scope">
           <div
             v-for="icCard in scope.row.icCards"
-            :key="icCard"
+            :key="icCard.cardNo"
           >{{ icCard.cardNo }}</div>
         </template>
       </el-table-column>
