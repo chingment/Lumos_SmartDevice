@@ -79,8 +79,6 @@ public class JsonUtil<T> {
     public static <T> T toObject(String json, TypeReference<?> typeReference)
         {
             try {
-
-
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
                 return (T) (typeReference.getType().equals(String.class) ? json
