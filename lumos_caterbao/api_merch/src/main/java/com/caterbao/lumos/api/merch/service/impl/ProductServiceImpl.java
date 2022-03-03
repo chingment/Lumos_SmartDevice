@@ -8,6 +8,7 @@ import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
 import com.caterbao.lumos.api.merch.rop.model.SkuModel;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.SpuInfo;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -598,6 +599,24 @@ public class ProductServiceImpl implements ProductService {
         ret.put("attrs", attrs);
         return result.success("", ret);
     }
+
+    @Override
+    public CustomResult<Object> searchSpu(String operater, String merchId, String key) {
+        CustomResult<Object> result = new CustomResult<>();
+
+        HashMap<String, Object> ret = new HashMap<>();
+
+        List<SpuInfo> spus=new ArrayList<>();
+
+        if(!CommonUtil.isEmpty(key)) {
+            spus = cacheFactory.getProduct().searchSpu(merchId, key);
+        }
+
+        ret.put("spus", spus);
+
+        return result.success("", ret);
+    }
+
 
     private FieldModel getSysKinds(String sysKinds) {
         FieldModel model = new FieldModel();

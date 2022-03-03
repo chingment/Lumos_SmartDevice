@@ -12,6 +12,7 @@ import com.caterbao.lumos.locals.dal.pojo.PrdSku;
 import com.caterbao.lumos.locals.dal.pojo.PrdSkuRfId;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -275,4 +276,48 @@ class ProductCacheServiceImpl implements ProductCacheService {
 
 
     }
+
+
+    @Override
+    public List<SpuInfo> searchSpu(String merchId, String key) {
+        List<SpuInfo> m_SpuInfos = new ArrayList<>();
+
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*" + key + "*").build());
+
+        int i = 0;
+        while (cursor.hasNext() && i < 10) {
+            Map.Entry<Object, Object> entry = cursor.next();
+
+            Object r_SpuInfo = redisTemplate.opsForHash().get(CACHE_KEY_SPU_INFO_PRE + ":" + merchId, entry.getValue().toString());
+            if (r_SpuInfo != null) {
+                SpuInfo spuInfo = JsonUtil.toObject(r_SpuInfo.toString(), new TypeReference<SpuInfo>() {
+                });
+                if (spuInfo != null) {
+                    m_SpuInfos.add(spuInfo);
+                }
+            }
+        }
+
+        return m_SpuInfos;
+    }
+
+//    public void SpuSKey(String merchId,String keyPre,String keyIdx, String spuId) {
+//
+//        Object skey_val = redisTemplate.opsForHash().get(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, keyPre + ":" + keyIdx);
+//
+//        List<String> arr_vals = new ArrayList<>();
+//        if (skey_val == null) {
+//            arr_vals.add(spuId);
+//        } else {
+//            arr_vals = JsonUtil.toObject(skey_val.toString(), new TypeReference<List<String>>() {
+//            });
+//            if (arr_vals != null) {
+//                if (arr_vals.contains(spuId)) {
+//                    arr_vals.add(spuId);
+//                }
+//            }
+//        }
+//
+//        redisTemplate.opsForHash().put(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, keyPre + ":" + keyIdx, JsonUtil.getJson(arr_vals));
+//    }
 }

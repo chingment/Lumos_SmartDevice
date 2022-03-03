@@ -62,4 +62,10 @@ public class ProductController extends  BaseController {
     public CustomResult<Object> getSysKindAttrs(@RequestParam String ids) {
         return productService.getSysKindAttrs(this.getCurrentUserId(), this.getCurrentMerchId(), ids);
     }
+
+    @RequestMapping(value = "searchSpu", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> searchSpu(@RequestParam String key) {
+        return productService.searchSpu(this.getCurrentUserId(), this.getCurrentMerchId(), key);
+    }
 }

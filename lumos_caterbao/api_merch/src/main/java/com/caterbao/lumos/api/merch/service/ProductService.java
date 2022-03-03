@@ -20,4 +20,6 @@ public interface ProductService {
     CustomResult<Object> edit(String operater, String merchId, RopProdcutEdit rop);
 
     CustomResult<Object> getSysKindAttrs(String operater, String merchId, String kindIds);
+
+    CustomResult<Object> searchSpu(String operater,String merchId,String key);
 }

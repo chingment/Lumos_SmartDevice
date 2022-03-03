@@ -56,6 +56,14 @@ export function getSysKindAttrs(params) {
   })
 }
 
+export function searchSpu(params) {
+  return request({
+    url: '/product/searchSpu',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   list: list,
   init_add: init_add,
@@ -63,5 +71,6 @@ export default {
   init_edit: init_edit,
   edit: edit,
   del: del,
-  getSysKindAttrs: getSysKindAttrs
+  getSysKindAttrs: getSysKindAttrs,
+  searchSpu: searchSpu
 }

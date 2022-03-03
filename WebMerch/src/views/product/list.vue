@@ -6,13 +6,14 @@
 
           <el-autocomplete
             v-model="listQuery.key"
+            :fetch-suggestions="onSearchSpu"
             placeholder="商品名称/编码/条形码/首拼音母"
             clearable
             style="width: 100%"
+            @select="onFilter"
             @keyup.enter.native="onFilter"
             @clear="onFilter"
           />
-
         </el-col>
         <el-col :xs="24" :sm="12" :lg="8" :xl="6" style="margin-bottom:20px">
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
@@ -85,7 +86,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { list, del } from '@/api/product'
+import { list, del, searchSpu } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -162,6 +163,21 @@ export default {
           }
         })
       }).catch(() => {
+      })
+    },
+    onSearchSpu(queryString, cb) {
+      searchSpu({ key: queryString }).then(res => {
+        if (res.code === this.$code_suc) {
+          var d = res.data
+          var spus = d.spus
+          if (spus != null) {
+            var restaurants = []
+            for (var j = 0; j < spus.length; j++) {
+              restaurants.push({ 'value': spus[j].name, 'name': spus[j].name, 'id': spus[j].id })
+            }
+            cb(restaurants)
+          }
+        }
       })
     }
   }
