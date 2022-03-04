@@ -47,4 +47,16 @@ public class ImgVo implements Serializable {
 
         return  url;
     }
+
+    public static String getMainImgUrl(List<ImgVo> vo) {
+        String url = "";
+
+        if (vo == null)
+            return url;
+
+        if (vo.size() == 0)
+            return url;
+
+        return vo.get(0).url;
+    }
 }

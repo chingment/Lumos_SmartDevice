@@ -1,12 +1,16 @@
 package com.caterbao.lumos.api.merch.rop;
 
+import com.caterbao.lumos.locals.common.ImgVo;
+
+import java.util.List;
+
 public class RopBorrowerAdd {
     private String cardNo;
     private String cardPwd;
     private String fullName;
     private String phoneNumber;
     private String email;
-    private String avatar;
+    private List<ImgVo> avatar;
 
     public String getCardNo() {
         return cardNo;
@@ -48,11 +52,11 @@ public class RopBorrowerAdd {
         this.email = email;
     }
 
-    public String getAvatar() {
+    public List<ImgVo> getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(List<ImgVo> avatar) {
         this.avatar = avatar;
     }
 }

@@ -5,9 +5,7 @@ import com.caterbao.lumos.api.merch.rop.RopAdCreativeEdit;
 import com.caterbao.lumos.api.merch.rop.RopAdCreatives;
 import com.caterbao.lumos.api.merch.rop.RopAdSpaces;
 import com.caterbao.lumos.api.merch.service.AdService;
-import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.PageResult;
+import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.AdCreativeMapper;
@@ -128,7 +126,7 @@ public class AdServiceImpl implements AdService {
 
             item.put("id", d_AdCreative.getId());
             item.put("title", d_AdCreative.getTitle());
-            item.put("fileUrl", d_AdCreative.getFileUrl());
+            item.put("fileUrl",ImgVo.getMainImgUrl(d_AdCreative.getFileUrls()));
             item.put("startTime",CommonUtil.toDateStr(d_AdCreative.getStartTime()));
             item.put("endTime",CommonUtil.toDateStr(d_AdCreative.getEndTime()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_AdCreative.getCreateTime()));
@@ -177,7 +175,7 @@ public class AdServiceImpl implements AdService {
         d_AdCreative.setMerchId(merchId);
         d_AdCreative.setSpaceId(rop.getSpaceId());
         d_AdCreative.setTitle(rop.getTitle());
-        d_AdCreative.setFileUrl(rop.getFileUrl());
+        d_AdCreative.setFileUrls(JsonUtil.getJson(rop.getFileUrls()));
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);
@@ -194,18 +192,18 @@ public class AdServiceImpl implements AdService {
     public CustomResult<Object> initCreativeEdit(String operater, String merchId, String creativeId) {
 
         CustomResult<Object> result = new CustomResult<>();
-        LumosSelective selective_Creative=new LumosSelective();
+        LumosSelective selective_Creative = new LumosSelective();
         selective_Creative.setFields("*");
-        selective_Creative.addWhere("CreativeId",creativeId);
+        selective_Creative.addWhere("CreativeId", creativeId);
 
         AdCreative d_AdCreative = adCreativeMapper.findOne(selective_Creative);
 
         if (d_AdCreative == null)
             return result.fail("初始失败");
 
-        LumosSelective selective_Space=new LumosSelective();
+        LumosSelective selective_Space = new LumosSelective();
         selective_Space.setFields("*");
-        selective_Space.addWhere("SpaceId",d_AdCreative.getSpaceId());
+        selective_Space.addWhere("SpaceId", d_AdCreative.getSpaceId());
 
         AdSpace d_AdSpace = adSpaceMapper.findOne(selective_Space);
 
@@ -213,21 +211,20 @@ public class AdServiceImpl implements AdService {
             return result.fail("初始失败");
 
 
-        HashMap<String,Object> ret=new HashMap<>();
+        HashMap<String, Object> ret = new HashMap<>();
 
-        ret.put("id",d_AdCreative.getId());
-        ret.put("title",d_AdCreative.getTitle());
-        ret.put("fileUrl",d_AdCreative.getFileUrl());
+        ret.put("id", d_AdCreative.getId());
+        ret.put("title", d_AdCreative.getTitle());
+        ret.put("fileUrls",JsonUtil.toObject(d_AdCreative.getFileUrls()));
         ret.put("priority", d_AdCreative.getPriority());
         ret.put("status", d_AdCreative.getStatus());
-        ret.put("startTime",CommonUtil.toDateStr(d_AdCreative.getStartTime()));
-        ret.put("endTime", CommonUtil.toDateStr(d_AdCreative.getEndTime()));
-        ret.put("spaceId",d_AdSpace.getId());
-        ret.put("spaceName",d_AdSpace.getName());
-        ret.put("spaceDescription",d_AdSpace.getDescription());
+        ret.put("validDate", new String[]{CommonUtil.toDateStr(d_AdCreative.getStartTime()), CommonUtil.toDateStr(d_AdCreative.getEndTime())});
+        ret.put("spaceId", d_AdSpace.getId());
+        ret.put("spaceName", d_AdSpace.getName());
+        ret.put("spaceDescription", d_AdSpace.getDescription());
         ret.put("spaceSupportFormat", d_AdSpace.getSupportFormat());
 
-        return result.success("初始成功",ret);
+        return result.success("初始成功", ret);
 
     }
 
@@ -237,7 +234,7 @@ public class AdServiceImpl implements AdService {
         AdCreative d_AdCreative=new AdCreative();
         d_AdCreative.setId(rop.getId());
         d_AdCreative.setTitle(rop.getTitle());
-        d_AdCreative.setFileUrl(rop.getFileUrl());
+        d_AdCreative.setFileUrls(JsonUtil.getJson(rop.getFileUrls()));
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);

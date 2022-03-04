@@ -1,10 +1,14 @@
 package com.caterbao.lumos.api.merch.rop;
 
+import com.caterbao.lumos.locals.common.ImgVo;
+
+import java.util.List;
+
 public class RopAdCreativeAdd {
     private String spaceId;
     private String title;
     private String[] validDate;
-    private String fileUrl;
+    private List<ImgVo> fileUrls;
 
 
     public String getSpaceId() {
@@ -31,11 +35,11 @@ public class RopAdCreativeAdd {
         this.validDate = validDate;
     }
 
-    public String getFileUrl() {
-        return fileUrl;
+    public List<ImgVo> getFileUrls() {
+        return fileUrls;
     }
 
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setFileUrls(List<ImgVo> fileUrls) {
+        this.fileUrls = fileUrls;
     }
 }

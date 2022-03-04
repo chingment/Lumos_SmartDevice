@@ -7,7 +7,7 @@ public class AdCreative {
     private String merchId;
     private String spaceId;
     private String title;
-    private String fileUrl;
+    private String fileUrls;
     private int priority;
     private int status;
     private Timestamp startTime;
@@ -49,12 +49,12 @@ public class AdCreative {
         this.title = title;
     }
 
-    public String getFileUrl() {
-        return fileUrl;
+    public String getFileUrls() {
+        return fileUrls;
     }
 
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setFileUrls(String fileUrls) {
+        this.fileUrls = fileUrls;
     }
 
     public int getPriority() {

@@ -2,10 +2,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.BorrowerService;
-import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.PageResult;
-import com.caterbao.lumos.locals.common.PasswordUtil;
+import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
@@ -163,7 +160,7 @@ public class BorrowerServiceImpl implements BorrowerService{
             d_SysUser.setFullName(rop.getFullName());
             d_SysUser.setPhoneNumber(rop.getPhoneNumber());
             d_SysUser.setEmail(rop.getEmail());
-            d_SysUser.setAvatar(rop.getAvatar());
+            d_SysUser.setAvatar(JsonUtil.getJson(rop.getAvatar()));
             d_SysUser.setIsDisable(false);
             d_SysUser.setCreator(operater);
             d_SysUser.setCreateTime(CommonUtil.getDateTimeNow());

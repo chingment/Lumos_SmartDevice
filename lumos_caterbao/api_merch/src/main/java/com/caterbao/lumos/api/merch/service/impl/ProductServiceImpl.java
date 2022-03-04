@@ -112,7 +112,9 @@ public class ProductServiceImpl implements ProductService {
             item.put("id",r_SpuInfo.getId());
             item.put("name",r_SpuInfo.getName());
             item.put("cumCode",r_SpuInfo.getCumCode());
-            item.put("imgUrl", r_SpuInfo.getDisplayImgUrls().get(0).getUrl());
+            item.put("imgUrl", ImgVo.getMainImgUrl(r_SpuInfo.getDisplayImgUrls()));
+            item.put("createTime",CommonUtil.toDateTimeStr(d_PrdSpu.getCreateTime()));
+            item.put("deleteTime","");
             item.put("sysKinds",getSysKinds(r_SpuInfo.getSysKindIds()));
 
             List<Object> m_Skus=new ArrayList<>();

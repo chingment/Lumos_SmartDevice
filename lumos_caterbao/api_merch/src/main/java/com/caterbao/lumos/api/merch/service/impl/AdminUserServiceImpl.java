@@ -140,7 +140,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             d_SysUser.setFullName(rop.getFullName());
             d_SysUser.setPhoneNumber(rop.getPhoneNumber());
             d_SysUser.setEmail(rop.getEmail());
-            d_SysUser.setAvatar(rop.getAvatar());
+            d_SysUser.setAvatar(JsonUtil.getJson(rop.getAvatar()));
             d_SysUser.setIsDisable(false);
             d_SysUser.setCreator(operater);
             d_SysUser.setCreateTime(CommonUtil.getDateTimeNow());
@@ -193,7 +193,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         ret.put("fullName",d_SysUser.getFullName());
         ret.put("phoneNumber",d_SysUser.getPhoneNumber());
         ret.put("email",d_SysUser.getEmail());
-        ret.put("avatar",d_SysUser.getAvatar());
+        ret.put("avatar",JsonUtil.toObject(d_SysUser.getAvatar()));
         ret.put("isDisable",d_SysUser.getIsDisable());
 
         return result.success("",ret);
@@ -225,7 +225,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             d_SysUser.setFullName(rop.getFullName());
             d_SysUser.setPhoneNumber(rop.getPhoneNumber());
             d_SysUser.setEmail(rop.getEmail());
-            d_SysUser.setAvatar(rop.getAvatar());
+            d_SysUser.setAvatar(JsonUtil.getJson(rop.getAvatar()));
             d_SysUser.setIsDisable(rop.getIsDisable());
             d_SysUser.setMender(operater);
             d_SysUser.setMendTime(CommonUtil.getDateTimeNow());
