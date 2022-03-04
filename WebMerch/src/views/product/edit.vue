@@ -15,22 +15,6 @@
           <el-form-item label="货号" prop="cumCode">
             <el-input v-model="form.cumCode" clearable />
           </el-form-item>
-          <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
-            <el-input :value="form.displayImgUrls.toString()" style="display:none" />
-            <lm-upload
-              v-model="form.displayImgUrls"
-              list-type="picture-card"
-              :file-list="form.displayImgUrls"
-              :action="uploadFileServiceUrl"
-              :headers="uploadFileHeaders"
-              :data="{folder:'product'}"
-              ext=".jpg,.png,.jpeg"
-              tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
-              :max-size="1024"
-              :sortable="true"
-              :limit="4"
-            />
-          </el-form-item>
           <el-form-item label="所属分类" prop="sysKindIds">
             <el-cascader
               v-model="form.sysKindIds"
@@ -60,6 +44,22 @@
               @blur="onCharTagsInputVaueConfirmAdd"
             />
             <el-button v-else class="button-new-tag" size="small" @click="onCharTagsInputShow">+ 添加</el-button>
+          </el-form-item>
+          <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
+            <el-input :value="form.displayImgUrls.toString()" style="display:none" />
+            <lm-upload
+              v-model="form.displayImgUrls"
+              list-type="picture-card"
+              :file-list="form.displayImgUrls"
+              :action="uploadFileServiceUrl"
+              :headers="uploadFileHeaders"
+              :data="{folder:'product'}"
+              ext=".jpg,.png,.jpeg"
+              tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
+              :max-size="1024"
+              :sortable="true"
+              :limit="4"
+            />
           </el-form-item>
         </el-form>
       </div>

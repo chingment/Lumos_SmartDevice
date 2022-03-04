@@ -17,29 +17,6 @@
           <el-form-item label="货号" prop="cumCode">
             <el-input v-model="form.cumCode" clearable />
           </el-form-item>
-          <el-form-item v-show="!isOpenAddMultiSpecs" label="编码" prop="singleSkuCumCode">
-            <el-input v-model="form.singleSkuCumCode" clearable />
-          </el-form-item>
-          <el-form-item v-show="!isOpenAddMultiSpecs" label="条形码" prop="singleSkuBarCode">
-            <el-input v-model="form.singleSkuBarCode" clearable />
-          </el-form-item>
-          <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
-            <el-input :value="form.displayImgUrls.toString()" style="display:none" />
-            <lm-upload
-              v-model="form.displayImgUrls"
-              list-type="picture-card"
-              :file-list="form.displayImgUrls"
-              :action="uploadFileServiceUrl"
-              :headers="uploadFileHeaders"
-              :data="{folder:'product'}"
-              ext=".jpg,.png,.jpeg"
-              tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
-              :max-size="1024"
-              :sortable="true"
-              :limit="4"
-            />
-
-          </el-form-item>
           <el-form-item label="所属分类" prop="sysKindIds">
             <el-cascader
               v-model="form.sysKindIds"
@@ -76,12 +53,28 @@
             />
             <el-button v-else class="button-new-tag" size="small" @click="onCharTagsInputShow">+ 添加</el-button>
           </el-form-item>
+          <el-form-item label="图片" prop="displayImgUrls" class="el-form-item-upload">
+            <el-input :value="form.displayImgUrls.toString()" style="display:none" />
+            <lm-upload
+              v-model="form.displayImgUrls"
+              list-type="picture-card"
+              :file-list="form.displayImgUrls"
+              :action="uploadFileServiceUrl"
+              :headers="uploadFileHeaders"
+              :data="{folder:'product'}"
+              ext=".jpg,.png,.jpeg"
+              tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
+              :max-size="1024"
+              :sortable="true"
+              :limit="4"
+            />
+
+          </el-form-item>
         </el-form>
       </div>
 
       <div v-show="active===1">
         <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
-
           <el-form-item
             v-for="(sysKindAttr,index) in form.sysKindAttrs"
             :key="index"
@@ -95,28 +88,16 @@
             />
           </el-form-item>
 
-          <el-form-item v-show="!isOpenAddMultiSpecs" label="默认销售价" prop="singleSkuSalePrice">
-            <el-input v-model="form.singleSkuSalePrice" clearable style="width:160px">
-              <template slot="prepend">￥</template>
-            </el-input>
+          <el-form-item label="商品规格" style="max-width:1000px">
 
-            <el-alert
-              title="提示：该价格仅作为销售价的参考"
-              type="remark"
-              :closable="false"
-            />
+            <el-radio-group v-model="isMultiSpecs">
+              <el-radio :label="false">单规格</el-radio>
+              <el-radio :label="true">多规格</el-radio>
+            </el-radio-group>
 
           </el-form-item>
-
-          <el-form-item label="属性" style="max-width:1000px">
-            <el-checkbox v-model="isOpenAddMultiSpecs">多规格</el-checkbox>
-          </el-form-item>
-          <el-form-item v-show="!isOpenAddMultiSpecs" label="规格" prop="singleSkuSpecDes">
-            <el-input v-model="form.singleSkuSpecDes" clearable />
-          </el-form-item>
-          <el-form-item v-show="isOpenAddMultiSpecs" style="max-width:1000px">
-
-            <div style="display:flex">
+          <el-form-item style="max-width:1000px">
+            <div v-show="isMultiSpecs" style="display:flex">
               <div style="min-width:50px;">规格：</div>
               <div style="flex:1;">
                 <el-tag
@@ -142,6 +123,7 @@
             </div>
             <div
               v-for="(item,i) in multiSpecsItems"
+              v-show="isMultiSpecs"
               :key="item.name"
               style="display:flex"
             >
@@ -171,7 +153,6 @@
               </div>
 
             </div>
-
             <table class="list-tb" cellpadding="0" cellspacing="0">
               <thead>
                 <tr>
@@ -202,7 +183,8 @@
                     v-for="(spec,y) in item.specDes"
                     :key="y"
                   >
-                    {{ spec.value }}
+                    <span v-if="isMultiSpecs">  {{ spec.value }}</span>
+                    <el-input v-else v-model="spec.value" clearable style="width:90%" />
                   </td>
                   <td>
                     <el-tooltip :content="item.cumCode" placement="top">
@@ -281,33 +263,25 @@ export default {
   data() {
     return {
       loading: false,
-      isOpenAddMultiSpecs: false,
+      isMultiSpecs: false,
       form: {
         name: '',
-        spuCode: '',
+        cumCode: '',
         sysKindIds: [],
         detailsDes: [],
         charTags: [],
         briefDes: '',
         displayImgUrls: [],
-        singleSkuCumCode: '',
-        singleSkuBarCode: '',
-        singleSkuSalePrice: 0,
-        singleSkuSpecDes: '',
         sysKindAttrs: []
       },
       rules0: {
         name: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         cumCode: [{ required: true, min: 1, max: 50, message: '必填,且不能超过50个字符', trigger: 'change' }],
-        singleSkuCumCode: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
-        singleSkuBarCode: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         sysKindIds: [{ type: 'array', required: true, message: '请选择一个商品分类', min: 1, max: 3 }],
         displayImgUrls: [{ type: 'array', required: false, message: '至少上传一张,且必须少于5张', max: 4 }],
         charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }]
       },
       rules1: {
-        singleSkuSalePrice: [{ required: true, message: '金额格式,eg:88.88', pattern: fromReg.money1 }],
-        singleSkuSpecDes: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }]
       },
       rules2: {
         briefDes: [{ required: false, min: 0, max: 200, message: '不能超过200个字符', trigger: 'change' }],
@@ -315,12 +289,12 @@ export default {
       },
       optionsSysKinds: [
       ],
-      multiSpecsItems: [],
+      multiSpecsItems: [{ name: '规格', value: [{ name: '' }] }],
       multiSpecsInputVisible: false,
       multiSpecsInputValue: '',
       multiSpecsSkuArray: [],
       multiSpecsSkuList: [],
-      multiSpecsSkuResult: [],
+      multiSpecsSkuResult: [{ specDes: [{ name: '规格', value: '' }], salePrice: '', barCode: '', cumCode: '' }],
       charTagsInputVisible: false,
       charTagsInputValue: '',
       active: 0,
@@ -330,17 +304,13 @@ export default {
     }
   },
   watch: {
-    isOpenAddMultiSpecs(val, oldVal) {
+    isMultiSpecs(val, oldVal) {
       if (val) {
-        this.rules0.singleSkuCumCode[0].required = false
-        this.rules0.singleSkuBarCode[0].required = false
-        this.rules1.singleSkuSalePrice[0].required = false
-        this.rules1.singleSkuSpecDes[0].required = false
+        this.multiSpecsItems = []
+        this.multiSpecsSkuResult = []
       } else {
-        this.rules0.singleSkuCumCode[0].required = true
-        this.rules0.singleSkuBarCode[0].required = true
-        this.rules1.singleSkuSalePrice[0].required = true
-        this.rules1.singleSkuSpecDes[0].required = true
+        this.multiSpecsItems = [{ name: '规格', value: [{ name: '' }] }]
+        this.multiSpecsSkuResult = [{ specDes: [{ name: '规格', value: '' }], salePrice: '', barCode: '', cumCode: '' }]
       }
     }
   },
@@ -557,47 +527,36 @@ export default {
         this.$refs['form1'].validate((valid) => {
           if (!valid) return
 
-          var skus = []
+          var skus = this.multiSpecsSkuResult
 
-          if (this.isOpenAddMultiSpecs) {
-            var _skus = this.multiSpecsSkuResult
-            for (var i = 0; i < _skus.length; i++) {
-              var strName = '规格 '
-
-              for (var j = 0; j < _skus[i].specDes.length; j++) {
-                strName += _skus[i].specDes[j].value + ' '
-              }
-
-              if (strLen(_skus[i].cumCode) <= 0 || strLen(_skus[i].cumCode) > 30) {
-                this.$message(strName + '的编码不能为空，且不能超过30个字符')
-                return false
-              }
-
-              if (strLen(_skus[i].barCode) > 30) {
-                this.$message(strName + '的条形码不能超过30个字符')
-                return false
-              }
-
-              if (!isMoney(_skus[i].salePrice)) {
-                this.$message(strName + '的价格格式必须为:xx.xx,eg: 88.88')
-                return false
-              }
-
-              skus.push({ specDes: _skus[i].specDes, salePrice: _skus[i].salePrice, barCode: _skus[i].barCode, cumCode: _skus[i].cumCode })
-            }
-          } else {
-            skus.push({ specDes: [{ name: '单规格', value: this.form.singleSkuSpecDes }], salePrice: this.form.singleSkuSalePrice, barCode: this.form.singleSkuBarCode, cumCode: this.form.singleSkuCumCode })
-          }
-
-          if (skus.length <= 0) {
+          if (skus == null || skus.length <= 0) {
             this.$message('至少录入一个规格商品')
             return false
           }
 
-          if (this.multiSpecsItems === null || this.multiSpecsItems.length === 0) {
-            this.multiSpecsItems = []
-            this.multiSpecsItems.push({ name: '单规格', value: [{ 'name': this.form.singleSkuSpecDes }] })
+          for (var i = 0; i < skus.length; i++) {
+            var strName = '规格 '
+
+            for (var j = 0; j < skus[i].specDes.length; j++) {
+              strName += skus[i].specDes[j].value + ' '
+            }
+
+            if (strLen(skus[i].cumCode) <= 0 || strLen(skus[i].cumCode) > 30) {
+              this.$message(strName + '的编码不能为空，且不能超过30个字符')
+              return false
+            }
+
+            if (strLen(skus[i].barCode) > 30) {
+              this.$message(strName + '的条形码不能超过30个字符')
+              return false
+            }
+
+            if (!isMoney(skus[i].salePrice)) {
+              this.$message(strName + '的价格格式必须为:xx.xx,eg: 88.88')
+              return false
+            }
           }
+
           this.skus = skus
           this.active += 1
         })

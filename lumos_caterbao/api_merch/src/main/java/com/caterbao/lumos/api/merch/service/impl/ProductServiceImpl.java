@@ -294,7 +294,7 @@ public class ProductServiceImpl implements ProductService {
 
                 if (prdSkuMapper.isExistCumCode(null, merchId, sku.getCumCode()) > 0) {
                     lock.unlock();
-                    return result.fail("编码已经存在");
+                    return result.fail("编码["+sku.getCumCode()+"]已经存在");
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
