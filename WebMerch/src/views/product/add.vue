@@ -5,7 +5,6 @@
     <el-steps :active="active" finish-status="success" align-center>
       <el-step title="商品信息" />
       <el-step title="规格属性" />
-      <el-step title="详情信息" />
     </el-steps>
 
     <div style="margin-top:30px;">
@@ -69,6 +68,25 @@
               :limit="4"
             />
 
+          </el-form-item>
+          <el-form-item label="简短描述" style="max-width:1000px">
+            <el-input v-model="form.briefDes" type="text" maxlength="200" clearable show-word-limit />
+          </el-form-item>
+          <el-form-item label="详情图片" prop="detailsDes" class="el-form-item-upload">
+            <el-input :value="form.detailsDes.toString()" style="display:none" />
+            <lm-upload
+              v-model="form.detailsDes"
+              list-type="picture-card"
+              :file-list="form.detailsDes"
+              :action="uploadFileServiceUrl"
+              :headers="uploadFileHeaders"
+              :data="{folder:'product'}"
+              ext=".jpg,.png,.jpeg"
+              tip="图片500*500，格式（jpg,png）不超过4M；可拖动改变图片顺序"
+              :max-size="1024"
+              :sortable="true"
+              :limit="4"
+            />
           </el-form-item>
         </el-form>
       </div>
@@ -224,33 +242,10 @@
         </el-form>
       </div>
 
-      <div v-show="active===2">
-        <el-form ref="form2" v-loading="loading" :model="form" :rules="rules2" label-width="100px">
-          <el-form-item label="简短描述" style="max-width:1000px">
-            <el-input v-model="form.briefDes" type="text" maxlength="200" clearable show-word-limit />
-          </el-form-item>
-          <el-form-item label="详情图片" prop="detailsDes" class="el-form-item-upload">
-            <el-input :value="form.detailsDes.toString()" style="display:none" />
-            <lm-upload
-              v-model="form.detailsDes"
-              list-type="picture-card"
-              :file-list="form.detailsDes"
-              :action="uploadFileServiceUrl"
-              :headers="uploadFileHeaders"
-              :data="{folder:'product'}"
-              ext=".jpg,.png,.jpeg"
-              tip="图片500*500，格式（jpg,png）不超过4M；可拖动改变图片顺序"
-              :max-size="1024"
-              :sortable="true"
-              :limit="4"
-            />
-          </el-form-item>
-        </el-form>
-      </div>
       <div style="padding-left:100px">
         <!-- <el-button type="primary" @click="onSubmit">保存</el-button> -->
         <el-button v-show="active>=1" plain style="margin-left:0px;margin-right:10px" @click="onLast">上一步</el-button>
-        <el-button type="primary" style="margin-left:0px;margin-right:10px" @click="onNext">下一步</el-button>
+        <el-button type="primary" style="margin-left:0px;margin-right:10px" @click="onNext">{{ active!==1?'下一步':'保 存' }}</el-button>
       </div>
     </div>
   </div>
@@ -287,13 +282,13 @@ export default {
         cumCode: [{ required: true, min: 1, max: 50, message: '必填,且不能超过50个字符', trigger: 'change' }],
         sysKindIds: [{ type: 'array', required: true, message: '请选择一个商品分类', min: 1, max: 3 }],
         charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }],
-        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }]
+        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }],
+        briefDes: [{ required: false, min: 0, max: 200, message: '不能超过200个字符', trigger: 'change' }],
+        detailsDes: [{ type: 'array', required: false, message: '不能超过3张', max: 3 }]
       },
       rules1: {
       },
       rules2: {
-        briefDes: [{ required: false, min: 0, max: 200, message: '不能超过200个字符', trigger: 'change' }],
-        detailsDes: [{ type: 'array', required: false, message: '不能超过3张', max: 3 }]
       },
       optionsSysKinds: [
       ],
@@ -564,12 +559,6 @@ export default {
             }
           }
 
-          this.active += 1
-        })
-      } else if (this.active === 2) {
-        this.$refs['form2'].validate((valid) => {
-          if (!valid) return
-
           var _form = {}
           _form.name = this.form.name
           _form.cumCode = this.form.cumCode
@@ -579,7 +568,7 @@ export default {
           _form.displayImgUrls = this.form.displayImgUrls
           _form.specItems = this.multiSpecsItems
           _form.charTags = this.form.charTags
-          _form.skus = this.form.skus
+          _form.skus = skus
           _form.sysKindAttrs = this.form.sysKindAttrs
 
           MessageBox.confirm('确定要保存', '提示', {
