@@ -8,7 +8,7 @@ public class RopAdCreativeEdit {
     private String id;
     private String title;
     private String[] validDate;
-    private List<ImgVo> fileUrls;
+    private List<ImgVo> fileUrl;
 
     public String getId() {
         return id;
@@ -34,11 +34,11 @@ public class RopAdCreativeEdit {
         this.validDate = validDate;
     }
 
-    public List<ImgVo> getFileUrls() {
-        return fileUrls;
+    public List<ImgVo> getFileUrl() {
+        return fileUrl;
     }
 
-    public void setFileUrls(List<ImgVo> fileUrls) {
-        this.fileUrls = fileUrls;
+    public void setFileUrl(List<ImgVo> fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

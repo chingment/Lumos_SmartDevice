@@ -59,9 +59,14 @@
           <span>{{ row.sysKinds.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="默认销售价" align="left" width="110">
+      <el-table-column label="售价" align="left" width="110">
         <template slot-scope="{row}">
           <span>{{ row.skus[0].salePrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="回收时间" align="left" width="160">
+        <template slot-scope="{row}">
+          <span>{{ row.rycbTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">

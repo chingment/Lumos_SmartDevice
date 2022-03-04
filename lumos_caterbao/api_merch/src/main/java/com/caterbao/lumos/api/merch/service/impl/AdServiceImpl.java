@@ -126,7 +126,7 @@ public class AdServiceImpl implements AdService {
 
             item.put("id", d_AdCreative.getId());
             item.put("title", d_AdCreative.getTitle());
-            item.put("fileUrl",ImgVo.getMainImgUrl(d_AdCreative.getFileUrls()));
+            item.put("fileUrl",ImgVo.getMainImgUrl(d_AdCreative.getFileUrl()));
             item.put("startTime",CommonUtil.toDateStr(d_AdCreative.getStartTime()));
             item.put("endTime",CommonUtil.toDateStr(d_AdCreative.getEndTime()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_AdCreative.getCreateTime()));
@@ -175,7 +175,7 @@ public class AdServiceImpl implements AdService {
         d_AdCreative.setMerchId(merchId);
         d_AdCreative.setSpaceId(rop.getSpaceId());
         d_AdCreative.setTitle(rop.getTitle());
-        d_AdCreative.setFileUrls(JsonUtil.getJson(rop.getFileUrls()));
+        d_AdCreative.setFileUrl(JsonUtil.getJson(rop.getFileUrl()));
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);
@@ -215,7 +215,7 @@ public class AdServiceImpl implements AdService {
 
         ret.put("id", d_AdCreative.getId());
         ret.put("title", d_AdCreative.getTitle());
-        ret.put("fileUrls",JsonUtil.toObject(d_AdCreative.getFileUrls()));
+        ret.put("fileUrl",JsonUtil.toObject(d_AdCreative.getFileUrl()));
         ret.put("priority", d_AdCreative.getPriority());
         ret.put("status", d_AdCreative.getStatus());
         ret.put("validDate", new String[]{CommonUtil.toDateStr(d_AdCreative.getStartTime()), CommonUtil.toDateStr(d_AdCreative.getEndTime())});
@@ -234,7 +234,7 @@ public class AdServiceImpl implements AdService {
         AdCreative d_AdCreative=new AdCreative();
         d_AdCreative.setId(rop.getId());
         d_AdCreative.setTitle(rop.getTitle());
-        d_AdCreative.setFileUrls(JsonUtil.getJson(rop.getFileUrls()));
+        d_AdCreative.setFileUrl(JsonUtil.getJson(rop.getFileUrl()));
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);

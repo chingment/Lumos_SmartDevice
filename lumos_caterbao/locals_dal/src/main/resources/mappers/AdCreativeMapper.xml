@@ -14,9 +14,9 @@
         <if test="where.CreativeId != null">and Id =#{where.CreativeId}</if>
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.AdCreative">
-  insert into AdCreative(id,merchId,spaceId,title,fileUrls,priority,
+  insert into AdCreative(id,merchId,spaceId,title,fileUrl,priority,
   status,startTime,endTime,creator,createTime)
-  values(#{id},#{merchId},#{spaceId},#{title},#{fileUrls},#{priority},
+  values(#{id},#{merchId},#{spaceId},#{title},#{fileUrl},#{priority},
   #{status},#{startTime},#{endTime},#{creator},#{createTime}
   )
     </insert>
@@ -24,7 +24,7 @@
         update AdCreative
         <set>
             <if test="title != null">title=#{title},</if>
-            <if test="fileUrls != null">fileUrls=#{fileUrls},</if>
+            <if test="fileUrl != null">fileUrl=#{fileUrl},</if>
             <if test="priority != null">priority=#{priority},</if>
             <if test="status != null">status=#{status},</if>
             <if test="startTime != null">startTime=#{startTime},</if>

@@ -8,7 +8,7 @@ public class RopAdCreativeAdd {
     private String spaceId;
     private String title;
     private String[] validDate;
-    private List<ImgVo> fileUrls;
+    private List<ImgVo> fileUrl;
 
 
     public String getSpaceId() {
@@ -35,11 +35,11 @@ public class RopAdCreativeAdd {
         this.validDate = validDate;
     }
 
-    public List<ImgVo> getFileUrls() {
-        return fileUrls;
+    public List<ImgVo> getFileUrl() {
+        return fileUrl;
     }
 
-    public void setFileUrls(List<ImgVo> fileUrls) {
-        this.fileUrls = fileUrls;
+    public void setFileUrl(List<ImgVo> fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

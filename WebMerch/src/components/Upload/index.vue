@@ -70,12 +70,22 @@ import Sortable from 'sortablejs'
 export default {
   name: 'LmUpload',
   props: {
-    data: Object,
+    data: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
     limit: {
       type: Number,
       default: 0
     },
-    fileList: Array,
+    fileList: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     ext: {
       type: String,
       default: '.jpg,.png,.gif,.jpeg'
@@ -88,12 +98,20 @@ export default {
       type: Number,
       default: 1204
     },
-    action: String,
+    action: {
+      type: String,
+      default: ''
+    },
     listType: {
       type: String,
       default: 'picture-card'
     },
-    headers: Object,
+    headers: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
     sortable: { type: Boolean, default: false },
     edit: { type: Boolean, default: true },
     onPreview: { type: Function, default: function() { } },
@@ -142,7 +160,6 @@ export default {
           newName = []
         }
         this.elFileList = newName
-
         if (!this.edit) {
           var c = this.$refs.uploadImg.$el
           setTimeout(function() {
@@ -165,7 +182,10 @@ export default {
 
   },
   created: function() {
-    this.elCount = this.elFileList.length
+    var elFileList = this.elFileList
+    if (elFileList == null) { elFileList = [] }
+    this.elFileList = elFileList
+    this.elCount = elFileList.length
   },
   mounted: function() {
     var that = this
@@ -181,9 +201,7 @@ export default {
   },
   methods: {
     beforeElUpload: function(file) {
-      console.log('beforeUpload')
       var ext = this.elExt
-      console.log(ext)
       var maxSize = this.elMaxSize
       var isOkExt = ext.indexOf(file.name.substring(file.name.lastIndexOf('.'))) >= 0
       if (!isOkExt) {
@@ -243,9 +261,6 @@ export default {
           }
         }
       }
-
-      // this.elCount = fileList.length
-      // this.elFileList = fileList
       this.uploadCardCheckShow()
       this.onRemove(file, fileList)
     },
@@ -281,7 +296,6 @@ export default {
     },
     isVideo(filename) {
       if (filename.indexOf('mp4') > -1) { return true }
-
       return false
     }
   }

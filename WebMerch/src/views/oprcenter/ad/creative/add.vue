@@ -8,12 +8,12 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" clearable />
       </el-form-item>
-      <el-form-item label="文件" prop="fileUrls" class="el-form-item-upload">
-        <el-input :value="form.fileUrls.toString()" style="display:none" />
+      <el-form-item label="文件" prop="fileUrl" class="el-form-item-upload">
+        <el-input :value="form.fileUrl.toString()" style="display:none" />
         <lm-upload
-          v-model="form.fileUrls"
+          v-model="form.fileUrl"
           list-type="picture-card"
-          :file-list="form.fileUrls"
+          :file-list="form.fileUrl"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
           :data="{folder:'ad'}"
@@ -65,11 +65,11 @@ export default {
         spaceSupportFormat: '',
         title: '',
         validDate: [],
-        fileUrls: []
+        fileUrl: []
       },
       rules: {
         title: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
-        fileUrls: [{ type: 'array', required: true, message: '至多上传一个文件', max: 1 }],
+        fileUrl: [{ type: 'array', required: true, message: '至多上传一个文件', max: 1 }],
         validDate: [{ type: 'array', required: true, message: '请选择有效期' }]
       },
       uploadFileHeaders: {},
@@ -106,13 +106,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            var _form = {
-              spaceId: this.form.spaceId,
-              title: this.form.title,
-              validDate: this.form.validDate,
-              fileUrl: this.form.fileUrls[0].url
-            }
-            creativeAdd(_form).then(res => {
+            creativeAdd(this.form).then(res => {
               if (res.code === this.$code_suc) {
                 this.$message.success(res.msg)
                 this.$router.push({

@@ -23,17 +23,17 @@
         <el-input v-model="form.fullName" clearable />
       </el-form-item>
       <el-form-item label="头像" prop="avatar" class="el-form-item-upload">
-        <el-input :value="form.avatar.toString()" style="display:none" />
+        <el-input :value="form.avatar==null?'':form.avatar.toString()" style="display:none" />
         <lm-upload
           v-model="form.avatar"
           list-type="picture-card"
           :file-list="form.avatar"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'avatar'}"
+          :data="{folder:'avatar/adminuser'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
-          :max-size="1024"
+          :max-size="1024*4"
           :sortable="true"
           :limit="1"
         />
@@ -104,13 +104,7 @@ export default {
       init_edit({ id: id }).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data
-          this.form.id = d.id
-          this.form.userName = d.userName
-          this.form.fullName = d.fullName
-          this.form.phoneNumber = d.phoneNumber
-          this.form.email = d.email
-          this.form.avatar.push({ name: 'xx', url: d.avatar })
-          this.form.isDisable = d.isDisable
+          this.form = d
         }
         this.loading = false
       }).catch(() => {
@@ -127,24 +121,15 @@ export default {
           }).then(() => {
             this.loading = true
 
-            var form = this.form
-            var _form = {
-              id: form.id,
-              password: form.password,
-              fullName: form.fullName,
-              phoneNumber: form.phoneNumber,
-              email: form.email,
-              avatar: form.avatar[0].url,
-              isDisable: form.isDisable
-            }
-
-            edit(_form).then(res => {
+            edit(this.form).then(res => {
               this.loading = false
               if (res.code === this.$code_suc) {
                 this.$message.success(res.msg)
               } else {
                 this.$message.error(res.msg)
               }
+            }).catch(() => {
+              this.loading = false
             })
           }).catch(() => {
           })

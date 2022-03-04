@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="文件" prop="imgUrl" align="left" width="120">
         <template slot-scope="scope">
-
+          <!--
           <img v-if="isImage(scope.row.fileUrl)" :src="scope.row.fileUrl" style="width:80px;height:80px;">
 
           <video
@@ -55,7 +55,7 @@
             height="100"
             class="el-upload-list__item-thumbnail"
             controls="controls"
-          />
+          /> -->
 
         </template>
       </el-table-column>
