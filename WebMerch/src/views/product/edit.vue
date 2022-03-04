@@ -65,8 +65,27 @@
       </div>
       <div v-show="active===1">
         <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
+          <el-form-item v-if="form.sysKindAttrs!=null&&form.sysKindAttrs.length>0" label="商品属性" />
+          <div class="kind-attr">
+            <template v-for="(sysKindAttr,index) in form.sysKindAttrs">
+              <div :key="index" :class="'item item_'+(index%2==0?'0':'1')">
 
-          <el-form-item
+                <el-form-item
+                  :label="sysKindAttr.name"
+                  :prop="'sysKindAttrs.' + index + '.value'"
+                  :rules="getAttrsRules(sysKindAttr)"
+                >
+                  <el-input
+                    v-model="sysKindAttr.value"
+                    style="max-width:300px"
+                    clearable
+                  />
+                </el-form-item>
+
+              </div>
+            </template>
+          </div>
+          <!-- <el-form-item
             v-for="(sysKindAttr,index) in form.sysKindAttrs"
             :key="index"
             :label="sysKindAttr.name"
@@ -77,7 +96,7 @@
               v-model="sysKindAttr.value"
               clearable
             />
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="规格商品" style="max-width:1000px">
             <table class="list-tb" cellpadding="0" cellspacing="0">
@@ -179,13 +198,14 @@ export default {
         name: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         cumCode: [{ required: true, min: 1, max: 50, message: '必填,且不能超过50个字符', trigger: 'change' }],
         sysKindIds: [{ type: 'array', required: true, message: '请选择一个三级商品分类', min: 1, max: 3 }],
+        charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }],
         displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }]
       },
       rules1: {
       },
       rules2: {
-        detailsDes: [{ type: 'array', required: false, message: '不能超过3张', max: 3 }],
-        charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }]
+        briefDes: [{ required: false, min: 0, max: 200, message: '不能超过200个字符', trigger: 'change' }],
+        detailsDes: [{ type: 'array', required: false, message: '不能超过3张', max: 3 }]
       },
       optionsSysKinds: [],
       charTagsInputVisible: false,
@@ -377,6 +397,14 @@ export default {
   .el-alert--remark {
     height: 30px;
     padding: 0;
+  }
+
+  .kind-attr{
+display: inline-block;
+    .item{
+      float: left;
+      width: 50%;
+    }
   }
 }
 
