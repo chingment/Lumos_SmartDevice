@@ -3,7 +3,7 @@
     <page-header />
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="卡号" prop="cardNo">
-        <el-input v-model="form.cardNo" clearable />
+        <el-input v-model.trim="form.cardNo" clearable />
       </el-form-item>
       <el-form-item label="密码" prop="cardPwd">
         <el-input v-model="form.cardPwd" type="cardPwd" clearable />

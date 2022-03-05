@@ -133,16 +133,16 @@
               <tbody>
                 <tr v-for="(item,x) in form.skus" :key="x">
                   <td v-for="(specDes,y) in item.specDes" :key="y">
-                    <el-input v-model="specDes.value" clearable style="width:90%" />
+                    <el-input v-model.trim="specDes.value" clearable style="width:90%" />
                   </td>
                   <td>
-                    <el-input v-model="item.cumCode" clearable style="width:90%" />
+                    <el-input v-model.trim="item.cumCode" clearable style="width:90%" />
                   </td>
                   <td>
-                    <el-input v-model="item.barCode" clearable style="width:90%" />
+                    <el-input v-model.trim="item.barCode" clearable style="width:90%" />
                   </td>
                   <td>
-                    <el-input v-model="item.salePrice" clearable style="width:90%" />
+                    <el-input v-model.trim="item.salePrice" clearable style="width:90%" />
                   </td>
                   <td>
                     <el-checkbox v-model="item.isOffSell" />

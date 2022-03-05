@@ -14,7 +14,7 @@
             <el-input v-model="form.name" clearable />
           </el-form-item>
           <el-form-item label="货号" prop="cumCode">
-            <el-input v-model="form.cumCode" clearable />
+            <el-input v-model.trim="form.cumCode" clearable />
           </el-form-item>
           <el-form-item label="所属分类" prop="sysKindIds">
             <el-cascader
@@ -210,21 +210,21 @@
                     :key="y"
                   >
                     <span v-if="isMultiSpecs">  {{ spec.value }}</span>
-                    <el-input v-else v-model="spec.value" clearable style="width:90%" />
+                    <el-input v-else v-model.trim="spec.value" clearable style="width:90%" />
                   </td>
                   <td>
                     <el-tooltip :content="item.cumCode" placement="top">
-                      <el-input v-model="item.cumCode" clearable style="width:90%" />
+                      <el-input v-model.trim="item.cumCode" clearable style="width:90%" />
                     </el-tooltip>
                   </td>
                   <td>
                     <el-tooltip :content="item.barCode" placement="top">
-                      <el-input v-model="item.barCode" clearable style="width:90%" />
+                      <el-input v-model.trim="item.barCode" clearable style="width:90%" />
                     </el-tooltip>
                   </td>
                   <td>
                     <el-tooltip :content="item.salePrice" placement="top">
-                      <el-input v-model="item.salePrice" clearable style="width:90%" />
+                      <el-input v-model.trim="item.salePrice" clearable style="width:90%" />
                     </el-tooltip>
                   </td>
                 </tr>

@@ -213,7 +213,27 @@ public class BorrowerServiceImpl implements BorrowerService{
     public CustomResult<Object> init_edit(String operater, String merchId, String borrowerId) {
 
         CustomResult<Object> result = new CustomResult<>();
-        return result.success("");
+
+        LumosSelective selective_SysClientUser = new LumosSelective();
+        selective_SysClientUser.setFields("*");
+        selective_SysClientUser.addWhere("UserId", borrowerId);
+        ClientUserVw d_ClientUserVw = sysClientUserMapper.findOne(selective_SysClientUser);
+
+        if (d_ClientUserVw == null)
+            return result.fail("初始数据失败");
+
+
+        HashMap<String,Object> ret=new HashMap<>();
+
+        ret.put("id",d_ClientUserVw.getId());
+        ret.put("fullName",d_ClientUserVw.getFullName());
+        ret.put("avatar",JsonUtil.toObject(d_ClientUserVw.getAvatar()));
+        ret.put("email", d_ClientUserVw.getEmail());
+        ret.put("phoneNumber", d_ClientUserVw.getPhoneNumber());
+
+        return result.success("初始成功",ret);
+
+
     }
 
     @Override

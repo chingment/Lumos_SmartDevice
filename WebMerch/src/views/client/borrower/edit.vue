@@ -2,23 +2,6 @@
   <div id="adminuser_edit">
     <page-header />
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户名" prop="userName">
-        {{ form.userName }}
-      </el-form-item>
-      <el-form-item v-show="!isOpenEditPassword" label="密码">
-        <span>********</span>
-        <el-button type="text" @click="openEditPassword">修改</el-button>
-      </el-form-item>
-      <el-form-item v-show="isOpenEditPassword" label="密码" prop="password">
-        <div style="display:flex">
-          <div style="flex:1">
-            <el-input v-model="form.password" type="password" clearable />
-          </div>
-          <div style="width:50px;text-align: center;">
-            <el-button type="text" @click="openEditPassword">取消</el-button>
-          </div>
-        </div>
-      </el-form-item>
       <el-form-item label="姓名" prop="fullName">
         <el-input v-model="form.fullName" clearable />
       </el-form-item>
@@ -30,7 +13,7 @@
           :file-list="form.avatar"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'shop'}"
+          :data="{folder:'avatar'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
           :max-size="4*1024"
@@ -43,9 +26,6 @@
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="form.email" clearable />
-      </el-form-item>
-      <el-form-item label="停用">
-        <el-switch v-model="form.isDisable" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -73,17 +53,13 @@ export default {
       isOpenEditPassword: false,
       form: {
         id: '',
-        userName: '',
-        password: '',
         fullName: '',
         phoneNumber: '',
         email: '',
-        avatar: [],
-        isDisable: false
+        avatar: []
       },
       rules: {
-        password: [{ required: false, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
-        avatar: [{ required: true, message: '必须上传' }],
+        avatar: [{ type: 'array', required: false, message: '必须上传', max: 1 }],
         fullName: [{ required: true, message: '必填', trigger: 'change' }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]

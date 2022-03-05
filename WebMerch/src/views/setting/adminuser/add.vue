@@ -3,7 +3,7 @@
     <page-header />
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="用户名" prop="userName">
-        <el-input v-model="form.userName" clearable />
+        <el-input v-model.trim="form.userName" clearable />
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="form.password" type="password" clearable />

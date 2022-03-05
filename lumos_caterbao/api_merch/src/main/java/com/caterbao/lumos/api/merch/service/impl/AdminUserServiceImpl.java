@@ -67,7 +67,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         int pageSize = rop.getPageSize();
 
 
-        Page<?> page = PageHelper.startPage(pageNum, pageSize);
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime Desc");
 
         LumosSelective selective=new LumosSelective();
         selective.setFields("*");

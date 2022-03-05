@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface SysClientUserMapper {
+    ClientUserVw findOne(LumosSelective selective);
     List<ClientUserVw> find(LumosSelective selective);
     long insert(SysClientUser selective);
 }
