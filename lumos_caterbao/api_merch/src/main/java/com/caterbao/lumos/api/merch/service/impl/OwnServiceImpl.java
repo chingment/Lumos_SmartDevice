@@ -17,6 +17,7 @@ import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
 import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
+import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -76,7 +77,7 @@ public class OwnServiceImpl implements OwnService {
         selective_SysMerchUser.setFields("UserId,MerchId");
         selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
 
-        SysMerchUser d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+        MerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
             return result.fail("该账号未授权");
@@ -101,38 +102,56 @@ public class OwnServiceImpl implements OwnService {
     }
 
     @Override
-    public CustomResult<Object> getInfo(String operater,String userId) {
+    public CustomResult<Object> getInfo(String operater,String userId,String mode) {
 
         CustomResult<Object> result = new CustomResult<>();
 
-        RetOwnGetInfo ret = new RetOwnGetInfo();
 
-        LumosSelective selective=new LumosSelective();
-        selective.setFields("*");
-        selective.addWhere("UserId",userId);
+        HashMap<String,Object> ret=new HashMap<>();
 
+      //  RetOwnGetInfo ret = new RetOwnGetInfo();
 
-        List<SysMenu> d_Menus = sysUserMapper.getMenusByUserId(selective);
+        if(mode.equals("0")) {
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("UserId", userId);
 
-        ret.setUserName("chingment");
+            List<SysMenu> d_Menus = sysUserMapper.getMenusByUserId(selective);
 
-        List<MenuModel> r_Menus=new ArrayList<>();
-        for (SysMenu d_Menu : d_Menus) {
-            MenuModel r_Menu = new MenuModel();
-            r_Menu.setId(d_Menu.getId());
-            r_Menu.setCode(d_Menu.getCode());
-            r_Menu.setTitle(d_Menu.getTitle());
-            r_Menu.setpId(d_Menu.getpId());
-            r_Menu.setComponent(d_Menu.getComponent());
-            r_Menu.setPath(d_Menu.getPath());
-            r_Menu.setIcon(d_Menu.getIcon());
-            r_Menu.setIsNavBar(d_Menu.getNavBar());
-            r_Menu.setIsSideBar(d_Menu.getSideBar());
-            r_Menu.setIsRouter(d_Menu.getRouter());
-            r_Menus.add(r_Menu);
+            ret.put("userName", "");
+
+            List<MenuModel> r_Menus = new ArrayList<>();
+            for (SysMenu d_Menu : d_Menus) {
+                MenuModel r_Menu = new MenuModel();
+                r_Menu.setId(d_Menu.getId());
+                r_Menu.setCode(d_Menu.getCode());
+                r_Menu.setTitle(d_Menu.getTitle());
+                r_Menu.setpId(d_Menu.getpId());
+                r_Menu.setComponent(d_Menu.getComponent());
+                r_Menu.setPath(d_Menu.getPath());
+                r_Menu.setIcon(d_Menu.getIcon());
+                r_Menu.setIsNavBar(d_Menu.getNavBar());
+                r_Menu.setIsSideBar(d_Menu.getSideBar());
+                r_Menu.setIsRouter(d_Menu.getRouter());
+                r_Menus.add(r_Menu);
+            }
+
+            ret.put("menus", r_Menus);
+        }
+        else {
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("UserId", userId);
+
+            MerchUserVw d_MerchUser = sysMerchUserMapper.findOne(selective);
+
+            ret.put("userName", d_MerchUser.getUserName());
+            ret.put("fullName", d_MerchUser.getFullName());
+            ret.put("phoneNumber", d_MerchUser.getPhoneNumber());
+            ret.put("email", d_MerchUser.getEmail());
+            ret.put("roleNames", "");
         }
 
-        ret.setMenus(r_Menus);
 
         return result.success("获取成功", ret);
     }

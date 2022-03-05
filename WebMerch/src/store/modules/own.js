@@ -49,7 +49,7 @@ const actions = {
   // get user info
   getInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      getInfo().then(res => {
+      getInfo({ mode: '0' }).then(res => {
         if (res.code === 1000) {
           const d = res.data
           commit('SET_USERINFO', d)

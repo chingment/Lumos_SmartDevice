@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface SysMerchUserMapper {
-    SysMerchUser findOne(LumosSelective selective);
+    MerchUserVw findOne(LumosSelective selective);
     List<MerchUserVw> find(LumosSelective selective);
     long insert(SysMerchUser sysMerchUser);
 }

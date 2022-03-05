@@ -43,7 +43,7 @@
 <script>
 import store from '@/store'
 import { MessageBox } from 'element-ui'
-import { changePassword } from '@/api/own'
+import { changePassword, getInfo } from '@/api/own'
 import fromReg from '@/utils/formReg'
 import { isEmpty } from '@/utils/commonUtil'
 export default {
@@ -69,24 +69,16 @@ export default {
   },
   methods: {
     init() {
-      var d = store.getters.userInfo
-      this.userInfo.userName = d.userName
-      this.userInfo.fullName = d.fullName
-      this.userInfo.phoneNumber = d.phoneNumber
-      this.userInfo.email = d.email
-
-      var roleNames = '未分配角色'
-
-      if (d.roles != null && d.roles.length > 0) {
-        roleNames = ''
-        for (var i = 0; i < d.roles.length; i++) {
-          roleNames += d.roles[i].name + ','
+      this.loading = true
+      getInfo({ mode: '1' }).then(res => {
+        if (res.code === this.$code_suc) {
+          var d = res.data
+          this.userInfo = d
         }
-
-        roleNames = roleNames.substring(0, roleNames.length - 1)
-      }
-
-      this.userInfo.roleNames = roleNames
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     onSavePassword() {
       if (isEmpty(fromReg.password)) {

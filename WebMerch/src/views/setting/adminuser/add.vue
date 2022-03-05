@@ -20,6 +20,7 @@
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
           :data="{folder:'avatar'}"
+          :on-remove="onUploadFileRemove"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
           :max-size="1024*4"
@@ -116,6 +117,12 @@ export default {
           })
         }
       })
+    },
+    onUploadFileRemove(file, fileList) {
+      console.log(file)
+    },
+    deleteInvalidFile(validFile, deleteFile) {
+
     }
   }
 }

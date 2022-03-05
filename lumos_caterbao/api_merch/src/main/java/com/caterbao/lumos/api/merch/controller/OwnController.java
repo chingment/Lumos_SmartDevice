@@ -34,8 +34,8 @@ public class OwnController extends  BaseController {
 
     @RequestMapping(value = "getInfo", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> getInfo() {
-        return  ownService.getInfo(getCurrentUserId(),getCurrentUserId());
+    public CustomResult<Object> getInfo(@RequestParam  String mode) {
+        return ownService.getInfo(getCurrentUserId(), getCurrentUserId(), mode);
     }
 
     @RequestMapping(value = "checkPermission", method = RequestMethod.GET)

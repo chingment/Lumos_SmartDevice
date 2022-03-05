@@ -12,6 +12,7 @@ public class MerchUserVw {
     private String email;
     private boolean isDisable;
     private Timestamp createTime;
+    private String merchId;
 
     public String getId() {
         return id;
@@ -75,5 +76,13 @@ public class MerchUserVw {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
+    }
+
+    public String getMerchId() {
+        return merchId;
+    }
+
+    public void setMerchId(String merchId) {
+        this.merchId = merchId;
     }
 }
