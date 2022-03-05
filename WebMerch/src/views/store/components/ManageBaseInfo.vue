@@ -19,7 +19,7 @@
           :file-list="form.displayImgUrls"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'shop'}"
+          :data="{folder:'store'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M；第一张为主图，可拖动改变图片顺序"
           :max-size="1024*4"

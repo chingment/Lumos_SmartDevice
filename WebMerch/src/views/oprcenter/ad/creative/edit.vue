@@ -16,7 +16,7 @@
           :file-list="form.fileUrl"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'ad'}"
+          :data="{folder:'adcreative'}"
           :ext="form.spaceSupportFormat"
           :tip="form.spaceDescription"
           :max-size="form.spaceSupportMaxSize"

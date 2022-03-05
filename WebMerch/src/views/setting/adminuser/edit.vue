@@ -30,7 +30,7 @@
           :file-list="form.avatar"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'avatar/adminuser'}"
+          :data="{folder:'avatar'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
           :max-size="1024*4"
@@ -84,7 +84,7 @@ export default {
       },
       rules: {
         password: [{ required: false, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
-        avatar: [{ required: true, message: '必须上传' }],
+        avatar: [{ type: 'array', required: true, message: '必须上传', max: 1 }],
         fullName: [{ required: true, message: '必填', trigger: 'change' }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]

@@ -45,18 +45,8 @@
       </el-table-column>
       <el-table-column label="文件" prop="imgUrl" align="left" width="120">
         <template slot-scope="scope">
-          <!--
-          <img v-if="isImage(scope.row.fileUrl)" :src="scope.row.fileUrl" style="width:80px;height:80px;">
-
-          <video
-            v-else-if="isVideo(scope.row.fileUrl)"
-            :src="scope.row.fileUrl"
-            width="100"
-            height="100"
-            class="el-upload-list__item-thumbnail"
-            controls="controls"
-          /> -->
-
+          <img v-if="isImage(scope.row.fileUrl)" :src="scope.row.fileUrl" style="width:80px;height:80px;" @click="onSawFile(scope.row)">
+          <el-link v-else-if="isVideo(scope.row.fileUrl)" type="primary" @click="onSawFile(scope.row)"> 视频<i class="el-icon-view el-icon--right" /></el-link>
         </template>
       </el-table-column>
       <el-table-column label="标题" prop="title" align="left" min-width="30%">
@@ -86,6 +76,15 @@
       </el-table-column>
     </el-table>
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
+
+    <el-dialog :visible.sync="dialogVisibleSaw" size="tiny">
+      <img v-if="isImage(dialogSawFileUrl)" width="100%" :src="dialogSawFileUrl" alt="">
+      <video
+        v-else-if="isVideo(dialogSawFileUrl)"
+        :src="dialogSawFileUrl"
+        controls="controls"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -96,7 +95,6 @@ import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
 import Pagination from '@/components/Pagination'
 export default {
-  name: 'OperationCenterAdContents',
   components: {
     PageHeader, Pagination
   },
@@ -119,6 +117,8 @@ export default {
       space: {
         name: ''
       },
+      dialogSawFileUrl: '',
+      dialogVisibleSaw: false,
       isDesktop: this.$store.getters.isDesktop
     }
   },
@@ -185,6 +185,10 @@ export default {
           return ''
       }
       return ''
+    },
+    onSawFile(item) {
+      this.dialogSawFileUrl = item.fileUrl
+      this.dialogVisibleSaw = true
     }
   }
 }

@@ -11,7 +11,7 @@
       <el-form-item label="姓名" prop="fullName">
         <el-input v-model="form.fullName" clearable />
       </el-form-item>
-      <el-form-item label="头像" prop="displayImgUrls" class="el-form-item-upload">
+      <el-form-item label="头像" prop="avatar" class="el-form-item-upload">
         <el-input :value="form.avatar==null?'':form.avatar.toString()" style="display:none" />
         <lm-upload
           v-model="form.avatar"
@@ -19,7 +19,7 @@
           :file-list="form.avatar"
           :action="uploadFileServiceUrl"
           :headers="uploadFileHeaders"
-          :data="{folder:'avatar/adminuser'}"
+          :data="{folder:'avatar'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
           :max-size="1024*4"
@@ -69,6 +69,7 @@ export default {
         userName: [{ required: true, message: '必填,且由3到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.userName }],
         password: [{ required: true, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
         fullName: [{ required: true, message: '必填', trigger: 'change' }],
+        avatar: [{ type: 'array', required: true, message: '必须上传', max: 1 }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
       },
