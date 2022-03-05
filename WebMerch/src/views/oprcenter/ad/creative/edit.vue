@@ -19,7 +19,7 @@
           :data="{folder:'ad'}"
           :ext="form.spaceSupportFormat"
           :tip="form.spaceDescription"
-          :max-size="1024"
+          :max-size="form.spaceSupportMaxSize"
           :sortable="true"
           :limit="1"
         />
@@ -59,14 +59,15 @@ export default {
     return {
       loading: false,
       form: {
+        id: '',
+        title: '',
+        validDate: [],
+        fileUrl: [],
         spaceId: 0,
         spaceName: '',
         spaceDescription: '',
         spaceSupportFormat: '',
-        id: '',
-        title: '',
-        validDate: [],
-        fileUrl: []
+        spaceSupportMaxSize: 1024
       },
       rules: {
         title: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],

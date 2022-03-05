@@ -162,6 +162,7 @@ public class AdServiceImpl implements AdService {
         ret.put("spaceName",d_AdSpace.getName());
         ret.put("spaceDescription",d_AdSpace.getDescription());
         ret.put("spaceSupportFormat", d_AdSpace.getSupportFormat());
+        ret.put("spaceSupportMaxSize", d_AdSpace.getSupportMaxSize());
 
         return result.success("初始成功",ret);
 
@@ -223,7 +224,7 @@ public class AdServiceImpl implements AdService {
         ret.put("spaceName", d_AdSpace.getName());
         ret.put("spaceDescription", d_AdSpace.getDescription());
         ret.put("spaceSupportFormat", d_AdSpace.getSupportFormat());
-
+        ret.put("spaceSupportMaxSize", d_AdSpace.getSupportMaxSize());
         return result.success("初始成功", ret);
 
     }

@@ -22,7 +22,7 @@
           :data="{folder:'avatar'}"
           ext=".jpg,.png,.jpeg"
           tip="图片500*500，格式（jpg,png）不超过4M"
-          :max-size="1024"
+          :max-size="1024*4"
           :sortable="true"
           :limit="1"
         />

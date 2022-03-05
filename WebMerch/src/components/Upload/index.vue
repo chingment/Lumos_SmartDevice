@@ -178,6 +178,9 @@ export default {
     },
     ext: function(val, oldval) {
       this.elExt = val
+    },
+    maxSize: function(val, oldval) {
+      this.elMaxSize = val
     }
 
   },

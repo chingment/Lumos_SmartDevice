@@ -19,7 +19,7 @@
           :data="{folder:'ad'}"
           :ext="form.spaceSupportFormat"
           :tip="form.spaceDescription"
-          :max-size="1024"
+          :max-size="form.spaceSupportMaxSize"
           :sortable="true"
           :limit="1"
         />
@@ -61,6 +61,7 @@ export default {
       form: {
         spaceId: 0,
         spaceName: '',
+        spaceSupportMaxSize: 0,
         spaceDescription: '',
         spaceSupportFormat: '',
         title: '',
@@ -92,6 +93,7 @@ export default {
           this.form.spaceName = d.spaceName
           this.form.spaceDescription = d.spaceDescription
           this.form.spaceSupportFormat = d.spaceSupportFormat
+          this.form.spaceSupportMaxSize = d.spaceSupportMaxSize
         }
         this.loading = false
       }).catch(() => {

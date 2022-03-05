@@ -6,6 +6,7 @@ public class AdSpace {
     private String id;
     private String name;
     private String supportFormat;
+    private int supportMaxSize;
     private String vector;
     private String description;
     private String creator;
@@ -83,5 +84,13 @@ public class AdSpace {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public int getSupportMaxSize() {
+        return supportMaxSize;
+    }
+
+    public void setSupportMaxSize(int supportMaxSize) {
+        this.supportMaxSize = supportMaxSize;
     }
 }
