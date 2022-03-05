@@ -19,6 +19,9 @@ public class PrdSpu {
     private Timestamp createTime;
     private String mender;
     private Timestamp mendTime;
+    private String deleter;
+    private Timestamp deleteTime;
+
 
     public String getId() {
         return id;
@@ -146,5 +149,21 @@ public class PrdSpu {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public String getDeleter() {
+        return deleter;
+    }
+
+    public void setDeleter(String deleter) {
+        this.deleter = deleter;
+    }
+
+    public Timestamp getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Timestamp deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

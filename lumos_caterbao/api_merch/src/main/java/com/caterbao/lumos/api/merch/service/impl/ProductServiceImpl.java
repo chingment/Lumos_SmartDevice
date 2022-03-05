@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
         Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
         LumosSelective selective_PrdSpu=new LumosSelective();
-        selective_PrdSpu.setFields("Id,MerchId,CreateTime");
+        selective_PrdSpu.setFields("Id,MerchId,CreateTime,DeleteTime");
         selective_PrdSpu.addWhere("MerchId",merchId);
         selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
         List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
             item.put("cumCode",r_SpuInfo.getCumCode());
             item.put("imgUrl", ImgVo.getMainImgUrl(r_SpuInfo.getDisplayImgUrls()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_PrdSpu.getCreateTime()));
-            item.put("deleteTime","");
+            item.put("deleteTime",CommonUtil.toDateTimeStr(d_PrdSpu.getDeleteTime()));
             item.put("sysKinds",getSysKinds(r_SpuInfo.getSysKindIds()));
 
             List<Object> m_Skus=new ArrayList<>();
@@ -222,7 +222,6 @@ public class ProductServiceImpl implements ProductService {
 
         return result.success("初始成功",ret);
     }
-
 
     @Override
     public CustomResult<Object> add(String operater, String merchId, RopProdcutAdd rop) {
@@ -605,7 +604,10 @@ public class ProductServiceImpl implements ProductService {
 
             d_PrdSpu.setCumCode("backup_"+d_PrdSpu.getCumCode());
             d_PrdSpu.setDelete(true);
-
+            d_PrdSpu.setMendTime(CommonUtil.getDateTimeNow());
+            d_PrdSpu.setMender(operater);
+            d_PrdSpu.setDeleteTime(CommonUtil.getDateTimeNow());
+            d_PrdSpu.setDeleter(operater);
             long r_PrdSpu_Update=prdSpuMapper.update(d_PrdSpu);
             if (r_PrdSpu_Update <= 0) {
                 lock.unlock();
