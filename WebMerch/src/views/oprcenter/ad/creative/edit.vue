@@ -35,6 +35,9 @@
           style="width: 380px"
         />
       </el-form-item>
+      <el-form-item label="停用">
+        <el-switch v-model="form.isDisable" />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">发布</el-button>
       </el-form-item>
@@ -67,11 +70,12 @@ export default {
         spaceName: '',
         spaceDescription: '',
         spaceSupportFormat: '',
-        spaceSupportMaxSize: 1024
+        spaceSupportMaxSize: 1024,
+        isDisable: false
       },
       rules: {
         title: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
-        fileUrl: [{ type: 'array', required: true, message: '必需上传1张', max: 1 }],
+        fileUrl: [{ type: 'array', required: true, message: '必须上传1张', max: 1 }],
         validDate: [{ type: 'array', required: true, message: '请选择有效期' }]
       },
       uploadFileHeaders: {},

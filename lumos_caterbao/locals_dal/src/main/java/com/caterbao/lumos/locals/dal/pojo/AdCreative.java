@@ -9,7 +9,7 @@ public class AdCreative {
     private String title;
     private String fileUrl;
     private int priority;
-    private int status;
+    private boolean isDisable;
     private Timestamp startTime;
     private Timestamp endTime;
     private String creator;
@@ -65,12 +65,13 @@ public class AdCreative {
         this.priority = priority;
     }
 
-    public int getStatus() {
-        return status;
+
+    public boolean getIsDisable() {
+        return isDisable;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setIsDisable(boolean isDisable) {
+        this.isDisable = isDisable;
     }
 
     public Timestamp getStartTime() {

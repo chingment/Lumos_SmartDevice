@@ -9,6 +9,7 @@ public class RopAdCreativeEdit {
     private String title;
     private String[] validDate;
     private List<ImgVo> fileUrl;
+    private boolean isDisable;
 
     public String getId() {
         return id;
@@ -40,5 +41,13 @@ public class RopAdCreativeEdit {
 
     public void setFileUrl(List<ImgVo> fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+    public boolean getIsDisable() {
+        return isDisable;
+    }
+
+    public void setIsDisable(boolean isDisable) {
+        this.isDisable = isDisable;
     }
 }

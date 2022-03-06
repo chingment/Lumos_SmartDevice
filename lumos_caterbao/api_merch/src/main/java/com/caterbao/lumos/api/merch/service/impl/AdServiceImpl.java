@@ -127,6 +127,23 @@ public class AdServiceImpl implements AdService {
             item.put("id", d_AdCreative.getId());
             item.put("title", d_AdCreative.getTitle());
             item.put("fileUrl",ImgVo.getMainImgUrl(d_AdCreative.getFileUrl()));
+
+            FieldModel status=new FieldModel();
+
+            if(d_AdCreative.getIsDisable()) {
+                status = new FieldModel(1, "已停用");
+            }
+            else {
+                if (CommonUtil.getDateTimeNow().before(d_AdCreative.getStartTime())) {
+                    status = new FieldModel(2, "未生效");
+                } else if (d_AdCreative.getEndTime().before(CommonUtil.getDateTimeNow())) {
+                    status = new FieldModel(3, "已过期");
+                } else {
+                    status = new FieldModel(0, "使用中");
+                }
+            }
+
+            item.put("status",status);
             item.put("startTime",CommonUtil.toDateStr(d_AdCreative.getStartTime()));
             item.put("endTime",CommonUtil.toDateStr(d_AdCreative.getEndTime()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_AdCreative.getCreateTime()));
@@ -180,7 +197,7 @@ public class AdServiceImpl implements AdService {
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);
-        d_AdCreative.setStatus(1);
+        d_AdCreative.setIsDisable(false);
         d_AdCreative.setCreator(operater);
         d_AdCreative.setCreateTime(CommonUtil.getDateTimeNow());
 
@@ -218,7 +235,7 @@ public class AdServiceImpl implements AdService {
         ret.put("title", d_AdCreative.getTitle());
         ret.put("fileUrl",JsonUtil.toObject(d_AdCreative.getFileUrl()));
         ret.put("priority", d_AdCreative.getPriority());
-        ret.put("status", d_AdCreative.getStatus());
+        ret.put("isDisable", d_AdCreative.getIsDisable());
         ret.put("validDate", new String[]{CommonUtil.toDateStr(d_AdCreative.getStartTime()), CommonUtil.toDateStr(d_AdCreative.getEndTime())});
         ret.put("spaceId", d_AdSpace.getId());
         ret.put("spaceName", d_AdSpace.getName());
@@ -239,7 +256,7 @@ public class AdServiceImpl implements AdService {
         d_AdCreative.setStartTime(CommonUtil.toDateTimestamp(rop.getValidDate()[0]));
         d_AdCreative.setEndTime(CommonUtil.toDateTimestamp(rop.getValidDate()[1]));
         d_AdCreative.setPriority(0);
-        d_AdCreative.setStatus(1);
+        d_AdCreative.setIsDisable(rop.getIsDisable());
         d_AdCreative.setMender(operater);
         d_AdCreative.setMendTime(CommonUtil.getDateTimeNow());
 

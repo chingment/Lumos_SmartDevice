@@ -80,7 +80,7 @@
             编辑
           </el-button>
           <el-button type="text" size="mini" @click="onDelete(row)">
-            加入回收站
+            回收
           </el-button>
         </template>
       </el-table-column>
@@ -155,7 +155,7 @@ export default {
       })
     },
     onDelete(item) {
-      MessageBox.confirm('确定要删除?删除后商品货号或者编码在原基础上加上backup_!', '提示', {
+      MessageBox.confirm('确定要回收?回收的商品货号或者编码在原基础上加上backup_，同时放入回收站!', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
