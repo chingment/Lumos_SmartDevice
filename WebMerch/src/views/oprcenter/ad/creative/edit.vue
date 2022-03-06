@@ -71,7 +71,7 @@ export default {
       },
       rules: {
         title: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
-        fileUrl: [{ type: 'array', required: true, message: '至多上传一个文件', max: 1 }],
+        fileUrl: [{ type: 'array', required: true, message: '必需上传1张', max: 1 }],
         validDate: [{ type: 'array', required: true, message: '请选择有效期' }]
       },
       uploadFileHeaders: {},

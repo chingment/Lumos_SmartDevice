@@ -59,8 +59,8 @@ export default {
         avatar: []
       },
       rules: {
-        avatar: [{ type: 'array', required: false, message: '必须上传', max: 1 }],
-        fullName: [{ required: true, message: '必填', trigger: 'change' }],
+        avatar: [{ type: 'array', required: false, message: '可传，且最多1张', max: 1 }],
+        fullName: [{ required: true, message: '必填，且不能超过20个字符', trigger: 'change', max: 20 }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
       },

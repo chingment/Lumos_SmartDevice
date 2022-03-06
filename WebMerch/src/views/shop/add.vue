@@ -73,7 +73,10 @@ export default {
       },
       rules: {
         name: [{ required: true, min: 1, max: 30, message: '必填,且不能超过30个字符', trigger: 'change' }],
-        address: [{ required: true, min: 1, max: 512, message: '必填' }],
+        address: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
+        contactName: [{ required: false, message: '可填，且不能超过20个字符', trigger: 'change', max: 20 }],
+        contactPhone: [{ required: false, message: '可填，且不能超过20个字符', trigger: 'change', max: 20 }],
+        contactAddress: [{ required: false, message: '可填，且不能超过200个字符', trigger: 'change', max: 200 }],
         displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且最多4张', max: 4 }]
       },
       uploadFileHeaders: {},

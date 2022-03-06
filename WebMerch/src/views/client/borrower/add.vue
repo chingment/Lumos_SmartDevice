@@ -67,10 +67,10 @@ export default {
       rules: {
         cardNo: [{ required: true, message: '必填,且由3到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.userName }],
         cardPwd: [{ required: true, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
-        fullName: [{ required: true, message: '必填', trigger: 'change' }],
+        fullName: [{ required: true, message: '必填，且不能超过20个字符', trigger: 'change', max: 20 }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }],
-        avatar: [{ type: 'array', required: false, message: '至少上传一张,且必须少于5张', max: 4 }]
+        avatar: [{ type: 'array', required: false, message: '可传，且最多1张', max: 1 }]
       },
       uploadFileHeaders: {},
       uploadFileServiceUrl: process.env.VUE_APP_UPLOAD_FILE_SERVICE_URL

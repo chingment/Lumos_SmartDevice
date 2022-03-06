@@ -281,10 +281,10 @@ export default {
         name: [{ required: true, min: 1, max: 200, message: '必填,且不能超过200个字符', trigger: 'change' }],
         cumCode: [{ required: true, min: 1, max: 50, message: '必填,且不能超过50个字符', trigger: 'change' }],
         sysKindIds: [{ type: 'array', required: true, message: '请选择一个商品分类', min: 1, max: 3 }],
-        charTags: [{ type: 'array', required: false, message: '不能超过5个', max: 3 }],
-        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且必须少于5张', max: 4 }],
-        briefDes: [{ required: false, min: 0, max: 200, message: '不能超过200个字符', trigger: 'change' }],
-        detailsDes: [{ type: 'array', required: false, message: '不能超过3张', max: 3 }]
+        charTags: [{ type: 'array', required: false, message: '可填，且不能超过5个', max: 5 }],
+        displayImgUrls: [{ type: 'array', required: true, message: '至少上传一张,且最多4张', max: 4 }],
+        briefDes: [{ required: false, min: 0, max: 200, message: '可填，且不能超过200个字符', trigger: 'change' }],
+        detailsDes: [{ type: 'array', required: false, message: '可传，且最多5张', max: 5 }]
       },
       rules1: {
       },

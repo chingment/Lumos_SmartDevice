@@ -4,7 +4,7 @@
       <el-form-item label="设备编码">
         {{ temp.id }}
       </el-form-item>
-      <el-form-item label="自编码" pr>
+      <el-form-item label="自编码" prop="cumCode">
         <el-input v-show="isEdit" v-model.trim="form.cumCode" clearable />
         <span v-show="!isEdit">{{ temp.cumCode }}</span>
       </el-form-item>
@@ -59,7 +59,7 @@ export default {
         cumCode: ''
       },
       rules: {
-
+        cumCode: [{ required: false, message: '可填，且不能超过20个字符', trigger: 'change', max: 20 }]
       }
     }
   },

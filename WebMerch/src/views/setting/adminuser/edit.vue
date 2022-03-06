@@ -84,8 +84,8 @@ export default {
       },
       rules: {
         password: [{ required: false, message: '必填,且由6到20个数字、英文字母或下划线组成', trigger: 'change', pattern: fromReg.password }],
-        avatar: [{ type: 'array', required: true, message: '必须上传', max: 1 }],
-        fullName: [{ required: true, message: '必填', trigger: 'change' }],
+        avatar: [{ type: 'array', required: true, message: '必须上传1张', max: 1 }],
+        fullName: [{ required: true, message: '必填，且不能超过20个字符', trigger: 'change', max: 20 }],
         phoneNumber: [{ required: false, message: '格式错误,eg:13800138000', trigger: 'change', pattern: fromReg.phoneNumber }],
         email: [{ required: false, message: '格式错误,eg:xxxx@xxx.xxx', trigger: 'change', pattern: fromReg.email }]
       },
