@@ -176,7 +176,9 @@ overflow: auto;
 
   .el-dialog{ -webkit-backface-visibility: hidden; }
 
-
+.el-table td, .el-table th.is-leaf {
+    border-bottom: 1px solid #dfe6ec !important;
+}
 
   .el-form-item-upload{
 

@@ -89,7 +89,7 @@
       </el-table-column>
       <el-table-column label="归还方式" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowWay.text }}</span>
+          <span>{{ scope.row.returnWay.text }}</span>
         </template>
       </el-table-column>
       <el-table-column label="归还时间" align="left" mwidth="160">
