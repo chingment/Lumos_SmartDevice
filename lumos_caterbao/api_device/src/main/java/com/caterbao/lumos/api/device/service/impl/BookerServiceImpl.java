@@ -272,7 +272,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setSkuName(r_Sku.getName());
                     d_BookBorrowFlowData.setSkuCumCode(r_Sku.getCumCode());
                     d_BookBorrowFlowData.setSkuImgUrl(r_Sku.getImgUrl());
-                    d_BookBorrowFlowData.setBorrowSeq(0);
+                    d_BookBorrowFlowData.setBorrowSeq(i);
                     d_BookBorrowFlowData.setBorrowWay(1);
                     d_BookBorrowFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
                     d_BookBorrowFlowData.setBorrowStatus(1);

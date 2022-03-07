@@ -85,14 +85,18 @@ public class IdentityServiceImpl implements IdentityService {
             info.put("signName", d_IcCard.getFullName());
             info.put("cardNo", d_IcCard.getCardNo());
 
-            info.put("canBorrowQuantity", 2);
-            info.put("borrowedQuantity", 1);
-
-            BookerCalculateOverdueFineResult  reuslt_fine = bookerService.CalculateOverdueFine(rop.getClientUserId());
+            BookerCalculateOverdueFineResult reuslt_fine = bookerService.CalculateOverdueFine(rop.getClientUserId());
 
             info.put("overdueFine", reuslt_fine.getOverdueFine());
             info.put("borrowBooks", reuslt_fine.getBorrowBooks());
 
+            int borrowedQuantity = reuslt_fine.getBorrowBooks().size();
+
+            int maxBorrowQuantity = 5;//最大可借书的数量
+
+            int canBorrowQuantity = maxBorrowQuantity - borrowedQuantity;
+            info.put("borrowedQuantity", borrowedQuantity);
+            info.put("canBorrowQuantity", canBorrowQuantity);
             ret.setInfo(info);
 
             return result.success("获取成功", ret);

@@ -26,7 +26,37 @@ public class BookBorrowFlow {
     private String closeActionCode;
     private Timestamp closeActionTime;
     private String closeRfIds;
-    private int status; //1 等待打开柜门 2 打开成功 3 打开失败 4 等待关闭门 5 关闭成功 6 关闭失败;
+
+    //1 创建借阅 AA000
+    //2 创建借阅流程成功 AB001
+    //3 创建借阅流程失败 AC002
+
+    //4 请求打开柜门 BA000
+    //5 请求打开柜门成功 BB001
+    //6 请求打开柜门失败 BC002
+
+    //7 调用打开柜门 CA000
+    //8 调用打开柜门命令成功 CB001
+    //9 调用打开柜门命令失败 CC002
+
+    //10 调用检查门柜状态命令 DA000
+    //11 调用检查门柜状态命令成功 DB001
+    //12 调用检查门柜状态命令失败 DC002
+
+    //13 打开柜门成功 EA001
+    //14 打开柜门失败 EB002 需要重试几次
+
+    //15 调用检查关门状态命令 FA000
+    //16 关闭柜门成功 FB001
+    //17 关闭柜门失败 FC002
+
+    //18 告知关闭柜门 GA000
+    //19 告知关闭柜门成功 GB001
+    //20 告知关闭柜门失败 GC002
+
+    //21 结束 HA000
+
+    private int status;
     private String creator;
     private Timestamp createTime;
     private String mender;
