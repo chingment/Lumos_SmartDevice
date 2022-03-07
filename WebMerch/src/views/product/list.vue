@@ -4,17 +4,32 @@
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :lg="8" :xl="6" style="margin-bottom:20px">
 
-          <el-autocomplete
-            v-model="listQuery.key"
-            :fetch-suggestions="onSearchSpu"
-            placeholder="商品名称/编码/条形码/首拼音母"
-            clearable
-            style="width: 100%"
-            :trigger-on-focus="false"
-            @select="onFilter"
-            @keyup.enter.native="onFilter"
-            @clear="onFilter"
-          />
+          <el-input v-model.trim="listQuery.keyWord" clearable style="width: 100%" placeholder="商品名称/编码/条形码/首拼音母" class="filter-item" />
+
+          <!-- <div class="select-seacrh-key">
+            <div class="tags">
+              <el-tag
+                v-for="tag in searchTags"
+                :key="tag"
+                closable
+                @close="onSearchDeleteTag(tag)"
+              >
+                {{ tag.text }}
+              </el-tag>
+            </div>
+            <el-autocomplete
+              v-model="listQuery.key"
+              class="autocomplete"
+              :fetch-suggestions="onSearchSpu"
+              placeholder="商品名称/编码/条形码/首拼音母"
+              clearable
+              style="width: 100%"
+              :trigger-on-focus="false"
+              @select="onSearchSelectTag"
+              @keyup.enter.native="onFilter"
+              @clear="onFilter"
+            />
+          </div> -->
         </el-col>
         <el-col :xs="24" :sm="12" :lg="8" :xl="6" style="margin-bottom:20px">
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
@@ -105,8 +120,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         isDelete: 0,
-        key: undefined
+        keyWord: undefined
       },
+      searchTags: [
+        { id: '1', text: '一个都不能少' },
+        { id: '2', text: '这个杀手不太冷静' }
+      ],
       listKey: 's',
       listData: {
         items: [],
@@ -186,7 +205,36 @@ export default {
           }
         }
       })
+    },
+    onSearchDeleteTag(tag) {
+      this.searchTags.splice(this.searchTags.indexOf(tag), 1)
+    },
+    onSearchSelectTag(tag) {
+      this.searchTags.push({ id: tag.id, text: tag.name })
+      this.listQuery.key = ''
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+
+.select-seacrh-key{
+display: flex;
+align-items: center;
+          background-color: #FFF;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+
+.el-tag{
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+ /deep/ input{
+      border: 0px solid #DCDFE6 ;
+    }
+}
+
+</style>

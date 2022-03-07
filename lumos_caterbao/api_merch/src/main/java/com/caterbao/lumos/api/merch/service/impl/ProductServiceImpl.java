@@ -92,6 +92,13 @@ public class ProductServiceImpl implements ProductService {
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
+        List<String> spuIds = new ArrayList<>();
+        if(!CommonUtil.isEmpty(rop.getKeyWord())) {
+            spuIds = cacheFactory.getProduct().searchSpuIds(merchId, rop.getKeyWord());
+            if (spuIds.size() == 0) {
+                spuIds.add("_");
+            }
+        }
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
@@ -99,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
         selective_PrdSpu.setFields("Id,MerchId,CreateTime,DeleteTime");
         selective_PrdSpu.addWhere("MerchId",merchId);
         selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
+        selective_PrdSpu.addWhere("SpuIds",spuIds);
         List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
 
         List<Object> items=new ArrayList<>();

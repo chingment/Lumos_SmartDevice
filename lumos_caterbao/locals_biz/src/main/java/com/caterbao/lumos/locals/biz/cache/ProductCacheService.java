@@ -14,5 +14,7 @@ public interface ProductCacheService {
 
     void removeSpuInfo(String merchId, String spuId);
 
-    List<SpuInfo> searchSpu(String merchId, String key);
+    List<SpuInfo> searchSpu(String merchId, String keyWord);
+
+    List<String> searchSpuIds(String merchId, String keyWord);
 }

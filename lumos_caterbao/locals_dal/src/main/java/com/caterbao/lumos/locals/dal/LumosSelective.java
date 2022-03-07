@@ -1,6 +1,7 @@
 package com.caterbao.lumos.locals.dal;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class LumosSelective {
     private String fields;
@@ -36,6 +37,15 @@ public class LumosSelective {
     }
 
     public void addWhere(String key,String[] val){
+        if(where==null) {
+            where = new HashMap<>();
+        }
+        if(!where.containsKey(key)){
+            where.put(key,val);
+        }
+    }
+
+    public void addWhere(String key, List<String> val){
         if(where==null) {
             where = new HashMap<>();
         }

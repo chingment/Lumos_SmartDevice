@@ -276,10 +276,10 @@ class ProductCacheServiceImpl implements ProductCacheService {
 
 
     @Override
-    public List<SpuInfo> searchSpu(String merchId, String key) {
+    public List<SpuInfo> searchSpu(String merchId, String keyWord) {
         List<SpuInfo> m_SpuInfos = new ArrayList<>();
 
-        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*" + key + "*").build());
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*" + keyWord + "*").build());
 
         int i = 0;
         while (cursor.hasNext() && i < 10) {
@@ -296,6 +296,22 @@ class ProductCacheServiceImpl implements ProductCacheService {
         }
 
         return m_SpuInfos;
+    }
+
+    @Override
+    public List<String> searchSpuIds(String merchId, String keyWord){
+
+        List<String> m_SpuIds = new ArrayList<>();
+
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SPU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*" + keyWord + "*").build());
+
+        int i = 0;
+        while (cursor.hasNext() && i < 10) {
+            Map.Entry<Object, Object> entry = cursor.next();
+            m_SpuIds.add(entry.getValue().toString());
+        }
+
+        return m_SpuIds;
     }
 
 //    public void SpuSKey(String merchId,String keyPre,String keyIdx, String spuId) {

@@ -15,6 +15,11 @@
         select ${fields} from PrdSpu where 1=1
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
         <if test="where.IsDelete != null and where.IsDelete.length() > 0">and isDelete =#{where.IsDelete}</if>
+        <if test="where.SpuIds != null and where.SpuIds.size()>0 "> and Id in
+            <foreach collection="where.SpuIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
 
     <select id="isExistCumCode" resultType="java.lang.Long">

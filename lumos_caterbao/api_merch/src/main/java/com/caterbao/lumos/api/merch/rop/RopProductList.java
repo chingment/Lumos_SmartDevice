@@ -6,6 +6,16 @@ public class RopProductList extends BasePageRequest{
 
     private String IsDelete;
 
+    private String keyWord;
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
+    }
+
     public String getIsDelete() {
         return IsDelete;
     }
