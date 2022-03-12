@@ -25,4 +25,10 @@ public class DeviceController extends BaseController{
         return deviceService.init(this.getCurrentUserId(),this.getCurrentMerchId(),rop);
     }
 
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> test(){
+        return new CustomResult<Object>();
+    }
+
 }

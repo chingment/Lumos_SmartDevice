@@ -82,7 +82,7 @@ public class IdentityServiceImpl implements IdentityService {
 
             HashMap<String, Object> info = new HashMap<>();
 
-            info.put("signName", d_IcCard.getFullName());
+            info.put("fullName", d_IcCard.getFullName());
             info.put("cardNo", d_IcCard.getCardNo());
 
             BookerCalculateOverdueFineResult reuslt_fine = bookerService.CalculateOverdueFine(rop.getClientUserId());
