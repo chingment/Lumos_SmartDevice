@@ -52,7 +52,7 @@ public class IdentityServiceImpl implements IdentityService {
             RetIdentityVerify ret = new RetIdentityVerify();
 
             ret.setClientUserId(d_IcCard.getClientUserId());
-            ret.setIdentityType("1");
+            ret.setIdentityType(1);
             ret.setIdentityId(d_IcCard.getId());
 
             return result.success("验证成功", ret);
@@ -66,7 +66,7 @@ public class IdentityServiceImpl implements IdentityService {
     public CustomResult<RetIdentityInfo> info(String operater, RopIdentityInfo rop) {
         CustomResult<RetIdentityInfo> result = new CustomResult<>();
 
-        if (rop.getIdentityType() == 2) {
+        if (rop.getIdentityType() == 1) {
 
             LumosSelective selective_IcCard = new LumosSelective();
             selective_IcCard.setFields("*");

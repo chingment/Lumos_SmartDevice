@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.device.rop;
 
 public class RetIdentityVerify {
     private String clientUserId;
-    private String identityType;
+    private int identityType;
     private String identityId;
 
     public String getClientUserId() {
@@ -13,11 +13,11 @@ public class RetIdentityVerify {
         this.clientUserId = clientUserId;
     }
 
-    public String getIdentityType() {
+    public int getIdentityType() {
         return identityType;
     }
 
-    public void setIdentityType(String identityType) {
+    public void setIdentityType(int identityType) {
         this.identityType = identityType;
     }
 
