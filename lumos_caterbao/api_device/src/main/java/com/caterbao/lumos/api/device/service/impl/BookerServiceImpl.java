@@ -89,7 +89,6 @@ public class BookerServiceImpl implements BookerService {
         this.cacheFactory = cacheFactory;
     }
 
-
     @Override
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
