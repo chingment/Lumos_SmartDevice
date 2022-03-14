@@ -214,6 +214,9 @@ public class BookerServiceImpl implements BookerService {
 
         try {
 
+            List<BookBean> ret_BorrowBooks = new ArrayList<>();
+            List<BookBean> ret_ReturnBooks = new ArrayList<>();
+
             LumosSelective selective_BookBorrowFlow = new LumosSelective();
             selective_BookBorrowFlow.setFields("*");
             selective_BookBorrowFlow.addWhere("FlowId", flowId);
@@ -314,6 +317,9 @@ public class BookerServiceImpl implements BookerService {
                         lock.unlock();
                         return result.fail("关闭失败[4]");
                     }
+                    else {
+                        ret_BorrowBooks.add(new BookBean(d_BookBorrowFlowData.getSkuId(),d_BookBorrowFlowData.getSkuRfId(),d_BookBorrowFlowData.getSkuName(),d_BookBorrowFlowData.getDeviceCumCode(),d_BookBorrowFlowData.getSkuImgUrl()));
+                    }
                 }
             }
 
@@ -337,25 +343,27 @@ public class BookerServiceImpl implements BookerService {
                         lock.unlock();
                         return result.fail("关闭失败[4]");
                     }
-
+                    else
+                    {
+                        ret_ReturnBooks.add(new BookBean(d_BookBorrowFlowData.getSkuId(),d_BookBorrowFlowData.getSkuRfId(),d_BookBorrowFlowData.getSkuName(),d_BookBorrowFlowData.getDeviceCumCode(),d_BookBorrowFlowData.getSkuImgUrl()));
+                    }
                 }
             }
 
             RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
             ret.setFlowId(flowId);
 
-            List<BookBean> borrowBooks = new ArrayList<>();
 
-            borrowBooks.add(new BookBean("1", "1", "安徒生童话故事", "1", "1"));
-            borrowBooks.add(new BookBean("1", "1", "这个杀手不太冷静", "1", "1"));
+            //borrowBooks.add(new BookBean("1", "1", "安徒生童话故事", "1", "1"));
+            //borrowBooks.add(new BookBean("1", "1", "这个杀手不太冷静", "1", "1"));
 
 
-            List<BookBean> returnBooks = new ArrayList<>();
-            returnBooks.add(new BookBean("1", "1", "西游记", "1", "1"));
-            returnBooks.add(new BookBean("1", "1", "红楼梦", "1", "1"));
 
-            ret.setBorrowBooks(borrowBooks);
-            ret.setReturnBooks(returnBooks);
+            //returnBooks.add(new BookBean("1", "1", "西游记", "1", "1"));
+            //returnBooks.add(new BookBean("1", "1", "红楼梦", "1", "1"));
+
+            ret.setBorrowBooks(ret_BorrowBooks);
+            ret.setReturnBooks(ret_ReturnBooks);
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
