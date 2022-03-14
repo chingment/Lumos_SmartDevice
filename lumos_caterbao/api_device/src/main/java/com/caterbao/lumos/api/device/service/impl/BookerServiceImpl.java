@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.*;
+import com.caterbao.lumos.api.device.rop.model.ActionDataByOpenRequest;
 import com.caterbao.lumos.api.device.rop.model.BookBean;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
@@ -24,6 +25,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -93,7 +95,7 @@ public class BookerServiceImpl implements BookerService {
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
-        addBorrowReturnFlowLog(rop.getTrgId(),rop.getFlowId(),rop.getActionCode(),rop.getActionData(),"",rop.getActionTime());
+        addBorrowReturnFlowLog(rop.getTrgId(),rop.getFlowId(),rop.getActionCode(),rop.getActionData(),"",rop.getActionRemark(), rop.getActionTime());
 
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return result.fail("设备号为空[01]");
@@ -117,14 +119,21 @@ public class BookerServiceImpl implements BookerService {
             return result.fail("未知动作[07]");
 
         if (rop.getActionCode().equals("open_request")) {
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(),new TypeReference<ActionDataByOpenRequest>() {});
             return borrowReturnOpenRequest(rop.getDeviceId(), rop.getCabinetId(),
-                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId());
+                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(),actionData.getRfIds());
         } else if (rop.getActionCode().equals("open_request_success")) {
             RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
             ret.setFlowId(rop.getFlowId());
             return result.success("", ret);
         } else if (rop.getActionCode().equals("open_request_failure")) {
 
+        }
+        else if (rop.getActionCode().equals("close_success")) {
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+            });
+            return borrowReturnCloseSuccess(rop.getDeviceId(), rop.getCabinetId(),
+                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(), rop.getFlowId(), actionData.getRfIds());
         }
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
@@ -136,7 +145,8 @@ public class BookerServiceImpl implements BookerService {
                                                             String slotId,
                                                             String clientUserId,
                                                             int identityType,
-                                                            String identityId) {
+                                                            String identityId,
+                                                            List<String> openRfIds) {
 
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
@@ -171,6 +181,8 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowFlow.setIdentityType(identityType);
         d_BookBorrowFlow.setIdentityId(identityId);
         d_BookBorrowFlow.setIdentityName(getIdentityName(identityType, identityId));
+        d_BookBorrowFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setOpenRfIds(JsonUtil.getJson(openRfIds));
         d_BookBorrowFlow.setStatus(1);
         d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookBorrowFlow.setCreator(IdWork.buildGuId());
@@ -184,103 +196,16 @@ public class BookerServiceImpl implements BookerService {
         return result.success("流程创建成功", ret);
     }
 
-    private void addBorrowReturnFlowLog(String trgId, String flowId,String actionCode,String actionData,String actionResult,String actionTime ){
-        BookBorrowFlowLog d_BookBorrowFlowLog=new BookBorrowFlowLog();
-        d_BookBorrowFlowLog.setId(IdWork.buildLongId());
-        d_BookBorrowFlowLog.setTrgId(trgId);
-        d_BookBorrowFlowLog.setFlowId(flowId);
-        d_BookBorrowFlowLog.setActionCode(actionCode);
-        d_BookBorrowFlowLog.setActionData(actionData);
-        d_BookBorrowFlowLog.setActionResult(actionResult);
-        d_BookBorrowFlowLog.setActionTime(CommonUtil.toDateTimestamp(actionTime));
-        d_BookBorrowFlowLog.setCreator(IdWork.buildGuId());
-        d_BookBorrowFlowLog.setCreateTime(CommonUtil.getDateTimeNow());
-        bookBorrowFlowLogMapper.insert(d_BookBorrowFlowLog);
-    }
+    private CustomResult<RetBookerBorrowReturn> borrowReturnCloseSuccess(String deviceId,
+                                                                         String cabinetId,
+                                                                         String slotId,
+                                                                         String clientUserId,
+                                                                         int identityType,
+                                                                         String identityId,
+                                                                         String flowId,
+                                                                         List<String> closeRfIds){
 
-    @Override
-    public CustomResult<RetBookerBorrowReturnCreateFlow> borrowReturnCreateFlow(String operater, RopBookerBorrowReturnCreateFlow rop) {
-
-        CustomResult<RetBookerBorrowReturnCreateFlow> result=new CustomResult<>();
-
-        LumosSelective selective_MerchDevice=new LumosSelective();
-        selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus","1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
-
-        if (d_MerchDevice==null)
-            return result.fail("设备未绑定商户");
-
-        if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
-            return result.fail("设备未绑定店铺");
-
-        if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
-            return result.fail("设备未绑定门店");
-
-        BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
-
-        d_BookBorrowFlow.setId(IdWork.buildLongId());
-        d_BookBorrowFlow.setMerchId(d_MerchDevice.getMerchId());
-        d_BookBorrowFlow.setMerchName(d_MerchDevice.getMerchName());
-        d_BookBorrowFlow.setStoreId(d_MerchDevice.getStoreId());
-        d_BookBorrowFlow.setStoreName(d_MerchDevice.getStoreName());
-        d_BookBorrowFlow.setShopId(d_MerchDevice.getShopId());
-        d_BookBorrowFlow.setShopName(d_MerchDevice.getShopName());
-        d_BookBorrowFlow.setDeviceId(rop.getDeviceId());
-        d_BookBorrowFlow.setDeviceCumCode(d_MerchDevice.getCumCode());
-        d_BookBorrowFlow.setCabinetId(rop.getCabinetId());
-        d_BookBorrowFlow.setSlotId(rop.getSlotId());
-        d_BookBorrowFlow.setClientUserId(rop.getClientUserId());
-        d_BookBorrowFlow.setIdentityType(rop.getIdentityType());
-        d_BookBorrowFlow.setIdentityId(rop.getIdentityId());
-        d_BookBorrowFlow.setIdentityName(getIdentityName(rop.getIdentityType(),rop.getIdentityId()));
-        d_BookBorrowFlow.setStatus(1);
-        d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowFlow.setCreator(IdWork.buildGuId());
-
-        if (bookBorrowFlowMapper.insert(d_BookBorrowFlow) <= 0)
-            return result.fail("流程创建失败");
-
-        RetBookerBorrowReturnCreateFlow ret = new RetBookerBorrowReturnCreateFlow();
-        ret.setFlowId(d_BookBorrowFlow.getId());
-
-        return result.success("流程创建成功", ret);
-    }
-
-    @Override
-    public CustomResult<RetBookerBorrowReturnOpenAction>  borrowReturnOpenAction(String operater, RopBookerBorrowReturnOpenAction rop) {
-
-        CustomResult<RetBookerBorrowReturnOpenAction> result=new CustomResult<>();
-
-        BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
-        d_BookBorrowFlow.setId(rop.getFlowId());
-        d_BookBorrowFlow.setOpenActionResult(rop.getActionResult());
-        d_BookBorrowFlow.setOpenActionCode(rop.getActionCode());
-        d_BookBorrowFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowFlow.setOpenRfIds(JsonUtil.getJson(rop.getRfIds()));
-        if (rop.getActionResult() == 1) {
-            d_BookBorrowFlow.setStatus(2);
-        } else if (rop.getActionResult() == 2) {
-            d_BookBorrowFlow.setStatus(3);
-        }
-        d_BookBorrowFlow.setMender(IdWork.buildGuId());
-        d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
-
-        if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0)
-            return result.fail("打开失败[1]");
-
-        if (rop.getActionResult() != 1)
-            return result.fail("打开失败[2]");
-
-        RetBookerBorrowReturnOpenAction ret = new RetBookerBorrowReturnOpenAction();
-        ret.setFlowId(rop.getFlowId());
-        return result.success("打开成功", ret);
-    }
-
-    @Override
-    public CustomResult<RetBookerBorrowReturnCloseAction>  borrowReturnCloseAction(String operater, RopBookerBorrowReturnCloseAction rop) {
-
-        CustomResult<RetBookerBorrowReturnCloseAction> result=new CustomResult<>();
+        CustomResult<RetBookerBorrowReturn> result=new CustomResult<>();
 
         lock.lock();
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
@@ -289,7 +214,7 @@ public class BookerServiceImpl implements BookerService {
 
             LumosSelective selective_BookBorrowFlow = new LumosSelective();
             selective_BookBorrowFlow.setFields("*");
-            selective_BookBorrowFlow.addWhere("FlowId", rop.getFlowId());
+            selective_BookBorrowFlow.addWhere("FlowId", flowId);
 
             //查找借还流程
             BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowFlow);
@@ -298,16 +223,10 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("关闭失败[1]");
             }
 
-            d_BookBorrowFlow.setCloseActionResult(rop.getActionResult());
-            d_BookBorrowFlow.setCloseActionCode(rop.getActionCode());
-            d_BookBorrowFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-            d_BookBorrowFlow.setCloseRfIds(JsonUtil.getJson(rop.getRfIds()));
 
-            if (rop.getActionResult() == 1) {
-                d_BookBorrowFlow.setStatus(5);
-            } else if (rop.getActionResult() == 2) {
-                d_BookBorrowFlow.setStatus(6);
-            }
+            d_BookBorrowFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
+            d_BookBorrowFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
+
 
             d_BookBorrowFlow.setMender(IdWork.buildGuId());
             d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
@@ -316,12 +235,6 @@ public class BookerServiceImpl implements BookerService {
                 lock.unlock();
                 return result.fail("关闭失败[2]");
             }
-
-            if (rop.getActionResult() != 1) {
-                lock.unlock();
-                return result.fail("关闭失败[3]");
-            }
-
 
             List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
 
@@ -361,7 +274,7 @@ public class BookerServiceImpl implements BookerService {
                 LumosSelective selective_BookBorrowReturnFlowBook = new LumosSelective();
                 selective_BookBorrowReturnFlowBook.setFields("*");
                 selective_BookBorrowReturnFlowBook.addWhere("MerchId", d_BookBorrowFlow.getMerchId());
-                selective_BookBorrowReturnFlowBook.addWhere("FlowId", rop.getFlowId());
+                selective_BookBorrowReturnFlowBook.addWhere("FlowId",flowId);
                 selective_BookBorrowReturnFlowBook.addWhere("SkuRfId", borrow_RfId);
 
                 BookBorrowFlowData d_BookBorrowFlowData = bookBorrowFlowDataMapper.findOne(selective_BookBorrowReturnFlowBook);
@@ -413,7 +326,7 @@ public class BookerServiceImpl implements BookerService {
                 if(d_BookBorrowFlowData !=null) {
 
                     d_BookBorrowFlowData.setReturnWay(1);
-                    d_BookBorrowFlowData.setReturnFlowId(rop.getFlowId());
+                    d_BookBorrowFlowData.setReturnFlowId(flowId);
                     d_BookBorrowFlowData.setReturnTime(CommonUtil.getDateTimeNow());
                     d_BookBorrowFlowData.setMender(IdWork.buildGuId());
                     d_BookBorrowFlowData.setMendTime(CommonUtil.getDateTimeNow());
@@ -426,8 +339,8 @@ public class BookerServiceImpl implements BookerService {
                 }
             }
 
-            RetBookerBorrowReturnCloseAction ret = new RetBookerBorrowReturnCloseAction();
-            ret.setFlowId(rop.getFlowId());
+            RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+            ret.setFlowId(flowId);
 
             List<BookBean> borrowBooks = new ArrayList<>();
 
@@ -451,15 +364,31 @@ public class BookerServiceImpl implements BookerService {
             lock.unlock();
             return result.fail("保存失败,服务器异常");
         }
+
+    }
+
+    private void addBorrowReturnFlowLog(String trgId, String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ){
+        BookBorrowFlowLog d_BookBorrowFlowLog=new BookBorrowFlowLog();
+        d_BookBorrowFlowLog.setId(IdWork.buildLongId());
+        d_BookBorrowFlowLog.setTrgId(trgId);
+        d_BookBorrowFlowLog.setFlowId(flowId);
+        d_BookBorrowFlowLog.setActionCode(actionCode);
+        d_BookBorrowFlowLog.setActionData(actionData);
+        d_BookBorrowFlowLog.setActionResult(actionResult);
+        d_BookBorrowFlowLog.setActionRemark(actionRemark);
+        d_BookBorrowFlowLog.setActionTime(CommonUtil.toDateTimeTimestamp(actionTime));
+        d_BookBorrowFlowLog.setCreator(IdWork.buildGuId());
+        d_BookBorrowFlowLog.setCreateTime(CommonUtil.getDateTimeNow());
+        bookBorrowFlowLogMapper.insert(d_BookBorrowFlowLog);
     }
 
     private String getIdentityName(int type,String id) {
         String name = "";
 
         if (type == 1) {
-            name = sysUserMapper.getFullNameById(id);
+            name =icCardMapper.getFullNameById(id);
         } else if (type == 2) {
-            name = icCardMapper.getFullNameById(id);
+            name = sysUserMapper.getFullNameById(id);
         }
 
         return name;

@@ -15,18 +15,14 @@
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow">
-  insert into BookBorrowFlow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,cabinetId,slotId, clientUserId,identityType,identityId,identityName,status,creator,createTime)
-  values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{cabinetId},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{status},#{creator},#{createTime})
+  insert into BookBorrowFlow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,cabinetId,slotId, clientUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,creator,createTime)
+  values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{cabinetId},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow">
         update BookBorrowFlow
         <set>
-            <if test="openActionResult != 0">openActionResult=#{openActionResult},</if>
-            <if test="openActionCode != null">openActionCode=#{openActionCode},</if>
             <if test="openActionTime != null">openActionTime=#{openActionTime},</if>
             <if test="openRfIds != null">openRfIds=#{openRfIds},</if>
-            <if test="closeActionResult != 0">closeActionResult=#{closeActionResult},</if>
-            <if test="closeActionCode != null">closeActionCode=#{closeActionCode},</if>
             <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
             <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
             <if test="status != null">status=#{status},</if>

@@ -12,6 +12,7 @@ public class RopBookerBorrowReturn {
     private String actionCode;
     private String actionData;
     private String actionTime;
+    private String actionRemark;
 
     public String getDeviceId() {
         return deviceId;
@@ -99,5 +100,13 @@ public class RopBookerBorrowReturn {
 
     public void setActionTime(String actionTime) {
         this.actionTime = actionTime;
+    }
+
+    public String getActionRemark() {
+        return actionRemark;
+    }
+
+    public void setActionRemark(String actionRemark) {
+        this.actionRemark = actionRemark;
     }
 }

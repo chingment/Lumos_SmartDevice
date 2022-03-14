@@ -18,12 +18,8 @@ public class BookBorrowFlow {
     private int identityType;
     private String identityId;
     private String identityName;
-    private int openActionResult;
-    private String openActionCode;
     private Timestamp openActionTime;
     private String openRfIds;
-    private int closeActionResult;
-    private String closeActionCode;
     private Timestamp closeActionTime;
     private String closeRfIds;
 
@@ -151,22 +147,6 @@ public class BookBorrowFlow {
         this.identityId = identityId;
     }
 
-    public int getOpenActionResult() {
-        return openActionResult;
-    }
-
-    public void setOpenActionResult(int openActionResult) {
-        this.openActionResult = openActionResult;
-    }
-
-    public String getOpenActionCode() {
-        return openActionCode;
-    }
-
-    public void setOpenActionCode(String openActionCode) {
-        this.openActionCode = openActionCode;
-    }
-
     public Timestamp getOpenActionTime() {
         return openActionTime;
     }
@@ -181,22 +161,6 @@ public class BookBorrowFlow {
 
     public void setOpenRfIds(String openRfIds) {
         this.openRfIds = openRfIds;
-    }
-
-    public int getCloseActionResult() {
-        return closeActionResult;
-    }
-
-    public void setCloseActionResult(int closeActionResult) {
-        this.closeActionResult = closeActionResult;
-    }
-
-    public String getCloseActionCode() {
-        return closeActionCode;
-    }
-
-    public void setCloseActionCode(String closeActionCode) {
-        this.closeActionCode = closeActionCode;
     }
 
     public Timestamp getCloseActionTime() {

@@ -25,21 +25,4 @@ public class BookerController extends BaseController{
         return bookerService.borrowReturn(this.getCurrentUserId(),rop);
     }
 
-    @RequestMapping(value = "borrowreturn/createflow", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult<RetBookerBorrowReturnCreateFlow> borrowReturnCreateflow(@RequestBody RopBookerBorrowReturnCreateFlow rop){
-        return bookerService.borrowReturnCreateFlow(this.getCurrentUserId(),rop);
-    }
-
-    @RequestMapping(value = "borrowreturn/openaction", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult<RetBookerBorrowReturnOpenAction>  borrowReturnOpenAction(@RequestBody RopBookerBorrowReturnOpenAction rop){
-        return bookerService.borrowReturnOpenAction(this.getCurrentUserId(),rop);
-    }
-
-    @RequestMapping(value = "borrowreturn/closeaction", method = RequestMethod.POST)
-    @ResponseBody
-    public CustomResult<RetBookerBorrowReturnCloseAction>  borrowReturnCloseAction(@RequestBody RopBookerBorrowReturnCloseAction rop){
-        return bookerService.borrowReturnCloseAction(this.getCurrentUserId(),rop);
-    }
 }

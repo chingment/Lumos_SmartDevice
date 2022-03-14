@@ -139,11 +139,7 @@ public class BookerServiceImpl implements BookerService {
             item.put("cabinetId",d_BookBorrowFlow.getCabinetId());
             item.put("slotId",d_BookBorrowFlow.getSlotId());
             item.put("openActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getOpenActionTime()));
-            item.put("openActionCode",d_BookBorrowFlow.getOpenActionCode());
-            item.put("openActionResult",d_BookBorrowFlow.getOpenActionResult());
             item.put("closeActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getCloseActionTime()));
-            item.put("closeActionCode",d_BookBorrowFlow.getCloseActionCode());
-            item.put("closeActionResult",d_BookBorrowFlow.getCloseActionResult());
             items.add(item);
         }
 

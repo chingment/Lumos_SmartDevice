@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowLogMapper">
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowLog">
-  insert into BookBorrowFlowLog(id,trgId,flowId,actionCode,actionName,actionData,actionResult,actionTime,creator,createTime)
-  values(#{id},#{trgId},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionTime},#{creator},#{createTime})
+  insert into BookBorrowFlowLog(id,trgId,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
+  values(#{id},#{trgId},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
     </insert>
 </mapper>

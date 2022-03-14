@@ -10,6 +10,7 @@ public class BookBorrowFlowLog {
     private String actionName;
     private String actionData;
     private String actionResult;
+    private String actionRemark;
     private Timestamp actionTime;
     private String creator;
     private Timestamp createTime;
@@ -68,6 +69,14 @@ public class BookBorrowFlowLog {
 
     public void setActionResult(String actionResult) {
         this.actionResult = actionResult;
+    }
+
+    public String getActionRemark() {
+        return actionRemark;
+    }
+
+    public void setActionRemark(String actionRemark) {
+        this.actionRemark = actionRemark;
     }
 
     public Timestamp getActionTime() {
