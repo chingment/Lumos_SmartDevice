@@ -10,9 +10,11 @@ import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowLogMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowLog;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import java.util.List;
 public class BookerServiceImpl implements BookerService {
 
     private BookBorrowFlowMapper bookBorrowFlowMapper;;
-
+    private BookBorrowFlowLogMapper bookBorrowFlowLogMapper;;
     private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
 
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
@@ -39,6 +41,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired
     public void setBookBorrowFlowDataMapper(BookBorrowFlowDataMapper bookBorrowFlowDataMapper) {
         this.bookBorrowFlowDataMapper = bookBorrowFlowDataMapper;
+    }
+
+    @Autowired
+    public void setBookBorrowFlowLogMapper(BookBorrowFlowLogMapper bookBorrowFlowLogMapper) {
+        this.bookBorrowFlowLogMapper = bookBorrowFlowLogMapper;
     }
 
     @Autowired
@@ -122,24 +129,23 @@ public class BookerServiceImpl implements BookerService {
 
         selective.addWhere("MerchId",merchId);
 
-        List<BookBorrowFlow> d_BookBorrowFlows = bookBorrowFlowMapper.find(selective);
+        List<BookBorrowFlowLog> d_BookBorrowFlowLogs = bookBorrowFlowLogMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
-        for (BookBorrowFlow  d_BookBorrowFlow :
-                d_BookBorrowFlows ) {
+        for (BookBorrowFlowLog  d_BookBorrowFlowLog :
+                d_BookBorrowFlowLogs ) {
 
             HashMap<String,Object> item=new HashMap<>();
 
-            item.put("id",d_BookBorrowFlow.getId());
-            item.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlow.getIdentityType()));
-            item.put("identityId",d_BookBorrowFlow.getIdentityId());
-            item.put("identityName",d_BookBorrowFlow.getIdentityName());
-            item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlow.getDeviceId(),d_BookBorrowFlow.getDeviceCumCode()));
-            item.put("cabinetId",d_BookBorrowFlow.getCabinetId());
-            item.put("slotId",d_BookBorrowFlow.getSlotId());
-            item.put("openActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getOpenActionTime()));
-            item.put("closeActionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getCloseActionTime()));
+            item.put("id",d_BookBorrowFlowLog.getId());
+            item.put("trgId",d_BookBorrowFlowLog.getTrgId());
+            item.put("flowId",d_BookBorrowFlowLog.getFlowId());
+            item.put("deviceCode",DeviceVoUtil.getCode(d_BookBorrowFlowLog.getDeviceId(),d_BookBorrowFlowLog.getDeviceCumCode()));
+            item.put("actionCode",d_BookBorrowFlowLog.getActionCode());
+            item.put("actionTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getActionTime()));
+            item.put("actionRemark",d_BookBorrowFlowLog.getActionRemark());
+            item.put("createTime",CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getCreateTime()));
             items.add(item);
         }
 

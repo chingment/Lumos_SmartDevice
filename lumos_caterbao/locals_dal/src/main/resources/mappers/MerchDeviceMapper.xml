@@ -54,6 +54,10 @@
         <if test="merchId != null and merchId.length() > 0"> and merchId=#{merchId} </if>
     </select>
 
+    <select id="getCurrentMerchId" resultType="java.lang.String">
+        select merchId from MerchDevice where deviceId=#{deviceId} and BindStatus=1
+    </select>
+
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.MerchDevice">
         update MerchDevice
         <set>

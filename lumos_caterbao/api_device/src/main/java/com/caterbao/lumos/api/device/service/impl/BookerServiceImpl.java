@@ -95,7 +95,9 @@ public class BookerServiceImpl implements BookerService {
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
-        addBorrowReturnFlowLog(rop.getTrgId(),rop.getFlowId(),rop.getActionCode(),rop.getActionData(),"",rop.getActionRemark(), rop.getActionTime());
+        new Thread(() -> {
+            addBorrowReturnFlowLog(rop.getTrgId(), rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+        }).start();
 
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return result.fail("设备号为空[01]");
@@ -367,10 +369,25 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
-    private void addBorrowReturnFlowLog(String trgId, String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ){
-        BookBorrowFlowLog d_BookBorrowFlowLog=new BookBorrowFlowLog();
+    private void addBorrowReturnFlowLog(String trgId,String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
+
+        String merchId = null;
+        String deviceCumCode = null;
+        LumosSelective selective_MerchDevice = new LumosSelective();
+        selective_MerchDevice.addWhere("DeviceId", deviceId);
+        selective_MerchDevice.addWhere("BindStatus", "1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        if (d_MerchDevice != null) {
+            merchId = d_MerchDevice.getMerchId();
+            deviceCumCode = d_MerchDevice.getCumCode();
+        }
+
+        BookBorrowFlowLog d_BookBorrowFlowLog = new BookBorrowFlowLog();
         d_BookBorrowFlowLog.setId(IdWork.buildLongId());
         d_BookBorrowFlowLog.setTrgId(trgId);
+        d_BookBorrowFlowLog.setMerchId(merchId);
+        d_BookBorrowFlowLog.setDeviceId(deviceId);
+        d_BookBorrowFlowLog.setDeviceCumCode(deviceCumCode);
         d_BookBorrowFlowLog.setFlowId(flowId);
         d_BookBorrowFlowLog.setActionCode(actionCode);
         d_BookBorrowFlowLog.setActionData(actionData);

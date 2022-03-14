@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 public class BookBorrowFlowLog {
     private String id;
     private String trgId;
+    private String merchId;
+    private String deviceId;
+    private String deviceCumCode;
     private String flowId;
     private String actionCode;
     private String actionName;
@@ -29,6 +32,30 @@ public class BookBorrowFlowLog {
 
     public void setTrgId(String trgId) {
         this.trgId = trgId;
+    }
+
+    public String getMerchId() {
+        return merchId;
+    }
+
+    public void setMerchId(String merchId) {
+        this.merchId = merchId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceCumCode() {
+        return deviceCumCode;
+    }
+
+    public void setDeviceCumCode(String deviceCumCode) {
+        this.deviceCumCode = deviceCumCode;
     }
 
     public String getFlowId() {

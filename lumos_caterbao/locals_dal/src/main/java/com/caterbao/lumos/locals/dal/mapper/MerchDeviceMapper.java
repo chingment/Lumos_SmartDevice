@@ -11,6 +11,7 @@ import java.util.List;
 public interface MerchDeviceMapper {
     MerchDeviceVw findOne(LumosSelective selective);
     List<MerchDeviceVw> find(LumosSelective selective);
+    String getCurrentMerchId(String DeviceId);
     long count(LumosSelective selective);
     long isExistCumCode(String deviceId,String merchId,String cumCode);
     long update(MerchDevice merchDevice);
