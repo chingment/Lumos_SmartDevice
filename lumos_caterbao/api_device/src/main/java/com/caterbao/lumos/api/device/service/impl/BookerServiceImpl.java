@@ -243,16 +243,21 @@ public class BookerServiceImpl implements BookerService {
 
             List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
 
+            if(open_RfIds==null) {
+                open_RfIds = new ArrayList<>();
+            }
+
             List<String> close_RfIds =JsonUtil.toObject(d_BookBorrowFlow.getCloseRfIds(),new TypeReference<List<String>>() {});
+            if (close_RfIds == null) {
+                close_RfIds = new ArrayList<>();
+            }
 
             List<String> borrow_RfIds = new ArrayList<>();
 
             if(open_RfIds!=null) {
                 for (String open_rfId : open_RfIds) {
-                    if (close_RfIds != null) {
-                        if (!close_RfIds.contains(open_rfId)) {
-                            borrow_RfIds.add(open_rfId);
-                        }
+                    if (!close_RfIds.contains(open_rfId)) {
+                        borrow_RfIds.add(open_rfId);
                     }
                 }
             }
@@ -261,10 +266,8 @@ public class BookerServiceImpl implements BookerService {
 
             if(close_RfIds!=null) {
                 for (String close_rfId : close_RfIds) {
-                    if(open_RfIds!=null) {
-                        if (!open_RfIds.contains(close_rfId)) {
-                            return_RfIds.add(close_rfId);
-                        }
+                    if (!open_RfIds.contains(close_rfId)) {
+                        return_RfIds.add(close_rfId);
                     }
                 }
             }
@@ -352,18 +355,9 @@ public class BookerServiceImpl implements BookerService {
 
             RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
             ret.setFlowId(flowId);
-
-
-            //borrowBooks.add(new BookBean("1", "1", "安徒生童话故事", "1", "1"));
-            //borrowBooks.add(new BookBean("1", "1", "这个杀手不太冷静", "1", "1"));
-
-
-
-            //returnBooks.add(new BookBean("1", "1", "西游记", "1", "1"));
-            //returnBooks.add(new BookBean("1", "1", "红楼梦", "1", "1"));
-
             ret.setBorrowBooks(ret_BorrowBooks);
             ret.setReturnBooks(ret_ReturnBooks);
+
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
