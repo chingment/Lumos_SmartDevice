@@ -106,9 +106,9 @@ public class BookerServiceImpl implements BookerService {
     public FieldModel getIdentityType(int type) {
         FieldModel model = new FieldModel();
         if (type == 1)
-            return new FieldModel(1, "小程序");
+            return new FieldModel(1, "IC卡");
         else if (type == 2)
-            return new FieldModel(2, "IC卡");
+            return new FieldModel(2, "小程序");
         return model;
     }
 

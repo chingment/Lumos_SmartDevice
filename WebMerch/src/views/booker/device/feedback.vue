@@ -42,12 +42,12 @@
     >
       <el-table-column label="触发号" fixed="left" align="left" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.trgId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="业务号" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.identityName }}</span>
+          <span>{{ scope.row.flowId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">

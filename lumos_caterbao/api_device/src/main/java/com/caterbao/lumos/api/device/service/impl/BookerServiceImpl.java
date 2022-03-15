@@ -120,29 +120,25 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(rop.getActionCode()))
             return result.fail("未知动作[07]");
 
-        if (rop.getActionCode().equals("open_request")) {
+        if (rop.getActionCode().equals("request_open_auth")) {
             ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(),new TypeReference<ActionDataByOpenRequest>() {});
-            return borrowReturnOpenRequest(rop.getDeviceId(), rop.getCabinetId(),
+            return borrowReturnRequestOpenAuth(rop.getDeviceId(), rop.getCabinetId(),
                     rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(),actionData.getRfIds());
-        } else if (rop.getActionCode().equals("open_request_success")) {
+        }
+        else if (rop.getActionCode().equals("request_close_auth")) {
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+            });
+            return borrowReturnRequestCloseAuth(rop.getDeviceId(), rop.getCabinetId(),
+                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(), rop.getFlowId(), actionData.getRfIds());
+        }
+        else {
             RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
             ret.setFlowId(rop.getFlowId());
             return result.success("", ret);
-        } else if (rop.getActionCode().equals("open_request_failure")) {
-
         }
-        else if (rop.getActionCode().equals("close_success")) {
-            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
-            });
-            return borrowReturnCloseSuccess(rop.getDeviceId(), rop.getCabinetId(),
-                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(), rop.getFlowId(), actionData.getRfIds());
-        }
-
-        RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
-        return result.success("", ret);
     }
 
-    private CustomResult<RetBookerBorrowReturn> borrowReturnOpenRequest(String deviceId,
+    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestOpenAuth(String deviceId,
                                                             String cabinetId,
                                                             String slotId,
                                                             String clientUserId,
@@ -198,7 +194,7 @@ public class BookerServiceImpl implements BookerService {
         return result.success("流程创建成功", ret);
     }
 
-    private CustomResult<RetBookerBorrowReturn> borrowReturnCloseSuccess(String deviceId,
+    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestCloseAuth(String deviceId,
                                                                          String cabinetId,
                                                                          String slotId,
                                                                          String clientUserId,
@@ -371,7 +367,7 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
-    private void addBorrowReturnFlowLog(String trgId,String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
+    private void  addBorrowReturnFlowLog(String trgId,String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
 
         String merchId = null;
         String deviceCumCode = null;
