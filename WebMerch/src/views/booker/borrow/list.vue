@@ -72,11 +72,6 @@
           <span>{{ scope.row.deviceCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="身份验证" align="left" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.identityType.text }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="借阅方式" align="left" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.borrowWay.text }}</span>
@@ -85,6 +80,11 @@
       <el-table-column label="借阅时间" align="left" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.borrowTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="到期时间" align="left" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.expireTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="归还方式" align="left" width="120">
@@ -97,14 +97,14 @@
           <span>{{ scope.row.returnTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" fixed="right" align="left" width="120">
+      <el-table-column label="状态" fixed="right" align="center" width="100">
         <template slot-scope="scope">
           <el-tag :type="getBorrowStatusColor(scope.row.borrowStatus.value)">{{ scope.row.borrowStatus.text }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="text" size="mini" @click="onEdit(row)">
+          <el-button type="text" size="mini" @click="onSaw(row)">
             查看
           </el-button>
         </template>
@@ -113,16 +113,19 @@
 
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
+    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :flow-data-id="selectFlowDataId" />
+
   </div>
 </template>
 
 <script>
 import { borrowList } from '@/api/booker'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import PaneDetails from './details.vue'
 
 export default {
   name: 'BookerBorrowList',
-  components: { Pagination },
+  components: { Pagination, PaneDetails },
   data() {
     return {
       loading: false,
@@ -143,6 +146,8 @@ export default {
         totalPages: 0,
         totalSize: 0
       },
+      dialogVisibleDetails: false,
+      selectFlowDataId: '',
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -203,22 +208,9 @@ export default {
         return 'error'
       }
     },
-    onAdd() {
-      this.$router.push({
-        path: '/client/iccard/add'
-      })
-    },
-    onEdit(item) {
-      this.$router.push({
-        path: '/client/iccard/edit?id=' + item.id
-      })
-    },
-    getIsDisableColor(isDisable) {
-      if (isDisable) {
-        return 'danger'
-      } else {
-        return 'success'
-      }
+    onSaw(item) {
+      this.selectFlowDataId = item.id
+      this.dialogVisibleDetails = true
     }
   }
 }

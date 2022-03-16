@@ -8,6 +8,14 @@ export function borrowList(data) {
   })
 }
 
+export function borrowDetails(params) {
+  return request({
+    url: '/booker/borrow/details',
+    method: 'get',
+    params
+  })
+}
+
 export function deviceFeedback(data) {
   return request({
     url: '/booker/device/feedback',
@@ -16,7 +24,17 @@ export function deviceFeedback(data) {
   })
 }
 
+export function deviceFeedbackDetails(params) {
+  return request({
+    url: '/booker/device/feedback/details',
+    method: 'get',
+    params
+  })
+}
+
 export default {
   borrowList: borrowList,
-  deviceFeedback: deviceFeedback
+  borrowDetails: borrowDetails,
+  deviceFeedback: deviceFeedback,
+  deviceFeedbackDetails: deviceFeedbackDetails
 }

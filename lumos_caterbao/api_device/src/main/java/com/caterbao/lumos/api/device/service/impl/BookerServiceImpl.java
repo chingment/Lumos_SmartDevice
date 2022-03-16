@@ -99,54 +99,51 @@ public class BookerServiceImpl implements BookerService {
             addBorrowReturnFlowLog(rop.getTrgId(), rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
-        if (CommonUtil.isEmpty(rop.getDeviceId()))
-            return result.fail("设备号为空[01]");
-
-        if (CommonUtil.isEmpty(rop.getCabinetId()))
-            return result.fail("柜体编号为空[02]");
-
-        if (CommonUtil.isEmpty(rop.getSlotId()))
-            return result.fail("柜门编号为空[03]");
-
-        if (CommonUtil.isEmpty(rop.getClientUserId()))
-            return result.fail("身份未验证[04]");
-
-        if (CommonUtil.isEmpty(rop.getIdentityType()))
-            return result.fail("身份未验证[05]");
-
-        if (CommonUtil.isEmpty(rop.getIdentityId()))
-            return result.fail("身份未验证[06]");
-
-        if (CommonUtil.isEmpty(rop.getActionCode()))
-            return result.fail("未知动作[07]");
-
-        if (rop.getActionCode().equals("request_open_auth")) {
-            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(),new TypeReference<ActionDataByOpenRequest>() {});
-            return borrowReturnRequestOpenAuth(rop.getDeviceId(), rop.getCabinetId(),
-                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(),actionData.getRfIds());
-        }
-        else if (rop.getActionCode().equals("request_close_auth")) {
+        if (rop.getActionCode().equals("create_flow")) {
+            return borrowReturnCreateFlow(rop.getDeviceId(), rop.getCabinetId(), rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId());
+        } else if (rop.getActionCode().equals("request_open_auth")) {
             ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
             });
-            return borrowReturnRequestCloseAuth(rop.getDeviceId(), rop.getCabinetId(),
-                    rop.getSlotId(), rop.getClientUserId(), rop.getIdentityType(), rop.getIdentityId(), rop.getFlowId(), actionData.getRfIds());
-        }
-        else {
+            return borrowReturnRequestOpenAuth(rop.getFlowId(), actionData.getRfIds());
+        } else if (rop.getActionCode().equals("request_close_auth")) {
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+            });
+            return borrowReturnRequestCloseAuth(rop.getFlowId(), actionData.getRfIds());
+        } else {
             RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
             ret.setFlowId(rop.getFlowId());
             return result.success("", ret);
         }
     }
 
-    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestOpenAuth(String deviceId,
-                                                            String cabinetId,
-                                                            String slotId,
-                                                            String clientUserId,
-                                                            int identityType,
-                                                            String identityId,
-                                                            List<String> openRfIds) {
+    private CustomResult<RetBookerBorrowReturn> borrowReturnCreateFlow(String deviceId,
+                                                                       String cabinetId,
+                                                                       String slotId,
+                                                                       String clientUserId,
+                                                                       int identityType,
+                                                                       String identityId) {
 
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
+
+
+        if (CommonUtil.isEmpty(deviceId))
+            return result.fail("创建失败[01]");
+
+        if (CommonUtil.isEmpty(cabinetId))
+            return result.fail("创建失败[02]");
+
+        if (CommonUtil.isEmpty(slotId))
+            return result.fail("创建失败[03]");
+
+        if (CommonUtil.isEmpty(clientUserId))
+            return result.fail("创建失败[04]");
+
+        if (CommonUtil.isEmpty(identityType))
+            return result.fail("创建失败[05]");
+
+        if (CommonUtil.isEmpty(identityId))
+            return result.fail("创建失败[06]");
+
 
         LumosSelective selective_MerchDevice = new LumosSelective();
         selective_MerchDevice.addWhere("DeviceId", deviceId);
@@ -154,13 +151,13 @@ public class BookerServiceImpl implements BookerService {
         MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
 
         if (d_MerchDevice == null)
-            return result.fail("设备未绑定商户");
+            return result.fail("创建失败[07]");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
-            return result.fail("设备未绑定店铺");
+            return result.fail("创建失败[08]");
 
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
-            return result.fail("设备未绑定门店");
+            return result.fail("创建失败[09]");
 
         BookBorrowFlow d_BookBorrowFlow = new BookBorrowFlow();
 
@@ -179,29 +176,51 @@ public class BookerServiceImpl implements BookerService {
         d_BookBorrowFlow.setIdentityType(identityType);
         d_BookBorrowFlow.setIdentityId(identityId);
         d_BookBorrowFlow.setIdentityName(getIdentityName(identityType, identityId));
-        d_BookBorrowFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-        d_BookBorrowFlow.setOpenRfIds(JsonUtil.getJson(openRfIds));
         d_BookBorrowFlow.setStatus(1);
         d_BookBorrowFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookBorrowFlow.setCreator(IdWork.buildGuId());
 
         if (bookBorrowFlowMapper.insert(d_BookBorrowFlow) <= 0)
-            return result.fail("流程创建失败");
+            return result.fail("创建失败[10]");
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
         ret.setFlowId(d_BookBorrowFlow.getId());
 
-        return result.success("流程创建成功", ret);
+        return result.success("创建成功", ret);
+
     }
 
-    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestCloseAuth(String deviceId,
-                                                                         String cabinetId,
-                                                                         String slotId,
-                                                                         String clientUserId,
-                                                                         int identityType,
-                                                                         String identityId,
-                                                                         String flowId,
-                                                                         List<String> closeRfIds){
+    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestOpenAuth(String flowId,List<String> openRfIds) {
+
+        CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
+
+
+        LumosSelective selective_BookBorrowFlow = new LumosSelective();
+        selective_BookBorrowFlow.setFields("*");
+        selective_BookBorrowFlow.addWhere("FlowId", flowId);
+
+
+        BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowFlow);
+
+        if (d_BookBorrowFlow == null)
+            return result.fail("验证失败[01]");
+
+        d_BookBorrowFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setOpenRfIds(JsonUtil.getJson(openRfIds));
+        d_BookBorrowFlow.setStatus(1);
+        d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
+        d_BookBorrowFlow.setMender(IdWork.buildGuId());
+
+        if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0)
+            return result.fail("验证失败[02]");
+
+        RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+        ret.setFlowId(d_BookBorrowFlow.getId());
+
+        return result.success("验证成功", ret);
+    }
+
+    private CustomResult<RetBookerBorrowReturn> borrowReturnRequestCloseAuth(String flowId, List<String> closeRfIds){
 
         CustomResult<RetBookerBorrowReturn> result=new CustomResult<>();
 
@@ -221,20 +240,17 @@ public class BookerServiceImpl implements BookerService {
             BookBorrowFlow d_BookBorrowFlow = bookBorrowFlowMapper.findOne(selective_BookBorrowFlow);
             if (d_BookBorrowFlow == null) {
                 lock.unlock();
-                return result.fail("关闭失败[1]");
+                return result.fail("验证失败[01]");
             }
-
 
             d_BookBorrowFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
             d_BookBorrowFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
-
-
             d_BookBorrowFlow.setMender(IdWork.buildGuId());
             d_BookBorrowFlow.setMendTime(CommonUtil.getDateTimeNow());
 
             if (bookBorrowFlowMapper.update(d_BookBorrowFlow) <= 0) {
                 lock.unlock();
-                return result.fail("关闭失败[2]");
+                return result.fail("验证失败[02]");
             }
 
             List<String> open_RfIds = JsonUtil.toObject(d_BookBorrowFlow.getOpenRfIds(),new TypeReference<List<String>>() {});
@@ -268,6 +284,7 @@ public class BookerServiceImpl implements BookerService {
                 }
             }
 
+            int expireDay=30;
             //借书
             for (int i=0;i< borrow_RfIds.size() ; i++) {
 
@@ -309,12 +326,13 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrowFlowData.setBorrowWay(1);
                     d_BookBorrowFlowData.setBorrowTime(CommonUtil.getDateTimeNow());
                     d_BookBorrowFlowData.setBorrowStatus(1);
+                    d_BookBorrowFlowData.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(expireDay));
                     d_BookBorrowFlowData.setCreator(IdWork.buildGuId());
                     d_BookBorrowFlowData.setCreateTime(CommonUtil.getDateTimeNow());
 
                     if (bookBorrowFlowDataMapper.insert(d_BookBorrowFlowData) <= 0) {
                         lock.unlock();
-                        return result.fail("关闭失败[4]");
+                        return result.fail("验证失败[03]");
                     }
                     else {
                         ret_BorrowBooks.add(new BookBean(d_BookBorrowFlowData.getSkuId(),d_BookBorrowFlowData.getSkuRfId(),d_BookBorrowFlowData.getSkuName(),d_BookBorrowFlowData.getDeviceCumCode(),d_BookBorrowFlowData.getSkuImgUrl()));
@@ -340,7 +358,7 @@ public class BookerServiceImpl implements BookerService {
 
                     if (bookBorrowFlowDataMapper.update(d_BookBorrowFlowData) <= 0) {
                         lock.unlock();
-                        return result.fail("关闭失败[4]");
+                        return result.fail("验证失败[04]");
                     }
                     else
                     {
@@ -357,12 +375,12 @@ public class BookerServiceImpl implements BookerService {
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
-            return  result.success("保存成功",ret);
+            return  result.success("验证成功",ret);
         } catch (Exception e) {
             platformTransactionManager.rollback(transaction);
             e.printStackTrace();
             lock.unlock();
-            return result.fail("保存失败,服务器异常");
+            return result.fail("验证失败[99]");
         }
 
     }

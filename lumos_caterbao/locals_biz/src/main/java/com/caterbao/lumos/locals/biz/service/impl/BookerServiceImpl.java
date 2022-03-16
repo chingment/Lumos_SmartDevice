@@ -11,6 +11,7 @@ import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public FieldModel getBorrowStatus(int stauts) {
+    public FieldModel getBorrowStatus(int stauts,Timestamp expireTime) {
         FieldModel model=new FieldModel();
         if(stauts==1)
             return new FieldModel(1,"借阅");

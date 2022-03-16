@@ -504,3 +504,22 @@ border: 1px solid #909399;
 
   
 }
+
+
+.cumstom-dialog{
+  background-color: #fff;
+  height: 90%;
+  .el-dialog__body{
+    overflow: hidden;
+    padding-bottom: 10px;
+    padding: 10px;
+  }
+
+}
+
+.el-dialog{
+.lcn1{
+  width: 75px;
+  text-align: right;
+}
+}

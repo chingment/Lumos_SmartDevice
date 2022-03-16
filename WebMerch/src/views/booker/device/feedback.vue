@@ -40,14 +40,9 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="触发号" fixed="left" align="left" width="180">
+      <el-table-column label="业务号" align="left" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.trgId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="业务号" align="left" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.flowId }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">
@@ -72,7 +67,7 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="text" size="mini" @click="onEdit(row)">
+          <el-button type="text" size="mini" @click="onSaw(row)">
             查看
           </el-button>
         </template>
@@ -81,6 +76,8 @@
 
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
+    <pane-feedback-details v-if="dialogVisibleFeedbackDetails" :visible.sync="dialogVisibleFeedbackDetails" :flow-id="selectFlowId" />
+
   </div>
 </template>
 
@@ -88,9 +85,11 @@
 import { deviceFeedback } from '@/api/booker'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
+import PaneFeedbackDetails from './feedback/details.vue'
+
 export default {
   name: 'BookerDeviceFeedback',
-  components: { Pagination },
+  components: { Pagination, PaneFeedbackDetails },
   data() {
     return {
       loading: false,
@@ -110,6 +109,35 @@ export default {
         totalPages: 0,
         totalSize: 0
       },
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      dialogVisibleFeedbackDetails: false,
+      selectFlowId: '',
       isDesktop: this.$store.getters.isDesktop
     }
   },
@@ -136,29 +164,9 @@ export default {
       this.listQuery.pageNum = 1
       this.onList()
     },
-    getBorrowStatusColor(val) {
-      if (val === 1) {
-        return 'success'
-      } else {
-        return 'error'
-      }
-    },
-    onAdd() {
-      this.$router.push({
-        path: '/client/iccard/add'
-      })
-    },
-    onEdit(item) {
-      this.$router.push({
-        path: '/client/iccard/edit?id=' + item.id
-      })
-    },
-    getIsDisableColor(isDisable) {
-      if (isDisable) {
-        return 'danger'
-      } else {
-        return 'success'
-      }
+    onSaw(item) {
+      this.selectFlowId = item.id
+      this.dialogVisibleFeedbackDetails = true
     }
   }
 }

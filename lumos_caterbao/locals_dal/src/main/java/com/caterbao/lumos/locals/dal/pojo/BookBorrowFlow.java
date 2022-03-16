@@ -23,6 +23,7 @@ public class BookBorrowFlow {
     private Timestamp closeActionTime;
     private String closeRfIds;
 
+
     //1 创建借阅 AA000
     //2 创建借阅流程成功 AB001
     //3 创建借阅流程失败 AC002

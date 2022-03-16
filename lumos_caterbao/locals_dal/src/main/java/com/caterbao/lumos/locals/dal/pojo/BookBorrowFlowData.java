@@ -31,6 +31,9 @@ public class BookBorrowFlowData {
     private int returnWay;
     private Timestamp returnTime;
     private String returnFlowId;
+    private Timestamp expireTime;
+    private Timestamp renewLastTime;
+    private int renewCount;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -290,5 +293,29 @@ public class BookBorrowFlowData {
 
     public void setIdentityName(String identityName) {
         this.identityName = identityName;
+    }
+
+    public Timestamp getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Timestamp expireTime) {
+        this.expireTime = expireTime;
+    }
+
+    public Timestamp getRenewLastTime() {
+        return renewLastTime;
+    }
+
+    public void setRenewLastTime(Timestamp renewLastTime) {
+        this.renewLastTime = renewLastTime;
+    }
+
+    public int getRenewCount() {
+        return renewCount;
+    }
+
+    public void setRenewCount(int renewCount) {
+        this.renewCount = renewCount;
     }
 }

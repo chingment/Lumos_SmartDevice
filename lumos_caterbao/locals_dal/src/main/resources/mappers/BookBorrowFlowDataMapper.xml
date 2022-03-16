@@ -8,6 +8,7 @@
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
         <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
         <if test="where.SkuRfId != null">and SkuRfId =#{where.SkuRfId}</if>
+        <if test="where.FlowDataId != null">and Id =#{where.FlowDataId}</if>
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookBorrowFlowData where 1=1

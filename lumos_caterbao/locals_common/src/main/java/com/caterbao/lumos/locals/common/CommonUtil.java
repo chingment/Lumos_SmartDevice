@@ -18,10 +18,17 @@ public class CommonUtil {
         return "HelloWorld";
     }
 
-    public static Timestamp getDateTimeNow(){
-        return  new Timestamp(new java.util.Date().getTime());
+    public static Timestamp getDateTimeNow() {
+
+        String current = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+        Timestamp time = Timestamp.valueOf(current);
+
+        return time;
     }
 
+    public static Timestamp getDateTimeNowAndAddDay(int day){
+        return  new Timestamp(new java.util.Date().getTime()+ (day * 24 * 60 * 60 * 1000));
+    }
 
     public static String getPyIdxChar(String str) {
         String convert = "";

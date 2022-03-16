@@ -12,9 +12,12 @@ import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowLogMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowMapper;
+import com.caterbao.lumos.locals.dal.mapper.SysClientUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowLog;
+import com.caterbao.lumos.locals.dal.pojo.SysClientUser;
+import com.caterbao.lumos.locals.dal.vw.ClientUserVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ public class BookerServiceImpl implements BookerService {
     private BookBorrowFlowMapper bookBorrowFlowMapper;;
     private BookBorrowFlowLogMapper bookBorrowFlowLogMapper;;
     private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
+    private SysClientUserMapper sysClientUserMapper;
 
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
 
@@ -88,12 +92,13 @@ public class BookerServiceImpl implements BookerService {
             item.put("skuName",d_BookBorrowFlowData.getSkuName());
             item.put("borrowWay",bizBookerService.getBorrowWay(d_BookBorrowFlowData.getBorrowWay()));
             item.put("borrowTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getBorrowTime()));
+            item.put("expireTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getExpireTime()));
             item.put("returnWay",bizBookerService.getReturnWay(d_BookBorrowFlowData.getReturnWay()));
             item.put("returnTime", "");
             item.put("buyTime", "");
             item.put("renewLastTime","");
             item.put("renewCount","");
-            item.put("borrowStatus",bizBookerService.getBorrowStatus(d_BookBorrowFlowData.getBorrowStatus()));//借阅，超期
+            item.put("borrowStatus",bizBookerService.getBorrowStatus(d_BookBorrowFlowData.getBorrowStatus(),d_BookBorrowFlowData.getExpireTime()));//借阅，超期
             items.add(item);
         }
 
@@ -107,6 +112,47 @@ public class BookerServiceImpl implements BookerService {
 
         return result.success("",ret);
     }
+
+    @Override
+    public CustomResult<Object> borrowDetails(String operater, String merchId, String flowDataId) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        LumosSelective selective_FlowData = new LumosSelective();
+        selective_FlowData.setFields("*");
+
+        selective_FlowData.addWhere("MerchId", merchId);
+        selective_FlowData.addWhere("FlowDataId", flowDataId);
+
+        BookBorrowFlowData d_BookBorrowFlowData = bookBorrowFlowDataMapper.findOne(selective_FlowData);
+
+        if (d_BookBorrowFlowData == null)
+            return result.fail("找不到数据");
+
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("id",d_BookBorrowFlowData.getId());
+        ret.put("flowId",d_BookBorrowFlowData.getFlowId());
+        ret.put("identityType",bizBookerService.getIdentityType(d_BookBorrowFlowData.getIdentityType()));
+        ret.put("identityId",d_BookBorrowFlowData.getIdentityId());
+        ret.put("identityName",d_BookBorrowFlowData.getIdentityName());
+        ret.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlowData.getDeviceId(),d_BookBorrowFlowData.getDeviceCumCode()));
+        ret.put("skuRfId",d_BookBorrowFlowData.getSkuRfId());
+        ret.put("skuImgUrl",d_BookBorrowFlowData.getSkuImgUrl());
+        ret.put("skuCumCode",d_BookBorrowFlowData.getSkuCumCode());
+        ret.put("skuName",d_BookBorrowFlowData.getSkuName());
+        ret.put("borrowWay",bizBookerService.getBorrowWay(d_BookBorrowFlowData.getBorrowWay()));
+        ret.put("borrowTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getBorrowTime()));
+        ret.put("expireTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getExpireTime()));
+        ret.put("returnWay",bizBookerService.getReturnWay(d_BookBorrowFlowData.getReturnWay()));
+        ret.put("returnTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getReturnTime()));
+        ret.put("renewLastTime",CommonUtil.toDateTimeStr(d_BookBorrowFlowData.getRenewLastTime()));
+        ret.put("renewCount",d_BookBorrowFlowData.getRenewCount());
+        ret.put("borrowStatus",bizBookerService.getBorrowStatus(d_BookBorrowFlowData.getBorrowStatus(),d_BookBorrowFlowData.getExpireTime()));//借阅，超期
+
+
+        return result.success("", ret);
+    }
+
 
     @Override
     public CustomResult<Object> renewList(String operater, String merchId, RopBookerRenewList rop) {
@@ -129,23 +175,33 @@ public class BookerServiceImpl implements BookerService {
 
         selective.addWhere("MerchId",merchId);
 
-        List<BookBorrowFlowLog> d_BookBorrowFlowLogs = bookBorrowFlowLogMapper.find(selective);
+        List<BookBorrowFlow> d_BookBorrowFlows = bookBorrowFlowMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
-        for (BookBorrowFlowLog  d_BookBorrowFlowLog :
-                d_BookBorrowFlowLogs ) {
+        for (BookBorrowFlow  d_BookBorrowFlow :
+                d_BookBorrowFlows ) {
 
-            HashMap<String,Object> item=new HashMap<>();
+            HashMap<String, Object> item = new HashMap<>();
 
-            item.put("id",d_BookBorrowFlowLog.getId());
-            item.put("trgId",d_BookBorrowFlowLog.getTrgId());
-            item.put("flowId",d_BookBorrowFlowLog.getFlowId());
-            item.put("deviceCode",DeviceVoUtil.getCode(d_BookBorrowFlowLog.getDeviceId(),d_BookBorrowFlowLog.getDeviceCumCode()));
-            item.put("actionCode",d_BookBorrowFlowLog.getActionCode());
-            item.put("actionTime", CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getActionTime()));
-            item.put("actionRemark",d_BookBorrowFlowLog.getActionRemark());
-            item.put("createTime",CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getCreateTime()));
+            item.put("id", d_BookBorrowFlow.getId());
+            item.put("deviceCode", DeviceVoUtil.getCode(d_BookBorrowFlow.getDeviceId(), d_BookBorrowFlow.getDeviceCumCode()));
+
+            BookBorrowFlowLog d_BookBorrowFlowLog = bookBorrowFlowLogMapper.findLastFlowLog(d_BookBorrowFlow.getId());
+
+            String actionCode="";
+            String actionTime="";
+            String actionRemark="";
+            if(d_BookBorrowFlowLog!=null) {
+                actionCode = d_BookBorrowFlowLog.getActionCode();
+                actionTime = CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getActionTime());
+                actionRemark = d_BookBorrowFlowLog.getActionRemark();
+            }
+
+            item.put("actionCode",actionCode);
+            item.put("actionTime", actionTime);
+            item.put("actionRemark",actionRemark);
+            item.put("createTime",CommonUtil.toDateTimeStr(d_BookBorrowFlow.getCreateTime()));
             items.add(item);
         }
 
@@ -158,6 +214,39 @@ public class BookerServiceImpl implements BookerService {
         ret.setItems(items);
 
         return result.success("",ret);
+    }
+
+    @Override
+    public CustomResult<Object> deviceFeedbackDetails(String operater, String merchId, String flowId) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        LumosSelective selective_FlowLogs = new LumosSelective();
+        selective_FlowLogs.setFields("*");
+        selective_FlowLogs.addWhere("MerchId", merchId);
+        selective_FlowLogs.addWhere("FlowId", flowId);
+
+        List<BookBorrowFlowLog> d_BookBorrowFlowLogs = bookBorrowFlowLogMapper.find(selective_FlowLogs);
+
+        List<Object> flowLogs=new ArrayList<>();
+
+        for (BookBorrowFlowLog  d_BookBorrowFlowLog :
+                d_BookBorrowFlowLogs ) {
+
+            HashMap<String, Object> flowLog = new HashMap<>();
+
+            flowLog.put("actionCode",d_BookBorrowFlowLog.getActionCode());
+            flowLog.put("actionTime",CommonUtil.toDateTimeStr(d_BookBorrowFlowLog.getActionTime()));
+            flowLog.put("actionRemark",d_BookBorrowFlowLog.getActionRemark());
+
+            flowLogs.add(flowLog);
+        }
+
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("flowLogs",flowLogs);
+
+
+        return result.success("", ret);
     }
 
 }

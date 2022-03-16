@@ -26,10 +26,10 @@ public class BookerController extends  BaseController  {
         return bookerService.borrowList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
     }
 
-    @RequestMapping(value = "renew/list", method = RequestMethod.POST)
+    @RequestMapping(value = "borrow/details", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> renewList(@RequestBody RopBookerRenewList rop) {
-        return bookerService.renewList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    public CustomResult<Object> borrowDetails(@RequestParam String flowDataId) {
+        return bookerService.borrowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),flowDataId);
     }
 
     @RequestMapping(value = "device/feedback", method = RequestMethod.POST)
@@ -37,5 +37,19 @@ public class BookerController extends  BaseController  {
     public CustomResult<Object> deviceFeedback(@RequestBody RopBookerDeviceFeedback rop) {
         return bookerService.deviceFeedback(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
     }
+
+    @RequestMapping(value = "device/feedback/details", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomResult<Object> deviceFeedbackDetails(@RequestParam String flowId) {
+        return bookerService.deviceFeedbackDetails(this.getCurrentUserId(), this.getCurrentMerchId(),flowId);
+    }
+
+    @RequestMapping(value = "renew/list", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> renewList(@RequestBody RopBookerRenewList rop) {
+        return bookerService.renewList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    }
+
+
 
 }
