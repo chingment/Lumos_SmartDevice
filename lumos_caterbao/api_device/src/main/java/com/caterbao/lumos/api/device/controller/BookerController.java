@@ -18,8 +18,13 @@ public class BookerController extends BaseController{
         this.bookerService=bookerService;
     }
 
+    @RequestMapping(value = "createFlow", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<RetBookerCreateFlow> createFlow(@RequestBody RopBookerCreateFlow rop){
+        return bookerService.createFlow(this.getCurrentUserId(),rop);
+    }
 
-    @RequestMapping(value = "borrowreturn", method = RequestMethod.POST)
+    @RequestMapping(value = "borrowReturn", method = RequestMethod.POST)
     @ResponseBody
     public CustomResult<RetBookerBorrowReturn> borrowReturn(@RequestBody RopBookerBorrowReturn rop){
         return bookerService.borrowReturn(this.getCurrentUserId(),rop);

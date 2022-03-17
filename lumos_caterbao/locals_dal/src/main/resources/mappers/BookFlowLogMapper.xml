@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookFlowLogMapper">
+    <select id="findLastByFlowId" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
+        select  * from BookFlowLog where FlowId=#{flowId} order by actionTime desc limit 0,1
+    </select>
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from BookFlowLog where 1=1
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+    </select>
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
+  insert into BookFlowLog(id,merchId,deviceId,deviceCumCode,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
+  values(#{id},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
+    </insert>
+</mapper>

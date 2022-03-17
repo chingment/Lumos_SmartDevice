@@ -2,9 +2,8 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookBorrowFlowLog {
+public class BookFlowLog {
     private String id;
-    private String trgId;
     private String merchId;
     private String deviceId;
     private String deviceCumCode;
@@ -26,13 +25,6 @@ public class BookBorrowFlowLog {
         this.id = id;
     }
 
-    public String getTrgId() {
-        return trgId;
-    }
-
-    public void setTrgId(String trgId) {
-        this.trgId = trgId;
-    }
 
     public String getMerchId() {
         return merchId;

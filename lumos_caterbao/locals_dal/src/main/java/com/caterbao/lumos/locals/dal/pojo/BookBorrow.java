@@ -2,8 +2,9 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookBorrowFlow {
+public class BookBorrow {
     private String id;
+    private String flowId;
     private String merchId;
     private String merchName;
     private String storeId;
@@ -18,43 +19,21 @@ public class BookBorrowFlow {
     private int identityType;
     private String identityId;
     private String identityName;
-    private Timestamp openActionTime;
-    private String openRfIds;
-    private Timestamp closeActionTime;
-    private String closeRfIds;
-
-
-    //1 创建借阅 AA000
-    //2 创建借阅流程成功 AB001
-    //3 创建借阅流程失败 AC002
-
-    //1 开始 
-    //4 请求打开柜门 BA000
-    //5 请求打开柜门成功 BB001
-    //6 请求打开柜门失败 BC002
-
-    //7 调用打开柜门 CA000
-    //8 调用打开柜门命令成功 CB001
-    //9 调用打开柜门命令失败 CC002
-
-    //10 调用检查门柜状态命令 DA000
-    //11 调用检查门柜状态命令成功 DB001
-    //12 调用检查门柜状态命令失败 DC002
-
-    //13 打开柜门成功 EA001
-    //14 打开柜门失败 EB002 需要重试几次
-
-    //15 调用检查关门状态命令 FA000
-    //16 关闭柜门成功 FB001
-    //17 关闭柜门失败 FC002
-
-    //18 告知关闭柜门 GA000
-    //19 告知关闭柜门成功 GB001
-    //20 告知关闭柜门失败 GC002
-
-    //21 结束 HA000
-
-    private int status;
+    private String skuId;
+    private String skuName;
+    private String skuImgUrl;
+    private String skuCumCode;
+    private String skuRfId;
+    private int borrowSeq;
+    private int borrowWay;
+    private Timestamp borrowTime;
+    private Timestamp expireTime;
+    private Timestamp renewLastTime;
+    private int renewCount;
+    private int status;//1000 借阅中,2000 已超期，3000 已归还，4000 已购买
+    private String returnFlowId;
+    private int returnWay;
+    private Timestamp returnTime;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -66,6 +45,14 @@ public class BookBorrowFlow {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(String flowId) {
+        this.flowId = flowId;
     }
 
     public String getMerchId() {
@@ -124,14 +111,6 @@ public class BookBorrowFlow {
         this.slotId = slotId;
     }
 
-    public String getClientUserId() {
-        return clientUserId;
-    }
-
-    public void setClientUserId(String clientUserId) {
-        this.clientUserId = clientUserId;
-    }
-
     public int getIdentityType() {
         return identityType;
     }
@@ -148,44 +127,84 @@ public class BookBorrowFlow {
         this.identityId = identityId;
     }
 
-    public Timestamp getOpenActionTime() {
-        return openActionTime;
+    public String getClientUserId() {
+        return clientUserId;
     }
 
-    public void setOpenActionTime(Timestamp openActionTime) {
-        this.openActionTime = openActionTime;
+    public void setClientUserId(String clientUserId) {
+        this.clientUserId = clientUserId;
     }
 
-    public String getOpenRfIds() {
-        return openRfIds;
+    public String getSkuId() {
+        return skuId;
     }
 
-    public void setOpenRfIds(String openRfIds) {
-        this.openRfIds = openRfIds;
+    public void setSkuId(String skuId) {
+        this.skuId = skuId;
     }
 
-    public Timestamp getCloseActionTime() {
-        return closeActionTime;
+    public String getSkuName() {
+        return skuName;
     }
 
-    public void setCloseActionTime(Timestamp closeActionTime) {
-        this.closeActionTime = closeActionTime;
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 
-    public String getCloseRfIds() {
-        return closeRfIds;
+    public String getSkuImgUrl() {
+        return skuImgUrl;
     }
 
-    public void setCloseRfIds(String closeRfIds) {
-        this.closeRfIds = closeRfIds;
+    public void setSkuImgUrl(String skuImgUrl) {
+        this.skuImgUrl = skuImgUrl;
     }
 
-    public int getStatus() {
-        return status;
+    public String getSkuCumCode() {
+        return skuCumCode;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setSkuCumCode(String skuCumCode) {
+        this.skuCumCode = skuCumCode;
+    }
+
+    public String getSkuRfId() {
+        return skuRfId;
+    }
+
+    public void setSkuRfId(String skuRfId) {
+        this.skuRfId = skuRfId;
+    }
+
+    public int getBorrowSeq() {
+        return borrowSeq;
+    }
+
+    public void setBorrowSeq(int borrowSeq) {
+        this.borrowSeq = borrowSeq;
+    }
+
+    public Timestamp getBorrowTime() {
+        return borrowTime;
+    }
+
+    public void setBorrowTime(Timestamp borrowTime) {
+        this.borrowTime = borrowTime;
+    }
+
+    public Timestamp getReturnTime() {
+        return returnTime;
+    }
+
+    public void setReturnTime(Timestamp returnTime) {
+        this.returnTime = returnTime;
+    }
+
+    public String getReturnFlowId() {
+        return returnFlowId;
+    }
+
+    public void setReturnFlowId(String returnFlowId) {
+        this.returnFlowId = returnFlowId;
     }
 
     public String getCreator() {
@@ -220,6 +239,30 @@ public class BookBorrowFlow {
         this.mendTime = mendTime;
     }
 
+    public int getBorrowWay() {
+        return borrowWay;
+    }
+
+    public void setBorrowWay(int borrowWay) {
+        this.borrowWay = borrowWay;
+    }
+
+    public int getReturnWay() {
+        return returnWay;
+    }
+
+    public void setReturnWay(int returnWay) {
+        this.returnWay = returnWay;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public String getMerchName() {
         return merchName;
     }
@@ -251,4 +294,29 @@ public class BookBorrowFlow {
     public void setIdentityName(String identityName) {
         this.identityName = identityName;
     }
+
+    public Timestamp getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Timestamp expireTime) {
+        this.expireTime = expireTime;
+    }
+
+    public Timestamp getRenewLastTime() {
+        return renewLastTime;
+    }
+
+    public void setRenewLastTime(Timestamp renewLastTime) {
+        this.renewLastTime = renewLastTime;
+    }
+
+    public int getRenewCount() {
+        return renewCount;
+    }
+
+    public void setRenewCount(int renewCount) {
+        this.renewCount = renewCount;
+    }
+
 }

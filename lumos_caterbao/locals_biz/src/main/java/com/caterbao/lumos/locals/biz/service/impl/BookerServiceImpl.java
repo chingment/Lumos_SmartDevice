@@ -6,8 +6,8 @@ import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.FieldModel;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.BookBorrowFlowDataMapper;
-import com.caterbao.lumos.locals.dal.pojo.BookBorrowFlowData;
+import com.caterbao.lumos.locals.dal.mapper.BookBorrowMapper;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +18,10 @@ import java.util.List;
 @Service("BizBookerService")
 public class BookerServiceImpl implements BookerService {
 
-    private BookBorrowFlowDataMapper bookBorrowFlowDataMapper;
+    private BookBorrowMapper bookBorrowMapper;
     @Autowired(required = false)
-    public void setBookBorrowFlowDataMapper(BookBorrowFlowDataMapper bookBorrowFlowDataMapper) {
-        this.bookBorrowFlowDataMapper = bookBorrowFlowDataMapper;
+    public void setBookBorrowMapper(BookBorrowMapper bookBorrowMapper) {
+        this.bookBorrowMapper = bookBorrowMapper;
     }
     @Override
     public BookerCalculateOverdueFineResult CalculateOverdueFine(String clientUserId) {
@@ -32,14 +32,14 @@ public class BookerServiceImpl implements BookerService {
         selective_1.setFields("*");
         selective_1.addWhere("ClientUserId", clientUserId);
 
-        List<BookBorrowFlowData> d_BookBorrowFlowDatas = bookBorrowFlowDataMapper.find(selective_1);
+        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective_1);
 
 
         List<BookerBorrowBook> bookerBorrowBooks = new ArrayList<>();
         float sumSverdueFine=0;
-        for (int i = 0; i < d_BookBorrowFlowDatas.size(); i++) {
-            BookBorrowFlowData d_BookBorrowFlowData = d_BookBorrowFlowDatas.get(i);
-            BookerBorrowBook bookerBorrowBook = CalculateOverdueFine(d_BookBorrowFlowData);
+        for (int i = 0; i < d_BookBorrows.size(); i++) {
+            BookBorrow d_BookBorrow = d_BookBorrows.get(i);
+            BookerBorrowBook bookerBorrowBook = CalculateOverdueFine(d_BookBorrow);
             sumSverdueFine += bookerBorrowBook.getOverdueFine();
             bookerBorrowBooks.add(bookerBorrowBook);
         }
@@ -50,17 +50,17 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public BookerBorrowBook CalculateOverdueFine(BookBorrowFlowData bookBorrowFlowData) {
+    public BookerBorrowBook CalculateOverdueFine(BookBorrow bookBorrow) {
         BookerBorrowBook bookerBorrowBook = new BookerBorrowBook();
 
-        bookerBorrowBook.setSkuId(bookBorrowFlowData.getSkuId());
-        bookerBorrowBook.setRfId(bookBorrowFlowData.getSkuRfId());
-        bookerBorrowBook.setName(bookBorrowFlowData.getSkuName());
-        bookerBorrowBook.setCumCode(bookBorrowFlowData.getSkuCumCode());
-        bookerBorrowBook.setImgUrl(bookBorrowFlowData.getSkuImgUrl());
-        bookerBorrowBook.setBorrowTime(CommonUtil.toDateTimeStr(bookBorrowFlowData.getBorrowTime()));
+        bookerBorrowBook.setSkuId(bookBorrow.getSkuId());
+        bookerBorrowBook.setRfId(bookBorrow.getSkuRfId());
+        bookerBorrowBook.setName(bookBorrow.getSkuName());
+        bookerBorrowBook.setCumCode(bookBorrow.getSkuCumCode());
+        bookerBorrowBook.setImgUrl(bookBorrow.getSkuImgUrl());
+        bookerBorrowBook.setBorrowTime(CommonUtil.toDateTimeStr(bookBorrow.getBorrowTime()));
 
-        long l = CommonUtil.getDateTimeNow().getTime() - bookBorrowFlowData.getBorrowTime().getTime();
+        long l = CommonUtil.getDateTimeNow().getTime() - bookBorrow.getBorrowTime().getTime();
         long diffDay = l / (24 * 60 * 60 * 1000);
 
         float overdueFine = 0;
@@ -71,7 +71,7 @@ public class BookerServiceImpl implements BookerService {
             status = new FieldModel(1, "借阅中");
         } else if (diffDay > 3 && diffDay <= 30) {
             status = new FieldModel(2, "逾期借阅");
-            if (bookBorrowFlowData.getBorrowSeq() <= 2) {
+            if (bookBorrow.getBorrowSeq() <= 2) {
                 overdueFine = (diffDay - 3) * 0.5f;
             } else {
                 overdueFine = (diffDay - 3) * 1f;
@@ -89,9 +89,16 @@ public class BookerServiceImpl implements BookerService {
 
     @Override
     public FieldModel getBorrowStatus(int stauts,Timestamp expireTime) {
-        FieldModel model=new FieldModel();
-        if(stauts==1)
-            return new FieldModel(1,"借阅");
+        //todo 未判断超时
+        FieldModel model = new FieldModel();
+        if (stauts == 1000) {
+            return new FieldModel(1000, "借阅中");
+        } else if (stauts == 2000) {
+            return new FieldModel(2000, "已超期");
+        } else if (stauts == 3000)
+            return new FieldModel(3000, "已归还");
+        else if (stauts == 4000)
+            return new FieldModel(4000, "已购买");
         return model;
     }
 
@@ -118,6 +125,14 @@ public class BookerServiceImpl implements BookerService {
         FieldModel model=new FieldModel();
         if(way==1)
             return new FieldModel(1,"自助设备");
+        return model;
+    }
+
+    @Override
+    public FieldModel getFlowType(int type) {
+        FieldModel model=new FieldModel();
+        if(type==1)
+            return new FieldModel(1,"借还");
         return model;
     }
 }

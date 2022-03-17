@@ -5,4 +5,5 @@ import com.caterbao.lumos.locals.common.CustomResult;
 
 public interface BookerService {
     CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop);
+    CustomResult<RetBookerCreateFlow> createFlow(String operater, RopBookerCreateFlow rop);
 }

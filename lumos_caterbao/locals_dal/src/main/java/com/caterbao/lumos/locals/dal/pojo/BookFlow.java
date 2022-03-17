@@ -2,9 +2,8 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookBorrowFlowData {
+public class BookFlow {
     private String id;
-    private String flowId;
     private String merchId;
     private String merchName;
     private String storeId;
@@ -15,25 +14,16 @@ public class BookBorrowFlowData {
     private String deviceCumCode;
     private String cabinetId;
     private String slotId;
+    private int type;
     private String clientUserId;
     private int identityType;
     private String identityId;
     private String identityName;
-    private String skuId;
-    private String skuName;
-    private String skuImgUrl;
-    private String skuCumCode;
-    private String skuRfId;
-    private int borrowSeq;
-    private int borrowWay;
-    private Timestamp borrowTime;
-    private int borrowStatus;
-    private int returnWay;
-    private Timestamp returnTime;
-    private String returnFlowId;
-    private Timestamp expireTime;
-    private Timestamp renewLastTime;
-    private int renewCount;
+    private Timestamp openActionTime;
+    private String openRfIds;
+    private Timestamp closeActionTime;
+    private String closeRfIds;
+    private int status;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -45,14 +35,6 @@ public class BookBorrowFlowData {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getFlowId() {
-        return flowId;
-    }
-
-    public void setFlowId(String flowId) {
-        this.flowId = flowId;
     }
 
     public String getMerchId() {
@@ -111,6 +93,14 @@ public class BookBorrowFlowData {
         this.slotId = slotId;
     }
 
+    public String getClientUserId() {
+        return clientUserId;
+    }
+
+    public void setClientUserId(String clientUserId) {
+        this.clientUserId = clientUserId;
+    }
+
     public int getIdentityType() {
         return identityType;
     }
@@ -127,84 +117,44 @@ public class BookBorrowFlowData {
         this.identityId = identityId;
     }
 
-    public String getClientUserId() {
-        return clientUserId;
+    public Timestamp getOpenActionTime() {
+        return openActionTime;
     }
 
-    public void setClientUserId(String clientUserId) {
-        this.clientUserId = clientUserId;
+    public void setOpenActionTime(Timestamp openActionTime) {
+        this.openActionTime = openActionTime;
     }
 
-    public String getSkuId() {
-        return skuId;
+    public String getOpenRfIds() {
+        return openRfIds;
     }
 
-    public void setSkuId(String skuId) {
-        this.skuId = skuId;
+    public void setOpenRfIds(String openRfIds) {
+        this.openRfIds = openRfIds;
     }
 
-    public String getSkuName() {
-        return skuName;
+    public Timestamp getCloseActionTime() {
+        return closeActionTime;
     }
 
-    public void setSkuName(String skuName) {
-        this.skuName = skuName;
+    public void setCloseActionTime(Timestamp closeActionTime) {
+        this.closeActionTime = closeActionTime;
     }
 
-    public String getSkuImgUrl() {
-        return skuImgUrl;
+    public String getCloseRfIds() {
+        return closeRfIds;
     }
 
-    public void setSkuImgUrl(String skuImgUrl) {
-        this.skuImgUrl = skuImgUrl;
+    public void setCloseRfIds(String closeRfIds) {
+        this.closeRfIds = closeRfIds;
     }
 
-    public String getSkuCumCode() {
-        return skuCumCode;
+    public int getStatus() {
+        return status;
     }
 
-    public void setSkuCumCode(String skuCumCode) {
-        this.skuCumCode = skuCumCode;
-    }
-
-    public String getSkuRfId() {
-        return skuRfId;
-    }
-
-    public void setSkuRfId(String skuRfId) {
-        this.skuRfId = skuRfId;
-    }
-
-    public int getBorrowSeq() {
-        return borrowSeq;
-    }
-
-    public void setBorrowSeq(int borrowSeq) {
-        this.borrowSeq = borrowSeq;
-    }
-
-    public Timestamp getBorrowTime() {
-        return borrowTime;
-    }
-
-    public void setBorrowTime(Timestamp borrowTime) {
-        this.borrowTime = borrowTime;
-    }
-
-    public Timestamp getReturnTime() {
-        return returnTime;
-    }
-
-    public void setReturnTime(Timestamp returnTime) {
-        this.returnTime = returnTime;
-    }
-
-    public String getReturnFlowId() {
-        return returnFlowId;
-    }
-
-    public void setReturnFlowId(String returnFlowId) {
-        this.returnFlowId = returnFlowId;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getCreator() {
@@ -239,30 +189,6 @@ public class BookBorrowFlowData {
         this.mendTime = mendTime;
     }
 
-    public int getBorrowWay() {
-        return borrowWay;
-    }
-
-    public void setBorrowWay(int borrowWay) {
-        this.borrowWay = borrowWay;
-    }
-
-    public int getReturnWay() {
-        return returnWay;
-    }
-
-    public void setReturnWay(int returnWay) {
-        this.returnWay = returnWay;
-    }
-
-    public int getBorrowStatus() {
-        return borrowStatus;
-    }
-
-    public void setBorrowStatus(int borrowStatus) {
-        this.borrowStatus = borrowStatus;
-    }
-
     public String getMerchName() {
         return merchName;
     }
@@ -295,27 +221,11 @@ public class BookBorrowFlowData {
         this.identityName = identityName;
     }
 
-    public Timestamp getExpireTime() {
-        return expireTime;
+    public int getType() {
+        return type;
     }
 
-    public void setExpireTime(Timestamp expireTime) {
-        this.expireTime = expireTime;
-    }
-
-    public Timestamp getRenewLastTime() {
-        return renewLastTime;
-    }
-
-    public void setRenewLastTime(Timestamp renewLastTime) {
-        this.renewLastTime = renewLastTime;
-    }
-
-    public int getRenewCount() {
-        return renewCount;
-    }
-
-    public void setRenewCount(int renewCount) {
-        this.renewCount = renewCount;
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.merch.controller;
 
 
 import com.caterbao.lumos.api.merch.rop.RopBookerBorrowList;
-import com.caterbao.lumos.api.merch.rop.RopBookerDeviceFeedback;
+import com.caterbao.lumos.api.merch.rop.RopBookerFlowList;
 import com.caterbao.lumos.api.merch.rop.RopBookerRenewList;
 import com.caterbao.lumos.api.merch.service.BookerService;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -28,20 +28,20 @@ public class BookerController extends  BaseController  {
 
     @RequestMapping(value = "borrow/details", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> borrowDetails(@RequestParam String flowDataId) {
-        return bookerService.borrowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),flowDataId);
+    public CustomResult<Object> borrowDetails(@RequestParam String id) {
+        return bookerService.borrowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
-    @RequestMapping(value = "device/feedback", method = RequestMethod.POST)
+    @RequestMapping(value = "flow/list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult<Object> deviceFeedback(@RequestBody RopBookerDeviceFeedback rop) {
-        return bookerService.deviceFeedback(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    public CustomResult<Object> flowList(@RequestBody RopBookerFlowList rop) {
+        return bookerService.flowList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
     }
 
-    @RequestMapping(value = "device/feedback/details", method = RequestMethod.GET)
+    @RequestMapping(value = "flow/details", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> deviceFeedbackDetails(@RequestParam String flowId) {
-        return bookerService.deviceFeedbackDetails(this.getCurrentUserId(), this.getCurrentMerchId(),flowId);
+    public CustomResult<Object> flowDetails(@RequestParam String id) {
+        return bookerService.flowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
     @RequestMapping(value = "renew/list", method = RequestMethod.POST)

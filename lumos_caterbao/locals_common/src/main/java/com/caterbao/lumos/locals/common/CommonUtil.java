@@ -103,7 +103,7 @@ public class CommonUtil {
     public static Timestamp toDateTimeTimestamp(String time){
         try {
             SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss");
+                    "yyyy-MM-dd HH:mm:ss.SSS");
             Date lFromDate1 = datetimeFormatter1.parse(time);
             System.out.println("gpsdate :" + lFromDate1);
             Timestamp fromTS1 = new Timestamp(lFromDate1.getTime());

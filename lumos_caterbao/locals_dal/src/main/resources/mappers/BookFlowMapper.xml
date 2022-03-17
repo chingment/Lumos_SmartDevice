@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookFlowMapper">
+
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select  ${fields} from BookFlow where 1=1
+        <if test="where.FlowId != null">and Id =#{where.FlowId}</if>
+    </select>
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from BookFlow where 1=1
+        <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
+        <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
+    </select>
+
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
+  insert into BookFlow(id,type,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,cabinetId,slotId, clientUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,creator,createTime)
+  values(#{id},#{type},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{cabinetId},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{creator},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
+        update BookFlow
+        <set>
+            <if test="openActionTime != null">openActionTime=#{openActionTime},</if>
+            <if test="openRfIds != null">openRfIds=#{openRfIds},</if>
+            <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
+            <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
+            <if test="status != null">status=#{status},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
