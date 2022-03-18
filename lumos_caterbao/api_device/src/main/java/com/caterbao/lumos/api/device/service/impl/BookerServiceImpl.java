@@ -1,15 +1,14 @@
 package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.*;
-import com.caterbao.lumos.api.device.rop.model.ActionDataByOpenRequest;
-import com.caterbao.lumos.api.device.rop.model.BookBean;
+import com.caterbao.lumos.api.device.rop.vo.ActionDataByOpenRequest;
+import com.caterbao.lumos.api.device.rop.vo.BookVo;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
-import com.caterbao.lumos.locals.common.web.BaseExceptionHandler;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
@@ -18,7 +17,6 @@ import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.mysql.cj.util.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,9 +102,6 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return result.fail("创建失败[W01]");
 
-        if (CommonUtil.isEmpty(rop.getCabinetId()))
-            return result.fail("创建失败[W02]");
-
         if (CommonUtil.isEmpty(rop.getSlotId()))
             return result.fail("创建失败[W03]");
 
@@ -149,7 +144,6 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlow.setShopName(d_MerchDevice.getShopName());
         d_BookFlow.setDeviceId(rop.getDeviceId());
         d_BookFlow.setDeviceCumCode(d_MerchDevice.getCumCode());
-        d_BookFlow.setCabinetId(rop.getCabinetId());
         d_BookFlow.setSlotId(rop.getSlotId());
         d_BookFlow.setClientUserId(rop.getClientUserId());
         d_BookFlow.setIdentityType(rop.getIdentityType());
@@ -218,8 +212,8 @@ public class BookerServiceImpl implements BookerService {
 
                 List<String> close_RfIds = actionData.getRfIds();
 
-                List<BookBean> ret_BorrowBooks = new ArrayList<>();
-                List<BookBean> ret_ReturnBooks = new ArrayList<>();
+                List<BookVo> ret_BorrowBooks = new ArrayList<>();
+                List<BookVo> ret_ReturnBooks = new ArrayList<>();
 
                 d_BookFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
                 d_BookFlow.setCloseRfIds(JsonUtil.getJson(close_RfIds));
@@ -281,7 +275,6 @@ public class BookerServiceImpl implements BookerService {
                         d_BookBorrow.setShopName(d_BookFlow.getShopName());
                         d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
                         d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
-                        d_BookBorrow.setCabinetId(d_BookFlow.getCabinetId());
                         d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
                         d_BookBorrow.setFlowId(d_BookFlow.getId());
                         d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
@@ -306,7 +299,7 @@ public class BookerServiceImpl implements BookerService {
                             lock.unlock();
                             return result.fail("验证失败[D03]");
                         } else {
-                            ret_BorrowBooks.add(new BookBean(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                            ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
                         }
                     }
                 }
@@ -331,7 +324,7 @@ public class BookerServiceImpl implements BookerService {
                             lock.unlock();
                             return result.fail("验证失败[D04]");
                         } else {
-                            ret_ReturnBooks.add(new BookBean(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                            ret_ReturnBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
                         }
                     }
                 }

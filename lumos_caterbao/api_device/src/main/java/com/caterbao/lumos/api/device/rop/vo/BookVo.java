@@ -1,6 +1,6 @@
-package com.caterbao.lumos.api.device.rop.model;
+package com.caterbao.lumos.api.device.rop.vo;
 
-public class BookBean {
+public class BookVo {
 
     private String skuId;
     private String imgUrl;
@@ -8,11 +8,11 @@ public class BookBean {
     private String cumCode;
     private String rfId;
 
-    public BookBean(){
+    public BookVo(){
 
     }
 
-    public BookBean(String skuId,String rfId,String name,String cumCode,String  imgUrl) {
+    public BookVo(String skuId, String rfId, String name, String cumCode, String  imgUrl) {
         this.skuId = skuId;
         this.rfId = rfId;
         this.name = name;

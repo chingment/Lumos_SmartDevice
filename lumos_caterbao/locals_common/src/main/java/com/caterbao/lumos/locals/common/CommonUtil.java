@@ -5,10 +5,7 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CommonUtil {
@@ -27,7 +24,17 @@ public class CommonUtil {
     }
 
     public static Timestamp getDateTimeNowAndAddDay(int day){
-        return  new Timestamp(new java.util.Date().getTime()+ (day * 24 * 60 * 60 * 1000));
+
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, day);
+
+        String current = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(c.getTime());
+        Timestamp time = Timestamp.valueOf(current);
+
+
+
+        return time;
     }
 
     public static String getPyIdxChar(String str) {

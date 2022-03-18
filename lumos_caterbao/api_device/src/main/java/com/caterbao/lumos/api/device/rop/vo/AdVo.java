@@ -1,11 +1,11 @@
-package com.caterbao.lumos.api.device.rop.model;
+package com.caterbao.lumos.api.device.rop.vo;
 
 import java.util.List;
 
-public class AdBean {
+public class AdVo {
     private String spaceId;
     private String name;
-    private List<AdCreativeBean> creatives;
+    private List<AdCreativeVo> creatives;
 
     public String getSpaceId() {
         return spaceId;
@@ -23,11 +23,11 @@ public class AdBean {
         this.name = name;
     }
 
-    public List<AdCreativeBean> getCreatives() {
+    public List<AdCreativeVo> getCreatives() {
         return creatives;
     }
 
-    public void setCreatives(List<AdCreativeBean> creatives) {
+    public void setCreatives(List<AdCreativeVo> creatives) {
         this.creatives = creatives;
     }
 }

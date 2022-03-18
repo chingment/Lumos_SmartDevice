@@ -13,7 +13,6 @@ public class BookBorrow {
     private String shopName;
     private String deviceId;
     private String deviceCumCode;
-    private String cabinetId;
     private String slotId;
     private String clientUserId;
     private int identityType;
@@ -93,14 +92,6 @@ public class BookBorrow {
 
     public void setDeviceCumCode(String deviceCumCode) {
         this.deviceCumCode = deviceCumCode;
-    }
-
-    public String getCabinetId() {
-        return cabinetId;
-    }
-
-    public void setCabinetId(String cabinetId) {
-        this.cabinetId = cabinetId;
     }
 
     public String getSlotId() {

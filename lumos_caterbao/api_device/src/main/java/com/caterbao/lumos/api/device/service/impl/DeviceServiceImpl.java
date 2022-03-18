@@ -2,20 +2,13 @@ package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
-import com.caterbao.lumos.api.device.rop.model.AdBean;
-import com.caterbao.lumos.api.device.rop.model.AdCreativeBean;
-import com.caterbao.lumos.api.device.rop.model.CabinetBean;
-import com.caterbao.lumos.api.device.rop.model.DeviceBean;
+import com.caterbao.lumos.api.device.rop.vo.*;
 import com.caterbao.lumos.api.device.service.DeviceService;
-import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
-import com.caterbao.lumos.locals.dal.pojo.AdCreative;
-import com.caterbao.lumos.locals.dal.pojo.AdSpace;
-import com.caterbao.lumos.locals.dal.pojo.Device;
-import com.caterbao.lumos.locals.dal.pojo.DeviceCabinet;
+import com.caterbao.lumos.locals.dal.pojo.*;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +22,8 @@ public class DeviceServiceImpl implements DeviceService{
 
     private DeviceMapper deviceMapper;
     private DeviceCabinetMapper deviceCabinetMapper;
+    private DeviceDriveMapper deviceDriveMapper;
+    private BookerSlotMapper bookerSlotMapper;
     private MerchDeviceMapper merchDeviceMapper;
     private AdSpaceMapper adSpaceMapper;
     private AdCreativeMapper adCreativeMapper;
@@ -56,6 +51,17 @@ public class DeviceServiceImpl implements DeviceService{
     @Autowired(required = false)
     public void setAdSpaceMapper(AdSpaceMapper adSpaceMapper) {
         this.adSpaceMapper = adSpaceMapper;
+    }
+
+
+    @Autowired(required = false)
+    public void setDeviceDriveMapper(DeviceDriveMapper deviceDriveMapper) {
+        this.deviceDriveMapper = deviceDriveMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookerSlotMapper(BookerSlotMapper bookerSlotMapper) {
+        this.bookerSlotMapper = bookerSlotMapper;
     }
 
     @Override
@@ -101,46 +107,43 @@ public class DeviceServiceImpl implements DeviceService{
 
         deviceMapper.update(d_Device);
 
-        LumosSelective selective_Cabinet=new LumosSelective();
-        selective_Cabinet.setFields("CabinetId,Name,ComId,ComPrl,ComBaud,Layout,Priority");
-        selective_Cabinet.addWhere("DeviceId",rop.getDeviceId());
-
-        List<DeviceCabinet> d_Cabinets = deviceCabinetMapper.find(selective_Cabinet);
-
         RetDeviceInitData ret = new RetDeviceInitData();
 
-        DeviceBean m_Device = new DeviceBean();
+        DeviceVo m_Device = new DeviceVo();
         m_Device.setDeviceId(d_Device.getId());
         m_Device.setMerchId(d_MerchDevice.getMerchId());
         m_Device.setName(d_Device.getName());
         m_Device.setSceneMode(d_Device.getSceneMode());
         m_Device.setVersionMode(d_Device.getVersionMode());
 
-        HashMap<String, CabinetBean> m_Cabinets=new HashMap<>();
-        if(d_Cabinets!=null) {
-            for (DeviceCabinet d_Cabinet : d_Cabinets) {
-                if(!m_Cabinets.containsKey(d_Cabinet.getCabinetId())) {
-                    CabinetBean m_Cabinet = new CabinetBean();
-                    m_Cabinet.setCabinetId(d_Cabinet.getCabinetId());
-                    m_Cabinet.setName(d_Cabinet.getName());
-                    m_Cabinet.setComId(d_Cabinet.getComId());
-                    m_Cabinet.setComPrl(d_Cabinet.getComPrl());
-                    m_Cabinet.setComBaud(d_Cabinet.getComBaud());
-                    m_Cabinet.setLayout(d_Cabinet.getLayout());
-                    m_Cabinet.setPriority(d_Cabinet.getPriority());
-                    m_Cabinets.put(d_Cabinet.getCabinetId(), m_Cabinet);
-                }
+        LumosSelective selective_Drives=new LumosSelective();
+        selective_Drives.setFields("DriveId,Name,ComId,ComPrl,ComBaud");
+        selective_Drives.addWhere("DeviceId",rop.getDeviceId());
+
+        List<DeviceDrive> d_Drives = deviceDriveMapper.find(selective_Drives);
+
+
+        HashMap<String, DriveVo> m_Drives=new HashMap<>();
+        if(d_Drives!=null) {
+            for (DeviceDrive d_Drive : d_Drives) {
+                DriveVo m_Drive = new DriveVo();
+                m_Drive.setDriveId(d_Drive.getDriveId());
+                m_Drive.setName(d_Drive.getName());
+                m_Drive.setComId(d_Drive.getComId());
+                m_Drive.setComPrl(d_Drive.getComPrl());
+                m_Drive.setComBaud(d_Drive.getComBaud());
+                m_Drives.put(d_Drive.getDriveId(), m_Drive);
             }
         }
 
-        m_Device.setCabinets(m_Cabinets);
+        m_Device.setDrives(m_Drives);
 
         ret.setDevice(m_Device);
 
         HashMap<String, Object> customData = new HashMap<>();
 
         customData.put("ads",getAds(d_MerchDevice.getMerchId(),d_MerchDevice.getId()));
-
+        customData.put("slots",getBookerSlots(d_MerchDevice.getMerchId(),d_MerchDevice.getId()));
         ret.setCustomData(customData);
 
         return result.success("获取成功", ret);
@@ -148,8 +151,8 @@ public class DeviceServiceImpl implements DeviceService{
 
 
 
-    private HashMap<String, AdBean> getAds(String merchId,String deviceId) {
-        HashMap<String, AdBean> ads = new HashMap<>();
+    private HashMap<String, AdVo> getAds(String merchId, String deviceId) {
+        HashMap<String, AdVo> ads = new HashMap<>();
 
         String[] spaceIds = new String[]{"101"};
 
@@ -162,7 +165,7 @@ public class DeviceServiceImpl implements DeviceService{
 
 
         for (AdSpace d_AdSpace : d_AdSpaces) {
-            AdBean ad = new AdBean();
+            AdVo ad = new AdVo();
             ad.setSpaceId(d_AdSpace.getId());
             ad.setName(d_AdSpace.getName());
 
@@ -175,10 +178,10 @@ public class DeviceServiceImpl implements DeviceService{
             selective_AdCreative.addWhere("EndTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
             List<AdCreative> d_AdCreatives = adCreativeMapper.find(selective_AdCreative);
 
-            List<AdCreativeBean> m_AdCreatives = new ArrayList<>();
+            List<AdCreativeVo> m_AdCreatives = new ArrayList<>();
             for (AdCreative d_AdCreative : d_AdCreatives) {
 
-                AdCreativeBean m_AdCreative = new AdCreativeBean();
+                AdCreativeVo m_AdCreative = new AdCreativeVo();
 
                 m_AdCreative.setFileUrl("http://file.17fanju.com/upload/test.mp4");
 
@@ -191,6 +194,47 @@ public class DeviceServiceImpl implements DeviceService{
         }
 
         return ads;
+    }
+
+    private List<BookerSlotVo> getBookerSlots(String merchId, String deviceId) {
+        List<BookerSlotVo> m_Slots = new ArrayList<>();
+
+
+        LumosSelective selective_Drives=new LumosSelective();
+        selective_Drives.setFields("*");
+        selective_Drives.addWhere("DeviceId",deviceId);
+        List<BookerSlot> d_Slots = bookerSlotMapper.find(selective_Drives);
+
+        if(d_Slots!=null) {
+            for (BookerSlot d_Slot : d_Slots) {
+                BookerSlotVo m_Slot = new BookerSlotVo();
+                m_Slot.setSlotId(d_Slot.getSlotId());
+                m_Slot.setName(d_Slot.getName());
+
+                BookerSlotDriveVo m_SlotDrive=new BookerSlotDriveVo();
+
+                BookerDriveLockeqVo m_Lockeq=new BookerDriveLockeqVo();
+                m_Lockeq.setDriveId(d_Slot.getDriveLockeqId());
+                m_Lockeq.setPlate(d_Slot.getDriveLockeqPlate());
+                m_Lockeq.setAnt(d_Slot.getDriveLockeqAnt());
+
+                BookerDriveRfeqVo m_RfeqVo=new BookerDriveRfeqVo();
+
+                m_RfeqVo.setDriveId(d_Slot.getDriveRfeqId());
+                m_RfeqVo.setAnt(d_Slot.getDriveRfeqAnt());
+
+
+                m_SlotDrive.setLockeq(m_Lockeq);
+                m_SlotDrive.setRfeq(m_RfeqVo);
+
+                m_Slot.setDrive(m_SlotDrive);
+
+                m_Slots.add(m_Slot);
+            }
+        }
+
+
+        return m_Slots;
     }
 
 }

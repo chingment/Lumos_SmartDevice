@@ -15,8 +15,8 @@
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
-  insert into BookFlow(id,type,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,cabinetId,slotId, clientUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,creator,createTime)
-  values(#{id},#{type},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{cabinetId},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{creator},#{createTime})
+  insert into BookFlow(id,type,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId, clientUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,creator,createTime)
+  values(#{id},#{type},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
         update BookFlow
@@ -26,9 +26,9 @@
             <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
             <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
             <if test="status != null">status=#{status},</if>
-            <if test="actionCode != null">actionCode=#{actionCode},</if>
-            <if test="actionTime != null">actionTime=#{actionTime},</if>
-            <if test="actionRemark != null">actionRemark=#{actionRemark},</if>
+            <if test="lastActionCode != null">lastActionCode=#{lastActionCode},</if>
+            <if test="lastActionTime != null">lastActionTime=#{lastActionTime},</if>
+            <if test="lastActionRemark != null">lastActionRemark=#{lastActionRemark},</if>
             <if test="mender != null">mender=#{mender},</if>
             <if test="mendTime != null">mendTime=#{mendTime}</if>
         </set>

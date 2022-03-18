@@ -1,16 +1,16 @@
 package com.caterbao.lumos.api.device.rop;
 
-import com.caterbao.lumos.api.device.rop.model.DeviceBean;
+import com.caterbao.lumos.api.device.rop.vo.DeviceVo;
 
 public class RetDeviceInitData {
-    private DeviceBean device;
+    private DeviceVo device;
     private Object customData;
 
-    public DeviceBean getDevice() {
+    public DeviceVo getDevice() {
         return device;
     }
 
-    public void setDevice(DeviceBean device) {
+    public void setDevice(DeviceVo device) {
         this.device = device;
     }
 

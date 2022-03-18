@@ -1,8 +1,8 @@
-package com.caterbao.lumos.api.device.rop.model;
+package com.caterbao.lumos.api.device.rop.vo;
 
 import java.io.Serializable;
 
-public class AdCreativeBean implements Serializable {
+public class AdCreativeVo implements Serializable {
 
     private String fileType;
     private String fileUrl;

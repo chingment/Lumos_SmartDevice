@@ -12,7 +12,6 @@ public class BookFlow {
     private String shopName;
     private String deviceId;
     private String deviceCumCode;
-    private String cabinetId;
     private String slotId;
     private int type;
     private String clientUserId;
@@ -78,14 +77,6 @@ public class BookFlow {
 
     public void setDeviceCumCode(String deviceCumCode) {
         this.deviceCumCode = deviceCumCode;
-    }
-
-    public String getCabinetId() {
-        return cabinetId;
-    }
-
-    public void setCabinetId(String cabinetId) {
-        this.cabinetId = cabinetId;
     }
 
     public String getSlotId() {

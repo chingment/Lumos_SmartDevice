@@ -1,15 +1,15 @@
-package com.caterbao.lumos.api.device.rop.model;
+package com.caterbao.lumos.api.device.rop.vo;
 
 import java.util.HashMap;
 
-public class DeviceBean {
+public class DeviceVo {
     private String deviceId;
     private String name;
     private String merchId;
     private String merchName;
     private int sceneMode;
     private int versionMode;
-    private HashMap<String, CabinetBean> cabinets;
+    private HashMap<String, DriveVo> drives;
 
     public String getDeviceId() {
         return deviceId;
@@ -59,11 +59,11 @@ public class DeviceBean {
         this.versionMode = versionMode;
     }
 
-    public HashMap<String, CabinetBean> getCabinets() {
-        return cabinets;
+    public HashMap<String, DriveVo> getDrives() {
+        return drives;
     }
 
-    public void setCabinets(HashMap<String, CabinetBean> cabinets) {
-        this.cabinets = cabinets;
+    public void setDrives(HashMap<String, DriveVo> drives) {
+        this.drives = drives;
     }
 }

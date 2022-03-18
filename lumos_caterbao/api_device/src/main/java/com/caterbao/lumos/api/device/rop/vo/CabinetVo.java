@@ -1,6 +1,6 @@
-package com.caterbao.lumos.api.device.rop.model;
+package com.caterbao.lumos.api.device.rop.vo;
 
-public class CabinetBean {
+public class CabinetVo {
     private String cabinetId;
 
     private String name;

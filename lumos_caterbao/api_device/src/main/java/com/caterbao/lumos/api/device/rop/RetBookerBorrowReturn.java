@@ -1,13 +1,13 @@
 package com.caterbao.lumos.api.device.rop;
 
-import com.caterbao.lumos.api.device.rop.model.BookBean;
+import com.caterbao.lumos.api.device.rop.vo.BookVo;
 
 import java.util.List;
 
 public class RetBookerBorrowReturn {
     private String flowId;
-    private List<BookBean> borrowBooks;
-    private List<BookBean> returnBooks;
+    private List<BookVo> borrowBooks;
+    private List<BookVo> returnBooks;
 
     public String getFlowId() {
         return flowId;
@@ -17,19 +17,19 @@ public class RetBookerBorrowReturn {
         this.flowId = flowId;
     }
 
-    public List<BookBean> getBorrowBooks() {
+    public List<BookVo> getBorrowBooks() {
         return borrowBooks;
     }
 
-    public void setBorrowBooks(List<BookBean> borrowBooks) {
+    public void setBorrowBooks(List<BookVo> borrowBooks) {
         this.borrowBooks = borrowBooks;
     }
 
-    public List<BookBean> getReturnBooks() {
+    public List<BookVo> getReturnBooks() {
         return returnBooks;
     }
 
-    public void setReturnBooks(List<BookBean> returnBooks) {
+    public void setReturnBooks(List<BookVo> returnBooks) {
         this.returnBooks = returnBooks;
     }
 }
