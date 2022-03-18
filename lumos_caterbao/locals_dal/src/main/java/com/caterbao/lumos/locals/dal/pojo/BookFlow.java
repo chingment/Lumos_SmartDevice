@@ -24,6 +24,9 @@ public class BookFlow {
     private Timestamp closeActionTime;
     private String closeRfIds;
     private int status;
+    private Timestamp lastActionTime;
+    private String lastActionCode;
+    private String lastActionRemark;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -227,5 +230,29 @@ public class BookFlow {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public Timestamp getLastActionTime() {
+        return lastActionTime;
+    }
+
+    public void setLastActionTime(Timestamp lastActionTime) {
+        this.lastActionTime = lastActionTime;
+    }
+
+    public String getLastActionCode() {
+        return lastActionCode;
+    }
+
+    public void setLastActionCode(String lastActionCode) {
+        this.lastActionCode = lastActionCode;
+    }
+
+    public String getLastActionRemark() {
+        return lastActionRemark;
+    }
+
+    public void setLastActionRemark(String lastActionRemark) {
+        this.lastActionRemark = lastActionRemark;
     }
 }

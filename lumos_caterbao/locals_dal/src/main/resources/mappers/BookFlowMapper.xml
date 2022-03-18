@@ -26,6 +26,9 @@
             <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
             <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
             <if test="status != null">status=#{status},</if>
+            <if test="actionCode != null">actionCode=#{actionCode},</if>
+            <if test="actionTime != null">actionTime=#{actionTime},</if>
+            <if test="actionRemark != null">actionRemark=#{actionRemark},</if>
             <if test="mender != null">mender=#{mender},</if>
             <if test="mendTime != null">mendTime=#{mendTime}</if>
         </set>
