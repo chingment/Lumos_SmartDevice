@@ -1,10 +1,10 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.api.merch.rop.vo;
 
 import com.caterbao.lumos.locals.common.SpecDesModel;
 
 import java.util.List;
 
-public class SkuModel {
+public class SkuVo {
 
     private String id;
     private String cumCode;

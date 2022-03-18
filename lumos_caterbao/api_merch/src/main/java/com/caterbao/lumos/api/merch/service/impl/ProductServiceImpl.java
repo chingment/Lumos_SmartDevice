@@ -4,8 +4,8 @@ import com.caterbao.lumos.api.merch.rop.RopProdcutAdd;
 import com.caterbao.lumos.api.merch.rop.RopProdcutDelete;
 import com.caterbao.lumos.api.merch.rop.RopProdcutEdit;
 import com.caterbao.lumos.api.merch.rop.RopProductList;
-import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
-import com.caterbao.lumos.api.merch.rop.model.SkuModel;
+import com.caterbao.lumos.api.merch.rop.vo.KindAttrVo;
+import com.caterbao.lumos.api.merch.rop.vo.SkuVo;
 import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
@@ -277,9 +277,9 @@ public class ProductServiceImpl implements ProductService {
             }
 
             //
-            List<KindAttrModel> sysKindAttrs=rop.getSysKindAttrs();
+            List<KindAttrVo> sysKindAttrs=rop.getSysKindAttrs();
             if(sysKindAttrs!=null) {
-                for (KindAttrModel attr : sysKindAttrs) {
+                for (KindAttrVo attr : sysKindAttrs) {
                     PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
                     d_PrdSpuAttr.setId(IdWork.buildLongId());
                     d_PrdSpuAttr.setKindId(attr.getKindId());
@@ -293,7 +293,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
 
-            for (SkuModel sku : rop.getSkus()) {
+            for (SkuVo sku : rop.getSkus()) {
 
 
                 if (CommonUtil.isEmpty(sku.getCumCode())) {
@@ -466,9 +466,9 @@ public class ProductServiceImpl implements ProductService {
 
             prdSpuAttrMapper.deleteBySpuId(d_PrdSpu.getId());
 
-            List<KindAttrModel> sysKindAttrs=rop.getSysKindAttrs();
+            List<KindAttrVo> sysKindAttrs=rop.getSysKindAttrs();
             if(sysKindAttrs!=null) {
-                for (KindAttrModel attr : sysKindAttrs) {
+                for (KindAttrVo attr : sysKindAttrs) {
                     PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
                     d_PrdSpuAttr.setId(IdWork.buildLongId());
                     d_PrdSpuAttr.setKindId(attr.getKindId());
@@ -484,7 +484,7 @@ public class ProductServiceImpl implements ProductService {
 
             List<SpecItemModel> specItems=new ArrayList<>();
 
-            for (SkuModel sku: rop.getSkus()) {
+            for (SkuVo sku: rop.getSkus()) {
                 for (SpecDesModel specDes : sku.getSpecDes()) {
 
                     Optional<SpecItemModel> s=specItems.stream().filter((SpecItemModel b) ->b.getName()==specDes.getName()).findFirst();
@@ -541,7 +541,7 @@ public class ProductServiceImpl implements ProductService {
                 return result.fail("保存失败");
             }
 
-            for (SkuModel sku : rop.getSkus()) {
+            for (SkuVo sku : rop.getSkus()) {
 
                 if (CommonUtil.isEmpty(sku.getCumCode())) {
                     lock.unlock();

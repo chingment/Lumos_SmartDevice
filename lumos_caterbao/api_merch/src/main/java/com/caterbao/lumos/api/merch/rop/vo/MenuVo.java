@@ -1,6 +1,6 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.api.merch.rop.vo;
 
-public class MenuModel {
+public class MenuVo {
     private String id;
     private String code;
     private String pId;

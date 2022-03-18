@@ -1,6 +1,6 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.api.merch.rop.vo;
 
-public class KindAttrModel {
+public class KindAttrVo {
     private int id;
     private String value;
     private int kindId;

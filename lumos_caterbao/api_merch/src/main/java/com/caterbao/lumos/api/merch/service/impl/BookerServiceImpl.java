@@ -199,7 +199,6 @@ public class BookerServiceImpl implements BookerService {
             item.put("id", d_BookFlow.getId());
             item.put("deviceCode", DeviceVoUtil.getCode(d_BookFlow.getDeviceId(), d_BookFlow.getDeviceCumCode()));
             item.put("type",bizBookerService.getFlowType(d_BookFlow.getType()));
-
             item.put("lastActionCode",d_BookFlow.getLastActionCode());
             item.put("lastActionTime", CommonUtil.toDateTimeStr(d_BookFlow.getLastActionTime()));
             item.put("lastActionRemark",d_BookFlow.getLastActionRemark());

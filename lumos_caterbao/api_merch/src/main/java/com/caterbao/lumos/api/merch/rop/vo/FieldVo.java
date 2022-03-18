@@ -1,14 +1,14 @@
-package com.caterbao.lumos.api.merch.rop.model;
+package com.caterbao.lumos.api.merch.rop.vo;
 
-public class FieldModel {
+public class FieldVo {
     private String text;
     private int value;
 
-    public FieldModel(){
+    public FieldVo(){
 
     }
 
-    public FieldModel(int value,String text){
+    public FieldVo(int value, String text){
         this.value=value;
         this.text=text;
     }

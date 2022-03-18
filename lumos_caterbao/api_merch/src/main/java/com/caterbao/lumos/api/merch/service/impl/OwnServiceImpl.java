@@ -1,9 +1,8 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
-import com.caterbao.lumos.api.merch.rop.RetOwnGetInfo;
 import com.caterbao.lumos.api.merch.rop.RopOwnChangePassword;
 import com.caterbao.lumos.api.merch.rop.RopOwnLogout;
-import com.caterbao.lumos.api.merch.rop.model.MenuModel;
+import com.caterbao.lumos.api.merch.rop.vo.MenuVo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.api.merch.rop.RopOwnLoginByAccount;
@@ -15,7 +14,6 @@ import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
-import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
 import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,9 +118,9 @@ public class OwnServiceImpl implements OwnService {
 
             ret.put("userName", "");
 
-            List<MenuModel> r_Menus = new ArrayList<>();
+            List<MenuVo> r_Menus = new ArrayList<>();
             for (SysMenu d_Menu : d_Menus) {
-                MenuModel r_Menu = new MenuModel();
+                MenuVo r_Menu = new MenuVo();
                 r_Menu.setId(d_Menu.getId());
                 r_Menu.setCode(d_Menu.getCode());
                 r_Menu.setTitle(d_Menu.getTitle());

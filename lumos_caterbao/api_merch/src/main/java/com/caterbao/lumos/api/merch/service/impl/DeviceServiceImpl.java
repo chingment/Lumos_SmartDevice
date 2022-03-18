@@ -2,14 +2,13 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
-import com.caterbao.lumos.api.merch.rop.model.FieldModel;
+import com.caterbao.lumos.api.merch.rop.vo.FieldVo;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.pojo.MerchDevice;
-import com.caterbao.lumos.locals.dal.pojo.Store;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -49,8 +48,8 @@ public class DeviceServiceImpl implements DeviceService {
         return result.success("初始成功", ret);
     }
 
-    public FieldModel getStatus(){
-        FieldModel model=new FieldModel();
+    public FieldVo getStatus(){
+        FieldVo model=new FieldVo();
 
         return model;
     }

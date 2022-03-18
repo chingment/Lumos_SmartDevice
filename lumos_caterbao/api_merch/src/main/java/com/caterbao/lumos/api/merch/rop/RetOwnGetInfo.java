@@ -1,12 +1,12 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.api.merch.rop.model.MenuModel;
+import com.caterbao.lumos.api.merch.rop.vo.MenuVo;
 
 import java.util.List;
 
 public class RetOwnGetInfo {
     private String userName;
-    private List<MenuModel> menus;
+    private List<MenuVo> menus;
 
     public String getUserName() {
         return userName;
@@ -16,11 +16,11 @@ public class RetOwnGetInfo {
         this.userName = userName;
     }
 
-    public List<MenuModel> getMenus() {
+    public List<MenuVo> getMenus() {
         return menus;
     }
 
-    public void setMenus(List<MenuModel> menus) {
+    public void setMenus(List<MenuVo> menus) {
         this.menus = menus;
     }
 }

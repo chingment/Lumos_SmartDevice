@@ -3,15 +3,7 @@ package com.caterbao.lumos.api.device.rop.vo;
 public class BookerSlotVo {
     private String slotId;
     private String name;
-    private BookerSlotDriveVo drive;
-
-    public String getSlotId() {
-        return slotId;
-    }
-
-    public void setSlotId(String slotId) {
-        this.slotId = slotId;
-    }
+    private BookerSlotDrivesVo drives;
 
     public String getName() {
         return name;
@@ -21,11 +13,19 @@ public class BookerSlotVo {
         this.name = name;
     }
 
-    public BookerSlotDriveVo getDrive() {
-        return drive;
+    public String getSlotId() {
+        return slotId;
     }
 
-    public void setDrive(BookerSlotDriveVo drive) {
-        this.drive = drive;
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
+
+    public BookerSlotDrivesVo getDrives() {
+        return drives;
+    }
+
+    public void setDrives(BookerSlotDrivesVo drives) {
+        this.drives = drives;
     }
 }

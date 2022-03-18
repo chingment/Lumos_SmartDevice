@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.device.rop.vo;
 
-public class BookerSlotDriveVo {
+public class BookerSlotDrivesVo {
     private BookerDriveLockeqVo lockeq;
     private BookerDriveRfeqVo rfeq;
     public BookerDriveLockeqVo getLockeq() {

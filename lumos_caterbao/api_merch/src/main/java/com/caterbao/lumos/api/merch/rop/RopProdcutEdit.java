@@ -1,7 +1,7 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.api.merch.rop.model.KindAttrModel;
-import com.caterbao.lumos.api.merch.rop.model.SkuModel;
+import com.caterbao.lumos.api.merch.rop.vo.KindAttrVo;
+import com.caterbao.lumos.api.merch.rop.vo.SkuVo;
 import com.caterbao.lumos.locals.common.ImgVo;
 
 import java.util.List;
@@ -15,9 +15,9 @@ public class RopProdcutEdit {
     private List<String> charTags;
     private List<ImgVo> detailsDes;
     private List<ImgVo> displayImgUrls;
-    private List<SkuModel> skus;
+    private List<SkuVo> skus;
     private String briefDes;
-    private List<KindAttrModel> sysKindAttrs;
+    private List<KindAttrVo> sysKindAttrs;
 
     public String getId() {
         return id;
@@ -75,11 +75,11 @@ public class RopProdcutEdit {
         this.displayImgUrls = displayImgUrls;
     }
 
-    public List<SkuModel> getSkus() {
+    public List<SkuVo> getSkus() {
         return skus;
     }
 
-    public void setSkus(List<SkuModel> skus) {
+    public void setSkus(List<SkuVo> skus) {
         this.skus = skus;
     }
 
@@ -91,11 +91,11 @@ public class RopProdcutEdit {
         this.briefDes = briefDes;
     }
 
-    public List<KindAttrModel> getSysKindAttrs() {
+    public List<KindAttrVo> getSysKindAttrs() {
         return sysKindAttrs;
     }
 
-    public void setSysKindAttrs(List<KindAttrModel> sysKindAttrs) {
+    public void setSysKindAttrs(List<KindAttrVo> sysKindAttrs) {
         this.sysKindAttrs = sysKindAttrs;
     }
 }
