@@ -126,20 +126,20 @@ public class AdServiceImpl implements AdService {
 
             item.put("id", d_AdCreative.getId());
             item.put("title", d_AdCreative.getTitle());
-            item.put("fileUrl",ImgVo.getMainImgUrl(d_AdCreative.getFileUrl()));
+            item.put("fileUrl", FileVo.getFileUrl(d_AdCreative.getFileUrl()));
 
-            FieldModel status=new FieldModel();
+            FieldVo status=new FieldVo();
 
             if(d_AdCreative.getIsDisable()) {
-                status = new FieldModel(1, "已停用");
+                status = new FieldVo(1, "已停用");
             }
             else {
                 if (CommonUtil.getDateTimeNow().before(d_AdCreative.getStartTime())) {
-                    status = new FieldModel(2, "未生效");
+                    status = new FieldVo(2, "未生效");
                 } else if (d_AdCreative.getEndTime().before(CommonUtil.getDateTimeNow())) {
-                    status = new FieldModel(3, "已过期");
+                    status = new FieldVo(3, "已过期");
                 } else {
-                    status = new FieldModel(0, "使用中");
+                    status = new FieldVo(0, "使用中");
                 }
             }
 

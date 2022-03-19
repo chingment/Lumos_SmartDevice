@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
 import java.util.List;
 
-public class ImgVo implements Serializable {
+public class FileVo implements Serializable {
     private String name;
     private String url;
 
@@ -26,19 +26,16 @@ public class ImgVo implements Serializable {
         this.url = url;
     }
 
-    public static String getMainImgUrl(String json){
+    public static String getFileUrl(String json){
         String url="";
 
         try {
 
+            List<FileVo> obj =JsonUtil.toObject(json, new TypeReference<List<FileVo> >() {
+            });
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<ImgVo> obj = objectMapper.readValue(json,
-                    new TypeReference<List<ImgVo> >() {
-                    });
-
-            if(obj!=null&&obj.size()>0){
-                url=obj.get(0).getUrl();
+            if(obj!=null&&obj.size()>0) {
+                url = obj.get(0).getUrl();
             }
         }
         catch (Exception ex){
@@ -48,7 +45,7 @@ public class ImgVo implements Serializable {
         return  url;
     }
 
-    public static String getMainImgUrl(List<ImgVo> vo) {
+    public static String getFileUrl(List<FileVo> vo) {
         String url = "";
 
         if (vo == null)

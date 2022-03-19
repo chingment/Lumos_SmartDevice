@@ -1,18 +1,18 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 
 import java.util.List;
 
 public class RopBorrowerEdit {
 
-    private List<ImgVo> avatar;
+    private List<FileVo> avatar;
 
-    public List<ImgVo> getAvatar() {
+    public List<FileVo> getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(List<ImgVo> avatar) {
+    public void setAvatar(List<FileVo> avatar) {
         this.avatar = avatar;
     }
 }

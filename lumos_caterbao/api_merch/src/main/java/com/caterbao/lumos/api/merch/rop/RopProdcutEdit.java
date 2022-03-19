@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.api.merch.rop.vo.KindAttrVo;
 import com.caterbao.lumos.api.merch.rop.vo.SkuVo;
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ public class RopProdcutEdit {
     private String cumCode;
     private List<Integer> sysKindIds;
     private List<String> charTags;
-    private List<ImgVo> detailsDes;
-    private List<ImgVo> displayImgUrls;
+    private List<FileVo> detailsDes;
+    private List<FileVo> displayImgUrls;
     private List<SkuVo> skus;
     private String briefDes;
     private List<KindAttrVo> sysKindAttrs;
@@ -59,19 +59,19 @@ public class RopProdcutEdit {
         this.charTags = charTags;
     }
 
-    public List<ImgVo> getDetailsDes() {
+    public List<FileVo> getDetailsDes() {
         return detailsDes;
     }
 
-    public void setDetailsDes(List<ImgVo> detailsDes) {
+    public void setDetailsDes(List<FileVo> detailsDes) {
         this.detailsDes = detailsDes;
     }
 
-    public List<ImgVo> getDisplayImgUrls() {
+    public List<FileVo> getDisplayImgUrls() {
         return displayImgUrls;
     }
 
-    public void setDisplayImgUrls(List<ImgVo> displayImgUrls) {
+    public void setDisplayImgUrls(List<FileVo> displayImgUrls) {
         this.displayImgUrls = displayImgUrls;
     }
 

@@ -6,6 +6,8 @@ import com.caterbao.lumos.api.device.rop.vo.*;
 import com.caterbao.lumos.api.device.service.DeviceService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.common.FileVo;
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
 import com.caterbao.lumos.locals.dal.pojo.*;
@@ -122,7 +124,6 @@ public class DeviceServiceImpl implements DeviceService{
 
         List<DeviceDrive> d_Drives = deviceDriveMapper.find(selective_Drives);
 
-
         HashMap<String, DriveVo> m_Drives=new HashMap<>();
         if(d_Drives!=null) {
             for (DeviceDrive d_Drive : d_Drives) {
@@ -183,7 +184,7 @@ public class DeviceServiceImpl implements DeviceService{
 
                 AdCreativeVo m_AdCreative = new AdCreativeVo();
 
-                m_AdCreative.setFileUrl("http://file.17fanju.com/upload/test.mp4");
+                m_AdCreative.setFileUrl(FileVo.getFileUrl(d_AdCreative.getFileUrl()));
 
                 m_AdCreatives.add(m_AdCreative);
             }

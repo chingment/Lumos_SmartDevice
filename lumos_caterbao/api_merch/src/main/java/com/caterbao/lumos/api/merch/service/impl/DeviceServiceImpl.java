@@ -2,7 +2,6 @@ package com.caterbao.lumos.api.merch.service.impl;
 
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
-import com.caterbao.lumos.api.merch.rop.vo.FieldVo;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;

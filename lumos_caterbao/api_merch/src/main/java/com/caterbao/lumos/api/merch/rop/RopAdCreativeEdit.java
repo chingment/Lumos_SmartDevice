@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class RopAdCreativeEdit {
     private String id;
     private String title;
     private String[] validDate;
-    private List<ImgVo> fileUrl;
+    private List<FileVo> fileUrl;
     private boolean isDisable;
 
     public String getId() {
@@ -35,11 +35,11 @@ public class RopAdCreativeEdit {
         this.validDate = validDate;
     }
 
-    public List<ImgVo> getFileUrl() {
+    public List<FileVo> getFileUrl() {
         return fileUrl;
     }
 
-    public void setFileUrl(List<ImgVo> fileUrl) {
+    public void setFileUrl(List<FileVo> fileUrl) {
         this.fileUrl = fileUrl;
     }
 

@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class RopShopEdit {
     private String id;
     private String name;
     private String address;
-    private List<ImgVo> displayImgUrls;
+    private List<FileVo> displayImgUrls;
     private String contactName;
     private String contactPhone;
     private String contactAddress;
@@ -37,11 +37,11 @@ public class RopShopEdit {
         this.address = address;
     }
 
-    public List<ImgVo> getDisplayImgUrls() {
+    public List<FileVo> getDisplayImgUrls() {
         return displayImgUrls;
     }
 
-    public void setDisplayImgUrls(List<ImgVo> displayImgUrls) {
+    public void setDisplayImgUrls(List<FileVo> displayImgUrls) {
         this.displayImgUrls = displayImgUrls;
     }
 

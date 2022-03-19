@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
             item.put("id",r_SpuInfo.getId());
             item.put("name",r_SpuInfo.getName());
             item.put("cumCode",r_SpuInfo.getCumCode());
-            item.put("imgUrl", ImgVo.getMainImgUrl(r_SpuInfo.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFileUrl(r_SpuInfo.getDisplayImgUrls()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_PrdSpu.getCreateTime()));
             item.put("deleteTime",CommonUtil.toDateTimeStr(d_PrdSpu.getDeleteTime()));
             item.put("sysKinds",getSysKinds(r_SpuInfo.getSysKindIds()));
@@ -700,8 +700,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private FieldModel getSysKinds(String sysKinds) {
-        FieldModel model = new FieldModel();
+    private FieldVo getSysKinds(String sysKinds) {
+        FieldVo model = new FieldVo();
 
         List<Integer> sysKindIds = CommonUtil.intStr2Arr(sysKinds);
 

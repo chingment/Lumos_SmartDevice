@@ -67,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
 
             item.put("id",d_Store.getId());
             item.put("name",d_Store.getName());
-            item.put("imgUrl", ImgVo.getMainImgUrl(d_Store.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFileUrl(d_Store.getDisplayImgUrls()));
             items.add(item);
         }
 
@@ -167,7 +167,7 @@ public class StoreServiceImpl implements StoreService {
 
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());
-            item.put("imgUrl", ImgVo.getMainImgUrl(d_Shop.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFileUrl(d_Shop.getDisplayImgUrls()));
             item.put("deviceCount",deviceCount);
             items.add(item);
         }
@@ -212,7 +212,7 @@ public class StoreServiceImpl implements StoreService {
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());
             item.put("address",d_Shop.getAddress());
-            item.put("imgUrl", ImgVo.getMainImgUrl(d_Shop.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFileUrl(d_Shop.getDisplayImgUrls()));
             items.add(item);
         }
 

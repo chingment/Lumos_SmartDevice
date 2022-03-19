@@ -1,6 +1,6 @@
 package com.caterbao.lumos.locals.biz.model;
 
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 import com.caterbao.lumos.locals.common.SpecIdxSkuModel;
 import com.caterbao.lumos.locals.common.SpecItemModel;
 
@@ -11,12 +11,12 @@ public class SpuInfo implements Serializable {
     private String id;
     private String cumCode;
     private String name;
-    private List<ImgVo>  displayImgUrls;
+    private List<FileVo>  displayImgUrls;
     private String sysKindIds;
     private String pyIdx;
     private List<String> charTags;
     private String briefDes;
-    private List<ImgVo> detailsDes;
+    private List<FileVo> detailsDes;
     private List<SpecItemModel> specItems;
     private List<SpecIdxSkuModel> specIdxSkus;
 
@@ -44,11 +44,11 @@ public class SpuInfo implements Serializable {
         this.name = name;
     }
 
-    public List<ImgVo> getDisplayImgUrls() {
+    public List<FileVo> getDisplayImgUrls() {
         return displayImgUrls;
     }
 
-    public void setDisplayImgUrls(List<ImgVo> displayImgUrls) {
+    public void setDisplayImgUrls(List<FileVo> displayImgUrls) {
         this.displayImgUrls = displayImgUrls;
     }
 
@@ -84,11 +84,11 @@ public class SpuInfo implements Serializable {
         this.briefDes = briefDes;
     }
 
-    public List<ImgVo> getDetailsDes() {
+    public List<FileVo> getDetailsDes() {
         return detailsDes;
     }
 
-    public void setDetailsDes(List<ImgVo> detailsDes) {
+    public void setDetailsDes(List<FileVo> detailsDes) {
         this.detailsDes = detailsDes;
     }
 

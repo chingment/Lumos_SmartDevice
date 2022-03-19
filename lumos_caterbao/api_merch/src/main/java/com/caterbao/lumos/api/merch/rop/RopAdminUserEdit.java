@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.locals.common.ImgVo;
+import com.caterbao.lumos.locals.common.FileVo;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class RopAdminUserEdit {
     private String fullName;
     private String phoneNumber;
     private String email;
-    private List<ImgVo> avatar;
+    private List<FileVo> avatar;
     private Boolean isDisable;
 
     public String getId() {
@@ -53,11 +53,11 @@ public class RopAdminUserEdit {
         this.email = email;
     }
 
-    public List<ImgVo> getAvatar() {
+    public List<FileVo> getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(List<ImgVo> avatar) {
+    public void setAvatar(List<FileVo> avatar) {
         this.avatar = avatar;
     }
 

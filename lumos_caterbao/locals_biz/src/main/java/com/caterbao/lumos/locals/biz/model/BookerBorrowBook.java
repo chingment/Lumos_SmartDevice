@@ -1,6 +1,6 @@
 package com.caterbao.lumos.locals.biz.model;
 
-import com.caterbao.lumos.locals.common.FieldModel;
+import com.caterbao.lumos.locals.common.FieldVo;
 
 public class BookerBorrowBook {
     private String skuId;
@@ -12,7 +12,7 @@ public class BookerBorrowBook {
     private String expireTime;
     private float overdueFine;
 
-    private FieldModel status;
+    private FieldVo status;
 
     public String getSkuId() {
         return skuId;
@@ -70,11 +70,11 @@ public class BookerBorrowBook {
         this.expireTime = expireTime;
     }
 
-    public FieldModel getStatus() {
+    public FieldVo getStatus() {
         return status;
     }
 
-    public void setStatus(FieldModel status) {
+    public void setStatus(FieldVo status) {
         this.status = status;
     }
 

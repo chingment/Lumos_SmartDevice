@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,10 @@ public class BookerServiceImpl implements BookerService {
     private BookBorrowMapper bookBorrowMapper;
     private BookFlowLogMapper bookFlowLogMapper;
     private MerchDeviceMapper merchDeviceMapper;
-    private PlatformTransactionManager platformTransactionManager;
-    private TransactionDefinition transactionDefinition;
     private CacheFactory cacheFactory;
 
     
-    private final Lock lock = new ReentrantLock();
+   // private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
     public void setBookFlowMapper(BookFlowMapper bookFlowMapper) {
@@ -78,15 +78,15 @@ public class BookerServiceImpl implements BookerService {
         this.icCardMapper = icCardMapper;
     }
 
-    @Autowired
-    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
-        this.platformTransactionManager = platformTransactionManager;
-    }
-
-    @Autowired
-    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
-        this.transactionDefinition = transactionDefinition;
-    }
+//    @Autowired
+//    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
+//        this.platformTransactionManager = platformTransactionManager;
+//    }
+//
+//    @Autowired
+//    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
+//        this.transactionDefinition = transactionDefinition;
+//    }
 
     @Autowired
     public void setCacheFactory(CacheFactory cacheFactory) {
@@ -163,199 +163,184 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
+
     @Override
+    @Transactional()
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
         logger.info("borrowReturn");
+
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
         new Thread(() -> {
             addBorrowReturnFlowLog(rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
-        lock.lock();
-        TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
+        RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
 
-        try {
+        String actionCode = rop.getActionCode();
+        String flowId = rop.getFlowId();
 
-            RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+        LumosSelective selective_BookFlow = new LumosSelective();
+        selective_BookFlow.setFields("*");
+        selective_BookFlow.addWhere("FlowId", flowId);
 
-            String actionCode = rop.getActionCode();
-            String flowId = rop.getFlowId();
+        BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
 
-            LumosSelective selective_BookFlow = new LumosSelective();
-            selective_BookFlow.setFields("*");
-            selective_BookFlow.addWhere("FlowId", flowId);
-
-            BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
-
-            if (d_BookFlow == null) {
-                lock.unlock();
-                return result.fail("验证失败[D01]");
-            }
-
-            if (actionCode.equals("request_open_auth"))
-            {
-
-                ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
-                });
-
-                List<String> open_RfIds = actionData.getRfIds();
-
-                d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-                d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
-
-            }
-            else if (actionCode.equals("request_close_auth")) {
-
-                ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
-                });
-
-                List<String> close_RfIds = actionData.getRfIds();
-
-                List<BookVo> ret_BorrowBooks = new ArrayList<>();
-                List<BookVo> ret_ReturnBooks = new ArrayList<>();
-
-                d_BookFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-                d_BookFlow.setCloseRfIds(JsonUtil.getJson(close_RfIds));
-
-                List<String> open_RfIds = JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
-                });
-
-                if (open_RfIds == null) {
-                    open_RfIds = new ArrayList<>();
-                }
-
-                if (close_RfIds == null) {
-                    close_RfIds = new ArrayList<>();
-                }
-
-                List<String> borrow_RfIds = new ArrayList<>();
-
-                if (open_RfIds != null) {
-                    for (String open_rfId : open_RfIds) {
-                        if (!close_RfIds.contains(open_rfId)) {
-                            borrow_RfIds.add(open_rfId);
-                        }
-                    }
-                }
-
-                List<String> return_RfIds = new ArrayList<>();
-
-                if (close_RfIds != null) {
-                    for (String close_rfId : close_RfIds) {
-                        if (!open_RfIds.contains(close_rfId)) {
-                            return_RfIds.add(close_rfId);
-                        }
-                    }
-                }
-
-                int expireDay = 30;
-                //借书
-                for (int i = 0; i < borrow_RfIds.size(); i++) {
-
-                    String borrow_RfId = borrow_RfIds.get(i);
-
-                    SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), borrow_RfId);
-
-                    LumosSelective selective_BookBorrow = new LumosSelective();
-                    selective_BookBorrow.setFields("*");
-                    selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                    selective_BookBorrow.addWhere("FlowId", flowId);
-                    selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
-
-                    BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
-                    if (d_BookBorrow == null) {
-                        d_BookBorrow = new BookBorrow();
-                        d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
-                        d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
-                        d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
-                        d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
-                        d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
-                        d_BookBorrow.setShopId(d_BookFlow.getShopId());
-                        d_BookBorrow.setShopName(d_BookFlow.getShopName());
-                        d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
-                        d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
-                        d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
-                        d_BookBorrow.setFlowId(d_BookFlow.getId());
-                        d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
-                        d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
-                        d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
-                        d_BookBorrow.setClientUserId(d_BookFlow.getClientUserId());
-                        d_BookBorrow.setSkuRfId(borrow_RfId);
-                        d_BookBorrow.setSkuId(r_Sku.getId());
-                        d_BookBorrow.setSkuName(r_Sku.getName());
-                        d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
-                        d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
-                        d_BookBorrow.setBorrowSeq(i);
-                        d_BookBorrow.setBorrowWay(1);
-                        d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
-                        d_BookBorrow.setStatus(1000);
-                        d_BookBorrow.setRenewCount(0);
-                        d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(expireDay));
-                        d_BookBorrow.setCreator(IdWork.buildGuId());
-                        d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
-
-                        if (bookBorrowMapper.insert(d_BookBorrow) <= 0) {
-                            lock.unlock();
-                            return result.fail("验证失败[D03]");
-                        } else {
-                            ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
-                        }
-                    }
-                }
-
-                //还书
-                for (String return_RfId : return_RfIds) {
-
-                    LumosSelective selective_BookBorrow = new LumosSelective();
-                    selective_BookBorrow.setFields("*");
-                    selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                    selective_BookBorrow.addWhere("SkuRfId", return_RfId);
-                    BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
-                    if (d_BookBorrow != null) {
-                        d_BookBorrow.setReturnFlowId(flowId);
-                        d_BookBorrow.setReturnWay(d_BookBorrow.getBorrowWay());
-                        d_BookBorrow.setReturnTime(CommonUtil.getDateTimeNow());
-                        d_BookBorrow.setStatus(3000);
-                        d_BookBorrow.setMender(IdWork.buildGuId());
-                        d_BookBorrow.setMendTime(CommonUtil.getDateTimeNow());
-
-                        if (bookBorrowMapper.update(d_BookBorrow) <= 0) {
-                            lock.unlock();
-                            return result.fail("验证失败[D04]");
-                        } else {
-                            ret_ReturnBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
-                        }
-                    }
-                }
-
-                ret.setFlowId(flowId);
-                ret.setBorrowBooks(ret_BorrowBooks);
-                ret.setReturnBooks(ret_ReturnBooks);
-            }
-
-            d_BookFlow.setLastActionCode(rop.getActionCode());
-            d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
-            d_BookFlow.setLastActionRemark(rop.getActionRemark());
-            d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
-            d_BookFlow.setMender(IdWork.buildGuId());
-
-            if (bookFlowMapper.update(d_BookFlow) <= 0) {
-                lock.unlock();
-                return result.fail("验证失败[D02]");
-            }
-
-            platformTransactionManager.commit(transaction);
-            lock.unlock();
-
-            return result.success("验证成功", ret);
-        } catch (Exception ex) {
-            logger.error("borrowReturn_Exception", ex);
-            platformTransactionManager.rollback(transaction);
-            ex.printStackTrace();
-            lock.unlock();
-            return result.fail("验证失败[99]");
+        if (d_BookFlow == null) {
+            return result.fail("验证失败[D01]");
         }
+
+        if (actionCode.equals("request_open_auth")) {
+
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+            });
+
+            List<String> open_RfIds = actionData.getRfIds();
+
+            d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
+            d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
+
+        } else if (actionCode.equals("request_close_auth")) {
+
+            ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+            });
+
+            List<String> close_RfIds = actionData.getRfIds();
+
+            List<BookVo> ret_BorrowBooks = new ArrayList<>();
+            List<BookVo> ret_ReturnBooks = new ArrayList<>();
+
+            d_BookFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
+            d_BookFlow.setCloseRfIds(JsonUtil.getJson(close_RfIds));
+
+            List<String> open_RfIds = JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
+            });
+
+            if (open_RfIds == null) {
+                open_RfIds = new ArrayList<>();
+            }
+
+            if (close_RfIds == null) {
+                close_RfIds = new ArrayList<>();
+            }
+
+            List<String> borrow_RfIds = new ArrayList<>();
+
+            if (open_RfIds != null) {
+                for (String open_rfId : open_RfIds) {
+                    if (!close_RfIds.contains(open_rfId)) {
+                        borrow_RfIds.add(open_rfId);
+                    }
+                }
+            }
+
+            List<String> return_RfIds = new ArrayList<>();
+
+            if (close_RfIds != null) {
+                for (String close_rfId : close_RfIds) {
+                    if (!open_RfIds.contains(close_rfId)) {
+                        return_RfIds.add(close_rfId);
+                    }
+                }
+            }
+
+            int expireDay = 30;
+            //借书
+            for (int i = 0; i < borrow_RfIds.size(); i++) {
+
+                String borrow_RfId = borrow_RfIds.get(i);
+
+                SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), borrow_RfId);
+
+                LumosSelective selective_BookBorrow = new LumosSelective();
+                selective_BookBorrow.setFields("*");
+                selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
+                selective_BookBorrow.addWhere("FlowId", flowId);
+                selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
+
+                BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+                if (d_BookBorrow == null) {
+                    d_BookBorrow = new BookBorrow();
+                    d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
+                    d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
+                    d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
+                    d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
+                    d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
+                    d_BookBorrow.setShopId(d_BookFlow.getShopId());
+                    d_BookBorrow.setShopName(d_BookFlow.getShopName());
+                    d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
+                    d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
+                    d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
+                    d_BookBorrow.setFlowId(d_BookFlow.getId());
+                    d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
+                    d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
+                    d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
+                    d_BookBorrow.setClientUserId(d_BookFlow.getClientUserId());
+                    d_BookBorrow.setSkuRfId(borrow_RfId);
+                    d_BookBorrow.setSkuId(r_Sku.getId());
+                    d_BookBorrow.setSkuName(r_Sku.getName());
+                    d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
+                    d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
+                    d_BookBorrow.setBorrowSeq(i);
+                    d_BookBorrow.setBorrowWay(1);
+                    d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrow.setStatus(1000);
+                    d_BookBorrow.setRenewCount(0);
+                    d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(expireDay));
+                    d_BookBorrow.setCreator(IdWork.buildGuId());
+                    d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
+
+                    if (bookBorrowMapper.insert(d_BookBorrow) <= 0) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return result.fail("验证失败[D03]");
+                    } else {
+                        ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                    }
+                }
+            }
+
+            //还书
+            for (String return_RfId : return_RfIds) {
+
+                LumosSelective selective_BookBorrow = new LumosSelective();
+                selective_BookBorrow.setFields("*");
+                selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
+                selective_BookBorrow.addWhere("SkuRfId", return_RfId);
+                BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+                if (d_BookBorrow != null) {
+                    d_BookBorrow.setReturnFlowId(flowId);
+                    d_BookBorrow.setReturnWay(d_BookBorrow.getBorrowWay());
+                    d_BookBorrow.setReturnTime(CommonUtil.getDateTimeNow());
+                    d_BookBorrow.setStatus(3000);
+                    d_BookBorrow.setMender(IdWork.buildGuId());
+                    d_BookBorrow.setMendTime(CommonUtil.getDateTimeNow());
+
+                    if (bookBorrowMapper.update(d_BookBorrow) <= 0) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return result.fail("验证失败[D04]");
+                    } else {
+                        ret_ReturnBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                    }
+                }
+            }
+
+            ret.setFlowId(flowId);
+            ret.setBorrowBooks(ret_BorrowBooks);
+            ret.setReturnBooks(ret_ReturnBooks);
+        }
+
+        d_BookFlow.setLastActionCode(rop.getActionCode());
+        d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
+        d_BookFlow.setLastActionRemark(rop.getActionRemark());
+        d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
+        d_BookFlow.setMender(IdWork.buildGuId());
+
+        if (bookFlowMapper.update(d_BookFlow) <= 0) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result.fail("验证失败[D02]");
+        }
+
+        return result.success("验证成功", ret);
     }
 
     private void  addBorrowReturnFlowLog(String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {

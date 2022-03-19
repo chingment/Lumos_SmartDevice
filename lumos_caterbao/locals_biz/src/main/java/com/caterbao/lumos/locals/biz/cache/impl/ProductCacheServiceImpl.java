@@ -12,18 +12,15 @@ import com.caterbao.lumos.locals.dal.pojo.PrdSku;
 import com.caterbao.lumos.locals.dal.pojo.PrdSkuRfId;
 import com.caterbao.lumos.locals.dal.pojo.PrdSpu;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 class ProductCacheServiceImpl implements ProductCacheService {
@@ -135,7 +132,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo.setBarCode(d_PrdSku.getBarCode());
             skuInfo.setCumCode(d_PrdSku.getCumCode());
             skuInfo.setSpecDes(JsonUtil.toObject(d_PrdSku.getSpecDes(),new TypeReference<List<SpecDesModel>>() {}));
-            List<ImgVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<ImgVo>>() {
+            List<FileVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {
             });
             if (displayImgUrls != null && displayImgUrls.size() > 0) {
                 skuInfo.setImgUrl(displayImgUrls.get(0).getUrl());
@@ -194,8 +191,8 @@ class ProductCacheServiceImpl implements ProductCacheService {
             spuInfo.setCumCode(d_PrdSpu.getCumCode());
             spuInfo.setBriefDes(d_PrdSpu.getBriefDes());
             spuInfo.setCharTags(JsonUtil.toObject(d_PrdSpu.getCharTags(), new TypeReference<List<String>>() {}));
-            spuInfo.setDetailsDes(JsonUtil.toObject(d_PrdSpu.getDetailsDes(), new TypeReference<List<ImgVo>>() {}));
-            spuInfo.setDisplayImgUrls(JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<ImgVo>>() {}));
+            spuInfo.setDetailsDes(JsonUtil.toObject(d_PrdSpu.getDetailsDes(), new TypeReference<List<FileVo>>() {}));
+            spuInfo.setDisplayImgUrls(JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {}));
             spuInfo.setSpecItems(JsonUtil.toObject(d_PrdSpu.getSpecItems(), new TypeReference<List<SpecItemModel>>() {}));
             spuInfo.setSysKindIds(d_PrdSpu.getSysKindIds());
             LumosSelective selective_PrdSku = new LumosSelective();

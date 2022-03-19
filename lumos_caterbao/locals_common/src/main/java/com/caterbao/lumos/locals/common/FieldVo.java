@@ -1,14 +1,14 @@
 package com.caterbao.lumos.locals.common;
 
-public class FieldModel {
+public class FieldVo {
     private Object value;
     private String text;
 
-    public FieldModel(){
+    public FieldVo(){
 
     }
 
-    public  FieldModel(Object value,String text) {
+    public FieldVo(Object value, String text) {
         this.value = value;
         this.text = text;
     }

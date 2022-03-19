@@ -4,7 +4,7 @@ import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
 import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.FieldModel;
+import com.caterbao.lumos.locals.common.FieldVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
@@ -65,19 +65,19 @@ public class BookerServiceImpl implements BookerService {
 
         float overdueFine = 0;
 
-        FieldModel status = new FieldModel();
+        FieldVo status = new FieldVo();
         if (diffDay <= 3) {
             overdueFine = 0;
-            status = new FieldModel(1, "借阅中");
+            status = new FieldVo(1, "借阅中");
         } else if (diffDay > 3 && diffDay <= 30) {
-            status = new FieldModel(2, "逾期借阅");
+            status = new FieldVo(2, "逾期借阅");
             if (bookBorrow.getBorrowSeq() <= 2) {
                 overdueFine = (diffDay - 3) * 0.5f;
             } else {
                 overdueFine = (diffDay - 3) * 1f;
             }
         } else if (diffDay > 30) {
-            status = new FieldModel(3, "逾期借阅");
+            status = new FieldVo(3, "逾期借阅");
             overdueFine = 40f;
         }
 
@@ -88,51 +88,51 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public FieldModel getBorrowStatus(int stauts,Timestamp expireTime) {
+    public FieldVo getBorrowStatus(int stauts, Timestamp expireTime) {
         //todo 未判断超时
-        FieldModel model = new FieldModel();
+        FieldVo model = new FieldVo();
         if (stauts == 1000) {
-            return new FieldModel(1000, "借阅中");
+            return new FieldVo(1000, "借阅中");
         } else if (stauts == 2000) {
-            return new FieldModel(2000, "已超期");
+            return new FieldVo(2000, "已超期");
         } else if (stauts == 3000)
-            return new FieldModel(3000, "已归还");
+            return new FieldVo(3000, "已归还");
         else if (stauts == 4000)
-            return new FieldModel(4000, "已购买");
+            return new FieldVo(4000, "已购买");
         return model;
     }
 
     @Override
-    public FieldModel getReturnWay(int way) {
-        FieldModel model=new FieldModel();
+    public FieldVo getReturnWay(int way) {
+        FieldVo model=new FieldVo();
         if(way==1)
-            return new FieldModel(1,"自助设备");
+            return new FieldVo(1,"自助设备");
         return model;
     }
 
     @Override
-    public FieldModel getIdentityType(int type) {
-        FieldModel model = new FieldModel();
+    public FieldVo getIdentityType(int type) {
+        FieldVo model = new FieldVo();
         if (type == 1)
-            return new FieldModel(1, "IC卡");
+            return new FieldVo(1, "IC卡");
         else if (type == 2)
-            return new FieldModel(2, "小程序");
+            return new FieldVo(2, "小程序");
         return model;
     }
 
     @Override
-    public FieldModel getBorrowWay(int way) {
-        FieldModel model=new FieldModel();
+    public FieldVo getBorrowWay(int way) {
+        FieldVo model=new FieldVo();
         if(way==1)
-            return new FieldModel(1,"自助设备");
+            return new FieldVo(1,"自助设备");
         return model;
     }
 
     @Override
-    public FieldModel getFlowType(int type) {
-        FieldModel model=new FieldModel();
+    public FieldVo getFlowType(int type) {
+        FieldVo model=new FieldVo();
         if(type==1)
-            return new FieldModel(1,"借还");
+            return new FieldVo(1,"借还");
         return model;
     }
 }
