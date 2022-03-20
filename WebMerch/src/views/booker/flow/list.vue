@@ -1,5 +1,5 @@
 <template>
-  <div id="adminuser_list">
+  <div id="flow_list">
     <div class="filter-container">
       <el-form ref="form" label-width="120px" class="query-box">
         <el-form-item label="业务号">
@@ -45,24 +45,29 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="类型" align="left" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.type.text }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.deviceCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="事件" align="left" width="120">
+      <el-table-column label="最新事件" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.actionCode }}</span>
+          <span>{{ scope.row.lastActionCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="left" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.actionRemark }}</span>
+          <span>{{ scope.row.lastActionRemark }}</span>
         </template>
       </el-table-column>
       <el-table-column label="时间" align="left" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.actionTime }}</span>
+          <span>{{ scope.row.lastActionTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
@@ -76,20 +81,19 @@
 
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
-    <pane-feedback-details v-if="dialogVisibleFeedbackDetails" :visible.sync="dialogVisibleFeedbackDetails" :flow-id="selectFlowId" />
+    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :flow-id="selectFlowId" />
 
   </div>
 </template>
 
 <script>
-import { deviceFeedback } from '@/api/booker'
+import { flowList } from '@/api/booker'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-import PaneFeedbackDetails from './feedback/details.vue'
+import PaneDetails from './details.vue'
 
 export default {
-  name: 'BookerDeviceFeedback',
-  components: { Pagination, PaneFeedbackDetails },
+  components: { Pagination, PaneDetails },
   data() {
     return {
       loading: false,
@@ -136,7 +140,7 @@ export default {
           }
         }]
       },
-      dialogVisibleFeedbackDetails: false,
+      dialogVisibleDetails: false,
       selectFlowId: '',
       isDesktop: this.$store.getters.isDesktop
     }
@@ -151,7 +155,7 @@ export default {
     onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      deviceFeedback(this.listQuery).then(res => {
+      flowList(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }
@@ -166,7 +170,7 @@ export default {
     },
     onSaw(item) {
       this.selectFlowId = item.id
-      this.dialogVisibleFeedbackDetails = true
+      this.dialogVisibleDetails = true
     }
   }
 }

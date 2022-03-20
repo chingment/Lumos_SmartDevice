@@ -24,11 +24,23 @@
         <el-descriptions-item label="过期时间">{{ details.expireTime }}</el-descriptions-item>
         <el-descriptions-item label="续借次数">{{ details.renewCount }}</el-descriptions-item>
         <el-descriptions-item label="续借时间">{{ details.renewLastTime }}</el-descriptions-item>
-        <el-descriptions-item label="归还时间">{{ details.renewLastTime }}</el-descriptions-item>
-        <el-descriptions-item label="归还方式">{{ details.returnWay.text }}</el-descriptions-item>
-        <el-descriptions-item label="归还设备">{{ details.returnWay.text }}</el-descriptions-item>
-        <el-descriptions-item label="状态">{{ details.borrowStatus.text }}</el-descriptions-item>
+        <el-descriptions-item label="状态">
+          <el-tag :type="getStatusColor(details.status.value)">{{ details.status.text }}</el-tag>
+        </el-descriptions-item>
       </el-descriptions>
+      <div class="row-title clearfix">
+        <div class="pull-left"> <h5>归还信息</h5>
+        </div>
+        <div class="pull-right" />
+      </div>
+      <el-descriptions :label-class-name="'lcn1'" title="" :column="3">
+        <el-descriptions-item label="业务号" :span="3">{{ details.returnFlowId }}</el-descriptions-item>
+        <el-descriptions-item label="归还者" :span="3">{{ details.returnIdentityName }}</el-descriptions-item>
+        <el-descriptions-item label="归还时间">{{ details.returnTime }}</el-descriptions-item>
+        <el-descriptions-item label="归还方式">{{ details.returnWay.text }}</el-descriptions-item>
+        <el-descriptions-item label="归还设备">{{ details.returnDeviceCode }}</el-descriptions-item>
+      </el-descriptions>
+
     </div>
   </el-dialog>
 </template>
@@ -39,7 +51,7 @@ import { borrowDetails } from '@/api/booker'
 export default {
   name: '',
   props: {
-    flowDataId: {
+    borrowId: {
       type: String,
       default: ''
     },
@@ -55,7 +67,9 @@ export default {
         title: ''
       },
       details: {
-
+        borrowWay: { value: '', text: '' },
+        returnWay: { value: '', text: '' },
+        status: { value: '', text: '' }
       },
       loading: false,
       isDesktop: this.$store.getters.isDesktop
@@ -72,7 +86,7 @@ export default {
   methods: {
     onGetDetail() {
       this.loading = true
-      borrowDetails({ flowDataId: this.flowDataId }).then(res => {
+      borrowDetails({ id: this.borrowId }).then(res => {
         if (res.code === this.$code_suc) {
           this.details = res.data
         }
@@ -84,6 +98,19 @@ export default {
     },
     onBeforeClose() {
       this.$emit('update:visible', false)
+    },
+    getStatusColor(val) {
+      if (val === 1000) {
+        return 'success'
+      } else if (val === 2000) {
+        return 'warning'
+      } else if (val === 3000) {
+        return 'primary'
+      } else if (val === 4000) {
+        return 'danger'
+      } else {
+        return ''
+      }
     }
   }
 }

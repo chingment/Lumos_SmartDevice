@@ -9,7 +9,7 @@
           </el-menu-item-group>
           <el-menu-item-group>
             <template slot="title">设备</template>
-            <el-menu-item index="/booker/device/feedback">流程反馈</el-menu-item>
+            <el-menu-item index="/booker/flow/list">流程反馈</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>

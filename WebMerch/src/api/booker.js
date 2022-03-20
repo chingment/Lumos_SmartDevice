@@ -16,17 +16,17 @@ export function borrowDetails(params) {
   })
 }
 
-export function deviceFeedback(data) {
+export function flowList(data) {
   return request({
-    url: '/booker/device/feedback',
+    url: '/booker/flow/list',
     method: 'post',
     data
   })
 }
 
-export function deviceFeedbackDetails(params) {
+export function flowDetails(params) {
   return request({
-    url: '/booker/device/feedback/details',
+    url: '/booker/flow/details',
     method: 'get',
     params
   })
@@ -35,6 +35,6 @@ export function deviceFeedbackDetails(params) {
 export default {
   borrowList: borrowList,
   borrowDetails: borrowDetails,
-  deviceFeedback: deviceFeedback,
-  deviceFeedbackDetails: deviceFeedbackDetails
+  flowList: flowList,
+  flowDetails: flowDetails
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="adminuser_list">
+  <div id="borrow_list">
     <div class="filter-container">
       <el-form ref="form" label-width="120px" class="query-box">
         <el-form-item label="业务号">
@@ -99,7 +99,7 @@
       </el-table-column>
       <el-table-column label="状态" fixed="right" align="center" width="100">
         <template slot-scope="scope">
-          <el-tag :type="getBorrowStatusColor(scope.row.borrowStatus.value)">{{ scope.row.borrowStatus.text }}</el-tag>
+          <el-tag :type="getStatusColor(scope.row.status.value)">{{ scope.row.status.text }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
@@ -113,7 +113,7 @@
 
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
-    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :flow-data-id="selectFlowDataId" />
+    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :borrow-id="selectBorrowId" />
 
   </div>
 </template>
@@ -147,7 +147,7 @@ export default {
         totalSize: 0
       },
       dialogVisibleDetails: false,
-      selectFlowDataId: '',
+      selectBorrowId: '',
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -201,15 +201,21 @@ export default {
       this.listQuery.pageNum = 1
       this.onList()
     },
-    getBorrowStatusColor(val) {
-      if (val === 1) {
+    getStatusColor(val) {
+      if (val === 1000) {
         return 'success'
+      } else if (val === 2000) {
+        return 'warning'
+      } else if (val === 3000) {
+        return 'primary'
+      } else if (val === 4000) {
+        return 'danger'
       } else {
-        return 'error'
+        return ''
       }
     },
     onSaw(item) {
-      this.selectFlowDataId = item.id
+      this.selectBorrowId = item.id
       this.dialogVisibleDetails = true
     }
   }

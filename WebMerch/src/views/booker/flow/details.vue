@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-if="visible" title="详细" :visible.sync="visible" width="800px" custom-class="cumstom-dialog-1" append-to-body :before-close="onBeforeClose">
-    <div id="day_report_detail" v-loading="loading">
+    <div id="flow_detail" v-loading="loading">
       <div class="row-title clearfix">
         <div class="pull-left"> <h5>流程记录</h5>
         </div>
@@ -34,7 +34,7 @@
 </template>
 <script>
 
-import { deviceFeedbackDetails } from '@/api/booker'
+import { flowDetails } from '@/api/booker'
 
 export default {
   name: '',
@@ -72,7 +72,7 @@ export default {
   methods: {
     onGetDetail() {
       this.loading = true
-      deviceFeedbackDetails({ flowId: this.flowId }).then(res => {
+      flowDetails({ id: this.flowId }).then(res => {
         if (res.code === this.$code_suc) {
           this.details = res.data
         }
