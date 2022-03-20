@@ -15,7 +15,8 @@
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
         <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
         <if test="where.SkuRfId != null">and SkuRfId =#{where.SkuRfId}</if>
-        <if test="where.ClientUserId != null">and ClientUserId =#{where.ClientUserId}</if>
+        <if test="where.ClientUserId != null">and ClientUserId=#{where.ClientUserId}</if>
+        <if test="where.Status != null">and Status=#{where.Status}</if>
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
   insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)

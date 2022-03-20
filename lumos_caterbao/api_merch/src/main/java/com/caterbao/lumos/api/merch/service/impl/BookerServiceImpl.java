@@ -89,10 +89,10 @@ public class BookerServiceImpl implements BookerService {
             item.put("skuCumCode", d_BookBorrow.getSkuCumCode());
             item.put("skuName", d_BookBorrow.getSkuName());
             item.put("borrowWay",bizBookerService.getBorrowWay(d_BookBorrow.getBorrowWay()));
-            item.put("borrowTime", CommonUtil.toDateTimeStr(d_BookBorrow.getBorrowTime()));
-            item.put("expireTime", CommonUtil.toDateTimeStr(d_BookBorrow.getExpireTime()));
+            item.put("borrowTime", CommonUtil.toDateStr(d_BookBorrow.getBorrowTime()));
+            item.put("expireTime", CommonUtil.toDateStr(d_BookBorrow.getExpireTime()));
             item.put("returnWay",bizBookerService.getReturnWay(d_BookBorrow.getReturnWay()));
-            item.put("returnTime", CommonUtil.toDateTimeStr(d_BookBorrow.getReturnTime()));
+            item.put("returnTime", CommonUtil.toDateStr(d_BookBorrow.getReturnTime()));
             item.put("renewLastTime","");
             item.put("renewCount","");
             item.put("status",bizBookerService.getBorrowStatus(d_BookBorrow.getStatus(), d_BookBorrow.getExpireTime()));//借阅，超期
@@ -136,9 +136,9 @@ public class BookerServiceImpl implements BookerService {
         ret.put("skuCumCode", d_BookBorrow.getSkuCumCode());
         ret.put("skuName", d_BookBorrow.getSkuName());
         ret.put("borrowWay", bizBookerService.getBorrowWay(d_BookBorrow.getBorrowWay()));
-        ret.put("borrowTime", CommonUtil.toDateTimeStr(d_BookBorrow.getBorrowTime()));
-        ret.put("expireTime", CommonUtil.toDateTimeStr(d_BookBorrow.getExpireTime()));
-        ret.put("renewLastTime", CommonUtil.toDateTimeStr(d_BookBorrow.getRenewLastTime()));
+        ret.put("borrowTime", CommonUtil.toDateStr(d_BookBorrow.getBorrowTime()));
+        ret.put("expireTime", CommonUtil.toDateStr(d_BookBorrow.getExpireTime()));
+        ret.put("renewLastTime", CommonUtil.toDateStr(d_BookBorrow.getRenewLastTime()));
         ret.put("renewCount", d_BookBorrow.getRenewCount());
         ret.put("status", bizBookerService.getBorrowStatus(d_BookBorrow.getStatus(), d_BookBorrow.getExpireTime()));//借阅，超期
 

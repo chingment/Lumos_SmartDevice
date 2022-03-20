@@ -1,14 +1,12 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RopBookerCreateFlow {
+import com.caterbao.lumos.locals.common.BasePageRequest;
+
+public class RopBookerSawBorrowBooks  extends BasePageRequest {
     private String deviceId;
-    private String slotId;
     private String clientUserId;
     private int identityType;
     private String identityId;
-    private int type;
-
-
 
     public String getDeviceId() {
         return deviceId;
@@ -16,14 +14,6 @@ public class RopBookerCreateFlow {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
-    }
-
-    public String getSlotId() {
-        return slotId;
-    }
-
-    public void setSlotId(String slotId) {
-        this.slotId = slotId;
     }
 
     public String getClientUserId() {
@@ -48,13 +38,5 @@ public class RopBookerCreateFlow {
 
     public void setIdentityId(String identityId) {
         this.identityId = identityId;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 }

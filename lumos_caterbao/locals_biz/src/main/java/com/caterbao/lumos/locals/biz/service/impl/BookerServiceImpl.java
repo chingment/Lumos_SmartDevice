@@ -36,55 +36,43 @@ public class BookerServiceImpl implements BookerService {
 
 
         List<BookerBorrowBook> bookerBorrowBooks = new ArrayList<>();
-        float sumSverdueFine=0;
+        float sumOverdueFine=0;
         for (int i = 0; i < d_BookBorrows.size(); i++) {
             BookBorrow d_BookBorrow = d_BookBorrows.get(i);
-            BookerBorrowBook bookerBorrowBook = CalculateOverdueFine(d_BookBorrow);
-            sumSverdueFine += bookerBorrowBook.getOverdueFine();
-            bookerBorrowBooks.add(bookerBorrowBook);
+
+            BookerBorrowBook m_BookerBorrowBook=new BookerBorrowBook();
+            m_BookerBorrowBook.setBorrowId(d_BookBorrow.getId());
+            float overdueFine = CalculateOverdueFine(d_BookBorrow);
+            sumOverdueFine += overdueFine;
+            bookerBorrowBooks.add(m_BookerBorrowBook);
         }
 
         result.setBorrowBooks(bookerBorrowBooks);
-        result.setOverdueFine(sumSverdueFine);
+        result.setOverdueFine(sumOverdueFine);
         return result;
     }
 
     @Override
-    public BookerBorrowBook CalculateOverdueFine(BookBorrow bookBorrow) {
-        BookerBorrowBook bookerBorrowBook = new BookerBorrowBook();
-
-        bookerBorrowBook.setSkuId(bookBorrow.getSkuId());
-        bookerBorrowBook.setRfId(bookBorrow.getSkuRfId());
-        bookerBorrowBook.setName(bookBorrow.getSkuName());
-        bookerBorrowBook.setCumCode(bookBorrow.getSkuCumCode());
-        bookerBorrowBook.setImgUrl(bookBorrow.getSkuImgUrl());
-        bookerBorrowBook.setBorrowTime(CommonUtil.toDateTimeStr(bookBorrow.getBorrowTime()));
+    public float CalculateOverdueFine(BookBorrow bookBorrow) {
 
         long l = CommonUtil.getDateTimeNow().getTime() - bookBorrow.getBorrowTime().getTime();
         long diffDay = l / (24 * 60 * 60 * 1000);
 
         float overdueFine = 0;
 
-        FieldVo status = new FieldVo();
         if (diffDay <= 3) {
             overdueFine = 0;
-            status = new FieldVo(1, "借阅中");
         } else if (diffDay > 3 && diffDay <= 30) {
-            status = new FieldVo(2, "逾期借阅");
             if (bookBorrow.getBorrowSeq() <= 2) {
                 overdueFine = (diffDay - 3) * 0.5f;
             } else {
                 overdueFine = (diffDay - 3) * 1f;
             }
         } else if (diffDay > 30) {
-            status = new FieldVo(3, "逾期借阅");
             overdueFine = 40f;
         }
 
-        bookerBorrowBook.setStatus(status);
-        bookerBorrowBook.setOverdueFine(overdueFine);
-
-        return bookerBorrowBook;
+        return overdueFine;
     }
 
     @Override

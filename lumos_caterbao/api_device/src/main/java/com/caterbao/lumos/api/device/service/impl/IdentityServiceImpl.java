@@ -6,6 +6,7 @@ import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
 import com.caterbao.lumos.api.device.service.IdentityService;
 import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
+import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
@@ -20,16 +21,17 @@ import java.util.List;
 public class IdentityServiceImpl implements IdentityService {
 
     private IcCardMapper icCardMapper;
-    private com.caterbao.lumos.locals.biz.service.BookerService bookerService;
+    private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
 
     @Autowired(required = false)
     public void setIcCardMapper(IcCardMapper icCardMapper) {
         this.icCardMapper = icCardMapper;
     }
 
+
     @Autowired(required = false)
-    public void setBookerService(com.caterbao.lumos.locals.biz.service.BookerService bookerService) {
-        this.bookerService = bookerService;
+    public void setBizBookerService(BookerService bizBookerService) {
+        this.bizBookerService = bizBookerService;
     }
 
     @Override
@@ -85,10 +87,9 @@ public class IdentityServiceImpl implements IdentityService {
             info.put("fullName", d_IcCard.getFullName());
             info.put("cardNo", d_IcCard.getCardNo());
 
-            BookerCalculateOverdueFineResult reuslt_fine = bookerService.CalculateOverdueFine(rop.getClientUserId());
+            BookerCalculateOverdueFineResult reuslt_fine = bizBookerService.CalculateOverdueFine(rop.getClientUserId());
 
             info.put("overdueFine", reuslt_fine.getOverdueFine());
-            info.put("borrowBooks", reuslt_fine.getBorrowBooks());
 
             int borrowedQuantity = reuslt_fine.getBorrowBooks().size();
 

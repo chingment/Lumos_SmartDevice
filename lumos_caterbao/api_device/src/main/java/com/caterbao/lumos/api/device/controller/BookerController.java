@@ -30,4 +30,22 @@ public class BookerController extends BaseController{
         return bookerService.borrowReturn(this.getCurrentUserId(),rop);
     }
 
+    @RequestMapping(value = "sawBorrowBooks", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<RetBookerSawBorrowBooks> sawBorrowBooks(@RequestBody RopBookerSawBorrowBooks rop){
+        return bookerService.sawBorrowBooks(this.getCurrentUserId(),rop);
+    }
+
+    @RequestMapping(value = "renewBooks", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<RetBookerRenewBooks> renewBooks(@RequestBody RopBookerRenewBooks rop){
+        return bookerService.renewBooks(this.getCurrentUserId(),rop);
+    }
+
+    @RequestMapping(value = "displayBooks", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<RetBookerDisplayBooks> displayBooks(@RequestBody RopBookerDisplayBooks rop){
+        return bookerService.displayBooks(this.getCurrentUserId(),rop);
+    }
+
 }

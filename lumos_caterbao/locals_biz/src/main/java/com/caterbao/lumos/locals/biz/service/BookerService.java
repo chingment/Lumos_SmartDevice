@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 public interface BookerService {
     BookerCalculateOverdueFineResult CalculateOverdueFine(String clientUserId);
-    BookerBorrowBook CalculateOverdueFine(BookBorrow bookBorrow);
+    float CalculateOverdueFine(BookBorrow bookBorrow);
     FieldVo getBorrowWay(int way);
     FieldVo getReturnWay(int way);
     FieldVo getIdentityType(int type);

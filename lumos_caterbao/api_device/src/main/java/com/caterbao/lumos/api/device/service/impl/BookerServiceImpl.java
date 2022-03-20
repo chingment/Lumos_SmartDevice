@@ -5,10 +5,12 @@ import com.caterbao.lumos.api.device.rop.vo.ActionDataByOpenRequest;
 import com.caterbao.lumos.api.device.rop.vo.BookVo;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
+import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
@@ -16,7 +18,10 @@ import com.caterbao.lumos.locals.dal.pojo.BookFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
+import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,6 +49,7 @@ public class BookerServiceImpl implements BookerService {
     private BookBorrowMapper bookBorrowMapper;
     private BookFlowLogMapper bookFlowLogMapper;
     private MerchDeviceMapper merchDeviceMapper;
+    private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
     private CacheFactory cacheFactory;
 
     
@@ -76,6 +83,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired(required = false)
     public void setIcCardMapper(IcCardMapper icCardMapper) {
         this.icCardMapper = icCardMapper;
+    }
+
+    @Autowired
+    public void setBizBookerService(com.caterbao.lumos.locals.biz.service.BookerService bizBookerService) {
+        this.bizBookerService = bizBookerService;
     }
 
 //    @Autowired
@@ -131,8 +143,6 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
             return result.fail("创建失败[D03]");
 
-
-
         BookFlow d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
         d_BookFlow.setType(rop.getType());
@@ -162,7 +172,6 @@ public class BookerServiceImpl implements BookerService {
         return result.success("创建成功", ret);
 
     }
-
 
     @Override
     @Transactional()
@@ -342,6 +351,73 @@ public class BookerServiceImpl implements BookerService {
 
         return result.success("验证成功", ret);
     }
+
+    @Override
+    public CustomResult<RetBookerSawBorrowBooks> sawBorrowBooks(String operater,RopBookerSawBorrowBooks rop) {
+
+        CustomResult<RetBookerSawBorrowBooks> result = new CustomResult<>();
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime Desc");
+
+        LumosSelective selective_BookBorrows=new LumosSelective();
+        selective_BookBorrows.setFields("*");
+        selective_BookBorrows.addWhere("ClientUserId", rop.getClientUserId());
+        selective_BookBorrows.addWhere("Status","1000");
+        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective_BookBorrows);
+
+        List<Object> items=new ArrayList<>();
+
+        for (BookBorrow d_BookBorrow:
+                d_BookBorrows ) {
+            BookerBorrowBook item = new BookerBorrowBook();
+
+            item.setBorrowId(d_BookBorrow.getId());
+            item.setSkuId(d_BookBorrow.getSkuId());
+            item.setSkuCumCode(d_BookBorrow.getSkuCumCode());
+            item.setSkuImgUrl(d_BookBorrow.getSkuImgUrl());
+            item.setSkuName(d_BookBorrow.getSkuName());
+            item.setSkuRfId(d_BookBorrow.getSkuRfId());
+            item.setBorrowWay(bizBookerService.getBorrowWay(d_BookBorrow.getBorrowWay()));
+            item.setBorrowTime(CommonUtil.toDateStr(d_BookBorrow.getBorrowTime()));
+            item.setExpireTime(CommonUtil.toDateStr(d_BookBorrow.getExpireTime()));
+            item.setRenewLastTime(CommonUtil.toDateStr(d_BookBorrow.getRenewLastTime()));
+            item.setRenewCount(d_BookBorrow.getRenewCount());
+            item.setOverdueFine(bizBookerService.CalculateOverdueFine(d_BookBorrow));
+            item.setStatus(bizBookerService.getBorrowStatus(d_BookBorrow.getStatus(),d_BookBorrow.getExpireTime()));
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        RetBookerSawBorrowBooks ret = new RetBookerSawBorrowBooks();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return result.success("",ret);
+
+    }
+
+    @Override
+    public CustomResult<RetBookerRenewBooks> renewBooks(String operater,RopBookerRenewBooks rop) {
+
+        CustomResult<RetBookerRenewBooks> result = new CustomResult<>();
+
+        return result.success("");
+    }
+
+    @Override
+    public CustomResult<RetBookerDisplayBooks> displayBooks(String operater,RopBookerDisplayBooks rop) {
+
+        CustomResult<RetBookerDisplayBooks> result = new CustomResult<>();
+
+        return result.success("");
+    }
+
 
     private void  addBorrowReturnFlowLog(String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
 

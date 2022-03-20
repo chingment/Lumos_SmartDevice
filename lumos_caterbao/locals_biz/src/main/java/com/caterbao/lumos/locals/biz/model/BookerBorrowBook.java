@@ -3,16 +3,28 @@ package com.caterbao.lumos.locals.biz.model;
 import com.caterbao.lumos.locals.common.FieldVo;
 
 public class BookerBorrowBook {
+    private String borrowId;
     private String skuId;
-    private String imgUrl;
-    private String name;
-    private String cumCode;
-    private String rfId;
+    private String skuImgUrl;
+    private String skuName;
+    private String skuCumCode;
+    private String skuRfId;
     private String borrowTime;
+    private String returnTime;
     private String expireTime;
     private float overdueFine;
-
+    private FieldVo borrowWay;
     private FieldVo status;
+    private String renewLastTime;
+    private int renewCount;
+
+    public String getBorrowId() {
+        return borrowId;
+    }
+
+    public void setBorrowId(String borrowId) {
+        this.borrowId = borrowId;
+    }
 
     public String getSkuId() {
         return skuId;
@@ -22,36 +34,36 @@ public class BookerBorrowBook {
         this.skuId = skuId;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getSkuImgUrl() {
+        return skuImgUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setSkuImgUrl(String skuImgUrl) {
+        this.skuImgUrl = skuImgUrl;
     }
 
-    public String getName() {
-        return name;
+    public String getSkuName() {
+        return skuName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 
-    public String getCumCode() {
-        return cumCode;
+    public String getSkuCumCode() {
+        return skuCumCode;
     }
 
-    public void setCumCode(String cumCode) {
-        this.cumCode = cumCode;
+    public void setSkuCumCode(String skuCumCode) {
+        this.skuCumCode = skuCumCode;
     }
 
-    public String getRfId() {
-        return rfId;
+    public String getSkuRfId() {
+        return skuRfId;
     }
 
-    public void setRfId(String rfId) {
-        this.rfId = rfId;
+    public void setSkuRfId(String skuRfId) {
+        this.skuRfId = skuRfId;
     }
 
     public String getBorrowTime() {
@@ -62,12 +74,28 @@ public class BookerBorrowBook {
         this.borrowTime = borrowTime;
     }
 
+    public String getReturnTime() {
+        return returnTime;
+    }
+
+    public void setReturnTime(String returnTime) {
+        this.returnTime = returnTime;
+    }
+
     public String getExpireTime() {
         return expireTime;
     }
 
     public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public float getOverdueFine() {
+        return overdueFine;
+    }
+
+    public void setOverdueFine(float overdueFine) {
+        this.overdueFine = overdueFine;
     }
 
     public FieldVo getStatus() {
@@ -78,11 +106,27 @@ public class BookerBorrowBook {
         this.status = status;
     }
 
-    public float getOverdueFine() {
-        return overdueFine;
+    public FieldVo getBorrowWay() {
+        return borrowWay;
     }
 
-    public void setOverdueFine(float overdueFine) {
-        this.overdueFine = overdueFine;
+    public void setBorrowWay(FieldVo borrowWay) {
+        this.borrowWay = borrowWay;
+    }
+
+    public String getRenewLastTime() {
+        return renewLastTime;
+    }
+
+    public void setRenewLastTime(String renewLastTime) {
+        this.renewLastTime = renewLastTime;
+    }
+
+    public int getRenewCount() {
+        return renewCount;
+    }
+
+    public void setRenewCount(int renewCount) {
+        this.renewCount = renewCount;
     }
 }
