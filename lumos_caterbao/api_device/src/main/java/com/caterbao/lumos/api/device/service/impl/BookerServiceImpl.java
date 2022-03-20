@@ -174,7 +174,7 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
         logger.info("borrowReturn");
 
@@ -403,11 +403,49 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
+    @Transactional
     public CustomResult<RetBookerRenewBooks> renewBooks(String operater,RopBookerRenewBooks rop) {
 
         CustomResult<RetBookerRenewBooks> result = new CustomResult<>();
 
-        return result.success("");
+        String actionCode = rop.getActionCode();
+
+        List<BookBorrow> d_BookBorrows = null;
+
+        LumosSelective selective_BookBorrows = new LumosSelective();
+        selective_BookBorrows.setFields("*");
+        selective_BookBorrows.addWhere("ClientUserId", rop.getClientUserId());
+
+        if (actionCode.equals("multi")) {
+            selective_BookBorrows.addWhere("BorrowIds", rop.getBorrowIds());
+        }
+        else if(actionCode.equals("all")) {
+
+        } else {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result.fail("续借失败[01]");
+        }
+
+        d_BookBorrows = bookBorrowMapper.find(selective_BookBorrows);
+
+        if (d_BookBorrows == null || d_BookBorrows.size() <= 0) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result.fail("续借失败[01]");
+        }
+
+        for (BookBorrow d_BookBorrow : d_BookBorrows) {
+
+            d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(30));
+            d_BookBorrow.setMender(operater);
+            d_BookBorrow.setMendTime(CommonUtil.getDateTimeNow());
+
+            if (bookBorrowMapper.update(d_BookBorrow) < 0) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return result.fail("续借失败[02]");
+            }
+        }
+
+        return result.success("续借成功");
     }
 
     @Override
