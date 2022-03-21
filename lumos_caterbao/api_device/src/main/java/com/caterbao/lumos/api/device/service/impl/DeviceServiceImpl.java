@@ -1,6 +1,8 @@
 package com.caterbao.lumos.api.device.service.impl;
 
+import com.caterbao.lumos.api.device.rop.RetDeviceCheckAppVersion;
 import com.caterbao.lumos.api.device.rop.RetDeviceInitData;
+import com.caterbao.lumos.api.device.rop.RopDeviceCheckAppVerion;
 import com.caterbao.lumos.api.device.rop.RopDeviceInitData;
 import com.caterbao.lumos.api.device.rop.vo.*;
 import com.caterbao.lumos.api.device.service.DeviceService;
@@ -150,6 +152,11 @@ public class DeviceServiceImpl implements DeviceService{
         return result.success("获取成功", ret);
     }
 
+    @Override
+    public CustomResult<RetDeviceCheckAppVersion> checkAppVerion(String operater,RopDeviceCheckAppVerion rop){
+
+        return null;
+    }
 
 
     private HashMap<String, AdVo> getAds(String merchId, String deviceId) {

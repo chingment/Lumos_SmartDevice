@@ -176,7 +176,8 @@ public class BookerServiceImpl implements BookerService {
     @Override
     @Transactional
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
-        logger.info("borrowReturn");
+
+        logger.info("borrowReturn start");
 
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
@@ -235,25 +236,22 @@ public class BookerServiceImpl implements BookerService {
 
             List<String> borrow_RfIds = new ArrayList<>();
 
-            if (open_RfIds != null) {
-                for (String open_rfId : open_RfIds) {
-                    if (!close_RfIds.contains(open_rfId)) {
-                        borrow_RfIds.add(open_rfId);
-                    }
+            for (String open_rfId : open_RfIds) {
+                if (!close_RfIds.contains(open_rfId)) {
+                    borrow_RfIds.add(open_rfId);
                 }
             }
 
             List<String> return_RfIds = new ArrayList<>();
 
-            if (close_RfIds != null) {
-                for (String close_rfId : close_RfIds) {
-                    if (!open_RfIds.contains(close_rfId)) {
-                        return_RfIds.add(close_rfId);
-                    }
+            for (String close_rfId : close_RfIds) {
+                if (!open_RfIds.contains(close_rfId)) {
+                    return_RfIds.add(close_rfId);
                 }
             }
 
             int expireDay = 30;
+
             //借书
             for (int i = 0; i < borrow_RfIds.size(); i++) {
 
@@ -348,6 +346,8 @@ public class BookerServiceImpl implements BookerService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return result.fail("验证失败[D02]");
         }
+
+        logger.info("borrowReturn end");
 
         return result.success("验证成功", ret);
     }

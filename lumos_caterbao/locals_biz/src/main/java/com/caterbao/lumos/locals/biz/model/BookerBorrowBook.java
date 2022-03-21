@@ -18,6 +18,10 @@ public class BookerBorrowBook {
     private String renewLastTime;
     private int renewCount;
 
+//    private boolean canOnRenew;
+//    private boolean canOnPay;
+
+
     public String getBorrowId() {
         return borrowId;
     }
