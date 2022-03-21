@@ -186,6 +186,7 @@ public class BookerServiceImpl implements BookerService {
         }).start();
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
+        ret.setFlowId(rop.getFlowId());
 
         String actionCode = rop.getActionCode();
         String flowId = rop.getFlowId();
@@ -210,7 +211,8 @@ public class BookerServiceImpl implements BookerService {
             d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
             d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
 
-        } else if (actionCode.equals("request_close_auth")) {
+        }
+        else if (actionCode.equals("request_close_auth")) {
 
             ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
             });
@@ -331,7 +333,6 @@ public class BookerServiceImpl implements BookerService {
                 }
             }
 
-            ret.setFlowId(flowId);
             ret.setBorrowBooks(ret_BorrowBooks);
             ret.setReturnBooks(ret_ReturnBooks);
         }
@@ -346,6 +347,7 @@ public class BookerServiceImpl implements BookerService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return result.fail("验证失败[D02]");
         }
+
 
         logger.info("borrowReturn end");
 
