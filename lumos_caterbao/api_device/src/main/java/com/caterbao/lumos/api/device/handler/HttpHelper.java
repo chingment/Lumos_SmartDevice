@@ -13,6 +13,9 @@ public class HttpHelper {
         InputStream inputStream = null;
         BufferedReader reader = null;
         try {
+
+
+
             inputStream = request.getInputStream();
             reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
             String line = "";

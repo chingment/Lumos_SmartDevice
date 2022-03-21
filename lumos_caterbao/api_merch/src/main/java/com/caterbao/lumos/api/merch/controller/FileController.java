@@ -31,7 +31,7 @@ public class FileController extends  BaseController {
         CustomResult<Object> result = new CustomResult<>();
         try {
 
-            String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+            String staticPath =env.getProperty("lumos.custom.save-file-path");
             String fileName = file.getOriginalFilename();  //获取文件名
 
             String suffixname = fileName.substring(fileName.lastIndexOf("."));//后缀

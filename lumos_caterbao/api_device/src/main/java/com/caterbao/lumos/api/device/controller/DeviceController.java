@@ -56,12 +56,18 @@ public class DeviceController extends BaseController{
 
         CustomResult<Object> result = new CustomResult<>();
         try {
-
-            String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+            String staticPath =env.getProperty("lumos.custom.save-file-path");
             String fileName = file.getOriginalFilename();  //获取文件名
 
             String suffixname = fileName.substring(fileName.lastIndexOf("."));//后缀
-            String newFileName = UUID.randomUUID() + suffixname;//文件上传后重命名数据库存储
+
+            String newFileName="";
+            if(request.getParameter("keepFileName")!=null){
+                newFileName=fileName;
+            }
+            else {
+                newFileName = UUID.randomUUID() + suffixname;//文件上传后重命名数据库存储
+            }
 
             String folder = "common";
 

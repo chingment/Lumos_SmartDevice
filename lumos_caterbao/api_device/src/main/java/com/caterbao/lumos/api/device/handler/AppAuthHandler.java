@@ -41,7 +41,9 @@ public class AppAuthHandler implements HandlerInterceptor {
 
         this.response=response;
 
-        if (request.getMethod().equals("OPTIONS")) {
+       String contentType= request.getContentType();
+       String method=request.getMethod();
+        if (method.equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }

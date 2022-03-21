@@ -16,7 +16,10 @@ public class HttpServletRequestReplacedFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         ServletRequest requestWrapper = null;
         if(request instanceof HttpServletRequest) {
-            requestWrapper = new RequestReaderHttpServletRequestWrapper((HttpServletRequest) request);
+            String contentType = request.getContentType();
+            if (!contentType.contains("multipart/form-data")) {
+                requestWrapper = new RequestReaderHttpServletRequestWrapper((HttpServletRequest) request);
+            }
         }
         //获取请求中的流如何，将取出来的字符串，再次转换成流，然后把它放入到新request对象中。
         // 在chain.doFiler方法中传递新的request对象
