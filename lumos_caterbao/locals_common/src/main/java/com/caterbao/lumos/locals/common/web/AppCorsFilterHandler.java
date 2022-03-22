@@ -1,6 +1,4 @@
-package com.caterbao.lumos.api.merch.handler;
-
-import org.springframework.stereotype.Component;
+package com.caterbao.lumos.locals.common.web;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +9,7 @@ import java.io.IOException;
 *设置允许跨域
 *
 */
-@Component
+
 public class AppCorsFilterHandler implements Filter {
 
     /*跨域请求配置*/

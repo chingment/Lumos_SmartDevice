@@ -1,6 +1,6 @@
-package com.caterbao.lumos.locals.common;
+package com.caterbao.lumos.locals.common.vo;
 
-public class SpecItemValueModel {
+public class SpecItemValueVo {
     private String name;
 
     public String getName() {

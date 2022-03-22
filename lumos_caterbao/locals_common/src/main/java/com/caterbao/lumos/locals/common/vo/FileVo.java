@@ -1,7 +1,7 @@
-package com.caterbao.lumos.locals.common;
+package com.caterbao.lumos.locals.common.vo;
 
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,7 +31,7 @@ public class FileVo implements Serializable {
 
         try {
 
-            List<FileVo> obj =JsonUtil.toObject(json, new TypeReference<List<FileVo> >() {
+            List<FileVo> obj = JsonUtil.toObject(json, new TypeReference<List<FileVo> >() {
             });
 
             if(obj!=null&&obj.size()>0) {

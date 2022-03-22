@@ -1,6 +1,6 @@
-package com.caterbao.lumos.locals.common;
+package com.caterbao.lumos.locals.common.vo;
 
-public class SpecIdxSkuModel {
+public class SpecIdxSkuVo {
     private String skuId;
     private String specIdx;
 

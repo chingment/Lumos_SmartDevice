@@ -1,9 +1,8 @@
 package com.caterbao.lumos.locals.biz.service;
 
 
-import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
-import com.caterbao.lumos.locals.common.FieldVo;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 
 import java.sql.Timestamp;

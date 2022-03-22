@@ -1,8 +1,11 @@
 package com.caterbao.lumos.api.merch;
 
 import com.caterbao.lumos.api.merch.handler.AppAuthHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.ArrayList;
@@ -28,10 +31,20 @@ public class WebConfiguration implements WebMvcConfigurer {
 //                .allowedOrigins("*");
     }
 
+    @Autowired
+    private Environment env;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        //registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+
+
+        String staticPath = env.getProperty("lumos.custom.save-file-path")+"/upload/";
+
+        registry.addResourceHandler("/static/upload/**").addResourceLocations("file:"+staticPath);
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:"+staticPath);
+
     }
 
     @Override

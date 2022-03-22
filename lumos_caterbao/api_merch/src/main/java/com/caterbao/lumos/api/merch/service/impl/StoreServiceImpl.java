@@ -4,6 +4,7 @@ package com.caterbao.lumos.api.merch.service.impl;
 import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.StoreService;
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.common.vo.FileVo;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;

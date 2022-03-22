@@ -1,6 +1,6 @@
 package com.caterbao.lumos.locals.biz.model;
 
-import com.caterbao.lumos.locals.common.FieldVo;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
 
 public class BookerBorrowBook {
     private String borrowId;

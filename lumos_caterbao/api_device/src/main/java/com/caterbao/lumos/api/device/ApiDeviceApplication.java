@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.device;
 
-import com.caterbao.lumos.api.device.handler.HttpServletRequestReplacedFilter;
+import com.caterbao.lumos.api.device.handler.AppHttpServletRequestFilter;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -23,10 +23,10 @@ public class ApiDeviceApplication {
     @Bean
     public FilterRegistrationBean httpServletRequestReplacedRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new HttpServletRequestReplacedFilter());
+        registration.setFilter(new AppHttpServletRequestFilter());
         registration.addUrlPatterns("/*");
         registration.addInitParameter("paramName", "paramValue");
-        registration.setName("httpServletRequestReplacedFilter");
+        registration.setName("appHttpServletRequestFilter");
         registration.setOrder(1);
         return registration;
     }

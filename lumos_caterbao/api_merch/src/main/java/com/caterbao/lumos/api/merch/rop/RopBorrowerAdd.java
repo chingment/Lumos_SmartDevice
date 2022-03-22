@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-import com.caterbao.lumos.locals.common.FileVo;
+import com.caterbao.lumos.locals.common.vo.FileVo;
 
 import java.util.List;
 

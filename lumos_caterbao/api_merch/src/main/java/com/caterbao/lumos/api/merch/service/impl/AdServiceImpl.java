@@ -6,6 +6,8 @@ import com.caterbao.lumos.api.merch.rop.RopAdCreatives;
 import com.caterbao.lumos.api.merch.rop.RopAdSpaces;
 import com.caterbao.lumos.api.merch.service.AdService;
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
+import com.caterbao.lumos.locals.common.vo.FileVo;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.AdCreativeMapper;

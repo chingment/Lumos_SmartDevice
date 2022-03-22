@@ -2,8 +2,8 @@ package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.api.merch.rop.vo.SkuVo;
 import com.caterbao.lumos.api.merch.rop.vo.KindAttrVo;
-import com.caterbao.lumos.locals.common.FileVo;
-import com.caterbao.lumos.locals.common.SpecItemModel;
+import com.caterbao.lumos.locals.common.vo.FileVo;
+import com.caterbao.lumos.locals.common.vo.SpecItemVo;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class RopProdcutAdd {
     private List<String> charTags;
     private List<FileVo> detailsDes;
     private List<FileVo> displayImgUrls;
-    private List<SpecItemModel> specItems;
+    private List<SpecItemVo> specItems;
     private List<SkuVo> skus;
     private String briefDes;
     private List<KindAttrVo> sysKindAttrs;
@@ -67,11 +67,11 @@ public class RopProdcutAdd {
         this.displayImgUrls = displayImgUrls;
     }
 
-    public List<SpecItemModel> getSpecItems() {
+    public List<SpecItemVo> getSpecItems() {
         return specItems;
     }
 
-    public void setSpecItems(List<SpecItemModel> specItems) {
+    public void setSpecItems(List<SpecItemVo> specItems) {
         this.specItems = specItems;
     }
 

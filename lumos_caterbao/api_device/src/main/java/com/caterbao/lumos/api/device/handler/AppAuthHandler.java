@@ -1,6 +1,8 @@
 package com.caterbao.lumos.api.device.handler;
 
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.common.web.HttpHelper;
+import com.caterbao.lumos.locals.common.web.ResponseReaderHttpServletResponseWrapper;
 import com.caterbao.lumos.locals.dal.mapper.AppSoftMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,14 +98,13 @@ public class AppAuthHandler implements HandlerInterceptor {
         logger.info("请求响应：{}", content);
     }
 
-    public static String byte2String(byte[] src) {
+    public String byte2String(byte[] src) {
         Charset charset = Charset.defaultCharset();
         ByteBuffer buf = ByteBuffer.wrap(src);
         CharBuffer cBuf = charset.decode(buf);
 
         return  cBuf.toString();
     }
-
 
 
     private String getResponse(int code,String msg) {

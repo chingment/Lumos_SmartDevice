@@ -11,6 +11,7 @@ import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.biz.model.SpuInfo;
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.common.vo.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
@@ -128,8 +129,8 @@ public class ProductServiceImpl implements ProductService {
             List<Object> m_Skus=new ArrayList<>();
 
 
-            List<SpecIdxSkuModel> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
-            for (SpecIdxSkuModel specIdxSku : specIdxSkus) {
+            List<SpecIdxSkuVo> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
+            for (SpecIdxSkuVo specIdxSku : specIdxSkus) {
 
                 SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(merchId, specIdxSku.getSkuId());
 
@@ -316,7 +317,7 @@ public class ProductServiceImpl implements ProductService {
                 d_PrdSku.setSalePrice(sku.getSalePrice());
                 d_PrdSku.setPyIdx(d_PrdSpu.getPyIdx());
                 d_PrdSku.setSpecDes(JsonUtil.getJson(sku.getSpecDes()));
-                d_PrdSku.setSpecIdx(SpecDesModel.GetIdx(sku.getSpecDes()));
+                d_PrdSku.setSpecIdx(SpecDesVo.GetIdx(sku.getSpecDes()));
                 d_PrdSku.setDelete(false);
                 d_PrdSku.setCreator(operater);
                 d_PrdSku.setCreateTime(CommonUtil.getDateTimeNow());
@@ -376,8 +377,8 @@ public class ProductServiceImpl implements ProductService {
 
         List<Object> m_Skus = new ArrayList<>();
 
-        List<SpecIdxSkuModel> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
-        for (SpecIdxSkuModel specIdxSku : specIdxSkus) {
+        List<SpecIdxSkuVo> specIdxSkus= r_SpuInfo.getSpecIdxSkus();
+        for (SpecIdxSkuVo specIdxSku : specIdxSkus) {
 
             SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(merchId, specIdxSku.getSkuId());
 
@@ -482,12 +483,12 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
 
-            List<SpecItemModel> specItems=new ArrayList<>();
+            List<SpecItemVo> specItems=new ArrayList<>();
 
             for (SkuVo sku: rop.getSkus()) {
-                for (SpecDesModel specDes : sku.getSpecDes()) {
+                for (SpecDesVo specDes : sku.getSpecDes()) {
 
-                    Optional<SpecItemModel> s=specItems.stream().filter((SpecItemModel b) ->b.getName()==specDes.getName()).findFirst();
+                    Optional<SpecItemVo> s=specItems.stream().filter((SpecItemVo b) ->b.getName()==specDes.getName()).findFirst();
 
 
 
@@ -561,7 +562,7 @@ public class ProductServiceImpl implements ProductService {
                 d_PrdSku.setSalePrice(sku.getSalePrice());
                 d_PrdSku.setPyIdx(d_PrdSpu.getPyIdx());
                 d_PrdSku.setSpecDes(JsonUtil.getJson(sku.getSpecDes()));
-                d_PrdSku.setSpecIdx(SpecDesModel.GetIdx(sku.getSpecDes()));
+                d_PrdSku.setSpecIdx(SpecDesVo.GetIdx(sku.getSpecDes()));
                 d_PrdSku.setMender(operater);
                 d_PrdSku.setMendTime(CommonUtil.getDateTimeNow());
 

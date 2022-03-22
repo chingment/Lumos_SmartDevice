@@ -1,9 +1,9 @@
-package com.caterbao.lumos.locals.common;
+package com.caterbao.lumos.locals.common.vo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpecDesModel {
+public class SpecDesVo {
     private String name;
     private String value;
 
@@ -23,13 +23,13 @@ public class SpecDesModel {
         this.value = value;
     }
 
-    public static String GetIdx(List<SpecDesModel> specDess) {
+    public static String GetIdx(List<SpecDesVo> specDess) {
         if (specDess == null)
             return null;
         if (specDess.size() <= 0)
             return null;
         List<String> specDesValues = new ArrayList<>();
-        for (SpecDesModel specDes : specDess) {
+        for (SpecDesVo specDes : specDess) {
             specDesValues.add(specDes.getValue());
         }
 

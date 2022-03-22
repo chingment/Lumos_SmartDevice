@@ -4,7 +4,7 @@ import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
 import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.FieldVo;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;

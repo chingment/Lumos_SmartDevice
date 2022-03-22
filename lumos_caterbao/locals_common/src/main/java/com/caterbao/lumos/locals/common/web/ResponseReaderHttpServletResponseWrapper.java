@@ -1,4 +1,4 @@
-package com.caterbao.lumos.api.device.handler;
+package com.caterbao.lumos.locals.common.web;
 
 
 import javax.servlet.ServletOutputStream;

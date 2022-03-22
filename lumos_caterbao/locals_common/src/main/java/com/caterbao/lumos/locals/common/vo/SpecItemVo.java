@@ -1,10 +1,10 @@
-package com.caterbao.lumos.locals.common;
+package com.caterbao.lumos.locals.common.vo;
 
 import java.util.List;
 
-public class SpecItemModel {
+public class SpecItemVo {
     private String name;
-    private List<SpecItemValueModel> value;
+    private List<SpecItemValueVo> value;
 
     public String getName() {
         return name;
@@ -14,11 +14,11 @@ public class SpecItemModel {
         this.name = name;
     }
 
-    public List<SpecItemValueModel> getValue() {
+    public List<SpecItemValueVo> getValue() {
         return value;
     }
 
-    public void setValue(List<SpecItemValueModel> value) {
+    public void setValue(List<SpecItemValueVo> value) {
         this.value = value;
     }
 }

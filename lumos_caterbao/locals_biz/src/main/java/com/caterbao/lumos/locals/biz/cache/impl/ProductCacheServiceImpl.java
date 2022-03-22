@@ -4,6 +4,10 @@ import com.caterbao.lumos.locals.biz.cache.ProductCacheService;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.biz.model.SpuInfo;
 import com.caterbao.lumos.locals.common.*;
+import com.caterbao.lumos.locals.common.vo.FileVo;
+import com.caterbao.lumos.locals.common.vo.SpecDesVo;
+import com.caterbao.lumos.locals.common.vo.SpecIdxSkuVo;
+import com.caterbao.lumos.locals.common.vo.SpecItemVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.PrdSkuMapper;
 import com.caterbao.lumos.locals.dal.mapper.PrdSkuRfIdMapper;
@@ -131,7 +135,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo.setSpuId(d_PrdSku.getSpuId());
             skuInfo.setBarCode(d_PrdSku.getBarCode());
             skuInfo.setCumCode(d_PrdSku.getCumCode());
-            skuInfo.setSpecDes(JsonUtil.toObject(d_PrdSku.getSpecDes(),new TypeReference<List<SpecDesModel>>() {}));
+            skuInfo.setSpecDes(JsonUtil.toObject(d_PrdSku.getSpecDes(),new TypeReference<List<SpecDesVo>>() {}));
             List<FileVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {
             });
             if (displayImgUrls != null && displayImgUrls.size() > 0) {
@@ -193,7 +197,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             spuInfo.setCharTags(JsonUtil.toObject(d_PrdSpu.getCharTags(), new TypeReference<List<String>>() {}));
             spuInfo.setDetailsDes(JsonUtil.toObject(d_PrdSpu.getDetailsDes(), new TypeReference<List<FileVo>>() {}));
             spuInfo.setDisplayImgUrls(JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {}));
-            spuInfo.setSpecItems(JsonUtil.toObject(d_PrdSpu.getSpecItems(), new TypeReference<List<SpecItemModel>>() {}));
+            spuInfo.setSpecItems(JsonUtil.toObject(d_PrdSpu.getSpecItems(), new TypeReference<List<SpecItemVo>>() {}));
             spuInfo.setSysKindIds(d_PrdSpu.getSysKindIds());
             LumosSelective selective_PrdSku = new LumosSelective();
             selective_PrdSku.setFields("*");
@@ -202,11 +206,11 @@ class ProductCacheServiceImpl implements ProductCacheService {
             List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
             if (d_PrdSkus != null) {
 
-                List<SpecIdxSkuModel> specIdxSkus = new ArrayList<>();
+                List<SpecIdxSkuVo> specIdxSkus = new ArrayList<>();
 
                 for (PrdSku prdSku : d_PrdSkus) {
                     SkuInfo r_SkuInfo = getSkuInfo(merchId, prdSku.getId());
-                    SpecIdxSkuModel specIdxSku = new SpecIdxSkuModel();
+                    SpecIdxSkuVo specIdxSku = new SpecIdxSkuVo();
                     specIdxSku.setSkuId(prdSku.getId());
                     specIdxSku.setSpecIdx(prdSku.getSpecIdx());
                     specIdxSkus.add(specIdxSku);
@@ -246,7 +250,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
 
         if (r_Spu != null) {
             if (r_Spu.getSpecIdxSkus() != null) {
-                for (SpecIdxSkuModel specIdxSku : r_Spu.getSpecIdxSkus()) {
+                for (SpecIdxSkuVo specIdxSku : r_Spu.getSpecIdxSkus()) {
                     redisTemplate.opsForHash().delete(CACHE_KEY_SKU_INFO_PRE + ":" + merchId, specIdxSku.getSkuId());
 
                     Cursor<Map.Entry<Object,Object>> cursor = redisTemplate.opsForHash().scan(CACHE_KEY_SKU_SKEY_PRE + ":" + merchId, ScanOptions.scanOptions().match("*:*:"+specIdxSku.getSkuId()).build());

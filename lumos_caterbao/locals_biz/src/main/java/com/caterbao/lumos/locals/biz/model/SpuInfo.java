@@ -1,8 +1,8 @@
 package com.caterbao.lumos.locals.biz.model;
 
-import com.caterbao.lumos.locals.common.FileVo;
-import com.caterbao.lumos.locals.common.SpecIdxSkuModel;
-import com.caterbao.lumos.locals.common.SpecItemModel;
+import com.caterbao.lumos.locals.common.vo.FileVo;
+import com.caterbao.lumos.locals.common.vo.SpecIdxSkuVo;
+import com.caterbao.lumos.locals.common.vo.SpecItemVo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,8 +17,8 @@ public class SpuInfo implements Serializable {
     private List<String> charTags;
     private String briefDes;
     private List<FileVo> detailsDes;
-    private List<SpecItemModel> specItems;
-    private List<SpecIdxSkuModel> specIdxSkus;
+    private List<SpecItemVo> specItems;
+    private List<SpecIdxSkuVo> specIdxSkus;
 
     public String getId() {
         return id;
@@ -92,19 +92,19 @@ public class SpuInfo implements Serializable {
         this.detailsDes = detailsDes;
     }
 
-    public List<SpecItemModel> getSpecItems() {
+    public List<SpecItemVo> getSpecItems() {
         return specItems;
     }
 
-    public void setSpecItems(List<SpecItemModel> specItems) {
+    public void setSpecItems(List<SpecItemVo> specItems) {
         this.specItems = specItems;
     }
 
-    public List<SpecIdxSkuModel> getSpecIdxSkus() {
+    public List<SpecIdxSkuVo> getSpecIdxSkus() {
         return specIdxSkus;
     }
 
-    public void setSpecIdxSkus(List<SpecIdxSkuModel> specIdxSkus) {
+    public void setSpecIdxSkus(List<SpecIdxSkuVo> specIdxSkus) {
         this.specIdxSkus = specIdxSkus;
     }
 }
