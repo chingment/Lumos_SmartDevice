@@ -1,10 +1,8 @@
 package com.caterbao.lumos.api.device.handler;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.charset.Charset;
 
 public class HttpHelper {
@@ -42,4 +40,6 @@ public class HttpHelper {
         }
         return sb.toString();
     }
+
+
 }

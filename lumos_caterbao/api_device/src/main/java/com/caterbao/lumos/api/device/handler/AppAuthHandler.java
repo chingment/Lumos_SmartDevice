@@ -1,21 +1,18 @@
 package com.caterbao.lumos.api.device.handler;
 
-import com.caterbao.lumos.locals.common.CommonUtil;
-import com.caterbao.lumos.locals.common.CustomResult;
-import com.caterbao.lumos.locals.common.SHA256Encrypt;
+import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.mapper.AppSoftMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -37,15 +34,22 @@ public class AppAuthHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
-        logger.debug("AppAuthHandler.preHandle");
+        MDC.put(Constants.LOG_TRACE_ID, TraceLogUtils.getTraceId());
 
-        this.response=response;
+        logger.info("AppAuthHandler.preHandle");
 
-       String contentType= request.getContentType();
-       String method=request.getMethod();
-        if (method.equals("OPTIONS")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            return true;
+        logger.info("请求Url : {}", request.getRequestURL().toString());
+        logger.info("请求方式 : {}", request.getMethod());
+
+
+        this.response = response;
+
+        String contentType = request.getContentType();
+        String method = request.getMethod();
+        if (!method.equals("POST")) {
+            String str_result = getResponse(2501, "请求Method不正确");
+            response.getWriter().append(str_result);
+            return false;
         }
 
         String appId = request.getHeader("appId");
@@ -54,7 +58,7 @@ public class AppAuthHandler implements HandlerInterceptor {
         String timestamp = request.getHeader("timestamp");
 
         if (appId == null || appKey == null || sign == null || timestamp == null) {
-            String str_result = getResponse(2501,"缺少必要参数");
+            String str_result = getResponse(2501, "缺少必要参数");
             response.getWriter().append(str_result);
             return false;
         }
@@ -62,17 +66,19 @@ public class AppAuthHandler implements HandlerInterceptor {
         String appSecret = appSoftMapper.getSecretByKey(appKey);
 
         if (appSecret == null) {
-            String str_result = getResponse(2501,"应用无效");
+            String str_result = getResponse(2501, "应用无效");
             response.getWriter().append(str_result);
             return false;
         }
 
         String data = HttpHelper.getBodyString(request);
 
+        logger.info("请求参数 : {}",data);
+
         String my_sign = getSign(appId, appKey, appSecret, data, timestamp);
 
-        if(!sign.equals(my_sign)) {
-            String str_result = getResponse(2501,"签名错误");
+        if (!sign.equals(my_sign)) {
+            String str_result = getResponse(2501, "签名错误");
             response.getWriter().append(str_result);
             return false;
         }
@@ -80,9 +86,29 @@ public class AppAuthHandler implements HandlerInterceptor {
         return true;
     }
 
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) throws Exception {
+        ResponseReaderHttpServletResponseWrapper responseWrapper = (ResponseReaderHttpServletResponseWrapper) response;
+        byte[] responseBody = responseWrapper.getBytes();
+
+        String content = byte2String(responseBody);
+
+        logger.info("请求响应：{}", content);
+    }
+
+    public static String byte2String(byte[] src) {
+        Charset charset = Charset.defaultCharset();
+        ByteBuffer buf = ByteBuffer.wrap(src);
+        CharBuffer cBuf = charset.decode(buf);
+
+        return  cBuf.toString();
+    }
+
+
+
     private String getResponse(int code,String msg) {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
+        //response.setCharacterEncoding("UTF-8");
+        //response.setContentType("application/json; charset=utf-8");
         result.setCode(code);
         result.setMsg(msg);
         String str_result = result.toJSONString();

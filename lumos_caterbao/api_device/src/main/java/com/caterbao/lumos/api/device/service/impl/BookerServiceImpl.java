@@ -447,6 +447,8 @@ public class BookerServiceImpl implements BookerService {
             }
         }
 
+        logger.info("续借成功");
+
         return result.success("续借成功");
     }
 
