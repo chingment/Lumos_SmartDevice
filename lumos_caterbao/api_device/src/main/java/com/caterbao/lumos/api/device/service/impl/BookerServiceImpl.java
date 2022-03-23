@@ -307,6 +307,8 @@ public class BookerServiceImpl implements BookerService {
                 selective_BookBorrow.setFields("*");
                 selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
                 selective_BookBorrow.addWhere("SkuRfId", return_RfId);
+                selective_BookBorrow.addWhere("Statuss", new String[]{"1000","2000"});
+
                 BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
                 if (d_BookBorrow != null) {
                     d_BookBorrow.setReturnFlowId(flowId);

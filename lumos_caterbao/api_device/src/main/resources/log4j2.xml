@@ -92,8 +92,8 @@
         </RollingRandomAccessFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.caterbao.lumos" level="INFO" additivity="true">
-<!--            <AppenderRef ref="debug"/>-->
+        <Logger name="com.caterbao.lumos" level="DEBUG" additivity="true">
+            <AppenderRef ref="debug"/>
             <AppenderRef ref="info"/>
             <AppenderRef ref="warn"/>
             <AppenderRef ref="error"/>

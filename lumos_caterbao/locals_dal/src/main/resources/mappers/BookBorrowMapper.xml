@@ -9,6 +9,11 @@
         <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
         <if test="where.SkuRfId != null">and SkuRfId =#{where.SkuRfId}</if>
         <if test="where.BorrowId != null">and Id =#{where.BorrowId}</if>
+        <if test="where.Statuss != null "> and Status in
+            <foreach collection="where.Statuss" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookBorrow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookBorrow where 1=1
@@ -27,10 +32,9 @@
                 #{item}
             </foreach>
         </if>
-
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
-  insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuPrice skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)
+  insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuPrice, skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)
   values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{flowId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{skuId},#{skuName},#{skuImgUrl},#{skuPrice},#{skuCumCode},#{skuRfId},#{borrowSeq},#{borrowTime},#{borrowWay},#{status},#{expireTime},#{renewCount},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
@@ -38,7 +42,9 @@
         <set>
             <if test="returnFlowId != null">returnFlowId=#{returnFlowId},</if>
             <if test="returnTime != null">returnTime=#{returnTime},</if>
-            <if test="expireTime != null">expireTime=#{expireTime},</if>
+            <if test="returnWay != null">returnWay=#{returnWay},</if>
+            <if test="returnWay != null">returnWay=#{returnWay},</if>
+            <if test="status != null">status=#{status},</if>
             <if test="renewCount != null and renewCount>0">renewCount=#{renewCount},</if>
             <if test="renewLastTime != null">renewLastTime=#{renewLastTime},</if>
             <if test="mender != null">mender=#{mender},</if>
