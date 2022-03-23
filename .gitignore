@@ -23,6 +23,7 @@ Thumbs.db
 [Dd]ebug*/
 dist*/
 node_modules*/
+upload*/
 *.lib
 *.sbr
 *.rawproto
