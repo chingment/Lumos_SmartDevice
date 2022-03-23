@@ -26,17 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class BookerServiceImpl implements BookerService {
@@ -290,6 +284,7 @@ public class BookerServiceImpl implements BookerService {
                     d_BookBorrow.setSkuName(r_Sku.getName());
                     d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
                     d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
+                    d_BookBorrow.setSkuPrice(r_Sku.getSalePrice());
                     d_BookBorrow.setBorrowSeq(i);
                     d_BookBorrow.setBorrowWay(1);
                     d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
@@ -387,8 +382,13 @@ public class BookerServiceImpl implements BookerService {
             item.setExpireTime(CommonUtil.toDateStr(d_BookBorrow.getExpireTime()));
             item.setRenewLastTime(CommonUtil.toDateStr(d_BookBorrow.getRenewLastTime()));
             item.setRenewCount(d_BookBorrow.getRenewCount());
-            item.setOverdueFine(bizBookerService.CalculateOverdueFine(d_BookBorrow));
+            item.setOverdueFine(bizBookerService.CalculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq()));
             item.setStatus(bizBookerService.getBorrowStatus(d_BookBorrow.getStatus(),d_BookBorrow.getExpireTime()));
+            item.setWilldue(bizBookerService.chekIsWilldueBook(d_BookBorrow.getExpireTime()));
+            item.setOverdue(bizBookerService.chekIsOverdueBook(d_BookBorrow.getExpireTime()));
+            item.setCanRenew(bizBookerService.checkCanRenew(d_BookBorrow.getRenewCount(),1));
+            item.setCanReturn(bizBookerService.checkCanReturn(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq(),d_BookBorrow.getSkuPrice()));
+            item.setNeedPay(bizBookerService.checkNeedPay(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq(),d_BookBorrow.getSkuPrice()));
             items.add(item);
         }
 
@@ -459,7 +459,6 @@ public class BookerServiceImpl implements BookerService {
 
         return result.success("");
     }
-
 
     private void  addBorrowReturnFlowLog(String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
 

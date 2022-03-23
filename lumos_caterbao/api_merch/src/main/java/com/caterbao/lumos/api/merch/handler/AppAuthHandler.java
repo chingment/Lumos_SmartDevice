@@ -2,11 +2,14 @@ package com.caterbao.lumos.api.merch.handler;
 
 import com.caterbao.lumos.api.merch.controller.OwnController;
 import com.caterbao.lumos.locals.common.CommonUtil;
+import com.caterbao.lumos.locals.common.Constants;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.common.TraceLogUtils;
 import com.caterbao.lumos.locals.common.web.HttpHelper;
 import com.caterbao.lumos.locals.common.web.ResponseReaderHttpServletResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -29,19 +32,24 @@ public class AppAuthHandler implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
+        MDC.put(Constants.LOG_TRACE_ID, TraceLogUtils.getTraceId());
+
         logger.debug("AppAuthHandler.preHandle");
-
-        logger.info("请求Url : {}", request.getRequestURL().toString());
-        logger.info("请求方式 : {}", request.getMethod());
-
-        String data = HttpHelper.getBodyString(request);
-
-        logger.info("请求参数 : {}",data);
 
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
+
+        logger.info("请求Url路径 : {}", request.getRequestURL());
+        logger.info("请求Url参数 : {}", request.getQueryString());
+        logger.info("请求方式    : {}", request.getMethod());
+
+        if(request.getMethod().equals("POST")) {
+            String data = HttpHelper.getBodyString(request);
+            logger.info("请求体参数 : {}", data);
+        }
+
         String token = request.getHeader("token");
         Object token_val=null;
 

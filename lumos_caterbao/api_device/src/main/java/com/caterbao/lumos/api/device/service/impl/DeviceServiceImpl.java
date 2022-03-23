@@ -146,6 +146,7 @@ public class DeviceServiceImpl implements DeviceService{
 
         customData.put("ads",getAds(d_MerchDevice.getMerchId(),d_MerchDevice.getId()));
         customData.put("slots",getBookerSlots(d_MerchDevice.getMerchId(),d_MerchDevice.getId()));
+
         ret.setCustomData(customData);
 
         return result.success("获取成功", ret);

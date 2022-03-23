@@ -22,11 +22,16 @@
                 #{item}
             </foreach>
         </if>
+        <if test="where.Statuss != null "> and Status in
+            <foreach collection="where.Statuss" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
-  insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)
-  values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{flowId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{skuId},#{skuName},#{skuImgUrl},#{skuCumCode},#{skuRfId},#{borrowSeq},#{borrowTime},#{borrowWay},#{status},#{expireTime},#{renewCount},#{creator},#{createTime})
+  insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuPrice skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)
+  values(#{id},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{flowId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{skuId},#{skuName},#{skuImgUrl},#{skuPrice},#{skuCumCode},#{skuRfId},#{borrowSeq},#{borrowTime},#{borrowWay},#{status},#{expireTime},#{renewCount},#{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
         update BookBorrow

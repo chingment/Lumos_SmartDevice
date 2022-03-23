@@ -23,6 +23,7 @@ public class BookBorrow {
     private String skuImgUrl;
     private String skuCumCode;
     private String skuRfId;
+    private float skuPrice;
     private int borrowSeq;
     private int borrowWay;
     private Timestamp borrowTime;
@@ -310,4 +311,11 @@ public class BookBorrow {
         this.renewCount = renewCount;
     }
 
+    public float getSkuPrice() {
+        return skuPrice;
+    }
+
+    public void setSkuPrice(float skuPrice) {
+        this.skuPrice = skuPrice;
+    }
 }

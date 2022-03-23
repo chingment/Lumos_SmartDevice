@@ -1,7 +1,6 @@
 package com.caterbao.lumos.locals.biz.service.impl;
 
-import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
-import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
+import com.caterbao.lumos.locals.biz.model.BookerCountBorrowBookResult;
 import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.vo.FieldVo;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("BizBookerService")
@@ -24,38 +22,47 @@ public class BookerServiceImpl implements BookerService {
         this.bookBorrowMapper = bookBorrowMapper;
     }
     @Override
-    public BookerCalculateOverdueFineResult CalculateOverdueFine(String clientUserId) {
+    public BookerCountBorrowBookResult CountBorrowBookResult(String clientUserId) {
 
-        BookerCalculateOverdueFineResult result = new BookerCalculateOverdueFineResult();
+        BookerCountBorrowBookResult result = new BookerCountBorrowBookResult();
 
         LumosSelective selective_1 = new LumosSelective();
         selective_1.setFields("*");
         selective_1.addWhere("ClientUserId", clientUserId);
+        selective_1.addWhere("Statuss",new String[]{"1000","2000"});
 
         List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective_1);
 
-
-        List<BookerBorrowBook> bookerBorrowBooks = new ArrayList<>();
         float sumOverdueFine=0;
+
+        int sumWilldueQuantity=0;
+        int sumOverdueQuantity=0;
         for (int i = 0; i < d_BookBorrows.size(); i++) {
             BookBorrow d_BookBorrow = d_BookBorrows.get(i);
 
-            BookerBorrowBook m_BookerBorrowBook=new BookerBorrowBook();
-            m_BookerBorrowBook.setBorrowId(d_BookBorrow.getId());
-            float overdueFine = CalculateOverdueFine(d_BookBorrow);
-            sumOverdueFine += overdueFine;
-            bookerBorrowBooks.add(m_BookerBorrowBook);
+
+            if (chekIsWilldueBook(d_BookBorrow.getExpireTime())) {
+                sumWilldueQuantity += 1;
+            } else if (chekIsOverdueBook(d_BookBorrow.getExpireTime())) {
+                sumOverdueQuantity += 1;
+
+                float overdueFine = CalculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq());
+                sumOverdueFine += overdueFine;
+            }
+
         }
 
-        result.setBorrowBooks(bookerBorrowBooks);
+        result.setBorrowedQuantity(d_BookBorrows.size());
+        result.setWilldueQuantity(sumWilldueQuantity);
+        result.setOverdueQuantity(sumOverdueQuantity);
         result.setOverdueFine(sumOverdueFine);
         return result;
     }
 
     @Override
-    public float CalculateOverdueFine(BookBorrow bookBorrow) {
+    public float CalculateOverdueFine(Timestamp expireTime,int seq) {
 
-        long l = CommonUtil.getDateTimeNow().getTime() - bookBorrow.getBorrowTime().getTime();
+        long l = CommonUtil.getDateTimeNow().getTime() - expireTime.getTime();
         long diffDay = l / (24 * 60 * 60 * 1000);
 
         float overdueFine = 0;
@@ -63,7 +70,7 @@ public class BookerServiceImpl implements BookerService {
         if (diffDay <= 3) {
             overdueFine = 0;
         } else if (diffDay > 3 && diffDay <= 30) {
-            if (bookBorrow.getBorrowSeq() <= 2) {
+            if (seq <= 2) {
                 overdueFine = (diffDay - 3) * 0.5f;
             } else {
                 overdueFine = (diffDay - 3) * 1f;
@@ -123,4 +130,48 @@ public class BookerServiceImpl implements BookerService {
             return new FieldVo(1,"借还");
         return model;
     }
+
+    @Override
+    public boolean chekIsWilldueBook(Timestamp expireTime) {
+        boolean isflag = false;
+
+        long l_Willdue = expireTime.getTime() - CommonUtil.getDateTimeNow().getTime();
+        long diffDay_Willdue = l_Willdue / (24 * 60 * 60 * 1000);
+
+        if (diffDay_Willdue >= 0 && diffDay_Willdue <= 7) {
+            isflag = true;
+        }
+
+        return isflag;
+    }
+
+    @Override
+    public boolean chekIsOverdueBook(Timestamp expireTime) {
+        boolean isflag = false;
+
+        long l_Overdue = CommonUtil.getDateTimeNow().getTime() - expireTime.getTime();
+        long diffDay_Overdue = l_Overdue / (24 * 60 * 60 * 1000);
+
+        if (diffDay_Overdue > 0) {
+            isflag = true;
+        }
+
+        return isflag;
+    }
+
+    @Override
+    public  boolean checkCanRenew(int renewedCount,int maxRenewCount){
+        return  false;
+    }
+
+    @Override
+    public boolean checkCanReturn(Timestamp expireTime,int seq,float skuPrice){
+        return  false;
+    }
+
+    @Override
+    public  boolean checkNeedPay(Timestamp expireTime,int seq,float skuPrice){
+        return  false;
+    }
+
 }

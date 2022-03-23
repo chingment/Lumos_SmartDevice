@@ -5,9 +5,10 @@ import com.caterbao.lumos.api.device.rop.RetIdentityVerify;
 import com.caterbao.lumos.api.device.rop.RopIdentityInfo;
 import com.caterbao.lumos.api.device.rop.RopIdentityVerify;
 import com.caterbao.lumos.api.device.service.IdentityService;
-import com.caterbao.lumos.locals.biz.model.BookerCalculateOverdueFineResult;
+import com.caterbao.lumos.locals.biz.model.BookerCountBorrowBookResult;
 import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
 import com.caterbao.lumos.locals.dal.pojo.IcCard;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Service
 public class IdentityServiceImpl implements IdentityService {
@@ -87,17 +87,24 @@ public class IdentityServiceImpl implements IdentityService {
             info.put("fullName", d_IcCard.getFullName());
             info.put("cardNo", d_IcCard.getCardNo());
 
-            BookerCalculateOverdueFineResult reuslt_fine = bizBookerService.CalculateOverdueFine(rop.getClientUserId());
+            BookerCountBorrowBookResult rt_CountBorrowBook = bizBookerService.CountBorrowBookResult(rop.getClientUserId());
 
-            info.put("overdueFine", reuslt_fine.getOverdueFine());
+            info.put("overdueFine", rt_CountBorrowBook.getOverdueFine());
 
-            int borrowedQuantity = reuslt_fine.getBorrowBooks().size();
+            int borrowedQuantity = rt_CountBorrowBook.getBorrowedQuantity();
 
             int maxBorrowQuantity = 5;//最大可借书的数量
 
             int canBorrowQuantity = maxBorrowQuantity - borrowedQuantity;
             info.put("borrowedQuantity", borrowedQuantity);
             info.put("canBorrowQuantity", canBorrowQuantity);
+            info.put("willdueQuantity", rt_CountBorrowBook.getWilldueQuantity());//即将到期数量
+            info.put("overdueQuantity", rt_CountBorrowBook.getOverdueQuantity());//逾期数量
+
+            FieldVo status=new FieldVo(1,"正常");
+
+            info.put("status",status);
+
             ret.setInfo(info);
 
             return result.success("获取成功", ret);

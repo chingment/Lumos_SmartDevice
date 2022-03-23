@@ -17,10 +17,11 @@ public class BookerBorrowBook {
     private FieldVo status;
     private String renewLastTime;
     private int renewCount;
-
-//    private boolean canOnRenew;
-//    private boolean canOnPay;
-
+    private boolean isWilldue;
+    private boolean isOverdue;
+    private boolean canRenew;
+    private boolean canReturn;
+    private boolean needPay;
 
     public String getBorrowId() {
         return borrowId;
@@ -132,5 +133,45 @@ public class BookerBorrowBook {
 
     public void setRenewCount(int renewCount) {
         this.renewCount = renewCount;
+    }
+
+    public boolean isWilldue() {
+        return isWilldue;
+    }
+
+    public void setWilldue(boolean willdue) {
+        isWilldue = willdue;
+    }
+
+    public boolean isOverdue() {
+        return isOverdue;
+    }
+
+    public void setOverdue(boolean overdue) {
+        isOverdue = overdue;
+    }
+
+    public boolean isCanRenew() {
+        return canRenew;
+    }
+
+    public void setCanRenew(boolean canRenew) {
+        this.canRenew = canRenew;
+    }
+
+    public boolean isCanReturn() {
+        return canReturn;
+    }
+
+    public void setCanReturn(boolean canReturn) {
+        this.canReturn = canReturn;
+    }
+
+    public boolean isNeedPay() {
+        return needPay;
+    }
+
+    public void setNeedPay(boolean needPay) {
+        this.needPay = needPay;
     }
 }

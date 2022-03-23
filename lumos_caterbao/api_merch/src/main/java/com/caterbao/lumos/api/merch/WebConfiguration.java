@@ -62,6 +62,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         excludePath.add("/own/logout");     //登录
         excludePath.add("/static/**");  //静态资源
         excludePath.add("/upload/**");
+        excludePath.add("/error");
         excludePath.add("/assets/**");  //静态资源
 
         registry.addInterceptor(appAuthHandler)

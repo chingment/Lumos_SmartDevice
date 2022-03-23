@@ -97,7 +97,6 @@ public class CommonUtil {
             SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(
                     "yyyy-MM-dd");
             Date lFromDate1 = datetimeFormatter1.parse(time);
-            System.out.println("gpsdate :" + lFromDate1);
             Timestamp fromTS1 = new Timestamp(lFromDate1.getTime());
 
             return fromTS1;
@@ -112,7 +111,6 @@ public class CommonUtil {
             SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(
                     "yyyy-MM-dd HH:mm:ss.SSS");
             Date lFromDate1 = datetimeFormatter1.parse(time);
-            System.out.println("gpsdate :" + lFromDate1);
             Timestamp fromTS1 = new Timestamp(lFromDate1.getTime());
 
             return fromTS1;
