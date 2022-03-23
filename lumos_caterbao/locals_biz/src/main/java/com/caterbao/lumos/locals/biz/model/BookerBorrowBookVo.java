@@ -2,7 +2,7 @@ package com.caterbao.lumos.locals.biz.model;
 
 import com.caterbao.lumos.locals.common.vo.FieldVo;
 
-public class BookerBorrowBook {
+public class BookerBorrowBookVo {
     private String borrowId;
     private String skuId;
     private String skuImgUrl;
@@ -135,20 +135,20 @@ public class BookerBorrowBook {
         this.renewCount = renewCount;
     }
 
-    public boolean isWilldue() {
+    public boolean getIsWilldue() {
         return isWilldue;
     }
 
-    public void setWilldue(boolean willdue) {
-        isWilldue = willdue;
+    public void setIsWilldue(boolean isWilldue) {
+        this.isWilldue = isWilldue;
     }
 
-    public boolean isOverdue() {
+    public boolean getIsOverdue() {
         return isOverdue;
     }
 
-    public void setOverdue(boolean overdue) {
-        isOverdue = overdue;
+    public void setIsOverdue(boolean isOverdue) {
+        this.isOverdue = isOverdue;
     }
 
     public boolean isCanRenew() {

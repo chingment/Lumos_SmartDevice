@@ -87,7 +87,7 @@ public class IdentityServiceImpl implements IdentityService {
             info.put("fullName", d_IcCard.getFullName());
             info.put("cardNo", d_IcCard.getCardNo());
 
-            BookerCountBorrowBookResult rt_CountBorrowBook = bizBookerService.CountBorrowBookResult(rop.getClientUserId());
+            BookerCountBorrowBookResult rt_CountBorrowBook = bizBookerService.countBorrowBookResult(rop.getClientUserId());
 
             info.put("overdueFine", rt_CountBorrowBook.getOverdueFine());
 

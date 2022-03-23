@@ -1,5 +1,6 @@
 package com.caterbao.lumos.locals.biz.service.impl;
 
+import com.caterbao.lumos.locals.biz.model.BookerBorrowBookVo;
 import com.caterbao.lumos.locals.biz.model.BookerCountBorrowBookResult;
 import com.caterbao.lumos.locals.biz.service.BookerService;
 import com.caterbao.lumos.locals.common.CommonUtil;
@@ -22,7 +23,7 @@ public class BookerServiceImpl implements BookerService {
         this.bookBorrowMapper = bookBorrowMapper;
     }
     @Override
-    public BookerCountBorrowBookResult CountBorrowBookResult(String clientUserId) {
+    public BookerCountBorrowBookResult countBorrowBookResult(String clientUserId) {
 
         BookerCountBorrowBookResult result = new BookerCountBorrowBookResult();
 
@@ -46,7 +47,7 @@ public class BookerServiceImpl implements BookerService {
             } else if (chekIsOverdueBook(d_BookBorrow.getExpireTime())) {
                 sumOverdueQuantity += 1;
 
-                float overdueFine = CalculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq());
+                float overdueFine = calculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq());
                 sumOverdueFine += overdueFine;
             }
 
@@ -60,7 +61,35 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public float CalculateOverdueFine(Timestamp expireTime,int seq) {
+    public BookerBorrowBookVo covertBorrowBookVo(BookBorrow bookBorrow){
+
+
+        BookerBorrowBookVo vo = new BookerBorrowBookVo();
+
+        vo.setBorrowId(bookBorrow.getId());
+        vo.setSkuId(bookBorrow.getSkuId());
+        vo.setSkuCumCode(bookBorrow.getSkuCumCode());
+        vo.setSkuImgUrl(bookBorrow.getSkuImgUrl());
+        vo.setSkuName(bookBorrow.getSkuName());
+        vo.setSkuRfId(bookBorrow.getSkuRfId());
+        vo.setBorrowWay(getBorrowWay(bookBorrow.getBorrowWay()));
+        vo.setBorrowTime(CommonUtil.toDateStr(bookBorrow.getBorrowTime()));
+        vo.setExpireTime(CommonUtil.toDateStr(bookBorrow.getExpireTime()));
+        vo.setRenewLastTime(CommonUtil.toDateStr(bookBorrow.getRenewLastTime()));
+        vo.setRenewCount(bookBorrow.getRenewCount());
+        vo.setOverdueFine(calculateOverdueFine(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq()));
+        vo.setStatus(getBorrowStatus(bookBorrow.getStatus(),bookBorrow.getExpireTime()));
+        vo.setIsWilldue(chekIsWilldueBook(bookBorrow.getExpireTime()));
+        vo.setIsOverdue(chekIsOverdueBook(bookBorrow.getExpireTime()));
+        vo.setCanRenew(checkCanRenew(bookBorrow.getExpireTime(),bookBorrow.getRenewCount(),1));
+        vo.setCanReturn(checkCanReturn(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq(),bookBorrow.getSkuPrice()));
+        vo.setNeedPay(checkNeedPay(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq(),bookBorrow.getSkuPrice()));
+
+        return  vo;
+    }
+
+    @Override
+    public float calculateOverdueFine(Timestamp expireTime,int seq) {
 
         long l = CommonUtil.getDateTimeNow().getTime() - expireTime.getTime();
         long diffDay = l / (24 * 60 * 60 * 1000);
@@ -87,9 +116,14 @@ public class BookerServiceImpl implements BookerService {
         //todo 未判断超时
         FieldVo model = new FieldVo();
         if (stauts == 1000) {
-            return new FieldVo(1000, "借阅中");
+            if(chekIsOverdueBook(expireTime)){
+                return new FieldVo(2000, "已逾期");
+            }
+            else {
+                return new FieldVo(1000, "借阅中");
+            }
         } else if (stauts == 2000) {
-            return new FieldVo(2000, "已超期");
+            return new FieldVo(2000, "已逾期");
         } else if (stauts == 3000)
             return new FieldVo(3000, "已归还");
         else if (stauts == 4000)
@@ -160,8 +194,18 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public  boolean checkCanRenew(int renewedCount,int maxRenewCount){
-        return  false;
+    public  boolean checkCanRenew(Timestamp expireTime,int renewedCount,int maxRenewCount) {
+
+        boolean iflag = chekIsWilldueBook(expireTime);
+
+        if (iflag) {
+
+            if (renewedCount < maxRenewCount) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

@@ -5,12 +5,10 @@ import com.caterbao.lumos.api.device.rop.vo.ActionDataByOpenRequest;
 import com.caterbao.lumos.api.device.rop.vo.BookVo;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
-import com.caterbao.lumos.locals.biz.model.BookerBorrowBook;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.JsonUtil;
-import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.*;
@@ -18,7 +16,6 @@ import com.caterbao.lumos.locals.dal.pojo.BookFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
-import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -369,27 +366,7 @@ public class BookerServiceImpl implements BookerService {
 
         for (BookBorrow d_BookBorrow:
                 d_BookBorrows ) {
-            BookerBorrowBook item = new BookerBorrowBook();
-
-            item.setBorrowId(d_BookBorrow.getId());
-            item.setSkuId(d_BookBorrow.getSkuId());
-            item.setSkuCumCode(d_BookBorrow.getSkuCumCode());
-            item.setSkuImgUrl(d_BookBorrow.getSkuImgUrl());
-            item.setSkuName(d_BookBorrow.getSkuName());
-            item.setSkuRfId(d_BookBorrow.getSkuRfId());
-            item.setBorrowWay(bizBookerService.getBorrowWay(d_BookBorrow.getBorrowWay()));
-            item.setBorrowTime(CommonUtil.toDateStr(d_BookBorrow.getBorrowTime()));
-            item.setExpireTime(CommonUtil.toDateStr(d_BookBorrow.getExpireTime()));
-            item.setRenewLastTime(CommonUtil.toDateStr(d_BookBorrow.getRenewLastTime()));
-            item.setRenewCount(d_BookBorrow.getRenewCount());
-            item.setOverdueFine(bizBookerService.CalculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq()));
-            item.setStatus(bizBookerService.getBorrowStatus(d_BookBorrow.getStatus(),d_BookBorrow.getExpireTime()));
-            item.setWilldue(bizBookerService.chekIsWilldueBook(d_BookBorrow.getExpireTime()));
-            item.setOverdue(bizBookerService.chekIsOverdueBook(d_BookBorrow.getExpireTime()));
-            item.setCanRenew(bizBookerService.checkCanRenew(d_BookBorrow.getRenewCount(),1));
-            item.setCanReturn(bizBookerService.checkCanReturn(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq(),d_BookBorrow.getSkuPrice()));
-            item.setNeedPay(bizBookerService.checkNeedPay(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq(),d_BookBorrow.getSkuPrice()));
-            items.add(item);
+            items.add(bizBookerService.covertBorrowBookVo(d_BookBorrow));
         }
 
         long total = page.getTotal();
@@ -437,7 +414,10 @@ public class BookerServiceImpl implements BookerService {
 
         for (BookBorrow d_BookBorrow : d_BookBorrows) {
 
+            int renewCount=d_BookBorrow.getRenewCount()+1;
             d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(30));
+            d_BookBorrow.setRenewLastTime(CommonUtil.getDateTimeNow());
+            d_BookBorrow.setRenewCount(renewCount);
             d_BookBorrow.setMender(operater);
             d_BookBorrow.setMendTime(CommonUtil.getDateTimeNow());
 
