@@ -32,6 +32,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="where.CanRenew != null "> and renewCount <![CDATA[ < ]]>   1 and
+            TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:00'),DATE_FORMAT(ExpireTime, '%Y-%m-%d 00:00:00') ) <![CDATA[ <= ]]> 7
+        </if>
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
   insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuPrice, skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)
