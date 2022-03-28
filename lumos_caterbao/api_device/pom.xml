@@ -12,7 +12,7 @@
     <groupId>com.caterbao.lumos.api</groupId>
     <artifactId>device</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>device</name>
+    <name>api_device</name>
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
@@ -85,7 +85,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-            <scope>true</scope>
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -103,6 +102,15 @@
             <plugins>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

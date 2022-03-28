@@ -11,13 +11,16 @@
     <groupId>com.caterbao</groupId>
     <artifactId>lumos</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>lumos</name>
     <description>Demo project for Spring Boot</description>
 
     <modules>
         <module>api_merch</module>
+        <module>api_device</module>
         <module>locals_common</module>
         <module>locals_dal</module>
+        <module>locals_biz</module>
     </modules>
 
     <properties>
@@ -58,11 +61,6 @@
 <!--                <artifactId>spring-boot-starter-log4j2</artifactId>-->
 <!--                <version>${log4j2.version}</version>-->
 <!--            </dependency>-->
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis.spring.boot.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
