@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api_device" />
+        <module name="api_merch" />
+        <module name="locals_biz" />
+        <module name="locals_common" />
+        <module name="locals_dal" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api_device" target="1.8" />
+      <module name="api_merch" target="1.8" />
+      <module name="locals_biz" target="1.8" />
+      <module name="locals_common" target="1.8" />
+      <module name="locals_dal" target="1.8" />
+      <module name="lumos_caterbao" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api_device" options="-parameters" />
+      <module name="api_merch" options="-parameters" />
+      <module name="locals_biz" options="-parameters" />
+      <module name="locals_common" options="-parameters" />
+      <module name="locals_dal" options="-parameters" />
+      <module name="lumos_caterbao" options="-parameters" />
+    </option>
+  </component>
+</project>
