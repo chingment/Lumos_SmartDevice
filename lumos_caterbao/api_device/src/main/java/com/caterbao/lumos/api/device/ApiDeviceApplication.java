@@ -3,6 +3,8 @@ package com.caterbao.lumos.api.device;
 import com.caterbao.lumos.api.device.handler.AppHttpServletRequestFilter;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -16,8 +18,10 @@ import java.sql.Timestamp;
 @EnableTransactionManagement
 public class ApiDeviceApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(ApiDeviceApplication.class, args);
+
     }
 
     @Bean
