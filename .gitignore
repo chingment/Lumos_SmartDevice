@@ -20,7 +20,7 @@ Thumbs.db
 *.properties
 *.ilk
 *.log
-*log4j2.xml
+*resources/log4j2.xml
 [Bb]in
 [Dd]ebug*/
 dist*/
