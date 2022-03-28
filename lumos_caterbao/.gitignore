@@ -41,6 +41,7 @@ _ReSharper*/
 packages/
 .idea*/
 **/*log4j2.xml
+/lumos_caterbao/api_device/src/main/resources/log4j2.xml
 application.properties
 application-dev.properties
 application-prod.properties
