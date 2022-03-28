@@ -3,6 +3,7 @@ package com.caterbao.lumos.locals.dal.vw;
 import java.sql.Timestamp;
 
 public class MerchDeviceVw {
+
     private String id;
     private String cumCode;
     private String imgUrl;
