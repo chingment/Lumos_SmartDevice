@@ -224,6 +224,7 @@ $light_gray: #eee;
   }
 
   .login-box-lf {
+    display: flex;
     .banner {
       width: 100%;
       height: 100%;

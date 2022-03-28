@@ -17,6 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class AppAuthHandler implements HandlerInterceptor {
@@ -73,7 +76,15 @@ public class AppAuthHandler implements HandlerInterceptor {
             return false;
         }
 
-        String data = HttpHelper.getBodyString(request);
+        String data="";
+
+        if(contentType.contains("application/json")) {
+             data = HttpHelper.getBodyStringByApplicationJson(request);
+        }
+        else if(contentType.contains("multipart/form-data")){
+            //排除上传的文件的文件流数据
+            data = HttpHelper.getBodyStringByMultipartFormData(request);
+        }
 
         logger.info("请求参数 : {}",data);
 

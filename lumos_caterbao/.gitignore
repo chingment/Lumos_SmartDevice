@@ -39,7 +39,6 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
-resources*/
 .idea*/
 application.properties
 application-dev.properties

@@ -22,4 +22,5 @@ public interface BookerService {
     boolean checkCanRenew(Timestamp expireTime,int renewedCount,int maxRenewCount);
     boolean checkCanReturn(Timestamp expireTime,int seq,float skuPrice);
     boolean checkNeedPay(Timestamp expireTime,int seq,float skuPrice);
+    String getIdentityName(int type,String id);
 }

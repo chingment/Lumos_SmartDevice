@@ -34,17 +34,12 @@ public class BookerServiceImpl implements BookerService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private SysUserMapper sysUserMapper;
-    private IcCardMapper icCardMapper;
     private BookFlowMapper bookFlowMapper;
     private BookBorrowMapper bookBorrowMapper;
     private BookFlowLogMapper bookFlowLogMapper;
     private MerchDeviceMapper merchDeviceMapper;
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
     private CacheFactory cacheFactory;
-
-    
-   // private final Lock lock = new ReentrantLock();
 
     @Autowired(required = false)
     public void setBookFlowMapper(BookFlowMapper bookFlowMapper) {
@@ -66,30 +61,10 @@ public class BookerServiceImpl implements BookerService {
         this.merchDeviceMapper = merchDeviceMapper;
     }
 
-    @Autowired(required = false)
-    public void setSysUserMapper(SysUserMapper sysUserMapper) {
-        this.sysUserMapper = sysUserMapper;
-    }
-
-    @Autowired(required = false)
-    public void setIcCardMapper(IcCardMapper icCardMapper) {
-        this.icCardMapper = icCardMapper;
-    }
-
     @Autowired
     public void setBizBookerService(com.caterbao.lumos.locals.biz.service.BookerService bizBookerService) {
         this.bizBookerService = bizBookerService;
     }
-
-//    @Autowired
-//    public void setPlatformTransactionManager(PlatformTransactionManager platformTransactionManager) {
-//        this.platformTransactionManager = platformTransactionManager;
-//    }
-//
-//    @Autowired
-//    public void setTransactionDefinition(TransactionDefinition transactionDefinition) {
-//        this.transactionDefinition = transactionDefinition;
-//    }
 
     @Autowired
     public void setCacheFactory(CacheFactory cacheFactory) {
@@ -149,7 +124,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlow.setClientUserId(rop.getClientUserId());
         d_BookFlow.setIdentityType(rop.getIdentityType());
         d_BookFlow.setIdentityId(rop.getIdentityId());
-        d_BookFlow.setIdentityName(getIdentityName(rop.getIdentityType(), rop.getIdentityId()));
+        d_BookFlow.setIdentityName(bizBookerService.getIdentityName(rop.getIdentityType(), rop.getIdentityId()));
         d_BookFlow.setStatus(1);
         d_BookFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookFlow.setCreator(IdWork.buildGuId());
@@ -449,7 +424,7 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public CustomResult<RetBookerDisplayBooks> displayBooks(String operater,RopBookerDisplayBooks rop) {
+    public CustomResult<RetBookerDisplayBooks> displayBooks(String operater, RopBookerDisplayBooks rop) {
 
         CustomResult<RetBookerDisplayBooks> result = new CustomResult<>();
 
@@ -483,18 +458,6 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlowLog.setCreator(IdWork.buildGuId());
         d_BookFlowLog.setCreateTime(CommonUtil.getDateTimeNow());
         bookFlowLogMapper.insert(d_BookFlowLog);
-    }
-
-    private String getIdentityName(int type,String id) {
-        String name = "";
-
-        if (type == 1) {
-            name =icCardMapper.getFullNameById(id);
-        } else if (type == 2) {
-            name = sysUserMapper.getFullNameById(id);
-        }
-
-        return name;
     }
 
 }

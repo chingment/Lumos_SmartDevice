@@ -7,6 +7,8 @@ import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookBorrowMapper;
+import com.caterbao.lumos.locals.dal.mapper.IcCardMapper;
+import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,25 @@ import java.util.List;
 public class BookerServiceImpl implements BookerService {
 
     private BookBorrowMapper bookBorrowMapper;
+    private SysUserMapper sysUserMapper;
+    private IcCardMapper icCardMapper;
+
     @Autowired(required = false)
     public void setBookBorrowMapper(BookBorrowMapper bookBorrowMapper) {
         this.bookBorrowMapper = bookBorrowMapper;
     }
+
+    @Autowired(required = false)
+    public void setSysUserMapper(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
+    }
+
+    @Autowired(required = false)
+    public void setIcCardMapper(IcCardMapper icCardMapper) {
+        this.icCardMapper = icCardMapper;
+    }
+
+
     @Override
     public BookerCountBorrowBookResult countBorrowBookResult(String clientUserId) {
 
@@ -217,5 +234,19 @@ public class BookerServiceImpl implements BookerService {
     public  boolean checkNeedPay(Timestamp expireTime,int seq,float skuPrice){
         return  false;
     }
+
+    @Override
+    public String getIdentityName(int type,String id) {
+        String name = "";
+
+        if (type == 1) {
+            name =icCardMapper.getFullNameById(id);
+        } else if (type == 2) {
+            name = sysUserMapper.getFullNameById(id);
+        }
+
+        return name;
+    }
+
 
 }

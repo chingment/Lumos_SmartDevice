@@ -20,6 +20,7 @@ Thumbs.db
 *.properties
 *.ilk
 *.log
+log4j2.xml
 [Bb]in
 [Dd]ebug*/
 dist*/
@@ -39,7 +40,6 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
-resources*/
 .idea*/
 application.properties
 application-dev.properties
