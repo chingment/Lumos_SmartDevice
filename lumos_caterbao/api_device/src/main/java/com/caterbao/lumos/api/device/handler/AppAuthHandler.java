@@ -41,11 +41,6 @@ public class AppAuthHandler implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
         MDC.put(Constants.LOG_TRACE_ID, TraceLogUtils.getTraceId());
 
-        logger.info("info");
-        logger.warn("warn");
-        logger.debug("debug");
-        logger.error("error");
-
         logger.info("AppAuthHandler.preHandle");
 
         logger.info("请求Url : {}", request.getRequestURL().toString());
