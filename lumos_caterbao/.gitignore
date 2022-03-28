@@ -40,6 +40,7 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 .idea*/
+*log4j2.xml
 application.properties
 application-dev.properties
 application-prod.properties
