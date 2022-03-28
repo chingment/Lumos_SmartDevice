@@ -27,7 +27,6 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-resources/
 
 ### VS Code ###
 .vscode/
