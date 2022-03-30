@@ -22,7 +22,7 @@ public class BookFlow {
     private String openRfIds;
     private Timestamp closeActionTime;
     private String closeRfIds;
-    private int status;
+    private int status;//1000 已提交 2000 就绪中 3000执行中 4000已完成
     private Timestamp lastActionTime;
     private String lastActionCode;
     private String lastActionRemark;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookerStockMapper">
+    <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookerStock" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select ${fields} from BookerStock where 1=1
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+    </select>
+    <select id="findDevcieSkuStock" resultType="com.caterbao.lumos.locals.dal.vw.BookerDeviceSkuStockVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select distinct MerchId,StoreId,ShopId,DeviceId,SkuId,count(*) as Quantity from BookerStock
+        where 1=1
+
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+
+        GROUP BY MerchId,StoreId,ShopId,DeviceId,SkuId
+
+    </select>
+</mapper>

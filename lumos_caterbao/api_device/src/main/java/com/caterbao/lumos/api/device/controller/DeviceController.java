@@ -75,7 +75,15 @@ public class DeviceController extends BaseController{
                 folder=request.getParameter("folder");
             }
 
-            String save_path = "upload" + File.separator + folder;
+            String save_path="";
+            //判断到是日志转到logs 文件夹下
+            if(suffixname.equals(".log")) {
+                save_path = "logs" + File.separator + folder;
+            }
+            else
+            {
+                save_path = "upload" + File.separator + folder;
+            }
 
             // 图片存储目录及图片名称
             String access_path =env.getProperty("lumos.custom.file-service-url")+File.separator+ save_path + File.separator + newFileName;

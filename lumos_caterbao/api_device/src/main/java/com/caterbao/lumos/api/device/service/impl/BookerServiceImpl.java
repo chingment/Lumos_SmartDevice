@@ -15,6 +15,7 @@ import com.caterbao.lumos.locals.dal.mapper.*;
 import com.caterbao.lumos.locals.dal.pojo.BookFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
+import com.caterbao.lumos.locals.dal.vw.BookerDeviceSkuStockVw;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.Page;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -36,6 +38,7 @@ public class BookerServiceImpl implements BookerService {
 
     private BookFlowMapper bookFlowMapper;
     private BookBorrowMapper bookBorrowMapper;
+    private BookerStockMapper bookerStockMapper;
     private BookFlowLogMapper bookFlowLogMapper;
     private MerchDeviceMapper merchDeviceMapper;
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
@@ -59,6 +62,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired(required = false)
     public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
         this.merchDeviceMapper = merchDeviceMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookerStockMapper(BookerStockMapper bookerStockMapper) {
+        this.bookerStockMapper = bookerStockMapper;
     }
 
     @Autowired
@@ -109,7 +117,12 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
             return result.fail("创建失败[D03]");
 
-        BookFlow d_BookFlow = new BookFlow();
+        //todo 判断用户是否存在未完成的异常流程，阻止打开
+
+        if(bookFlowMapper.checkHasBorrowReturnException(rop.getClientUserId())>0)
+            return result.fail("该用户存在异常使用情况[D04]");
+
+        BookFlow  d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
         d_BookFlow.setType(rop.getType());
         d_BookFlow.setMerchId(d_MerchDevice.getMerchId());
@@ -125,7 +138,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlow.setIdentityType(rop.getIdentityType());
         d_BookFlow.setIdentityId(rop.getIdentityId());
         d_BookFlow.setIdentityName(bizBookerService.getIdentityName(rop.getIdentityType(), rop.getIdentityId()));
-        d_BookFlow.setStatus(1);
+        d_BookFlow.setStatus(1000);
         d_BookFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookFlow.setCreator(IdWork.buildGuId());
 
@@ -177,6 +190,8 @@ public class BookerServiceImpl implements BookerService {
 
                 d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
                 d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
+
+                d_BookFlow.setStatus(3000);
 
             } else if (actionCode.equals("request_close_auth")) {
 
@@ -230,8 +245,9 @@ public class BookerServiceImpl implements BookerService {
                     LumosSelective selective_BookBorrow = new LumosSelective();
                     selective_BookBorrow.setFields("*");
                     selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                    selective_BookBorrow.addWhere("FlowId", flowId);
+                   // selective_BookBorrow.addWhere("FlowId", flowId);
                     selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
+                    selective_BookBorrow.addWhere("CanBorrow", "1");
 
                     BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
                     if (d_BookBorrow == null) {
@@ -282,7 +298,7 @@ public class BookerServiceImpl implements BookerService {
                     selective_BookBorrow.setFields("*");
                     selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
                     selective_BookBorrow.addWhere("SkuRfId", return_RfId);
-                    selective_BookBorrow.addWhere("Statuss", new String[]{"1000", "2000"});
+                    selective_BookBorrow.addWhere("CanReturn", "1");
 
                     BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
                     if (d_BookBorrow != null) {
@@ -304,6 +320,8 @@ public class BookerServiceImpl implements BookerService {
 
                 ret.setBorrowBooks(ret_BorrowBooks);
                 ret.setReturnBooks(ret_ReturnBooks);
+
+                d_BookFlow.setStatus(4000);
             }
 
             d_BookFlow.setLastActionCode(rop.getActionCode());
@@ -428,7 +446,53 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerDisplayBooks> result = new CustomResult<>();
 
-        return result.success("");
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+        LumosSelective selective_MerchDevice = new LumosSelective();
+        selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
+        selective_MerchDevice.addWhere("BindStatus", "1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"SkuId Desc");
+
+        LumosSelective selective_BookerStocks=new LumosSelective();
+        selective_BookerStocks.setFields("*");
+        selective_BookerStocks.addWhere("MerchId",d_MerchDevice.getMerchId());
+        selective_BookerStocks.addWhere("StoreId",d_MerchDevice.getStoreId());
+        selective_BookerStocks.addWhere("ShopId",d_MerchDevice.getShopId());
+        selective_BookerStocks.addWhere("DeviceId",rop.getDeviceId());
+
+        List<BookerDeviceSkuStockVw> d_BookerDeviceSkuStocksVw= bookerStockMapper.findDevcieSkuStock(selective_BookerStocks);
+
+        List<Object> items=new ArrayList<>();
+
+        for (BookerDeviceSkuStockVw d_BookerDeviceSkuStockVw :
+                d_BookerDeviceSkuStocksVw ) {
+
+            HashMap<String, Object> item = new HashMap<>();
+
+            SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(d_BookerDeviceSkuStockVw.getMerchId(), d_BookerDeviceSkuStockVw.getSkuId());
+            if (r_SkuInfo != null) {
+                item.put("skuId", r_SkuInfo.getId());
+                item.put("name", r_SkuInfo.getName());
+                item.put("imgUrl", r_SkuInfo.getImgUrl());
+                item.put("cumCode", r_SkuInfo.getCumCode());
+                item.put("quantity",d_BookerDeviceSkuStockVw.getQuantity());
+                items.add(item);
+            }
+        }
+
+        long total = page.getTotal();
+        RetBookerDisplayBooks ret = new RetBookerDisplayBooks();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return result.success("",ret);
+
     }
 
     private void  addBorrowReturnFlowLog(String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
