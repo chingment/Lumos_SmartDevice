@@ -11,6 +11,7 @@ public class IcCard {
     private String cardPwdHash;
     private String securityStamp;
     private int cardType;
+    private int maxBorrowQuantity;
     private Boolean isDisable;
     private String creator;
     private Timestamp createTime;
@@ -119,5 +120,13 @@ public class IcCard {
 
     public void setSecurityStamp(String securityStamp) {
         this.securityStamp = securityStamp;
+    }
+
+    public int getMaxBorrowQuantity() {
+        return maxBorrowQuantity;
+    }
+
+    public void setMaxBorrowQuantity(int maxBorrowQuantity) {
+        this.maxBorrowQuantity = maxBorrowQuantity;
     }
 }

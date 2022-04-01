@@ -13,7 +13,7 @@
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
-  insert into BookFlowLog(id,merchId,deviceId,deviceCumCode,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
-  values(#{id},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
+  insert into BookFlowLog(id,msgId,msgMode,merchId,deviceId,deviceCumCode,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
+  values(#{id},#{msgId},#{msgMode},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
     </insert>
 </mapper>

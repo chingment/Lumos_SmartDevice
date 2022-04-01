@@ -30,6 +30,7 @@ public class DeviceServiceImpl implements DeviceService{
     private MerchDeviceMapper merchDeviceMapper;
     private AdSpaceMapper adSpaceMapper;
     private AdCreativeMapper adCreativeMapper;
+    private AppSoftMapper appSoftMapper;
 
     @Autowired(required = false)
     public void setDeviceMapper(DeviceMapper deviceMapper) {
@@ -65,6 +66,11 @@ public class DeviceServiceImpl implements DeviceService{
     @Autowired(required = false)
     public void setBookerSlotMapper(BookerSlotMapper bookerSlotMapper) {
         this.bookerSlotMapper = bookerSlotMapper;
+    }
+
+    @Autowired(required = false)
+    public void setAppSoftMapper(AppSoftMapper appSoftMapper) {
+        this.appSoftMapper = appSoftMapper;
     }
 
     @Override
@@ -153,9 +159,27 @@ public class DeviceServiceImpl implements DeviceService{
     }
 
     @Override
-    public CustomResult<RetDeviceCheckAppVersion> checkAppVerion(String operater,RopDeviceCheckAppVerion rop){
+    public CustomResult<RetDeviceCheckAppVersion> checkAppVerion(String operater,RopDeviceCheckAppVerion rop) {
 
-        return null;
+        CustomResult<RetDeviceCheckAppVersion> result = new CustomResult<>();
+
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("AppId", rop.getAppId());
+        selective.addWhere("AppKey", rop.getAppKey());
+
+        AppSoft d_AppSoft = appSoftMapper.findOne(selective);
+
+
+        if (d_AppSoft == null)
+            return result.fail("找不到应用");
+
+        RetDeviceCheckAppVersion ret=new RetDeviceCheckAppVersion();
+        ret.setDownloadUrl(d_AppSoft.getDownloadUrl());
+        ret.setVersionCode(d_AppSoft.getVersionCode());
+        ret.setVersionName(d_AppSoft.getVersionName());
+
+        return result.success("",ret);
     }
 
 

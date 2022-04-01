@@ -7,6 +7,8 @@ public class BookFlowLog {
     private String merchId;
     private String deviceId;
     private String deviceCumCode;
+    private String msgId;
+    private String msgMode;
     private String flowId;
     private String actionCode;
     private String actionName;
@@ -25,6 +27,21 @@ public class BookFlowLog {
         this.id = id;
     }
 
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    public String getMsgMode() {
+        return msgMode;
+    }
+
+    public void setMsgMode(String msgMode) {
+        this.msgMode = msgMode;
+    }
 
     public String getMerchId() {
         return merchId;

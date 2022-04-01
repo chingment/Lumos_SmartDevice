@@ -15,7 +15,7 @@
     </select>
 
     <select id="checkHasBorrowReturnException" resultType="java.lang.Long">
-        select count(*) from BookFlow where clientUserId=#{clientUserId}  and  status!='4000'
+        select count(*) from BookFlow where clientUserId=#{clientUserId}  and  status='3000'
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">

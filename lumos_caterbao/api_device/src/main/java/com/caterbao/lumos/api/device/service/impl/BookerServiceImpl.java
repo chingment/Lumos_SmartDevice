@@ -79,6 +79,7 @@ public class BookerServiceImpl implements BookerService {
         this.cacheFactory = cacheFactory;
     }
 
+
     @Override
     public CustomResult<RetBookerCreateFlow> createFlow(String operater,RopBookerCreateFlow rop) {
         logger.info("createFlow");
@@ -161,7 +162,7 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
         new Thread(() -> {
-            addBorrowReturnFlowLog(rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+            addBorrowReturnFlowLog(rop.getMsgId(),rop.getMsgMode(),rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
@@ -191,9 +192,11 @@ public class BookerServiceImpl implements BookerService {
                 d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
                 d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
 
+            }
+            else if(actionCode.equals("open_success")){
                 d_BookFlow.setStatus(3000);
-
-            } else if (actionCode.equals("request_close_auth")) {
+            }
+            else if (actionCode.equals("request_close_auth")) {
 
                 ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
                 });
@@ -495,7 +498,7 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
-    private void  addBorrowReturnFlowLog(String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
+    private void  addBorrowReturnFlowLog(String msgId,String msgMode, String deviceId,String flowId,String actionCode,String actionData,String actionResult,String actionRemark, String actionTime ) {
 
         String merchId = null;
         String deviceCumCode = null;
@@ -510,6 +513,8 @@ public class BookerServiceImpl implements BookerService {
 
         BookFlowLog d_BookFlowLog = new BookFlowLog();
         d_BookFlowLog.setId(IdWork.buildLongId());
+        d_BookFlowLog.setMsgId(msgId);
+        d_BookFlowLog.setMsgMode(msgMode);
         d_BookFlowLog.setMerchId(merchId);
         d_BookFlowLog.setDeviceId(deviceId);
         d_BookFlowLog.setDeviceCumCode(deviceCumCode);

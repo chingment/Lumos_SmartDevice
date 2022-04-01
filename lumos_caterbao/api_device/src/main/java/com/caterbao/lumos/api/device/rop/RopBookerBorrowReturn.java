@@ -1,13 +1,34 @@
 package com.caterbao.lumos.api.device.rop;
 
 public class RopBookerBorrowReturn {
+    private String msgId;
+    private String msgMode;
     private String deviceId;
-    private String trgId;
     private String flowId;
     private String actionCode;
     private String actionData;
     private String actionTime;
     private String actionRemark;
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    public String getMsgMode() {
+        return msgMode;
+    }
+
+    public void setMsgMode(String msgMode) {
+        this.msgMode = msgMode;
+    }
+
+    private RopBookerBorrowReturn(){
+
+    }
 
     public String getActionCode() {
         return actionCode;
@@ -31,14 +52,6 @@ public class RopBookerBorrowReturn {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
-    }
-
-    public String getTrgId() {
-        return trgId;
-    }
-
-    public void setTrgId(String trgId) {
-        this.trgId = trgId;
     }
 
     public String getFlowId() {
