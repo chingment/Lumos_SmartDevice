@@ -12,6 +12,9 @@ public class IcCard {
     private String securityStamp;
     private int cardType;
     private int maxBorrowQuantity;
+    private int maxBorrowExpireDay;
+    private int maxBorrowRenewDay;
+
     private Boolean isDisable;
     private String creator;
     private Timestamp createTime;
@@ -128,5 +131,21 @@ public class IcCard {
 
     public void setMaxBorrowQuantity(int maxBorrowQuantity) {
         this.maxBorrowQuantity = maxBorrowQuantity;
+    }
+
+    public int getMaxBorrowExpireDay() {
+        return maxBorrowExpireDay;
+    }
+
+    public void setMaxBorrowExpireDay(int maxBorrowExpireDay) {
+        this.maxBorrowExpireDay = maxBorrowExpireDay;
+    }
+
+    public int getMaxBorrowRenewDay() {
+        return maxBorrowRenewDay;
+    }
+
+    public void setMaxBorrowRenewDay(int maxBorrowRenewDay) {
+        this.maxBorrowRenewDay = maxBorrowRenewDay;
     }
 }

@@ -8,6 +8,8 @@ public class Merch {
     private String merchUserId;
     private String borrowInstructions;
     private int userMaxBorrowQuantity;
+    private int userMaxBorrowExpireDay;
+    private int UserMaxBorrowRenewDay;
     private String creator;
     private Timestamp createTime;
     private String mender;
@@ -83,5 +85,21 @@ public class Merch {
 
     public void setMendTime(Timestamp mendTime) {
         this.mendTime = mendTime;
+    }
+
+    public int getUserMaxBorrowExpireDay() {
+        return userMaxBorrowExpireDay;
+    }
+
+    public void setUserMaxBorrowExpireDay(int userMaxBorrowExpireDay) {
+        this.userMaxBorrowExpireDay = userMaxBorrowExpireDay;
+    }
+
+    public int getUserMaxBorrowRenewDay() {
+        return UserMaxBorrowRenewDay;
+    }
+
+    public void setUserMaxBorrowRenewDay(int userMaxBorrowRenewDay) {
+        UserMaxBorrowRenewDay = userMaxBorrowRenewDay;
     }
 }
