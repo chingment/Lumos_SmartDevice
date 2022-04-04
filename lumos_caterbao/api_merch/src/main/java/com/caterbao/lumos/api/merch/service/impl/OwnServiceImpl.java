@@ -15,7 +15,7 @@ import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.SysMenu;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
-import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
+import com.caterbao.lumos.locals.dal.vw.SysMerchUserVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class OwnServiceImpl implements OwnService {
         selective_SysMerchUser.setFields("UserId,MerchId");
         selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
 
-        MerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
             return result.fail("该账号未授权");
@@ -141,7 +141,7 @@ public class OwnServiceImpl implements OwnService {
             selective.setFields("*");
             selective.addWhere("UserId", userId);
 
-            MerchUserVw d_MerchUser = sysMerchUserMapper.findOne(selective);
+            SysMerchUserVw d_MerchUser = sysMerchUserMapper.findOne(selective);
 
             ret.put("userName", d_MerchUser.getUserName());
             ret.put("fullName", d_MerchUser.getFullName());

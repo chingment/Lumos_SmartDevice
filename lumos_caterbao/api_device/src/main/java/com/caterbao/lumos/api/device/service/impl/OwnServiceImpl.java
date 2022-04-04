@@ -9,9 +9,8 @@ import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
-import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
-import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
+import com.caterbao.lumos.locals.dal.vw.SysMerchUserVw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +64,7 @@ public class OwnServiceImpl implements OwnService {
         selective_SysMerchUser.setFields("UserId,MerchId");
         selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
 
-        MerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
 
         if (d_SysMerchUser == null)
             return result.fail("该账号未授权");

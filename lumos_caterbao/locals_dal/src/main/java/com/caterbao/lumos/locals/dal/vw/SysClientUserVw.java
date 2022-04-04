@@ -2,7 +2,7 @@ package com.caterbao.lumos.locals.dal.vw;
 
 import java.sql.Timestamp;
 
-public class ClientUserVw {
+public class SysClientUserVw {
     private String id;
     private String userName;
     private String fullName;

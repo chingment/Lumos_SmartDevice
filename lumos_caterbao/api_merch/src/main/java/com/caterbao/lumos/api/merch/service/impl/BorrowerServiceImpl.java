@@ -10,13 +10,11 @@ import com.caterbao.lumos.locals.dal.mapper.SysClientUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.IcCard;
 import com.caterbao.lumos.locals.dal.pojo.SysClientUser;
-import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
-import com.caterbao.lumos.locals.dal.vw.ClientUserVw;
+import com.caterbao.lumos.locals.dal.vw.SysClientUserVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -79,11 +77,11 @@ public class BorrowerServiceImpl implements BorrowerService{
         selective_ClientUsers.setFields("*");
         selective_ClientUsers.addWhere("MerchId",merchId);
 
-        List<ClientUserVw> d_ClientUsers = sysClientUserMapper.find(selective_ClientUsers);
+        List<SysClientUserVw> d_ClientUsers = sysClientUserMapper.find(selective_ClientUsers);
 
         List<Object> items=new ArrayList<>();
 
-        for (ClientUserVw d_ClientUser:
+        for (SysClientUserVw d_ClientUser:
                 d_ClientUsers ) {
 
             HashMap<String, Object> item = new HashMap<>();
@@ -217,19 +215,19 @@ public class BorrowerServiceImpl implements BorrowerService{
         LumosSelective selective_SysClientUser = new LumosSelective();
         selective_SysClientUser.setFields("*");
         selective_SysClientUser.addWhere("UserId", borrowerId);
-        ClientUserVw d_ClientUserVw = sysClientUserMapper.findOne(selective_SysClientUser);
+        SysClientUserVw d_Sys_ClientUserVw = sysClientUserMapper.findOne(selective_SysClientUser);
 
-        if (d_ClientUserVw == null)
+        if (d_Sys_ClientUserVw == null)
             return result.fail("初始数据失败");
 
 
         HashMap<String,Object> ret=new HashMap<>();
 
-        ret.put("id",d_ClientUserVw.getId());
-        ret.put("fullName",d_ClientUserVw.getFullName());
-        ret.put("avatar",JsonUtil.toObject(d_ClientUserVw.getAvatar()));
-        ret.put("email", d_ClientUserVw.getEmail());
-        ret.put("phoneNumber", d_ClientUserVw.getPhoneNumber());
+        ret.put("id", d_Sys_ClientUserVw.getId());
+        ret.put("fullName", d_Sys_ClientUserVw.getFullName());
+        ret.put("avatar",JsonUtil.toObject(d_Sys_ClientUserVw.getAvatar()));
+        ret.put("email", d_Sys_ClientUserVw.getEmail());
+        ret.put("phoneNumber", d_Sys_ClientUserVw.getPhoneNumber());
 
         return result.success("初始成功",ret);
 

@@ -7,13 +7,11 @@ import com.caterbao.lumos.api.merch.service.AdminUserService;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
-import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysUserMapper;
-import com.caterbao.lumos.locals.dal.pojo.Shop;
 import com.caterbao.lumos.locals.dal.pojo.SysMerchUser;
 import com.caterbao.lumos.locals.dal.pojo.SysUser;
-import com.caterbao.lumos.locals.dal.vw.MerchUserVw;
+import com.caterbao.lumos.locals.dal.vw.SysMerchUserVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +72,11 @@ public class AdminUserServiceImpl implements AdminUserService {
         selective.addWhere("MerchId",merchId);
         selective.addWhere("UserName",rop.getUserName());
         selective.addWhere("IsMaster","0");
-        List<MerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
+        List<SysMerchUserVw> d_MerchUsers = sysMerchUserMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
-        for (MerchUserVw d_MerchUser:
+        for (SysMerchUserVw d_MerchUser:
                 d_MerchUsers ) {
 
             HashMap<String,Object> item=new HashMap<>();
