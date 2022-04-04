@@ -40,7 +40,7 @@ public class IdentityServiceImpl implements IdentityService {
         CustomResult<RetIdentityVerify> result = new CustomResult<>();
 
 
-        if (rop.getDataType().equals("1")) {
+        if (rop.getVerifyMode()==1) {
 
             LumosSelective selective_IcCard = new LumosSelective();
             selective_IcCard.setFields("*");
