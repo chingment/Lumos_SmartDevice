@@ -5,11 +5,10 @@ public class BookerSlot {
     private String deviceId;
     private String slotId;
     private String name;
-    private String driveLockeqId;
-    private String driveLockeqPlate;
-    private String driveLockeqAnt;
-    private String driveRfeqId;
-    private String driveRfeqAnt;
+    private String lockeqId;
+    private String lockeqAnt;
+    private String rfeqId;
+    private String rfeqAnt;
 
     public String getId() {
         return id;
@@ -43,43 +42,35 @@ public class BookerSlot {
         this.name = name;
     }
 
-    public String getDriveLockeqId() {
-        return driveLockeqId;
+    public String getLockeqId() {
+        return lockeqId;
     }
 
-    public void setDriveLockeqId(String driveLockeqId) {
-        this.driveLockeqId = driveLockeqId;
+    public void setLockeqId(String lockeqId) {
+        this.lockeqId = lockeqId;
     }
 
-    public String getDriveLockeqPlate() {
-        return driveLockeqPlate;
+    public String getLockeqAnt() {
+        return lockeqAnt;
     }
 
-    public void setDriveLockeqPlate(String driveLockeqPlate) {
-        this.driveLockeqPlate = driveLockeqPlate;
+    public void setLockeqAnt(String lockeqAnt) {
+        this.lockeqAnt = lockeqAnt;
     }
 
-    public String getDriveLockeqAnt() {
-        return driveLockeqAnt;
+    public String getRfeqId() {
+        return rfeqId;
     }
 
-    public void setDriveLockeqAnt(String driveLockeqAnt) {
-        this.driveLockeqAnt = driveLockeqAnt;
+    public void setRfeqId(String rfeqId) {
+        this.rfeqId = rfeqId;
     }
 
-    public String getDriveRfeqId() {
-        return driveRfeqId;
+    public String getRfeqAnt() {
+        return rfeqAnt;
     }
 
-    public void setDriveRfeqId(String driveRfeqId) {
-        this.driveRfeqId = driveRfeqId;
-    }
-
-    public String getDriveRfeqAnt() {
-        return driveRfeqAnt;
-    }
-
-    public void setDriveRfeqAnt(String driveRfeqAnt) {
-        this.driveRfeqAnt = driveRfeqAnt;
+    public void setRfeqAnt(String rfeqAnt) {
+        this.rfeqAnt = rfeqAnt;
     }
 }

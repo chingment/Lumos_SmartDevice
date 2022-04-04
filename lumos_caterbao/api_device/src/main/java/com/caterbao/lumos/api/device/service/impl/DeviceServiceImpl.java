@@ -242,26 +242,10 @@ public class DeviceServiceImpl implements DeviceService{
                 BookerSlotVo m_Slot = new BookerSlotVo();
                 m_Slot.setSlotId(d_Slot.getSlotId());
                 m_Slot.setName(d_Slot.getName());
-
-                BookerSlotDrivesVo m_SlotDrive=new BookerSlotDrivesVo();
-
-                BookerDriveLockeqVo m_Lockeq=new BookerDriveLockeqVo();
-
-                m_Lockeq.setDriveId(d_Slot.getDriveLockeqId());
-                m_Lockeq.setPlate(d_Slot.getDriveLockeqPlate());
-                m_Lockeq.setAnt(d_Slot.getDriveLockeqAnt());
-
-                BookerDriveRfeqVo m_RfeqVo=new BookerDriveRfeqVo();
-
-                m_RfeqVo.setDriveId(d_Slot.getDriveRfeqId());
-                m_RfeqVo.setAnt(d_Slot.getDriveRfeqAnt());
-
-
-                m_SlotDrive.setLockeq(m_Lockeq);
-                m_SlotDrive.setRfeq(m_RfeqVo);
-
-                m_Slot.setDrives(m_SlotDrive);
-
+                m_Slot.setLockeqId(d_Slot.getLockeqId());
+                m_Slot.setLockeqAnt(d_Slot.getLockeqAnt());
+                m_Slot.setRfeqId(d_Slot.getRfeqId());
+                m_Slot.setRfeqAnt(d_Slot.getRfeqAnt());
                 m_Slots.add(m_Slot);
             }
         }
