@@ -94,7 +94,9 @@ public class IdentityServiceImpl implements IdentityService {
             int borrowedQuantity = rt_CountBorrowBook.getBorrowedQuantity();
 
             int maxBorrowQuantity =d_IcCard.getMaxBorrowQuantity() ;//最大可借书的数量
+
             int canBorrowQuantity = maxBorrowQuantity - borrowedQuantity;
+
             info.put("borrowedQuantity", borrowedQuantity);
             info.put("canBorrowQuantity", canBorrowQuantity);
             info.put("willdueQuantity", rt_CountBorrowBook.getWilldueQuantity());//即将到期数量

@@ -15,6 +15,7 @@ import com.caterbao.lumos.locals.dal.mapper.*;
 import com.caterbao.lumos.locals.dal.pojo.BookFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
+import com.caterbao.lumos.locals.dal.pojo.IcCard;
 import com.caterbao.lumos.locals.dal.vw.BookerDeviceSkuStockVw;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -41,6 +42,8 @@ public class BookerServiceImpl implements BookerService {
     private BookerStockMapper bookerStockMapper;
     private BookFlowLogMapper bookFlowLogMapper;
     private MerchDeviceMapper merchDeviceMapper;
+    private IcCardMapper icCardMapper;
+
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
     private CacheFactory cacheFactory;
 
@@ -67,6 +70,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired(required = false)
     public void setBookerStockMapper(BookerStockMapper bookerStockMapper) {
         this.bookerStockMapper = bookerStockMapper;
+    }
+
+    @Autowired(required = false)
+    public void setIcCardMapper(IcCardMapper icCardMapper) {
+        this.icCardMapper = icCardMapper;
     }
 
     @Autowired
@@ -236,7 +244,18 @@ public class BookerServiceImpl implements BookerService {
                     }
                 }
 
-                int expireDay = 30;
+                LumosSelective selective_IcCard = new LumosSelective();
+                selective_IcCard.setFields("*");
+                selective_IcCard.addWhere("ClientUserId", d_BookFlow.getClientUserId());
+                selective_IcCard.addWhere("IcCardId", d_BookFlow.getIdentityId());
+                IcCard d_IcCard=icCardMapper.findOne(selective_IcCard);
+
+                int maxBorrowExpireDay = 5;
+                if(d_IcCard!=null) {
+                    maxBorrowExpireDay = d_IcCard.getMaxBorrowExpireDay();
+                }
+
+
 
                 //借书
                 for (int i = 0; i < borrow_RfIds.size(); i++) {
@@ -281,7 +300,7 @@ public class BookerServiceImpl implements BookerService {
                         d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
                         d_BookBorrow.setStatus(1000);
                         d_BookBorrow.setRenewCount(0);
-                        d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(expireDay));
+                        d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowExpireDay));
                         d_BookBorrow.setCreator(IdWork.buildGuId());
                         d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
 
@@ -417,10 +436,21 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("续借失败[02]，没有可续借的书本");
             }
 
+            LumosSelective selective_IcCard = new LumosSelective();
+            selective_IcCard.setFields("*");
+            selective_IcCard.addWhere("ClientUserId", rop.getClientUserId());
+            selective_IcCard.addWhere("IcCardId", rop.getIdentityId());
+            IcCard d_IcCard=icCardMapper.findOne(selective_IcCard);
+
+            int maxBorrowRenewDay=5;
+            if(d_IcCard!=null) {
+                maxBorrowRenewDay=d_IcCard.getMaxBorrowRenewDay();
+            }
+
             for (BookBorrow d_BookBorrow : d_BookBorrows) {
                 if (bizBookerService.checkCanRenew(d_BookBorrow.getExpireTime(), d_BookBorrow.getRenewCount(),1)) {
                     int renewCount = d_BookBorrow.getRenewCount() + 1;
-                    d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(30));
+                    d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowRenewDay));
                     d_BookBorrow.setRenewLastTime(CommonUtil.getDateTimeNow());
                     d_BookBorrow.setRenewCount(renewCount);
                     d_BookBorrow.setMender(operater);
