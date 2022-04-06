@@ -1,7 +1,7 @@
 package com.caterbao.lumos.api.device.service.impl;
 
 import com.caterbao.lumos.api.device.rop.*;
-import com.caterbao.lumos.api.device.rop.vo.ActionDataByOpenRequest;
+import com.caterbao.lumos.api.device.rop.vo.BookerBorrowReturnActionData;
 import com.caterbao.lumos.api.device.rop.vo.BookVo;
 import com.caterbao.lumos.api.device.service.BookerService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
@@ -184,13 +184,13 @@ public class BookerServiceImpl implements BookerService {
 
             if (actionCode.equals("request_open_auth")) {
 
-                ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+                BookerBorrowReturnActionData actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<BookerBorrowReturnActionData>() {
                 });
 
-                List<String> open_RfIds = actionData.getRfIds();
+                List<String> openRfIds = actionData.getOpenRfIds();
 
                 d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
-                d_BookFlow.setOpenRfIds(JsonUtil.getJson(open_RfIds));
+                d_BookFlow.setOpenRfIds(JsonUtil.getJson(openRfIds));
 
             }
             else if(actionCode.equals("open_success")){
@@ -198,41 +198,41 @@ public class BookerServiceImpl implements BookerService {
             }
             else if (actionCode.equals("request_close_auth")) {
 
-                ActionDataByOpenRequest actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<ActionDataByOpenRequest>() {
+                BookerBorrowReturnActionData actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<BookerBorrowReturnActionData>() {
                 });
 
-                List<String> close_RfIds = actionData.getRfIds();
+                List<String> closeRfIds = actionData.getCloseRfIds();
 
                 List<BookVo> ret_BorrowBooks = new ArrayList<>();
                 List<BookVo> ret_ReturnBooks = new ArrayList<>();
 
                 d_BookFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
-                d_BookFlow.setCloseRfIds(JsonUtil.getJson(close_RfIds));
+                d_BookFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
 
-                List<String> open_RfIds = JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
+                List<String> openRfIds = JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
                 });
 
-                if (open_RfIds == null) {
-                    open_RfIds = new ArrayList<>();
+                if (openRfIds == null) {
+                    openRfIds = new ArrayList<>();
                 }
 
-                if (close_RfIds == null) {
-                    close_RfIds = new ArrayList<>();
+                if (closeRfIds == null) {
+                    closeRfIds = new ArrayList<>();
                 }
 
                 List<String> borrow_RfIds = new ArrayList<>();
 
-                for (String open_rfId : open_RfIds) {
-                    if (!close_RfIds.contains(open_rfId)) {
-                        borrow_RfIds.add(open_rfId);
+                for (String openRfId : openRfIds) {
+                    if (!closeRfIds.contains(openRfId)) {
+                        borrow_RfIds.add(openRfId);
                     }
                 }
 
                 List<String> return_RfIds = new ArrayList<>();
 
-                for (String close_rfId : close_RfIds) {
-                    if (!open_RfIds.contains(close_rfId)) {
-                        return_RfIds.add(close_rfId);
+                for (String closeRfId : closeRfIds) {
+                    if (!openRfIds.contains(closeRfId)) {
+                        return_RfIds.add(closeRfId);
                     }
                 }
 

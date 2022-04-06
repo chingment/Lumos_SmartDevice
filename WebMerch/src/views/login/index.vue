@@ -45,10 +45,11 @@
           </el-form-item>
           <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onLogin">登录</el-button>
         </el-form>
-
       </div>
     </div>
-
+    <div style="padding:10px;color: #fff;">
+      <a href="https://beian.miit.gov.cn"> ICP备案号：  粤ICP备17006767号</a>
+    </div>
   </div>
 </template>
 
@@ -215,7 +216,7 @@ $light_gray: #eee;
   background-color: #2d3a4b;
 
   justify-items: center;
-
+flex-direction: column;
   .login-box {
     display: flex;
 
