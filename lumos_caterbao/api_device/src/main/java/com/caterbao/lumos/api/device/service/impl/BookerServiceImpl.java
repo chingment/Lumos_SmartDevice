@@ -142,6 +142,9 @@ public class BookerServiceImpl implements BookerService {
         if (d_BookFlowExs.size() > 0)
             return result.fail("该柜门存在异常使用情况[D04]");
 
+
+
+
         BookFlow d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
         d_BookFlow.setType(rop.getType());
