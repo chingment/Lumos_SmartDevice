@@ -109,10 +109,11 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(rop.getIdentityId()))
             return result.fail("创建失败[W06]");
 
-        if(rop.getType()==0)
+        if (rop.getType() == 0)
             return result.fail("创建失败[W07]");
 
         LumosSelective selective_MerchDevice = new LumosSelective();
+        selective_MerchDevice.setFields("*");
         selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
         selective_MerchDevice.addWhere("BindStatus", "1");
         MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
@@ -126,12 +127,22 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
             return result.fail("创建失败[D03]");
 
-        //todo 判断用户是否存在未完成的异常流程，阻止打开
 
-        if(bookFlowMapper.checkHasBorrowReturnException(rop.getClientUserId())>0)
-            return result.fail("该用户存在异常使用情况[D04]");
+        LumosSelective selective_BookFlowExs = new LumosSelective();
+        selective_BookFlowExs.setFields("*");
+        selective_BookFlowExs.addWhere("MerchId", d_MerchDevice.getMerchId());
+        selective_BookFlowExs.addWhere("StoreId", d_MerchDevice.getStoreId());
+        selective_BookFlowExs.addWhere("ShopId", d_MerchDevice.getShopId());
+        selective_BookFlowExs.addWhere("DeviceId",d_MerchDevice.getId());
+        selective_BookFlowExs.addWhere("SlotId",rop.getSlotId());
+        selective_BookFlowExs.addWhere("Status", "3000");
 
-        BookFlow  d_BookFlow = new BookFlow();
+        List<BookFlow> d_BookFlowExs = bookFlowMapper.find(selective_BookFlowExs);
+
+        if (d_BookFlowExs.size() > 0)
+            return result.fail("该柜门存在异常使用情况[D04]");
+
+        BookFlow d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
         d_BookFlow.setType(rop.getType());
         d_BookFlow.setMerchId(d_MerchDevice.getMerchId());

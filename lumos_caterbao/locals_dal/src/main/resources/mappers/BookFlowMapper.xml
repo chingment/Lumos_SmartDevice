@@ -7,15 +7,22 @@
     <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select  ${fields} from BookFlow where 1=1
         <if test="where.FlowId != null">and Id =#{where.FlowId}</if>
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+        <if test="where.SlotId != null">and SlotId =#{where.SlotId}</if>
+        <if test="where.Status != null">and Status =#{where.Status}</if>
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookFlow where 1=1
         <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
-    </select>
-
-    <select id="checkHasBorrowReturnException" resultType="java.lang.Long">
-        select count(*) from BookFlow where clientUserId=#{clientUserId}  and  status='3000'
+        <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
+        <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+        <if test="where.SlotId != null">and SlotId =#{where.SlotId}</if>
+        <if test="where.Status != null">and Status =#{where.Status}</if>
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">

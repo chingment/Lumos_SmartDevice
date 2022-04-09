@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface BookFlowMapper {
     BookFlow findOne(LumosSelective selective);
-    long checkHasBorrowReturnException(String clientUserId);
+    long checkDeviceHasException(String merchId,String storeId,String shopId, String deviceId);
     List<BookFlow> find(LumosSelective selective);
     long insert(BookFlow bookFlow);
     long update(BookFlow bookFlow);
