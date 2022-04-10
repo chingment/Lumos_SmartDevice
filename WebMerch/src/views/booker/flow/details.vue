@@ -1,67 +1,74 @@
 <template>
   <el-dialog v-if="visible" title="详细" :visible.sync="visible" width="800px" custom-class="cumstom-dialog-1" append-to-body :before-close="onBeforeClose">
     <div id="flow_detail" v-loading="loading">
-      <div class="row-title clearfix">
-        <div class="pull-left"> <h5>开门前书籍（{{ details.openSkus.length }}）本</h5>
-        </div>
-        <div class="pull-right" />
+
+      <el-collapse v-model="activeNames" accordion>
+        <el-collapse-item>
+          <template slot="title">
+            <div class="row-title-1">
+              <div class="pull-left">开门前书籍（{{ details.openSkus.length }}）本</div>
+            </div>
+          </template>
+
+          <el-table
+            :key="listKey"
+            :data="details.openSkus"
+            highlight-current-row
+          >
+            <el-table-column label="书名" align="left" min-width="30%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="编码" align="left" min-width="40%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.cumCode }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="RFID" align="left" min-width="30%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.rfId }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
+        </el-collapse-item>
+        <el-collapse-item>
+          <template slot="title">
+            <div class="row-title-1">
+              <div class="pull-left">关门后书籍（{{ details.closeSkus.length }}）本</div>
+            </div>
+          </template>
+
+          <el-table
+            :key="listKey"
+            :data="details.closeSkus"
+            highlight-current-row
+          >
+            <el-table-column label="书名" align="left" min-width="30%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="编码" align="left" min-width="40%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.cumCode }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="RFID" align="left" min-width="30%">
+              <template slot-scope="scope">
+                <span>{{ scope.row.rfId }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
+        </el-collapse-item>
+      </el-collapse>
+
+      <div class="row-title-1">
+        <div class="pull-left">流程记录</div>
       </div>
 
-      <el-table
-        :key="listKey"
-        :data="details.openSkus"
-        highlight-current-row
-      >
-        <el-table-column label="书名" align="left" min-width="30%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="编码" align="left" min-width="40%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.cumCode }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="RFID" align="left" min-width="30%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.rfId }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div class="row-title clearfix">
-        <div class="pull-left"> <h5>关门后书籍（{{ details.closeSkus.length }}）本</h5>
-        </div>
-        <div class="pull-right" />
-      </div>
-
-      <el-table
-        :key="listKey"
-        :data="details.closeSkus"
-        highlight-current-row
-      >
-        <el-table-column label="书名" align="left" min-width="30%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="编码" align="left" min-width="40%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.cumCode }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="RFID" align="left" min-width="30%">
-          <template slot-scope="scope">
-            <span>{{ scope.row.rfId }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div class="row-title clearfix">
-        <div class="pull-left"> <h5>流程记录</h5>
-        </div>
-        <div class="pull-right" />
-      </div>
       <el-table
         :key="listKey"
         :data="details.flowLogs"
@@ -109,6 +116,7 @@ export default {
         width: '1000px',
         title: ''
       },
+      activeNames: ['1', '2'],
       details: {
         flowLogs: [],
         openSkus: [],
@@ -147,5 +155,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.row-title-1{
+
+    .pull-left{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
+    text-indent: 8px;
+    border-left: 2px solid rgb(136, 183, 224);
+    margin-right: 8px;
+    font-size: 14px;
+    display: flex;
+    height: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 8px 0px;
+    font-weight: 500;
+    color: #303133;
+    }
+}
 
 </style>
