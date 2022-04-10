@@ -4,8 +4,11 @@ import com.caterbao.lumos.api.merch.rop.RopBookerBorrowList;
 import com.caterbao.lumos.api.merch.rop.RopBookerFlowList;
 import com.caterbao.lumos.api.merch.rop.RopBookerRenewList;
 import com.caterbao.lumos.api.merch.service.BookerService;
+import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
+import com.caterbao.lumos.locals.common.JsonUtil;
 import com.caterbao.lumos.locals.common.PageResult;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
@@ -16,6 +19,7 @@ import com.caterbao.lumos.locals.dal.mapper.SysClientUserMapper;
 import com.caterbao.lumos.locals.dal.pojo.BookFlow;
 import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
 import com.caterbao.lumos.locals.dal.pojo.BookFlowLog;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +36,7 @@ public class BookerServiceImpl implements BookerService {
     private BookFlowLogMapper bookFlowLogMapper;;
     private BookBorrowMapper bookBorrowMapper;
     private SysClientUserMapper sysClientUserMapper;
-
+    private CacheFactory cacheFactory;
     private com.caterbao.lumos.locals.biz.service.BookerService bizBookerService;
 
     @Autowired
@@ -48,6 +52,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired
     public void setBookFlowogMapper(BookFlowLogMapper bookFlowLogMapper) {
         this.bookFlowLogMapper = bookFlowLogMapper;
+    }
+
+    @Autowired
+    public void setCacheFactory(CacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 
     @Autowired
@@ -222,6 +231,66 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<Object> result = new CustomResult<>();
 
+        HashMap<String, Object> ret = new HashMap<>();
+
+        LumosSelective selective_Flow = new LumosSelective();
+        selective_Flow.setFields("*");
+        selective_Flow.addWhere("MerchId", merchId);
+        selective_Flow.addWhere("FlowId", flowId);
+
+        BookFlow d_BookFlow = bookFlowMapper.findOne(selective_Flow);
+
+        if(d_BookFlow==null)
+            result.fail("找不到记录");
+
+        List<String>  open_RfIds= JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
+        });
+
+        List<Object> openSkus=new ArrayList<>();
+
+        if(open_RfIds!=null&&open_RfIds.size()>0) {
+
+            for (int i = 0; i < open_RfIds.size(); i++) {
+                String open_RfId = open_RfIds.get(i);
+
+                SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), open_RfId);
+
+                HashMap<String,String> openSku=new HashMap<>();
+                openSku.put("id",r_Sku.getId());
+                openSku.put("cumCode",r_Sku.getCumCode());
+                openSku.put("name",r_Sku.getName());
+                openSku.put("rfId",open_RfId);
+                openSku.put("imgUrl",r_Sku.getImgUrl());
+                openSkus.add(openSku);
+            }
+
+        }
+
+        List<String>  close_RfIds= JsonUtil.toObject(d_BookFlow.getCloseRfIds(), new TypeReference<List<String>>() {
+        });
+
+        List<Object> closeSkus=new ArrayList<>();
+
+        if(close_RfIds!=null&&close_RfIds.size()>0) {
+
+            for (int i = 0; i < close_RfIds.size(); i++) {
+
+                String close_RfId = close_RfIds.get(i);
+
+                SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), close_RfId);
+
+                HashMap<String,String> closeSku=new HashMap<>();
+
+                closeSku.put("id",r_Sku.getId());
+                closeSku.put("cumCode",r_Sku.getCumCode());
+                closeSku.put("name",r_Sku.getName());
+                closeSku.put("rfId",close_RfId);
+                closeSku.put("imgUrl",r_Sku.getImgUrl());
+
+                closeSkus.add(closeSku);
+            }
+        }
+
         LumosSelective selective_FlowLogs = new LumosSelective();
         selective_FlowLogs.setFields("*");
         selective_FlowLogs.addWhere("MerchId", merchId);
@@ -243,7 +312,8 @@ public class BookerServiceImpl implements BookerService {
             flowLogs.add(flowLog);
         }
 
-        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("openSkus",openSkus);
+        ret.put("closeSkus",closeSkus);
         ret.put("flowLogs",flowLogs);
 
 
