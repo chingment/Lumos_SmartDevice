@@ -28,11 +28,11 @@ public class JsonUtil<T> {
     public static  String getJson(List object) {
 
         if (object == null)
-            return null;
+            return "";
         if (object.size() <= 0)
-            return null;
+            return "";
 
-        String str = null;
+        String str = "";
         //jackson中的方法用于将对象转换为字符串形式
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -45,7 +45,7 @@ public class JsonUtil<T> {
     }
 
     public static String getJson(Object object, String dateFormat) {
-        String str = null;
+        String str = "";
         //jackson中的方法用于将对象转换为字符串形式
         ObjectMapper objectMapper = new ObjectMapper();
         //关闭时间戳功能，如果不关闭时将时间直接json化时将显示的是时间戳不是json形式的字符串

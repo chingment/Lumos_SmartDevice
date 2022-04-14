@@ -18,6 +18,9 @@ import com.caterbao.lumos.locals.dal.mapper.*;
 import com.caterbao.lumos.locals.dal.pojo.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.mysql.cj.util.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -33,6 +36,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+
+    public final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private PrdSpuMapper prdSpuMapper;
     private PrdSkuMapper prdSkuMapper;
@@ -335,9 +341,9 @@ public class ProductServiceImpl implements ProductService {
             cacheFactory.getProduct().getSpuInfo(merchId,d_PrdSpu.getId());
 
             return  result.success("保存成功");
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            logger.error("保存失败,服务器异常",ex);
             platformTransactionManager.rollback(transaction);
-            e.printStackTrace();
             lock.unlock();
             return result.fail("保存失败,服务器异常");
         }
@@ -578,8 +584,8 @@ public class ProductServiceImpl implements ProductService {
 
             result=result.success("保存成功");
         } catch (Exception ex) {
+            logger.error("保存失败,服务器异常",ex);
             platformTransactionManager.rollback(transaction);
-            ex.printStackTrace();
             lock.unlock();
             result = result.fail("保存失败,服务器异常");
         }
