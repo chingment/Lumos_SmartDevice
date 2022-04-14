@@ -22,4 +22,19 @@
         GROUP BY MerchId,StoreId,ShopId,DeviceId,SkuId
 
     </select>
+
+    <delete id="delete">
+        delete from BookerStock where MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+    </delete>
+
+    <insert id="insertBatch">
+        INSERT INTO BookerStock (id, merchId, storeId, shopId, deviceId,slotId,skuId,skuRfId,creator,createTime) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.merchId},#{item.storeId},#{item.shopId},#{item.deviceId},#{item.slotId},#{item.skuId},#{item.skuRfId},#{item.creator},#{item.createTime})
+        </foreach>
+    </insert>
+
 </mapper>

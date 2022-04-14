@@ -11,4 +11,6 @@ import java.util.List;
 public interface BookerStockMapper {
     List<BookerStock> find(LumosSelective selective);
     List<BookerDeviceSkuStockVw> findDevcieSkuStock(LumosSelective selective);
+    long delete(String merchId,String storeId,String shopId,String deviceId);
+    long insertBatch(List<BookerStock> list);
 }
