@@ -58,6 +58,8 @@ service.interceptors.response.use(
       if (i_code === 1 || i_code === 2) {
         if (code === 2501) {
           removeToken()
+
+          window.location.href = '/login'
           // MessageBox.confirm('您链接请求已经超时', '确定退出？', {
           //   confirmButtonText: '重新登录',
           //   cancelButtonText: '取消',

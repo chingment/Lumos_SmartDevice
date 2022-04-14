@@ -1,9 +1,9 @@
 <template>
   <el-dialog v-if="visible" title="详细" :visible.sync="visible" width="800px" custom-class="cumstom-dialog-1" append-to-body :before-close="onBeforeClose">
-    <div id="flow_detail" v-loading="loading">
+    <div id="flow_detail" v-loading="loading" style="height:600px">
 
-      <el-collapse v-model="activeNames" accordion>
-        <el-collapse-item>
+      <el-collapse v-model="activeNames">
+        <el-collapse-item name="1">
           <template slot="title">
             <div class="row-title-1">
               <div class="pull-left">开门前书籍（{{ details.openSkus.length }}）本</div>
@@ -33,7 +33,7 @@
           </el-table>
 
         </el-collapse-item>
-        <el-collapse-item>
+        <el-collapse-item name="2">
           <template slot="title">
             <div class="row-title-1">
               <div class="pull-left">关门后书籍（{{ details.closeSkus.length }}）本</div>
@@ -116,7 +116,7 @@ export default {
         width: '1000px',
         title: ''
       },
-      activeNames: ['1', '2'],
+      activeNames: [],
       details: {
         flowLogs: [],
         openSkus: [],

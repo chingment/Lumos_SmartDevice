@@ -146,6 +146,16 @@ public class DeviceServiceImpl implements DeviceService{
 
         m_Device.setDrives(m_Drives);
 
+
+        MqttVo m_Mqtt=new MqttVo();
+        m_Mqtt.setHost("tcp://112.74.179.185:1883");
+        m_Mqtt.setUserName("admin");
+        m_Mqtt.setPassword("public");
+        m_Mqtt.setClientId(rop.getDeviceId());
+        m_Mqtt.setSubTopic("/a1A2Mq6w51n/" + rop.getDeviceId() + "/user/get");
+        m_Mqtt.setPubTopic("/a1A2Mq6w51n/" + rop.getDeviceId() + "/user/update");
+        m_Device.setMqtt(m_Mqtt);
+
         ret.setDevice(m_Device);
 
         HashMap<String, Object> customData = new HashMap<>();

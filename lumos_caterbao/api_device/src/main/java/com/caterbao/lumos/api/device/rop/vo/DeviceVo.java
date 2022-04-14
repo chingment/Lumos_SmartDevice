@@ -10,6 +10,7 @@ public class DeviceVo {
     private int sceneMode;
     private int versionMode;
     private HashMap<String, DriveVo> drives;
+    private MqttVo mqtt;
 
     public String getDeviceId() {
         return deviceId;
@@ -65,5 +66,13 @@ public class DeviceVo {
 
     public void setDrives(HashMap<String, DriveVo> drives) {
         this.drives = drives;
+    }
+
+    public MqttVo getMqtt() {
+        return mqtt;
+    }
+
+    public void setMqtt(MqttVo mqtt) {
+        this.mqtt = mqtt;
     }
 }
