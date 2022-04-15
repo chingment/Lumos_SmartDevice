@@ -64,7 +64,7 @@ export default {
       })
     },
     getAvatar(avatar) {
-      if (avatar == null) { return 'http://file.17fanju.com/Upload/Avatar_default.png' }
+      if (avatar == null) { return 'http://file.gddeshang168.com/upload/default_avatar.png' }
       return avatar
     }
   }
