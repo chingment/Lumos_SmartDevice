@@ -7,7 +7,7 @@ public class AdSpace {
     private String name;
     private String supportFormat;
     private int supportMaxSize;
-    private String vector;
+    private int vector;
     private String description;
     private String creator;
     private Timestamp createTime;
@@ -38,11 +38,11 @@ public class AdSpace {
         this.supportFormat = supportFormat;
     }
 
-    public String getVector() {
+    public int getVector() {
         return vector;
     }
 
-    public void setVector(String vector) {
+    public void setVector(int vector) {
         this.vector = vector;
     }
 
