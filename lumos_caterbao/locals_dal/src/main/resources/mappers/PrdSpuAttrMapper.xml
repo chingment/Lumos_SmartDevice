@@ -13,6 +13,14 @@
   values(#{id},#{spuId},#{kindId},#{attrId},#{attrValue})
     </insert>
     <delete id="deleteBySpuId" >
-delete  from PrdSpuAttr where SpuId=#{SpuId}
+delete  from PrdSpuAttr where SpuId=#{spuId}
     </delete>
+
+    <insert id="insertBatch">
+        INSERT INTO PrdSpuAttr (id,spuId,kindId,attrId,attrValue) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.spuId},#{item.kindId},#{item.attrId},#{item.attrValue})
+        </foreach>
+    </insert>
+
 </mapper>

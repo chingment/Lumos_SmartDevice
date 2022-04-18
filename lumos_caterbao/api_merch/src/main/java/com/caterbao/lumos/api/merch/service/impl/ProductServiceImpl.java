@@ -276,16 +276,12 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setCreator(operater);
             d_PrdSpu.setCreateTime(CommonUtil.getDateTimeNow());
 
-            long r_PrdSpu_Insert = prdSpuMapper.insert(d_PrdSpu);
+            prdSpuMapper.insert(d_PrdSpu);
 
-            if (r_PrdSpu_Insert <= 0) {
-                lock.unlock();
-                return result.fail("保存失败");
-            }
-
-            //
             List<KindAttrVo> sysKindAttrs=rop.getSysKindAttrs();
             if(sysKindAttrs!=null) {
+                List<PrdSpuAttr> d_PrdSpuAttrs=new ArrayList<>();
+
                 for (KindAttrVo attr : sysKindAttrs) {
                     PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
                     d_PrdSpuAttr.setId(IdWork.buildLongId());
@@ -293,15 +289,16 @@ public class ProductServiceImpl implements ProductService {
                     d_PrdSpuAttr.setSpuId(d_PrdSpu.getId());
                     d_PrdSpuAttr.setAttrId(attr.getId());
                     d_PrdSpuAttr.setAttrValue(attr.getValue());
-                    if (prdSpuAttrMapper.insert(d_PrdSpuAttr) <= 0) {
-                        lock.unlock();
-                        return result.fail("保存失败");
-                    }
+
+                    d_PrdSpuAttrs.add(d_PrdSpuAttr);
+
                 }
+
+                prdSpuAttrMapper.insertBatch(d_PrdSpuAttrs);
+
             }
 
             for (SkuVo sku : rop.getSkus()) {
-
 
                 if (CommonUtil.isEmpty(sku.getCumCode())) {
                     lock.unlock();
@@ -310,7 +307,7 @@ public class ProductServiceImpl implements ProductService {
 
                 if (prdSkuMapper.isExistCumCode(null, merchId, sku.getCumCode()) > 0) {
                     lock.unlock();
-                    return result.fail("编码["+sku.getCumCode()+"]已经存在");
+                    return result.fail("编码[" + sku.getCumCode() + "]已经存在");
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
@@ -328,11 +325,8 @@ public class ProductServiceImpl implements ProductService {
                 d_PrdSku.setCreator(operater);
                 d_PrdSku.setCreateTime(CommonUtil.getDateTimeNow());
 
-                long r_PrdSku_Insert = prdSkuMapper.insert(d_PrdSku);
-                if (r_PrdSku_Insert <= 0) {
-                    lock.unlock();
-                    return result.fail("保存失败");
-                }
+                prdSkuMapper.insert(d_PrdSku);
+
             }
 
             platformTransactionManager.commit(transaction);
@@ -393,7 +387,7 @@ public class ProductServiceImpl implements ProductService {
             m_Sku.put("cumCode", r_SkuInfo.getCumCode());
             m_Sku.put("salePrice", r_SkuInfo.getSalePrice());
             m_Sku.put("barCode", r_SkuInfo.getBarCode());
-            m_Sku.put("isOffSell", false);
+            m_Sku.put("isOffSell", r_SkuInfo.getIsOffSell());
             m_Sku.put("specDes", r_SkuInfo.getSpecDes());
             m_Skus.add(m_Sku);
         }
@@ -470,11 +464,12 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setDisplayImgUrls(JsonUtil.getJson(rop.getDisplayImgUrls()));
             d_PrdSpu.setDetailsDes(JsonUtil.getJson(rop.getDetailsDes()));
 
-
             prdSpuAttrMapper.deleteBySpuId(d_PrdSpu.getId());
 
             List<KindAttrVo> sysKindAttrs=rop.getSysKindAttrs();
+
             if(sysKindAttrs!=null) {
+                List<PrdSpuAttr> d_PrdSpuAttrs=new ArrayList<>();
                 for (KindAttrVo attr : sysKindAttrs) {
                     PrdSpuAttr d_PrdSpuAttr=new PrdSpuAttr();
                     d_PrdSpuAttr.setId(IdWork.buildLongId());
@@ -482,71 +477,89 @@ public class ProductServiceImpl implements ProductService {
                     d_PrdSpuAttr.setSpuId(d_PrdSpu.getId());
                     d_PrdSpuAttr.setAttrId(attr.getId());
                     d_PrdSpuAttr.setAttrValue(attr.getValue());
-                    if (prdSpuAttrMapper.insert(d_PrdSpuAttr) <= 0) {
-                        lock.unlock();
-                        return result.fail("保存失败");
-                    }
+
+                    d_PrdSpuAttrs.add(d_PrdSpuAttr);
                 }
+
+                prdSpuAttrMapper.insertBatch(d_PrdSpuAttrs);
             }
 
             List<SpecItemVo> specItems=new ArrayList<>();
 
             for (SkuVo sku: rop.getSkus()) {
+
                 for (SpecDesVo specDes : sku.getSpecDes()) {
 
-                    Optional<SpecItemVo> s=specItems.stream().filter((SpecItemVo b) ->b.getName()==specDes.getName()).findFirst();
-
-
-
+                    SpecItemVo o_SpecItem=specItems.stream().filter((SpecItemVo b) ->b.getName().equals(specDes.getName())).findFirst().orElse(null);
+                    if(o_SpecItem==null){
+                        SpecItemVo specItem=new SpecItemVo();
+                        specItem.setName(specDes.getName());
+                        SpecItemValueVo specItemValue=new SpecItemValueVo();
+                        specItemValue.setName(specDes.getValue());
+                        List<SpecItemValueVo> specItemValues=new ArrayList<>();
+                        specItemValues.add(specItemValue);
+                        specItem.setValue(specItemValues);
+                        specItems.add(specItem);
+                    }
+                    else
+                    {
+                        SpecItemValueVo o_SpecItemValue= o_SpecItem.getValue().stream().filter((SpecItemValueVo b) ->b.getName().equals(specDes.getValue())).findFirst().orElse(null);
+                        if(o_SpecItemValue==null) {
+                            o_SpecItem.getValue().add(new SpecItemValueVo(specDes.getValue()));
+                        }
+                    }
                 }
             }
 
-//            boolean isHas = false;
-//            for (SpecItemModel specItem : specItems) {
-//                if (specItem.getName() == specDes.getName()) {
-//                    isHas = true;
+//            for (SkuVo sku: rop.getSkus()) {
+//                for (SpecDesVo specDes : sku.getSpecDes()) {
 //
-//                    boolean isFlag = false;
-//                    for (SpecItemValueModel itemVal : specItem.getValue()) {
-//                        if (itemVal.getName() == specDes.getValue()) {
-//                            isFlag = true;
+//                    boolean isHas = false;
+//
+//                    for (SpecItemVo specItem : specItems) {
+//
+//                        if (specItem.getName() == specDes.getName()) {
+//
+//                            isHas = true;
+//
+//                            boolean isFlag = false;
+//                            for (SpecItemValueVo itemVal : specItem.getValue()) {
+//                                if (itemVal.getName() == specDes.getValue()) {
+//                                    isFlag = true;
+//                                    break;
+//                                }
+//                            }
+//
+//                            if (!isFlag) {
+//                                List<SpecItemValueVo> itemVals = new ArrayList<>();
+//                                SpecItemValueVo itemVal = new SpecItemValueVo();
+//                                itemVal.setName(specDes.getValue());
+//                                itemVals.add(itemVal);
+//                                specItem.setValue(itemVals);
+//                            }
+//                            break;
 //                        }
 //                    }
 //
-//                    if (!isFlag) {
-//                        List<SpecItemValueModel> itemVals = new ArrayList<>();
-//                        SpecItemValueModel itemVal = new SpecItemValueModel();
+//                    if (!isHas) {
+//                        SpecItemVo itemModel = new SpecItemVo();
+//                        itemModel.setName(specDes.getName());
+//                        List<SpecItemValueVo> itemVals = new ArrayList<>();
+//                        SpecItemValueVo itemVal = new SpecItemValueVo();
 //                        itemVal.setName(specDes.getValue());
 //                        itemVals.add(itemVal);
-//                        specItem.setValue(itemVals);
+//                        itemModel.setValue(itemVals);
 //                    }
 //
-//                    break;
 //                }
-//            }
-//
-//            if (!isHas) {
-//                SpecItemModel itemModel = new SpecItemModel();
-//                itemModel.setName(specDes.getName());
-//                List<SpecItemValueModel> itemVals = new ArrayList<>();
-//                SpecItemValueModel itemVal = new SpecItemValueModel();
-//                itemVal.setName(specDes.getValue());
-//                itemVals.add(itemVal);
-//                itemModel.setValue(itemVals);
 //            }
 
 
             d_PrdSpu.setSpecItems(JsonUtil.getJson(specItems));
-
             d_PrdSpu.setMender(operater);
             d_PrdSpu.setMendTime(CommonUtil.getDateTimeNow());
 
-            long r_PrdSpu_Update = prdSpuMapper.update(d_PrdSpu);
-
-            if (r_PrdSpu_Update <= 0) {
-                lock.unlock();
-                return result.fail("保存失败");
-            }
+            prdSpuMapper.update(d_PrdSpu);
 
             for (SkuVo sku : rop.getSkus()) {
 
@@ -569,20 +582,19 @@ public class ProductServiceImpl implements ProductService {
                 d_PrdSku.setPyIdx(d_PrdSpu.getPyIdx());
                 d_PrdSku.setSpecDes(JsonUtil.getJson(sku.getSpecDes()));
                 d_PrdSku.setSpecIdx(SpecDesVo.GetIdx(sku.getSpecDes()));
+                d_PrdSku.setIsOffSell(sku.getIsOffSell());
                 d_PrdSku.setMender(operater);
                 d_PrdSku.setMendTime(CommonUtil.getDateTimeNow());
 
-                long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
-                if (r_PrdSku_Update <= 0) {
-                    lock.unlock();
-                    return result.fail("保存失败");
-                }
+                prdSkuMapper.update(d_PrdSku);
+
             }
 
             platformTransactionManager.commit(transaction);
             lock.unlock();
 
             result=result.success("保存成功");
+
         } catch (Exception ex) {
             logger.error("保存失败,服务器异常",ex);
             platformTransactionManager.rollback(transaction);
@@ -610,24 +622,21 @@ public class ProductServiceImpl implements ProductService {
                 return result.fail("货号ID不能为空");
             }
 
-
             LumosSelective selective_PrdSpu=new LumosSelective();
             selective_PrdSpu.setFields("Id,CumCode");
             selective_PrdSpu.addWhere("MerchId",merchId);
             selective_PrdSpu.addWhere("SpuId",rop.getId());
+
             PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective_PrdSpu);
 
-            d_PrdSpu.setCumCode("backup_"+d_PrdSpu.getCumCode());
+            d_PrdSpu.setCumCode("old_"+d_PrdSpu.getCumCode());
             d_PrdSpu.setDelete(true);
             d_PrdSpu.setMendTime(CommonUtil.getDateTimeNow());
             d_PrdSpu.setMender(operater);
             d_PrdSpu.setDeleteTime(CommonUtil.getDateTimeNow());
             d_PrdSpu.setDeleter(operater);
-            long r_PrdSpu_Update=prdSpuMapper.update(d_PrdSpu);
-            if (r_PrdSpu_Update <= 0) {
-                lock.unlock();
-                return result.fail("回收失败");
-            }
+
+            prdSpuMapper.update(d_PrdSpu);
 
             LumosSelective selective_PrdSkus=new LumosSelective();
             selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
@@ -638,14 +647,11 @@ public class ProductServiceImpl implements ProductService {
             for (PrdSku d_PrdSku: d_PrdSkus ) {
 
 
-                d_PrdSku.setCumCode("backup_"+d_PrdSku.getCumCode());
+                d_PrdSku.setCumCode("old_" + d_PrdSku.getCumCode());
                 d_PrdSku.setDelete(true);
 
-                long r_PrdSku_Update= prdSkuMapper.update(d_PrdSku);
-                if (r_PrdSku_Update <= 0) {
-                    lock.unlock();
-                    return result.fail("回收失败");
-                }
+                prdSkuMapper.update(d_PrdSku);
+
             }
 
             platformTransactionManager.commit(transaction);

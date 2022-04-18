@@ -41,27 +41,22 @@
           <span>{{ row.cumCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="条形码" align="left" width="180">
-        <template slot-scope="{row}">
-          <span>{{ row.skus[0].barCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="分类" align="left" width="200">
+      <el-table-column label="分类" align="left" width="180">
         <template slot-scope="{row}">
           <span>{{ row.sysKinds.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="售价" align="left" width="110">
+      <el-table-column label="售价" align="left" width="100">
         <template slot-scope="{row}">
           <span>{{ row.skus[0].salePrice }}</span>
         </template>
       </el-table-column>
       <el-table-column label="回收时间" align="left" width="160">
         <template slot-scope="{row}">
-          <span>{{ row.rycbTime }}</span>
+          <span>{{ row.deleteTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="120" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="text" size="mini" @click="onEdit(row)">
             编辑

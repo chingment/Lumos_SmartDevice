@@ -14,6 +14,7 @@ public class SkuInfo  implements Serializable {
     private String pyIdx;
     private String imgUrl;
     private String specIdx;
+    private Boolean isOffSell;
     private List<SpecDesVo> specDes;
     private float salePrice;
 
@@ -95,5 +96,13 @@ public class SkuInfo  implements Serializable {
 
     public void setSpecDes(List<SpecDesVo> specDes) {
         this.specDes = specDes;
+    }
+
+    public Boolean getIsOffSell() {
+        return isOffSell;
+    }
+
+    public void setIsOffSell(Boolean isOffSell) {
+        this.isOffSell = isOffSell;
     }
 }

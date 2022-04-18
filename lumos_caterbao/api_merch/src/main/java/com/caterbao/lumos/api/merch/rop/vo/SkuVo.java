@@ -11,6 +11,7 @@ public class SkuVo {
     private String barCode;
     private List<SpecDesVo> specDes;
     private float salePrice;
+    private Boolean isOffSell;
 
     public String getId() {
         return id;
@@ -50,5 +51,13 @@ public class SkuVo {
 
     public void setSalePrice(float salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public Boolean getIsOffSell() {
+        return isOffSell;
+    }
+
+    public void setIsOffSell(Boolean isOffSell) {
+        this.isOffSell = isOffSell;
     }
 }

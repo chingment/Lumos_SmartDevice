@@ -13,6 +13,7 @@ public class PrdSku {
     private float salePrice;
     private String specDes;
     private String specIdx;
+    private Boolean isOffSell;
     private Boolean isDelete;
     private String creator;
     private Timestamp createTime;
@@ -105,6 +106,15 @@ public class PrdSku {
 
     public void setDelete(Boolean delete) {
         isDelete = delete;
+    }
+
+
+    public Boolean getIsOffSell() {
+        return isOffSell;
+    }
+
+    public void setIsOffSell(Boolean isOffSell) {
+        this.isOffSell = isOffSell;
     }
 
     public String getCreator() {

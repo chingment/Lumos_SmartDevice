@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -174,8 +175,6 @@ public class BookerServiceImpl implements BookerService {
     @Override
     @Transactional
     public CustomResult<RetBookerBorrowReturn> borrowReturn(String operater, RopBookerBorrowReturn rop) {
-
-        logger.info("borrowReturn start");
 
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
@@ -353,9 +352,14 @@ public class BookerServiceImpl implements BookerService {
                 d_BookFlow.setStatus(4000);
             }
 
-            d_BookFlow.setLastActionCode(rop.getActionCode());
-            d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
-            d_BookFlow.setLastActionRemark(rop.getActionRemark());
+            Timestamp lastActionTime= CommonUtil.toDateTimeTimestamp(rop.getActionTime());
+
+            if(lastActionTime.after(d_BookFlow.getLastActionTime())) {
+                d_BookFlow.setLastActionCode(rop.getActionCode());
+                d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
+                d_BookFlow.setLastActionRemark(rop.getActionRemark());
+            }
+
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
             d_BookFlow.setMender(IdWork.buildGuId());
 
@@ -363,9 +367,6 @@ public class BookerServiceImpl implements BookerService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return result.fail("验证失败[D02]");
             }
-
-
-            logger.info("borrowReturn end");
 
             return result.success("验证成功", ret);
         } catch (Exception ex) {
@@ -599,7 +600,6 @@ public class BookerServiceImpl implements BookerService {
             merchId = d_MerchDevice.getMerchId();
             deviceCumCode = d_MerchDevice.getCumCode();
         }
-
         BookFlowLog d_BookFlowLog = new BookFlowLog();
         d_BookFlowLog.setId(IdWork.buildLongId());
         d_BookFlowLog.setMsgId(msgId);

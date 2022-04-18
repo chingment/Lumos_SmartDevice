@@ -135,6 +135,7 @@ class ProductCacheServiceImpl implements ProductCacheService {
             skuInfo.setSpuId(d_PrdSku.getSpuId());
             skuInfo.setBarCode(d_PrdSku.getBarCode());
             skuInfo.setCumCode(d_PrdSku.getCumCode());
+            skuInfo.setIsOffSell(d_PrdSku.getIsOffSell());
             skuInfo.setSpecDes(JsonUtil.toObject(d_PrdSku.getSpecDes(),new TypeReference<List<SpecDesVo>>() {}));
             List<FileVo> displayImgUrls = JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {
             });

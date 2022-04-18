@@ -69,27 +69,22 @@
           <span>{{ row.cumCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="条形码" align="left" width="180">
-        <template slot-scope="{row}">
-          <span>{{ row.skus[0].barCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="分类" align="left" width="200">
+      <el-table-column label="分类" align="left" width="180">
         <template slot-scope="{row}">
           <span>{{ row.sysKinds.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="售价" align="left" width="110">
+      <el-table-column label="售价" align="left" width="100">
         <template slot-scope="{row}">
           <span>{{ row.skus[0].salePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="录入时间" align="left" width="160">
+      <el-table-column label="创建时间" align="left" width="160">
         <template slot-scope="{row}">
           <span>{{ row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="120" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="text" size="mini" @click="onEdit(row)">
             编辑
@@ -174,7 +169,7 @@ export default {
       })
     },
     onDelete(item) {
-      MessageBox.confirm('确定要回收?回收的商品货号或者编码在原基础上加上backup_，同时放入回收站!', '提示', {
+      MessageBox.confirm('确定要回收?回收的商品货号或者编码在原基础上加上old_，同时放入回收站!', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
