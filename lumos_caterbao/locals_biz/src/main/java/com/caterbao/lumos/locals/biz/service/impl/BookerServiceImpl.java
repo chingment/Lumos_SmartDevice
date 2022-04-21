@@ -59,9 +59,9 @@ public class BookerServiceImpl implements BookerService {
             BookBorrow d_BookBorrow = d_BookBorrows.get(i);
 
 
-            if (chekIsWilldueBook(d_BookBorrow.getExpireTime())) {
+            if (checkIsWilldueBook(d_BookBorrow.getExpireTime())) {
                 sumWilldueQuantity += 1;
-            } else if (chekIsOverdueBook(d_BookBorrow.getExpireTime())) {
+            } else if (checkIsOverdueBook(d_BookBorrow.getExpireTime())) {
                 sumOverdueQuantity += 1;
 
                 float overdueFine = calculateOverdueFine(d_BookBorrow.getExpireTime(),d_BookBorrow.getBorrowSeq());
@@ -96,8 +96,8 @@ public class BookerServiceImpl implements BookerService {
         vo.setRenewCount(bookBorrow.getRenewCount());
         vo.setOverdueFine(calculateOverdueFine(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq()));
         vo.setStatus(getBorrowStatus(bookBorrow.getStatus(),bookBorrow.getExpireTime()));
-        vo.setIsWilldue(chekIsWilldueBook(bookBorrow.getExpireTime()));
-        vo.setIsOverdue(chekIsOverdueBook(bookBorrow.getExpireTime()));
+        vo.setIsWilldue(checkIsWilldueBook(bookBorrow.getExpireTime()));
+        vo.setIsOverdue(checkIsOverdueBook(bookBorrow.getExpireTime()));
         vo.setCanRenew(checkCanRenew(bookBorrow.getExpireTime(),bookBorrow.getRenewCount(),1));
         vo.setCanReturn(checkCanReturn(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq(),bookBorrow.getSkuPrice()));
         vo.setNeedPay(checkNeedPay(bookBorrow.getExpireTime(),bookBorrow.getBorrowSeq(),bookBorrow.getSkuPrice()));
@@ -133,7 +133,7 @@ public class BookerServiceImpl implements BookerService {
         //todo 未判断超时
         FieldVo model = new FieldVo();
         if (stauts == 1000) {
-            if(chekIsOverdueBook(expireTime)){
+            if(checkIsOverdueBook(expireTime)){
                 return new FieldVo(2000, "已逾期");
             }
             else {
@@ -176,14 +176,18 @@ public class BookerServiceImpl implements BookerService {
 
     @Override
     public FieldVo getFlowType(int type) {
-        FieldVo model=new FieldVo();
-        if(type==1)
-            return new FieldVo(1,"借还");
+        FieldVo model = new FieldVo();
+        if (type == 1)
+            return new FieldVo(1, "借还");
+        else if (type == 2)
+            return new FieldVo(2, "开机盘点");
+        else if (type == 3)
+            return new FieldVo(3, "后台盘点");
         return model;
     }
 
     @Override
-    public boolean chekIsWilldueBook(Timestamp expireTime) {
+    public boolean checkIsWilldueBook(Timestamp expireTime) {
         boolean isflag = false;
 
         long l_Willdue = expireTime.getTime() - CommonUtil.getDateTimeNow().getTime();
@@ -197,7 +201,7 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public boolean chekIsOverdueBook(Timestamp expireTime) {
+    public boolean checkIsOverdueBook(Timestamp expireTime) {
         boolean isflag = false;
 
         long l_Overdue = CommonUtil.getDateTimeNow().getTime() - expireTime.getTime();
@@ -213,7 +217,7 @@ public class BookerServiceImpl implements BookerService {
     @Override
     public  boolean checkCanRenew(Timestamp expireTime,int renewedCount,int maxRenewCount) {
 
-        boolean iflag = chekIsWilldueBook(expireTime);
+        boolean iflag = checkIsWilldueBook(expireTime);
 
         if (iflag) {
 

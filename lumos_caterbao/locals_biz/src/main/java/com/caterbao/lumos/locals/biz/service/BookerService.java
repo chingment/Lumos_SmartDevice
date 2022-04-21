@@ -17,8 +17,8 @@ public interface BookerService {
     FieldVo getIdentityType(int type);
     FieldVo getBorrowStatus(int stauts, Timestamp expireTime);
     FieldVo getFlowType(int type);
-    boolean chekIsWilldueBook(Timestamp expireTime);
-    boolean chekIsOverdueBook(Timestamp expireTime);
+    boolean checkIsWilldueBook(Timestamp expireTime);
+    boolean checkIsOverdueBook(Timestamp expireTime);
     boolean checkCanRenew(Timestamp expireTime,int renewedCount,int maxRenewCount);
     boolean checkCanReturn(Timestamp expireTime,int seq,float skuPrice);
     boolean checkNeedPay(Timestamp expireTime,int seq,float skuPrice);

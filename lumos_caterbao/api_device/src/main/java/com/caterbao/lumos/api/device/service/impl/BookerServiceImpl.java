@@ -93,23 +93,25 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerCreateFlow> result = new CustomResult<>();
 
-        if (CommonUtil.isEmpty(rop.getDeviceId()))
+        if (rop.getType() == 0)
             return result.fail("创建失败[W01]");
 
-        if (CommonUtil.isEmpty(rop.getSlotId()))
-            return result.fail("创建失败[W03]");
+        if (CommonUtil.isEmpty(rop.getDeviceId()))
+            return result.fail("创建失败[W02]");
 
-        if (CommonUtil.isEmpty(rop.getClientUserId()))
-            return result.fail("创建失败[W04]");
+        if (rop.getType() == 1) {
+            if (CommonUtil.isEmpty(rop.getSlotId()))
+                return result.fail("创建失败[W03]");
 
-        if (CommonUtil.isEmpty(rop.getIdentityType()))
-            return result.fail("创建失败[W05]");
+            if (CommonUtil.isEmpty(rop.getClientUserId()))
+                return result.fail("创建失败[W04]");
 
-        if (CommonUtil.isEmpty(rop.getIdentityId()))
-            return result.fail("创建失败[W06]");
+            if (CommonUtil.isEmpty(rop.getIdentityType()))
+                return result.fail("创建失败[W05]");
 
-        if (rop.getType() == 0)
-            return result.fail("创建失败[W07]");
+            if (CommonUtil.isEmpty(rop.getIdentityId()))
+                return result.fail("创建失败[W06]");
+        }
 
         LumosSelective selective_MerchDevice = new LumosSelective();
         selective_MerchDevice.setFields("*");
@@ -127,20 +129,21 @@ public class BookerServiceImpl implements BookerService {
             return result.fail("创建失败[D03]");
 
 
-        LumosSelective selective_BookFlowExs = new LumosSelective();
-        selective_BookFlowExs.setFields("*");
-        selective_BookFlowExs.addWhere("MerchId", d_MerchDevice.getMerchId());
-        selective_BookFlowExs.addWhere("StoreId", d_MerchDevice.getStoreId());
-        selective_BookFlowExs.addWhere("ShopId", d_MerchDevice.getShopId());
-        selective_BookFlowExs.addWhere("DeviceId", d_MerchDevice.getId());
-        selective_BookFlowExs.addWhere("SlotId", rop.getSlotId());
-        selective_BookFlowExs.addWhere("Status", "3000");
+        if (rop.getType() == 1) {
+            LumosSelective selective_BookFlowExs = new LumosSelective();
+            selective_BookFlowExs.setFields("*");
+            selective_BookFlowExs.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective_BookFlowExs.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective_BookFlowExs.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective_BookFlowExs.addWhere("DeviceId", d_MerchDevice.getId());
+            selective_BookFlowExs.addWhere("SlotId", rop.getSlotId());
+            selective_BookFlowExs.addWhere("Status", "3000");
 
-        List<BookFlow> d_BookFlowExs = bookFlowMapper.find(selective_BookFlowExs);
+            List<BookFlow> d_BookFlowExs = bookFlowMapper.find(selective_BookFlowExs);
 
-        if (d_BookFlowExs.size() > 0)
-            return result.fail("该柜门存在异常使用情况[D04]");
-
+            if (d_BookFlowExs.size() > 0)
+                return result.fail("该柜门存在异常使用情况[D04]");
+        }
 
         BookFlow d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
@@ -539,6 +542,10 @@ public class BookerServiceImpl implements BookerService {
     public CustomResult<RetBookerTakeStock> takeStock(String operater, RopBookerTakeStock rop) {
 
         CustomResult<RetBookerTakeStock> result = new CustomResult<>();
+
+        new Thread(() -> {
+            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+        }).start();
 
         try {
             RetBookerTakeStock ret = new RetBookerTakeStock();
