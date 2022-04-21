@@ -60,7 +60,7 @@
           <span>{{ scope.row.lastActionCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="left" width="160">
+      <el-table-column label="备注" align="left" min-width="100%">
         <template slot-scope="scope">
           <span>{{ scope.row.lastActionRemark }}</span>
         </template>

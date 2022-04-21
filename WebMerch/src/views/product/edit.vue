@@ -1,5 +1,5 @@
 <template>
-  <div id="product_edit">
+  <div id="product_edit" v-loading="loading">
     <page-header />
     <el-steps :active="active" finish-status="success" align-center>
       <el-step title="商品信息" />
@@ -7,7 +7,7 @@
     </el-steps>
     <div style="margin-top:30px;">
       <div v-show="active===0">
-        <el-form ref="form0" v-loading="loading" :model="form" :rules="rules0" label-width="100px">
+        <el-form ref="form0" :model="form" :rules="rules0" label-width="100px">
           <el-form-item label="名称" prop="name">
             <el-input v-model="form.name" clearable />
           </el-form-item>
@@ -85,7 +85,7 @@
         </el-form>
       </div>
       <div v-show="active===1">
-        <el-form ref="form1" v-loading="loading" :model="form" :rules="rules1" label-width="100px">
+        <el-form ref="form1" :model="form" :rules="rules1" label-width="100px">
           <el-form-item v-if="form.sysKindAttrs!=null&&form.sysKindAttrs.length>0" label="商品属性" />
           <div class="kind-attr">
             <template v-for="(sysKindAttr,index) in form.sysKindAttrs">
