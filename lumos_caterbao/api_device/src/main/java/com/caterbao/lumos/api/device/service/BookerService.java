@@ -10,4 +10,6 @@ public interface BookerService {
     CustomResult<RetBookerRenewBooks> renewBooks(String operater, RopBookerRenewBooks rop);
     CustomResult<RetBookerDisplayBooks> displayBooks(String operater, RopBookerDisplayBooks rop);
     CustomResult<RetBookerTakeStock> takeStock(String operater, RopBookerTakeStock rop);
+    CustomResult<RetBookerStockBins> stockBins(String operater, RopBookerStockBins rop);
+
 }
