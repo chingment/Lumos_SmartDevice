@@ -12,16 +12,18 @@
         <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
         <if test="where.ActionCode != null">and ActionCode =#{where.ActionCode}</if>
+        <if test="where.ActionSn != null">and ActionSn =#{where.ActionSn}</if>
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookFlowLog where 1=1
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
         <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+        order by ActionSn
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
-  insert into BookFlowLog(id,msgId,msgMode,merchId,deviceId,deviceCumCode,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
-  values(#{id},#{msgId},#{msgMode},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
+  insert into BookFlowLog(id,msgId,msgMode,merchId,deviceId,deviceCumCode,flowId,actionSn, actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
+  values(#{id},#{msgId},#{msgMode},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionSn},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
     </insert>
 
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">

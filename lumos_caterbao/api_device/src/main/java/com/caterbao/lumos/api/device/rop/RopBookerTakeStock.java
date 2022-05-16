@@ -10,6 +10,7 @@ public class RopBookerTakeStock {
     private String msgId;
     private String msgMode;
     private String flowId;
+    private int actionSn;
     private String actionCode;
     private String actionData;
     private String actionTime;
@@ -55,6 +56,14 @@ public class RopBookerTakeStock {
 
     public void setFlowId(String flowId) {
         this.flowId = flowId;
+    }
+
+    public int getActionSn() {
+        return actionSn;
+    }
+
+    public void setActionSn(int actionSn) {
+        this.actionSn = actionSn;
     }
 
     public String getActionCode() {

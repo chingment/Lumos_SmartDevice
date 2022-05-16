@@ -182,7 +182,7 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
         new Thread(() -> {
-            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
@@ -554,7 +554,7 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerTakeStock> result = new CustomResult<>();
 
         new Thread(() -> {
-            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         try {
@@ -605,7 +605,7 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
-    private void addBorrowReturnFlowLog(String msgId, String msgMode, String deviceId, String flowId, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {
+    private void addBorrowReturnFlowLog(String msgId, String msgMode, String deviceId, String flowId,int actionSn, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {
 
         String merchId = null;
         String deviceCumCode = null;
@@ -622,7 +622,7 @@ public class BookerServiceImpl implements BookerService {
         selective_BookFlowLog.addWhere("MerchId", merchId);
         selective_BookFlowLog.addWhere("DeviceId", deviceId);
         selective_BookFlowLog.addWhere("FlowId", flowId);
-        selective_BookFlowLog.addWhere("ActionCode", actionCode);
+        selective_BookFlowLog.addWhere("ActionSn",String.valueOf(actionSn));
         BookFlowLog d_BookFlowLog= bookFlowLogMapper.findOne(selective_BookFlowLog);
 
         if(d_BookFlowLog==null) {
@@ -634,6 +634,7 @@ public class BookerServiceImpl implements BookerService {
             d_BookFlowLog.setDeviceId(deviceId);
             d_BookFlowLog.setDeviceCumCode(deviceCumCode);
             d_BookFlowLog.setFlowId(flowId);
+            d_BookFlowLog.setActionSn(actionSn);
             d_BookFlowLog.setActionCode(actionCode);
             d_BookFlowLog.setActionData(actionData);
             d_BookFlowLog.setActionResult(actionResult);

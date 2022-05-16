@@ -11,6 +11,7 @@ public class BookFlowLog {
     private String msgMode;
     private String flowId;
     private String actionCode;
+    private int actionSn;
     private String actionName;
     private String actionData;
     private String actionResult;
@@ -81,6 +82,14 @@ public class BookFlowLog {
 
     public void setActionCode(String actionCode) {
         this.actionCode = actionCode;
+    }
+
+    public int getActionSn() {
+        return actionSn;
+    }
+
+    public void setActionSn(int actionSn) {
+        this.actionSn = actionSn;
     }
 
     public String getActionName() {

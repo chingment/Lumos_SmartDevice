@@ -6,6 +6,7 @@ public class RopBookerBorrowReturn {
     private String deviceId;
     private String flowId;
     private String actionCode;
+    private int actionSn;
     private String actionData;
     private String actionTime;
     private String actionRemark;
@@ -36,6 +37,14 @@ public class RopBookerBorrowReturn {
 
     public void setActionCode(String actionCode) {
         this.actionCode = actionCode;
+    }
+
+    public int getActionSn() {
+        return actionSn;
+    }
+
+    public void setActionSn(int actionSn) {
+        this.actionSn = actionSn;
     }
 
     public String getActionData() {
