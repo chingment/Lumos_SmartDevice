@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrdSkuRfIdMapper {
     PrdSkuRfId findOne(LumosSelective selective);
+    long insert(PrdSkuRfId prdSkuRfId);
 }

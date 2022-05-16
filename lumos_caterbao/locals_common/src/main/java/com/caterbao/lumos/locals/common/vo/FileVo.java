@@ -26,7 +26,7 @@ public class FileVo implements Serializable {
         this.url = url;
     }
 
-    public static String getFileUrl(String json){
+    public static String getFirstFileUrl(String json){
         String url="";
 
         try {
@@ -45,7 +45,7 @@ public class FileVo implements Serializable {
         return  url;
     }
 
-    public static String getFileUrl(List<FileVo> vo) {
+    public static String getFirstFileUrl(List<FileVo> vo) {
         String url = "";
 
         if (vo == null)

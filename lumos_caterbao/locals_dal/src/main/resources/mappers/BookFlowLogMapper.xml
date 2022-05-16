@@ -6,6 +6,13 @@
     <select id="findLastByFlowId" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
         select  * from BookFlowLog where FlowId=#{flowId} order by actionTime desc limit 0,1
     </select>
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
+        select  * from BookFlowLog where 1=1
+        <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
+        <if test="where.FlowId != null">and FlowId =#{where.FlowId}</if>
+        <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+        <if test="where.ActionCode != null">and ActionCode =#{where.ActionCode}</if>
+    </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookFlowLog where 1=1
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
@@ -16,4 +23,16 @@
   insert into BookFlowLog(id,msgId,msgMode,merchId,deviceId,deviceCumCode,flowId,actionCode,actionName,actionData,actionResult,actionRemark, actionTime,creator,createTime)
   values(#{id},#{msgId},#{msgMode},#{merchId},#{deviceId},#{deviceCumCode},#{flowId},#{actionCode},#{actionName},#{actionData},#{actionResult},#{actionRemark},#{actionTime},#{creator},#{createTime})
     </insert>
+
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlowLog">
+        update BookFlowLog
+        <set>
+            <if test="actionName != null">actionName=#{actionName},</if>
+            <if test="actionData != null">actionData=#{actionData},</if>
+            <if test="actionResult != null">actionResult=#{actionResult},</if>
+            <if test="actionTime != null">actionTime=#{actionTime}</if>
+        </set>
+        where id=#{id}
+    </update>
+
 </mapper>

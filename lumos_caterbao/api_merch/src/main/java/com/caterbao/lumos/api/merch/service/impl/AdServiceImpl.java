@@ -128,7 +128,7 @@ public class AdServiceImpl implements AdService {
 
             item.put("id", d_AdCreative.getId());
             item.put("title", d_AdCreative.getTitle());
-            item.put("fileUrl", FileVo.getFileUrl(d_AdCreative.getFileUrl()));
+            item.put("fileUrl", FileVo.getFirstFileUrl(d_AdCreative.getFileUrl()));
 
             FieldVo status=new FieldVo();
 

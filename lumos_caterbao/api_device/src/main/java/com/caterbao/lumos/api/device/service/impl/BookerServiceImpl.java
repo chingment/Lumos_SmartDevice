@@ -273,51 +273,54 @@ public class BookerServiceImpl implements BookerService {
 
                     SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), borrow_RfId);
 
-                    LumosSelective selective_BookBorrow = new LumosSelective();
-                    selective_BookBorrow.setFields("*");
-                    selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                    // selective_BookBorrow.addWhere("FlowId", flowId);
-                    selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
-                    selective_BookBorrow.addWhere("CanBorrow", "1");
+                    if(r_Sku!=null&&!CommonUtil.isEmpty(r_Sku.getId())) {
 
-                    BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
-                    if (d_BookBorrow == null) {
-                        d_BookBorrow = new BookBorrow();
-                        d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
-                        d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
-                        d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
-                        d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
-                        d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
-                        d_BookBorrow.setShopId(d_BookFlow.getShopId());
-                        d_BookBorrow.setShopName(d_BookFlow.getShopName());
-                        d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
-                        d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
-                        d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
-                        d_BookBorrow.setFlowId(d_BookFlow.getId());
-                        d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
-                        d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
-                        d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
-                        d_BookBorrow.setClientUserId(d_BookFlow.getClientUserId());
-                        d_BookBorrow.setSkuRfId(borrow_RfId);
-                        d_BookBorrow.setSkuId(r_Sku.getId());
-                        d_BookBorrow.setSkuName(r_Sku.getName());
-                        d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
-                        d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
-                        d_BookBorrow.setSkuPrice(r_Sku.getSalePrice());
-                        d_BookBorrow.setBorrowSeq(i);
-                        d_BookBorrow.setBorrowWay(1);
-                        d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
-                        d_BookBorrow.setStatus(1000);
-                        d_BookBorrow.setRenewCount(0);
-                        d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowExpireDay));
-                        d_BookBorrow.setCreator(IdWork.buildGuId());
-                        d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
+                        LumosSelective selective_BookBorrow = new LumosSelective();
+                        selective_BookBorrow.setFields("*");
+                        selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
+                        // selective_BookBorrow.addWhere("FlowId", flowId);
+                        selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
+                        selective_BookBorrow.addWhere("CanBorrow", "1");
 
-                        if (bookBorrowMapper.insert(d_BookBorrow) <= 0) {
-                            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                            return result.fail("验证失败[D03]");
-                        } else {
-                            ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+                        if (d_BookBorrow == null) {
+                            d_BookBorrow = new BookBorrow();
+                            d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
+                            d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
+                            d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
+                            d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
+                            d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
+                            d_BookBorrow.setShopId(d_BookFlow.getShopId());
+                            d_BookBorrow.setShopName(d_BookFlow.getShopName());
+                            d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
+                            d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
+                            d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
+                            d_BookBorrow.setFlowId(d_BookFlow.getId());
+                            d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
+                            d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
+                            d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
+                            d_BookBorrow.setClientUserId(d_BookFlow.getClientUserId());
+                            d_BookBorrow.setSkuRfId(borrow_RfId);
+                            d_BookBorrow.setSkuId(r_Sku.getId());
+                            d_BookBorrow.setSkuName(r_Sku.getName());
+                            d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
+                            d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
+                            d_BookBorrow.setSkuPrice(r_Sku.getSalePrice());
+                            d_BookBorrow.setBorrowSeq(i);
+                            d_BookBorrow.setBorrowWay(1);
+                            d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
+                            d_BookBorrow.setStatus(1000);
+                            d_BookBorrow.setRenewCount(0);
+                            d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowExpireDay));
+                            d_BookBorrow.setCreator(IdWork.buildGuId());
+                            d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
+
+                            if (bookBorrowMapper.insert(d_BookBorrow) <= 0) {
+                                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                                return result.fail("验证失败[D03]");
+                            } else {
+                                ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getDeviceCumCode(), d_BookBorrow.getSkuImgUrl()));
+                            }
                         }
                     }
                 }
@@ -357,10 +360,17 @@ public class BookerServiceImpl implements BookerService {
 
             Timestamp lastActionTime= CommonUtil.toDateTimeTimestamp(rop.getActionTime());
 
-            if(lastActionTime.after(d_BookFlow.getLastActionTime())) {
+            if(d_BookFlow.getLastActionTime()==null) {
                 d_BookFlow.setLastActionCode(rop.getActionCode());
                 d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
                 d_BookFlow.setLastActionRemark(rop.getActionRemark());
+            }
+            else {
+                if (lastActionTime.after(d_BookFlow.getLastActionTime())) {
+                    d_BookFlow.setLastActionCode(rop.getActionCode());
+                    d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
+                    d_BookFlow.setLastActionRemark(rop.getActionRemark());
+                }
             }
 
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
@@ -607,22 +617,41 @@ public class BookerServiceImpl implements BookerService {
             merchId = d_MerchDevice.getMerchId();
             deviceCumCode = d_MerchDevice.getCumCode();
         }
-        BookFlowLog d_BookFlowLog = new BookFlowLog();
-        d_BookFlowLog.setId(IdWork.buildLongId());
-        d_BookFlowLog.setMsgId(msgId);
-        d_BookFlowLog.setMsgMode(msgMode);
-        d_BookFlowLog.setMerchId(merchId);
-        d_BookFlowLog.setDeviceId(deviceId);
-        d_BookFlowLog.setDeviceCumCode(deviceCumCode);
-        d_BookFlowLog.setFlowId(flowId);
-        d_BookFlowLog.setActionCode(actionCode);
-        d_BookFlowLog.setActionData(actionData);
-        d_BookFlowLog.setActionResult(actionResult);
-        d_BookFlowLog.setActionRemark(actionRemark);
-        d_BookFlowLog.setActionTime(CommonUtil.toDateTimeTimestamp(actionTime));
-        d_BookFlowLog.setCreator(IdWork.buildGuId());
-        d_BookFlowLog.setCreateTime(CommonUtil.getDateTimeNow());
-        bookFlowLogMapper.insert(d_BookFlowLog);
+
+        LumosSelective selective_BookFlowLog = new LumosSelective();
+        selective_BookFlowLog.addWhere("MerchId", merchId);
+        selective_BookFlowLog.addWhere("DeviceId", deviceId);
+        selective_BookFlowLog.addWhere("FlowId", flowId);
+        selective_BookFlowLog.addWhere("ActionCode", actionCode);
+        BookFlowLog d_BookFlowLog= bookFlowLogMapper.findOne(selective_BookFlowLog);
+
+        if(d_BookFlowLog==null) {
+            d_BookFlowLog = new BookFlowLog();
+            d_BookFlowLog.setId(IdWork.buildLongId());
+            d_BookFlowLog.setMsgId(msgId);
+            d_BookFlowLog.setMsgMode(msgMode);
+            d_BookFlowLog.setMerchId(merchId);
+            d_BookFlowLog.setDeviceId(deviceId);
+            d_BookFlowLog.setDeviceCumCode(deviceCumCode);
+            d_BookFlowLog.setFlowId(flowId);
+            d_BookFlowLog.setActionCode(actionCode);
+            d_BookFlowLog.setActionData(actionData);
+            d_BookFlowLog.setActionResult(actionResult);
+            d_BookFlowLog.setActionRemark(actionRemark);
+            d_BookFlowLog.setActionTime(CommonUtil.toDateTimeTimestamp(actionTime));
+            d_BookFlowLog.setCreator(IdWork.buildGuId());
+            d_BookFlowLog.setCreateTime(CommonUtil.getDateTimeNow());
+            bookFlowLogMapper.insert(d_BookFlowLog);
+        }
+        else
+        {
+            d_BookFlowLog.setActionData(actionData);
+            d_BookFlowLog.setActionResult(actionResult);
+            d_BookFlowLog.setActionRemark(actionRemark);
+            d_BookFlowLog.setActionTime(CommonUtil.toDateTimeTimestamp(actionTime));
+
+            bookFlowLogMapper.update(d_BookFlowLog);
+        }
     }
 
 }

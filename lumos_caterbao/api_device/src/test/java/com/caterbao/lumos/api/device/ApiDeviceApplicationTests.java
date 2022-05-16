@@ -8,6 +8,7 @@ class ApiDeviceApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface BookFlowLogMapper {
     long insert(BookFlowLog bookFlowLog);
+    long update(BookFlowLog bookFlowLog);
     BookFlowLog findLastByFlowId(String flowId);
+    BookFlowLog findOne(LumosSelective selective);
     List<BookFlowLog> find(LumosSelective selective);
 }

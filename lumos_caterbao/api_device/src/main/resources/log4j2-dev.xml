@@ -63,7 +63,7 @@
         </RollingRandomAccessFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.caterbao.lumos" level="DEBUG" additivity="true">
+        <Logger name="com.caterbao.lumos" level="INFO" additivity="true">
             <AppenderRef ref="debug"/>
             <AppenderRef ref="info"/>
             <AppenderRef ref="warn"/>
@@ -75,7 +75,7 @@
         <Logger name="org.apache" level="ERROR"/>
         <!-- org.hibernate 只输出 ERROR 级别以上的日志 -->
         <Logger name="org.hibernate" level="ERROR"/>
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>

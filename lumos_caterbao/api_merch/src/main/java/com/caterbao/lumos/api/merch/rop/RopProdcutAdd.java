@@ -8,6 +8,7 @@ import com.caterbao.lumos.locals.common.vo.SpecItemVo;
 import java.util.List;
 
 public class RopProdcutAdd {
+    private String id;
     private String name;
     private String cumCode;
     private List<Integer> sysKindIds;
@@ -18,6 +19,15 @@ public class RopProdcutAdd {
     private List<SkuVo> skus;
     private String briefDes;
     private List<KindAttrVo> sysKindAttrs;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

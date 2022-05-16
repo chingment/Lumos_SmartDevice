@@ -628,10 +628,13 @@ export default {
     height: 30px;
     padding: 0;
   }
-    .kind-attr{
-display: inline-block;
-    .item{
+
+  .kind-attr {
+    display: inline-block;
+
+    .item {
       float: left;
+
       width: 50%;
     }
   }

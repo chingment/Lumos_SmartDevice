@@ -22,4 +22,6 @@ public interface ProductService {
     CustomResult<Object> getSysKindAttrs(String operater, String merchId, String kindIds);
 
     CustomResult<Object> searchSpu(String operater,String merchId,String key);
+
+    void text_export(String operater,String merchId);
 }

@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.merch.handler;
 
 import com.caterbao.lumos.api.merch.controller.OwnController;
+import com.caterbao.lumos.api.merch.service.ProductService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.Constants;
 import com.caterbao.lumos.locals.common.CustomResult;
@@ -30,16 +31,23 @@ public class AppAuthHandler implements HandlerInterceptor {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    //@Autowired
+    //private ProductService productService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)throws Exception {
         MDC.put(Constants.LOG_TRACE_ID, TraceLogUtils.getTraceId());
 
         logger.debug("AppAuthHandler.preHandle");
 
+        //productService.text_export("27ab6f924c904e728f1d48543fd2dacc","82854929");
+
         if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
+
+
 
         logger.info("请求Url路径 : {}", request.getRequestURL());
         logger.info("请求Url参数 : {}", request.getQueryString());

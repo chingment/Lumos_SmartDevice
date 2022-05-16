@@ -5,6 +5,7 @@ import com.caterbao.lumos.api.device.service.OwnService;
 import com.caterbao.lumos.locals.common.CommonUtil;
 import com.caterbao.lumos.locals.common.CustomResult;
 import com.caterbao.lumos.locals.common.PasswordUtil;
+import com.caterbao.lumos.locals.common.vo.FileVo;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
 import com.caterbao.lumos.locals.dal.mapper.SysMerchUserMapper;
@@ -83,7 +84,7 @@ public class OwnServiceImpl implements OwnService {
         ret.setUserId(d_SysUser.getId());
         ret.setUserName(d_SysUser.getUserName());
         ret.setFullName(d_SysUser.getFullName());
-        ret.setAvatar(d_SysUser.getAvatar());
+        ret.setAvatar(FileVo.getFirstFileUrl(d_SysUser.getAvatar()));
         return result.success("登录成功", ret);
     }
 
@@ -113,7 +114,7 @@ public class OwnServiceImpl implements OwnService {
         ret.setUserId(d_SysUser.getId());
         ret.setUserName(d_SysUser.getUserName());
         ret.setFullName(d_SysUser.getFullName());
-        ret.setAvatar(d_SysUser.getAvatar());
+        ret.setAvatar(FileVo.getFirstFileUrl(d_SysUser.getAvatar()));
 
         return result.success("获取成功",ret);
     }

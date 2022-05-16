@@ -63,7 +63,7 @@ public class ShopServiceImpl implements ShopService {
 
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());
-            item.put("imgUrl", FileVo.getFileUrl(d_Shop.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFirstFileUrl(d_Shop.getDisplayImgUrls()));
             items.add(item);
         }
 

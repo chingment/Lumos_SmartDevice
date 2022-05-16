@@ -19,6 +19,10 @@ import com.caterbao.lumos.locals.dal.pojo.*;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mysql.cj.util.LogUtils;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +43,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
 
     public final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,6 +54,7 @@ public class ProductServiceImpl implements ProductService {
     private CacheFactory cacheFactory;
     private PrdSysKindMapper prdSysKindMapper;
     private PrdSysKindAttrMapper prdSysKindAttrMapper;
+    private PrdSkuRfIdMapper prdSkuRfIdMapper;
 
     @Autowired(required = false)
     public void setPrdSpuMapper(PrdSpuMapper prdSpuMapper) {
@@ -89,6 +96,11 @@ public class ProductServiceImpl implements ProductService {
         this.prdSpuAttrMapper = prdSpuAttrMapper;
     }
 
+    @Autowired(required = false)
+    public void setPrdSkuRfIdMapper(PrdSkuRfIdMapper prdSkuRfIdMapper) {
+        this.prdSkuRfIdMapper = prdSkuRfIdMapper;
+    }
+
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -127,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
             item.put("id",r_SpuInfo.getId());
             item.put("name",r_SpuInfo.getName());
             item.put("cumCode",r_SpuInfo.getCumCode());
-            item.put("imgUrl", FileVo.getFileUrl(r_SpuInfo.getDisplayImgUrls()));
+            item.put("imgUrl", FileVo.getFirstFileUrl(r_SpuInfo.getDisplayImgUrls()));
             item.put("createTime",CommonUtil.toDateTimeStr(d_PrdSpu.getCreateTime()));
             item.put("deleteTime",CommonUtil.toDateTimeStr(d_PrdSpu.getDeleteTime()));
             item.put("sysKinds",getSysKinds(r_SpuInfo.getSysKindIds()));
@@ -261,7 +273,12 @@ public class ProductServiceImpl implements ProductService {
             }
 
             PrdSpu d_PrdSpu = new PrdSpu();
-            d_PrdSpu.setId(IdWork.buildGuId());
+            if(CommonUtil.isEmpty(rop.getId())) {
+                d_PrdSpu.setId(IdWork.buildGuId());
+            }
+            else{
+                d_PrdSpu.setId(rop.getId());
+            }
             d_PrdSpu.setMerchId(merchId);
             d_PrdSpu.setName(rop.getName());
             d_PrdSpu.setPyIdx(CommonUtil.getPyIdxChar(rop.getName()));
@@ -276,7 +293,11 @@ public class ProductServiceImpl implements ProductService {
             d_PrdSpu.setCreator(operater);
             d_PrdSpu.setCreateTime(CommonUtil.getDateTimeNow());
 
-            prdSpuMapper.insert(d_PrdSpu);
+           if( prdSpuMapper.insert(d_PrdSpu)<=0) {
+               platformTransactionManager.rollback(transaction);
+               lock.unlock();
+               return result.fail("保存失败");
+           }
 
             List<KindAttrVo> sysKindAttrs=rop.getSysKindAttrs();
             if(sysKindAttrs!=null) {
@@ -311,7 +332,14 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 PrdSku d_PrdSku = new PrdSku();
-                d_PrdSku.setId(IdWork.buildGuId());
+
+                if(CommonUtil.isEmpty(sku.getId())) {
+                    d_PrdSku.setId(IdWork.buildGuId());
+                }
+                else{
+                    d_PrdSku.setId(sku.getId());
+                }
+
                 d_PrdSku.setMerchId(merchId);
                 d_PrdSku.setSpuId(d_PrdSpu.getId());
                 d_PrdSku.setName(d_PrdSpu.getName());
@@ -325,7 +353,12 @@ public class ProductServiceImpl implements ProductService {
                 d_PrdSku.setCreator(operater);
                 d_PrdSku.setCreateTime(CommonUtil.getDateTimeNow());
 
-                prdSkuMapper.insert(d_PrdSku);
+
+                if( prdSkuMapper.insert(d_PrdSku)<=0){
+                    platformTransactionManager.rollback(transaction);
+                    lock.unlock();
+                    return result.fail("保存失败");
+                }
 
             }
 
@@ -605,6 +638,7 @@ public class ProductServiceImpl implements ProductService {
         if(result.getCode()==1000) {
             cacheFactory.getProduct().removeSpuInfo(merchId, rop.getId());
             cacheFactory.getProduct().getSpuInfo(merchId, rop.getId());
+
         }
 
         return  result;
@@ -736,6 +770,104 @@ public class ProductServiceImpl implements ProductService {
         model.setText(CommonUtil.arr2Str(names));
 
         return model;
+    }
+
+    @Override
+    public void text_export(String operater,String merchId) {
+
+        try {
+
+            TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
+
+            File file = new File("/Users/chingment/Documents/books.xlsx");
+            InputStream is = new FileInputStream(file);
+            Workbook workbook = new XSSFWorkbook(is);
+            Sheet sheet = workbook.getSheetAt(0); // 获取表格页码
+            if (sheet != null) {
+                int rowNum = sheet.getLastRowNum(); // 获取该页表共有多少行
+                for (int j = 1; j <= rowNum; j++) {  // 一般来说第一行是标题,所以第二行开始读取
+                    Row row = sheet.getRow(j); // 获取表格行
+
+                    String rfId = row.getCell(0).getStringCellValue();
+                    String skuName = row.getCell(1).getStringCellValue();
+                    String skuId = row.getCell(2).getStringCellValue();
+
+                    RopProdcutAdd rop = new RopProdcutAdd();
+                    rop.setId(skuId);
+                    rop.setCumCode("TB" + j);
+                    rop.setName(skuName);
+
+                    List<SkuVo> skus = new ArrayList<>();
+
+                    SkuVo sku = new SkuVo();
+                    sku.setId(skuId);
+                    sku.setBarCode("BAR" + j);
+                    sku.setCumCode("TB" + j);
+                    sku.setIsOffSell(false);
+                    sku.setSalePrice(6);
+                    List<SpecDesVo> specDess = new ArrayList<>();
+                    SpecDesVo specDes = new SpecDesVo();
+                    specDes.setName("单规格");
+                    specDes.setValue("无");
+                    specDess.add(specDes);
+                    sku.setSpecDes(specDess);
+
+                    skus.add(sku);
+
+                    rop.setSkus(skus);
+
+                    List<SpecItemVo> specItems = new ArrayList<>();
+                    SpecItemVo specItemVo = new SpecItemVo();
+                    specItemVo.setName("单规格");
+
+                    List<SpecItemValueVo> specItemValues = new ArrayList<>();
+                    SpecItemValueVo specItemValue = new SpecItemValueVo();
+                    specItemValue.setName("无");
+                    specItemValues.add(specItemValue);
+                    specItemVo.setValue(specItemValues);
+                    specItems.add(specItemVo);
+                    rop.setSpecItems(specItems);
+
+                    List<Integer> sysKindIds = new ArrayList<>();
+                    sysKindIds.add(1713);
+                    sysKindIds.add(3258);
+                    rop.setSysKindIds(sysKindIds);
+
+                    List<FileVo> displayImgUrls = new ArrayList<>();
+                    FileVo filev = new FileVo();
+                    filev.setName("default_book.jpg");
+                    filev.setUrl("http://file.gddeshang168.com/upload/product/default_book.jpg");
+                    displayImgUrls.add(filev);
+                    rop.setDisplayImgUrls(displayImgUrls);
+
+                    CustomResult result = add("00000000000000000000000000000000", merchId, rop);
+
+                    if (result.getCode() == 1000) {
+                        LumosSelective selective_PrdSkuRfId = new LumosSelective();
+                        selective_PrdSkuRfId.setFields("*");
+                        selective_PrdSkuRfId.addWhere("MerchId", merchId);
+                        selective_PrdSkuRfId.addWhere("SkuId", skuId);
+                        selective_PrdSkuRfId.addWhere("RfId", rfId);
+                        PrdSkuRfId prdSkuRfId = prdSkuRfIdMapper.findOne(selective_PrdSkuRfId);
+                        if (prdSkuRfId == null) {
+                            prdSkuRfId = new PrdSkuRfId();
+                            prdSkuRfId.setId(IdWork.buildGuId());
+                            prdSkuRfId.setMerchId(merchId);
+                            prdSkuRfId.setSkuId(skuId);
+                            prdSkuRfId.setRfId(rfId);
+                            prdSkuRfId.setCreator(operater);
+                            prdSkuRfId.setCreateTime(CommonUtil.getDateTimeNow());
+                            prdSkuRfIdMapper.insert(prdSkuRfId);
+                        }
+                    }
+                }
+            }
+
+            platformTransactionManager.commit(transaction);
+        }
+        catch (Exception ex){
+            logger.error("text_export",ex);
+        }
     }
 
 }

@@ -225,7 +225,7 @@ public class DeviceServiceImpl implements DeviceService{
 
                 AdCreativeVo m_AdCreative = new AdCreativeVo();
 
-                m_AdCreative.setFileUrl(FileVo.getFileUrl(d_AdCreative.getFileUrl()));
+                m_AdCreative.setFileUrl(FileVo.getFirstFileUrl(d_AdCreative.getFileUrl()));
 
                 m_AdCreatives.add(m_AdCreative);
             }

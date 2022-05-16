@@ -11,5 +11,10 @@
         <if test="where.RfId != null">and RfId =#{where.RfId}</if>
     </select>
 
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.PrdSkuRfId">
+  insert into PrdSkuRfId(id,merchId,skuId,rfId,creator,createTime)
+  values(#{id},#{merchId},#{skuId},#{rfId},#{creator},#{createTime}
+  )
+    </insert>
 
 </mapper>

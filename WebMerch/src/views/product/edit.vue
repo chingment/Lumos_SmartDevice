@@ -389,10 +389,12 @@ export default {
     padding: 0;
   }
 
-  .kind-attr{
-display: inline-block;
-    .item{
+  .kind-attr {
+    display: inline-block;
+
+    .item {
       float: left;
+
       width: 50%;
     }
   }
