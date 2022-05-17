@@ -24,6 +24,7 @@ public class BookFlow {
     private String closeRfIds;
     private int status;//1000 已提交 2000 就绪中 3000执行中 4000已完成
     private Timestamp lastActionTime;
+    private int lastActionSn;
     private String lastActionCode;
     private String lastActionRemark;
     private String creator;
@@ -221,6 +222,14 @@ public class BookFlow {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getLastActionSn() {
+        return lastActionSn;
+    }
+
+    public void setLastActionSn(int lastActionSn) {
+        this.lastActionSn = lastActionSn;
     }
 
     public Timestamp getLastActionTime() {

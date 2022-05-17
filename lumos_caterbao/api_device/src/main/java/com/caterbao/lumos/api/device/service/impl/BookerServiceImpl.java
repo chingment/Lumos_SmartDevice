@@ -181,6 +181,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlow.setIdentityType(rop.getIdentityType());
         d_BookFlow.setIdentityId(rop.getIdentityId());
         d_BookFlow.setIdentityName(bizBookerService.getIdentityName(rop.getIdentityType(), rop.getIdentityId()));
+        d_BookFlow.setLastActionSn(0);
         d_BookFlow.setStatus(1000);
         d_BookFlow.setCreateTime(CommonUtil.getDateTimeNow());
         d_BookFlow.setCreator(IdWork.buildGuId());
@@ -202,7 +203,7 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
         new Thread(() -> {
-            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+            addFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
@@ -378,20 +379,14 @@ public class BookerServiceImpl implements BookerService {
                 d_BookFlow.setStatus(4000);
             }
 
-            Timestamp lastActionTime= CommonUtil.toDateTimeTimestamp(rop.getActionTime());
 
-            if(d_BookFlow.getLastActionTime()==null) {
+            if(rop.getActionSn()>=d_BookFlow.getLastActionSn()) {
+                d_BookFlow.setLastActionSn(rop.getActionSn());
                 d_BookFlow.setLastActionCode(rop.getActionCode());
                 d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
                 d_BookFlow.setLastActionRemark(rop.getActionRemark());
             }
-            else {
-                if (lastActionTime.after(d_BookFlow.getLastActionTime())) {
-                    d_BookFlow.setLastActionCode(rop.getActionCode());
-                    d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
-                    d_BookFlow.setLastActionRemark(rop.getActionRemark());
-                }
-            }
+
 
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
             d_BookFlow.setMender(IdWork.buildGuId());
@@ -571,7 +566,7 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerTakeStock> result = new CustomResult<>();
 
         new Thread(() -> {
-            addBorrowReturnFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
+            addFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerTakeStock ret = new RetBookerTakeStock();
@@ -648,19 +643,11 @@ public class BookerServiceImpl implements BookerService {
             }
 
 
-            Timestamp lastActionTime= CommonUtil.toDateTimeTimestamp(rop.getActionTime());
-
-            if(d_BookFlow.getLastActionTime()==null) {
+            if(rop.getActionSn()>=d_BookFlow.getLastActionSn()) {
+                d_BookFlow.setLastActionSn(rop.getActionSn());
                 d_BookFlow.setLastActionCode(rop.getActionCode());
                 d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
                 d_BookFlow.setLastActionRemark(rop.getActionRemark());
-            }
-            else {
-                if (lastActionTime.after(d_BookFlow.getLastActionTime())) {
-                    d_BookFlow.setLastActionCode(rop.getActionCode());
-                    d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
-                    d_BookFlow.setLastActionRemark(rop.getActionRemark());
-                }
             }
 
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
@@ -785,7 +772,7 @@ public class BookerServiceImpl implements BookerService {
         return null;
     }
 
-    private void addBorrowReturnFlowLog(String msgId, String msgMode, String deviceId, String flowId,int actionSn, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {
+    private void addFlowLog(String msgId, String msgMode, String deviceId, String flowId,int actionSn, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {
 
         String merchId = null;
         String deviceCumCode = null;

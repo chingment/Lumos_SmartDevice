@@ -163,7 +163,24 @@ public class BookerServiceImpl implements BookerService {
             return new FieldVo(1, "IC卡");
         else if (type == 2)
             return new FieldVo(2, "小程序");
+        else if (type == 3)
+            return new FieldVo(3, "设备后台");
         return model;
+    }
+
+    @Override
+    public String getIdentityName(int type,String id) {
+        String name = "";
+
+        if (type == 1) {
+            name =icCardMapper.getFullNameById(id);
+        } else if (type == 2) {
+            name = sysUserMapper.getFullNameById(id);
+        } else if(type==3) {
+            name = sysUserMapper.getFullNameById(id);
+        }
+
+        return name;
     }
 
     @Override
@@ -238,19 +255,5 @@ public class BookerServiceImpl implements BookerService {
     public  boolean checkNeedPay(Timestamp expireTime,int seq,float skuPrice){
         return  false;
     }
-
-    @Override
-    public String getIdentityName(int type,String id) {
-        String name = "";
-
-        if (type == 1) {
-            name =icCardMapper.getFullNameById(id);
-        } else if (type == 2) {
-            name = sysUserMapper.getFullNameById(id);
-        }
-
-        return name;
-    }
-
 
 }
