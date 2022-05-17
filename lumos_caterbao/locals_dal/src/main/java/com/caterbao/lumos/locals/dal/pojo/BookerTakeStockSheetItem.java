@@ -2,7 +2,7 @@ package com.caterbao.lumos.locals.dal.pojo;
 
 import java.sql.Timestamp;
 
-public class BookerTakeStockSheetDetail {
+public class BookerTakeStockSheetItem {
     private String id;
     private String flowId;
     private String sheetId;
