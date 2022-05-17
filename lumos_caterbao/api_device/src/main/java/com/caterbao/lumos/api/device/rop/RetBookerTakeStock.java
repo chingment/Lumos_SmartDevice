@@ -8,6 +8,8 @@ public class RetBookerTakeStock {
     private String flowId;
     private String sheetId;
     private List<BookVo> sheetItems;
+    private List<BookVo> warnItems;
+
     public String getFlowId() {
         return flowId;
     }
@@ -32,5 +34,13 @@ public class RetBookerTakeStock {
 
     public void setSheetItems(List<BookVo> sheetItems) {
         this.sheetItems = sheetItems;
+    }
+
+    public List<BookVo> getWarnItems() {
+        return warnItems;
+    }
+
+    public void setWarnItems(List<BookVo> warnItems) {
+        this.warnItems = warnItems;
     }
 }
