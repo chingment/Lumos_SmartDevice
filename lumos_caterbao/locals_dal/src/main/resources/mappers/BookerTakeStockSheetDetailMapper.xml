@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookerTakeStockSheetDetailMapper">
+    <insert id="insertBatch">
+        INSERT INTO BookerTakeStockSheetDetail (id,flowId,sheetId, merchId, storeId, shopId, deviceId,slotId,skuId,skuRfId,creator,createTime) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.flowId},#{item.sheetId},#{item.merchId},#{item.storeId},#{item.shopId},#{item.deviceId},#{item.slotId},#{item.skuId},#{item.skuRfId},#{item.creator},#{item.createTime})
+        </foreach>
+    </insert>
+
+</mapper>

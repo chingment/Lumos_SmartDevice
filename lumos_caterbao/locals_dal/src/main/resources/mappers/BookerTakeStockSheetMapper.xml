@@ -4,7 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookerTakeStockSheetMapper">
-
+    <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookerTakeStockSheet">
+  insert into BookerTakeStockSheet(id,flowId,merchId,storeId,shopId,deviceId,slotId,quantity,creator,createTime)
+  values(#{id},#{flowId},#{merchId},#{storeId},#{shopId},#{deviceId},#{slotId},#{quantity},#{creator},#{createTime})
+    </insert>
     <select id="findLast" resultType="com.caterbao.lumos.locals.dal.pojo.BookerTakeStockSheet" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields}  from BookerTakeStockSheet where 1=1
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>

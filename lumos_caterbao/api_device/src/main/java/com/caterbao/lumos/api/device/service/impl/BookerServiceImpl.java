@@ -36,6 +36,7 @@ public class BookerServiceImpl implements BookerService {
 
     private BookerSlotMapper bookerSlotMapper;
     private BookerTakeStockSheetMapper bookerTakeStockSheetMapper;
+    private BookerTakeStockSheetDetailMapper bookerTakeStockSheetDetailMapper;
     private BookFlowMapper bookFlowMapper;
     private BookBorrowMapper bookBorrowMapper;
     private BookerStockMapper bookerStockMapper;
@@ -54,6 +55,11 @@ public class BookerServiceImpl implements BookerService {
     @Autowired(required = false)
     public void setBookerTakeStockSheetMapper(BookerTakeStockSheetMapper bookerTakeStockSheetMapper) {
         this.bookerTakeStockSheetMapper = bookerTakeStockSheetMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookerTakeStockSheetDetailMapper(BookerTakeStockSheetDetailMapper bookerTakeStockSheetDetailMapper) {
+        this.bookerTakeStockSheetDetailMapper = bookerTakeStockSheetDetailMapper;
     }
 
     @Autowired(required = false)
@@ -123,11 +129,7 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("创建失败[W06]");
         }
 
-        LumosSelective selective_MerchDevice = new LumosSelective();
-        selective_MerchDevice.setFields("*");
-        selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus", "1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
 
         if (d_MerchDevice == null)
             return result.fail("创建失败[D01]");
@@ -511,10 +513,7 @@ public class BookerServiceImpl implements BookerService {
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
-        LumosSelective selective_MerchDevice = new LumosSelective();
-        selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus", "1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize, "SkuId Desc");
 
@@ -568,44 +567,76 @@ public class BookerServiceImpl implements BookerService {
         }).start();
 
         try {
-            RetBookerTakeStock ret = new RetBookerTakeStock();
 
-            LumosSelective selective_MerchDevice = new LumosSelective();
-            selective_MerchDevice.setFields("*");
-            selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
-            selective_MerchDevice.addWhere("BindStatus", "1");
-            MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+            String actionCode = rop.getActionCode();
+            String flowId = rop.getFlowId();
 
-            if (d_MerchDevice == null)
-                return result.fail("盘点失败[D01]");
+            LumosSelective selective_BookFlow = new LumosSelective();
+            selective_BookFlow.setFields("*");
+            selective_BookFlow.addWhere("FlowId", flowId);
 
-            if (CommonUtil.isEmpty(d_MerchDevice.getStoreId()))
-                return result.fail("盘点失败[D02]");
+            BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
 
-            if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
-                return result.fail("盘点失败[D03]");
-
-            bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
-
-            List<BookerStock> d_BookerStocks = new ArrayList<>();
-
-            for (RfTagVo rfTag : rop.getRfTags()) {
-                BookerStock d_BookerStock = new BookerStock();
-                d_BookerStock.setId(IdWork.buildGuId());
-                d_BookerStock.setMerchId(d_MerchDevice.getMerchId());
-                d_BookerStock.setStoreId(d_MerchDevice.getStoreId());
-                d_BookerStock.setShopId(d_MerchDevice.getShopId());
-                d_BookerStock.setDeviceId(rop.getDeviceId());
-                d_BookerStock.setSlotId(rfTag.getSlotId());
-                d_BookerStock.setSkuRfId(rfTag.getRfId());
-                d_BookerStock.setCreateTime(CommonUtil.getDateTimeNow());
-                d_BookerStock.setCreator(operater);
-                d_BookerStocks.add(d_BookerStock);
+            if (d_BookFlow == null) {
+                return result.fail("验证失败[D01]");
             }
 
-            bookerStockMapper.insertBatch(d_BookerStocks);
+            if (actionCode.equals("rfreader_success")) {
 
-            return result.success("盘点成功", ret);
+                RetBookerTakeStock ret = new RetBookerTakeStock();
+
+                BookerBorrowReturnActionData actionData = JsonUtil.toObject(rop.getActionData(), new TypeReference<BookerBorrowReturnActionData>() {
+                });
+
+                List<String> closeRfIds = actionData.getCloseRfIds();
+
+                BookerTakeStockSheet d_BookerTakeStockSheet=new BookerTakeStockSheet();
+                d_BookerTakeStockSheet.setId(IdWork.buildGuId());
+                d_BookerTakeStockSheet.setFlowId(rop.getFlowId());
+                d_BookerTakeStockSheet.setMerchId(d_BookFlow.getMerchId());
+                d_BookerTakeStockSheet.setStoreId(d_BookFlow.getStoreId());
+                d_BookerTakeStockSheet.setShopId(d_BookFlow.getShopId());
+                d_BookerTakeStockSheet.setDeviceId(rop.getDeviceId());
+                d_BookerTakeStockSheet.setSlotId(d_BookFlow.getSlotId());
+                d_BookerTakeStockSheet.setQuantity(closeRfIds.size());
+                d_BookerTakeStockSheet.setCreateTime(CommonUtil.getDateTimeNow());
+                d_BookerTakeStockSheet.setCreator(operater);
+
+                bookerTakeStockSheetMapper.insert(d_BookerTakeStockSheet);
+
+                List<BookerTakeStockSheetDetail> d_BookerTakeStockSheetDetails=new ArrayList<>();
+                for (String closeRfId: closeRfIds ) {
+
+                    SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookerTakeStockSheet.getMerchId(), closeRfId);
+
+                    BookerTakeStockSheetDetail d_BookerTakeStockSheetDetail=new BookerTakeStockSheetDetail();
+                    d_BookerTakeStockSheetDetail.setId(IdWork.buildGuId());
+                    d_BookerTakeStockSheetDetail.setFlowId(d_BookerTakeStockSheet.getFlowId());
+                    d_BookerTakeStockSheetDetail.setSheetId(d_BookerTakeStockSheet.getId());
+                    d_BookerTakeStockSheetDetail.setMerchId(d_BookerTakeStockSheet.getMerchId());
+                    d_BookerTakeStockSheetDetail.setStoreId(d_BookerTakeStockSheet.getStoreId());
+                    d_BookerTakeStockSheetDetail.setShopId(d_BookerTakeStockSheet.getShopId());
+                    d_BookerTakeStockSheetDetail.setDeviceId(d_BookerTakeStockSheet.getDeviceId());
+                    d_BookerTakeStockSheetDetail.setSlotId(d_BookerTakeStockSheet.getSlotId());
+                    d_BookerTakeStockSheetDetail.setSkuId(r_Sku.getId());
+                    d_BookerTakeStockSheetDetail.setSkuRfId(closeRfId);
+                    d_BookerTakeStockSheetDetail.setCreateTime(d_BookerTakeStockSheet.getCreateTime());
+                    d_BookerTakeStockSheetDetail.setCreator(d_BookerTakeStockSheet.getCreator());
+
+                    d_BookerTakeStockSheetDetails.add(d_BookerTakeStockSheetDetail);
+
+                }
+
+
+                this.bookerTakeStockSheetDetailMapper.insertBatch(d_BookerTakeStockSheetDetails);
+
+                return result.success("盘点成功", ret);
+            }
+            else
+            {
+
+                return result.success("盘点成功");
+            }
 
         } catch (Exception ex) {
             logger.error("盘点流程发生异常", ex);
@@ -615,16 +646,22 @@ public class BookerServiceImpl implements BookerService {
 
     }
 
+    private MerchDeviceVw  getDevice(String deviceId){
+        LumosSelective selective_MerchDevice = new LumosSelective();
+        selective_MerchDevice.setFields("*");
+        selective_MerchDevice.addWhere("DeviceId", deviceId);
+        selective_MerchDevice.addWhere("BindStatus", "1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+
+        return d_MerchDevice;
+    }
+
     @Override
     public  CustomResult<RetBookerStockSlots> stockSlots(String operater, RopBookerStockSlots rop) {
 
         CustomResult<RetBookerStockSlots> result = new CustomResult<>();
 
-        LumosSelective selective_MerchDevice = new LumosSelective();
-        selective_MerchDevice.setFields("*");
-        selective_MerchDevice.addWhere("DeviceId", rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus", "1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
 
         if (d_MerchDevice == null)
             return result.fail("获取失败[D01]");
@@ -652,15 +689,14 @@ public class BookerServiceImpl implements BookerService {
 
             HashMap<String, Object> item = new HashMap<>();
 
-            item.put("slotId",d_BookerSlot.getSlotId());
-            item.put("name",d_BookerSlot.getName());
-            item.put("isOpen",false);
+            item.put("slotId", d_BookerSlot.getSlotId());
+            item.put("name", d_BookerSlot.getName());
+            item.put("isOpen", false);
 
 
+            long stockQuantity = bookerStockMapper.getDeviceStockQuantity(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
 
-            long stockQuantity=bookerStockMapper.getDeviceStockQuantity(d_MerchDevice.getMerchId(),d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
-
-            item.put("stockQuantity",stockQuantity);
+            item.put("stockQuantity", stockQuantity);
 
             LumosSelective selective_BookerTakeStockSheet = new LumosSelective();
             selective_BookerTakeStockSheet.setFields("*");
@@ -670,14 +706,13 @@ public class BookerServiceImpl implements BookerService {
             selective_BookerTakeStockSheet.addWhere("DeviceId", rop.getDeviceId());
 
 
-
             BookerTakeStockSheet d_BookerTakeStockSheet = bookerTakeStockSheetMapper.findLast(selective_BookerTakeStockSheet);
             if (d_BookerTakeStockSheet == null) {
-                item.put("lastTakeTime","无");
-                item.put("lastTakeQuantity",0);
+                item.put("lastTakeTime", "无");
+                item.put("lastTakeQuantity", 0);
             } else {
-                item.put("lastTakeTime",CommonUtil.toDateTimeStr(d_BookerTakeStockSheet.getCreateTime()));
-                item.put("lastTakeQuantity",d_BookerTakeStockSheet.getQuantity());
+                item.put("lastTakeTime", CommonUtil.toDateTimeStr(d_BookerTakeStockSheet.getCreateTime()));
+                item.put("lastTakeQuantity", d_BookerTakeStockSheet.getQuantity());
             }
 
             items.add(item);
@@ -692,6 +727,32 @@ public class BookerServiceImpl implements BookerService {
         ret.setItems(items);
 
         return result.success("获取成功", ret);
+    }
+
+    @Override
+    public  CustomResult<RetBookerStockInbound> stockInbound(String operater, RopBookerStockInbound rop){
+
+        //                    bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
+//
+//    List<BookerStock> d_BookerStocks = new ArrayList<>();
+//
+//                for (RfTagVo rfTag : rop.getRfTags()) {
+//        BookerStock d_BookerStock = new BookerStock();
+//        d_BookerStock.setId(IdWork.buildGuId());
+//        d_BookerStock.setMerchId(d_MerchDevice.getMerchId());
+//        d_BookerStock.setStoreId(d_MerchDevice.getStoreId());
+//        d_BookerStock.setShopId(d_MerchDevice.getShopId());
+//        d_BookerStock.setDeviceId(rop.getDeviceId());
+//        d_BookerStock.setSlotId(rfTag.getSlotId());
+//        d_BookerStock.setSkuRfId(rfTag.getRfId());
+//        d_BookerStock.setCreateTime(CommonUtil.getDateTimeNow());
+//        d_BookerStock.setCreator(operater);
+//        d_BookerStocks.add(d_BookerStock);
+//    }
+//
+//                bookerStockMapper.insertBatch(d_BookerStocks);
+
+        return null;
     }
 
     private void addBorrowReturnFlowLog(String msgId, String msgMode, String deviceId, String flowId,int actionSn, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {

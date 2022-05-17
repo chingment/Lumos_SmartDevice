@@ -11,5 +11,5 @@ public interface BookerService {
     CustomResult<RetBookerDisplayBooks> displayBooks(String operater, RopBookerDisplayBooks rop);
     CustomResult<RetBookerTakeStock> takeStock(String operater, RopBookerTakeStock rop);
     CustomResult<RetBookerStockSlots> stockSlots(String operater, RopBookerStockSlots rop);
-
+    CustomResult<RetBookerStockInbound> stockInbound(String operater, RopBookerStockInbound rop);
 }

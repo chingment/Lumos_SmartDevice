@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class BookerTakeStockSheetDetail {
     private String id;
+    private String flowId;
     private String sheetId;
     private String merchId;
     private String storeId;
@@ -21,6 +22,14 @@ public class BookerTakeStockSheetDetail {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(String flowId) {
+        this.flowId = flowId;
     }
 
     public String getSheetId() {

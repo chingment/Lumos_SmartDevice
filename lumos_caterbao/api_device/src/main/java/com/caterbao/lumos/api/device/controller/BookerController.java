@@ -60,4 +60,10 @@ public class BookerController extends BaseController{
         return bookerService.stockSlots(this.getCurrentUserId(),rop);
     }
 
+    @RequestMapping(value = "stockInbound", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<RetBookerStockInbound> stockInbound(@RequestBody RopBookerStockInbound rop){
+        return bookerService.stockInbound(this.getCurrentUserId(),rop);
+    }
+
 }

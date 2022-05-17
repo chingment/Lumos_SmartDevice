@@ -7,6 +7,7 @@ import java.util.List;
 
 public class RopBookerTakeStock {
     private String deviceId;
+    private String slotId;
     private String msgId;
     private String msgMode;
     private String flowId;
@@ -24,6 +25,14 @@ public class RopBookerTakeStock {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getSlotId() {
+        return slotId;
+    }
+
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
     }
 
     public List<RfTagVo> getRfTags() {
