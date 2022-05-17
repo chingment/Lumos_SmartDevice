@@ -1,8 +1,8 @@
 package com.caterbao.lumos.api.device.rop.vo;
 
-public class BookerStockBinVo {
+public class BookerStockSlotVo {
     private String slotId;
-    private String slotName;
+    private String name;
     private int quantity;
     private String lastTakeStockTime;
     private boolean isOpen;
@@ -15,12 +15,12 @@ public class BookerStockBinVo {
         this.slotId = slotId;
     }
 
-    public String getSlotName() {
-        return slotName;
+    public String getName() {
+        return name;
     }
 
-    public void setSlotName(String slotName) {
-        this.slotName = slotName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getQuantity() {

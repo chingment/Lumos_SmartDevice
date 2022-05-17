@@ -23,6 +23,13 @@
 
     </select>
 
+    <select id="getDeviceStockQuantity" resultType="java.lang.Long">
+        select count(*) from BookerStock where  MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+    </select>
+
     <delete id="delete">
         delete from BookerStock where MerchId =#{merchId}
         and StoreId =#{storeId}

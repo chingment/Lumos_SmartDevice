@@ -17,7 +17,6 @@ import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sun.imageio.plugins.common.I18N;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -617,9 +616,9 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public  CustomResult<RetBookerStockBins> stockBins(String operater, RopBookerStockBins rop){
+    public  CustomResult<RetBookerStockSlots> stockSlots(String operater, RopBookerStockSlots rop) {
 
-        CustomResult<RetBookerStockBins> result = new CustomResult<>();
+        CustomResult<RetBookerStockSlots> result = new CustomResult<>();
 
         LumosSelective selective_MerchDevice = new LumosSelective();
         selective_MerchDevice.setFields("*");
@@ -636,51 +635,56 @@ public class BookerServiceImpl implements BookerService {
         if (CommonUtil.isEmpty(d_MerchDevice.getShopId()))
             return result.fail("获取失败[D03]");
 
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
 
-        int pageNum = 1;
-        int pageSize = 100;
+        Page<?> page = PageHelper.startPage(pageNum, pageSize, "SlotId");
 
-        Page<?> page = PageHelper.startPage(pageNum, pageSize, "SlotId Desc");
-
-        LumosSelective selective_BookerSlots=new LumosSelective();
+        LumosSelective selective_BookerSlots = new LumosSelective();
         selective_BookerSlots.setFields("*");
-        selective_BookerSlots.addWhere("DeviceId",rop.getDeviceId());
+        selective_BookerSlots.addWhere("DeviceId", rop.getDeviceId());
 
-        List<BookerSlot> d_Slots = bookerSlotMapper.find(selective_BookerSlots);
+        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective_BookerSlots);
 
-        List<Object> items=new ArrayList<>();
+        List<Object> items = new ArrayList<>();
 
-        if(d_Slots!=null) {
-            for (BookerSlot d_Slot : d_Slots) {
-                BookerStockBinVo m_StockBin = new BookerStockBinVo();
-                m_StockBin.setSlotId(d_Slot.getSlotId());
-                m_StockBin.setSlotName(d_Slot.getName());
-                m_StockBin.setIsOpen(false);
+        for (BookerSlot d_BookerSlot : d_BookerSlots) {
 
-                LumosSelective selective_BookerTakeStockSheet=new LumosSelective();
-                selective_BookerTakeStockSheet.setFields("*");
-                selective_BookerTakeStockSheet.addWhere("MerchId",d_MerchDevice.getMerchId());
-                selective_BookerTakeStockSheet.addWhere("StoreId",d_MerchDevice.getStoreId());
-                selective_BookerTakeStockSheet.addWhere("ShopId",d_MerchDevice.getShopId());
-                selective_BookerTakeStockSheet.addWhere("DeviceId",rop.getDeviceId());
+            HashMap<String, Object> item = new HashMap<>();
 
-                BookerTakeStockSheet d_BookerTakeStockSheet= bookerTakeStockSheetMapper.findLast(selective_BookerTakeStockSheet);
-                if(d_BookerTakeStockSheet==null)
-                {
-                    m_StockBin.setLastTakeStockTime("无");
-                }
-                else {
-                    m_StockBin.setLastTakeStockTime(CommonUtil.toDateTimeStr(d_BookerTakeStockSheet.getCreateTime()));
-                    m_StockBin.setQuantity(d_BookerTakeStockSheet.getQuantity());
-                }
+            item.put("slotId",d_BookerSlot.getSlotId());
+            item.put("name",d_BookerSlot.getName());
+            item.put("isOpen",false);
 
-                items.add(m_StockBin);
 
+
+            long stockQuantity=bookerStockMapper.getDeviceStockQuantity(d_MerchDevice.getMerchId(),d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
+
+            item.put("stockQuantity",stockQuantity);
+
+            LumosSelective selective_BookerTakeStockSheet = new LumosSelective();
+            selective_BookerTakeStockSheet.setFields("*");
+            selective_BookerTakeStockSheet.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective_BookerTakeStockSheet.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective_BookerTakeStockSheet.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective_BookerTakeStockSheet.addWhere("DeviceId", rop.getDeviceId());
+
+
+
+            BookerTakeStockSheet d_BookerTakeStockSheet = bookerTakeStockSheetMapper.findLast(selective_BookerTakeStockSheet);
+            if (d_BookerTakeStockSheet == null) {
+                item.put("lastTakeTime","无");
+                item.put("lastTakeQuantity",0);
+            } else {
+                item.put("lastTakeTime",CommonUtil.toDateTimeStr(d_BookerTakeStockSheet.getCreateTime()));
+                item.put("lastTakeQuantity",d_BookerTakeStockSheet.getQuantity());
             }
+
+            items.add(item);
         }
 
         long total = page.getTotal();
-        RetBookerStockBins ret = new RetBookerStockBins();
+        RetBookerStockSlots ret = new RetBookerStockSlots();
         ret.setPageNum(pageNum);
         ret.setPageSize(pageSize);
         ret.setTotalPages(page.getPages());

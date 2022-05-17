@@ -1,6 +1,8 @@
 package com.caterbao.lumos.api.device.rop;
 
-public class RopBookerStockBins {
+import com.caterbao.lumos.locals.common.BasePageRequest;
+
+public class RopBookerStockSlots  extends BasePageRequest {
     private String deviceId;
 
     public String getDeviceId() {

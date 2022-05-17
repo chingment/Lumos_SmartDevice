@@ -13,4 +13,5 @@ public interface BookerStockMapper {
     List<BookerDeviceSkuStockVw> findDevcieSkuStock(LumosSelective selective);
     long delete(String merchId,String storeId,String shopId,String deviceId);
     long insertBatch(List<BookerStock> list);
+    long getDeviceStockQuantity(String merchId,String storeId,String shopId,String deviceId);
 }

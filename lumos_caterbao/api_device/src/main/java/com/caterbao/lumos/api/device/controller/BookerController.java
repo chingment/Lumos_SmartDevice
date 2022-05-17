@@ -54,10 +54,10 @@ public class BookerController extends BaseController{
         return bookerService.takeStock(this.getCurrentUserId(),rop);
     }
 
-    @RequestMapping(value = "stockBins", method = RequestMethod.POST)
+    @RequestMapping(value = "stockSlots", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult<RetBookerStockBins> takeStock(@RequestBody RopBookerStockBins rop){
-        return bookerService.stockBins(this.getCurrentUserId(),rop);
+    public CustomResult<RetBookerStockSlots> stockSlots(@RequestBody RopBookerStockSlots rop){
+        return bookerService.stockSlots(this.getCurrentUserId(),rop);
     }
 
 }
