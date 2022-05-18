@@ -55,11 +55,11 @@ public class OwnServiceImpl implements OwnService {
         CustomResult<Object> result = new CustomResult<>();
 
 
-        LumosSelective selective_SysUser=new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
-        selective_SysUser.addWhere("UserName",rop.getUserName());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+        selective.addWhere("UserName",rop.getUserName());
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         if (d_SysUser == null)
             return result.fail("账号或密码错误");
@@ -71,11 +71,11 @@ public class OwnServiceImpl implements OwnService {
         if (!isFlag)
             return result.fail("账号或密码错误");
 
-        LumosSelective selective_SysMerchUser=new LumosSelective();
-        selective_SysMerchUser.setFields("UserId,MerchId");
-        selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
+        selective=new LumosSelective();
+        selective.setFields("UserId,MerchId");
+        selective.addWhere("UserId",d_SysUser.getId());
 
-        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective);
 
         if (d_SysMerchUser == null)
             return result.fail("该账号未授权");
@@ -173,11 +173,11 @@ public class OwnServiceImpl implements OwnService {
             return result.fail("新密码不能为空");
         }
 
-        LumosSelective selective_SysUser = new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
-        selective_SysUser.addWhere("UserId", operater);
+        LumosSelective selective= new LumosSelective();
+        selective.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+        selective.addWhere("UserId", operater);
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         if (d_SysUser == null)
             return result.fail("保存失败");

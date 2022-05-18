@@ -121,12 +121,12 @@ public class ProductServiceImpl implements ProductService {
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
 
-        LumosSelective selective_PrdSpu=new LumosSelective();
-        selective_PrdSpu.setFields("Id,MerchId,CreateTime,DeleteTime");
-        selective_PrdSpu.addWhere("MerchId",merchId);
-        selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
-        selective_PrdSpu.addWhere("SpuIds",spuIds);
-        List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,MerchId,CreateTime,DeleteTime");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("IsDelete",rop.getIsDelete());
+        selective.addWhere("SpuIds",spuIds);
+        List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -176,66 +176,6 @@ public class ProductServiceImpl implements ProductService {
         ret.setItems(items);
 
         return result.success("",ret);
-
-
-//        CustomResult<Object> result = new CustomResult<>();
-//
-//        int pageNum = rop.getPageNum();
-//        int pageSize = rop.getPageSize();
-//
-//
-//        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
-//
-//        LumosSelective selective_PrdSpu=new LumosSelective();
-//        selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,DisplayImgUrls,CreateTime");
-//        selective_PrdSpu.addWhere("MerchId",merchId);
-//        selective_PrdSpu.addWhere("IsDelete",rop.getIsDelete());
-//        List<PrdSpu> d_PrdSpus = prdSpuMapper.find(selective_PrdSpu);
-//
-//        List<Object> items=new ArrayList<>();
-//
-//        for (PrdSpu d_PrdSpu:
-//                d_PrdSpus ) {
-//
-//            HashMap<String,Object> item=new HashMap<>();
-//
-//            item.put("id",d_PrdSpu.getId());
-//            item.put("name",d_PrdSpu.getName());
-//            item.put("cumCode",d_PrdSpu.getCumCode());
-//            item.put("imgUrl", ImgVo.getMainImgUrl(d_PrdSpu.getDisplayImgUrls()));
-//            item.put("sysKinds",getSysKinds(d_PrdSpu.getSysKindIds()));
-//            LumosSelective selective_PrdSku=new LumosSelective();
-//            selective_PrdSku.setFields("Id,CumCode,BarCode,SalePrice,SpecDes");
-//            selective_PrdSku.addWhere("MerchId",merchId);
-//            selective_PrdSku.addWhere("SpuId",d_PrdSpu.getId());
-//            List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
-//
-//            List<Object> skus=new ArrayList<>();
-//
-//            for (PrdSku d_PrdSku: d_PrdSkus ) {
-//                HashMap<String,Object> item_sku=new HashMap<>();
-//                item_sku.put("id",d_PrdSku.getId());
-//                item_sku.put("cumCode",d_PrdSku.getCumCode());
-//                item_sku.put("barCode",d_PrdSku.getBarCode());
-//                item_sku.put("salePrice",d_PrdSku.getSalePrice());
-//                item_sku.put("specDes",d_PrdSku.getSpecDes());
-//                skus.add(item_sku);
-//            }
-//
-//            item.put("skus",skus);
-//
-//            items.add(item);
-//        }
-//
-//        long total = page.getTotal();
-//        PageResult<Object> ret = new PageResult<>();
-//        ret.setPageNum(pageNum);
-//        ret.setPageSize(pageSize);
-//        ret.setTotalPages(page.getPages());
-//        ret.setTotalSize(total);
-//        ret.setItems(items);
-//
-//        return result.success("",ret);
     }
 
     @Override
@@ -382,20 +322,6 @@ public class ProductServiceImpl implements ProductService {
 
         SpuInfo r_SpuInfo = cacheFactory.getProduct().getSpuInfo(merchId,spuId);
 
-        //LumosSelective selective_PrdSpu = new LumosSelective();
-        //selective_PrdSpu.setFields("Id,Name,CumCode,SysKindIds,SpecItems, DisplayImgUrls,CharTags,BriefDes,DetailsDes");
-        //selective_PrdSpu.addWhere("MerchId", merchId);
-        //selective_PrdSpu.addWhere("SpuId", spuId);
-
-        //PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
-
-        //LumosSelective selective_PrdSkus = new LumosSelective();
-        //selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
-        //selective_PrdSkus.addWhere("MerchId", merchId);
-        //selective_PrdSkus.addWhere("SpuId", spuId);
-
-        //List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSkus);
-
         HashMap<String, Object> ret = new HashMap<>();
         ret.put("id", r_SpuInfo.getId());
         ret.put("name", r_SpuInfo.getName());
@@ -427,21 +353,21 @@ public class ProductServiceImpl implements ProductService {
 
         ret.put("skus", m_Skus);
 
-        LumosSelective selective_PrdSpuAttrs = new LumosSelective();
-        selective_PrdSpuAttrs.setFields("*");
-        selective_PrdSpuAttrs.addWhere("SpuId", spuId);
+        LumosSelective selective= new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("SpuId", spuId);
 
         List<Object> m_SysKindAttrs = new ArrayList<>();
 
-        List<PrdSpuAttr> d_PrdSpuAttrs = prdSpuAttrMapper.find(selective_PrdSpuAttrs);
+        List<PrdSpuAttr> d_PrdSpuAttrs = prdSpuAttrMapper.find(selective);
 
         for (PrdSpuAttr d_PrdSpuAttr : d_PrdSpuAttrs) {
 
-            LumosSelective selective_PrdSysKindAttrs = new LumosSelective();
-            selective_PrdSysKindAttrs.setFields("*");
-            selective_PrdSysKindAttrs.addWhere("AttrId", String.valueOf(d_PrdSpuAttr.getAttrId()));
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("AttrId", String.valueOf(d_PrdSpuAttr.getAttrId()));
 
-            PrdSysKindAttr d_PrdSysKindAttr = prdSysKindAttrMapper.findOne(selective_PrdSysKindAttrs);
+            PrdSysKindAttr d_PrdSysKindAttr = prdSysKindAttrMapper.findOne(selective);
 
             if (d_PrdSysKindAttr != null) {
                 HashMap<String, Object> m_SysKindAttr = new HashMap<>();
@@ -656,12 +582,12 @@ public class ProductServiceImpl implements ProductService {
                 return result.fail("货号ID不能为空");
             }
 
-            LumosSelective selective_PrdSpu=new LumosSelective();
-            selective_PrdSpu.setFields("Id,CumCode");
-            selective_PrdSpu.addWhere("MerchId",merchId);
-            selective_PrdSpu.addWhere("SpuId",rop.getId());
+            LumosSelective selective=new LumosSelective();
+            selective.setFields("Id,CumCode");
+            selective.addWhere("MerchId",merchId);
+            selective.addWhere("SpuId",rop.getId());
 
-            PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective_PrdSpu);
+            PrdSpu d_PrdSpu=prdSpuMapper.findOne(selective);
 
             d_PrdSpu.setCumCode("old_"+d_PrdSpu.getCumCode());
             d_PrdSpu.setDelete(true);
@@ -672,11 +598,11 @@ public class ProductServiceImpl implements ProductService {
 
             prdSpuMapper.update(d_PrdSpu);
 
-            LumosSelective selective_PrdSkus=new LumosSelective();
-            selective_PrdSkus.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
-            selective_PrdSkus.addWhere("MerchId",merchId);
-            selective_PrdSkus.addWhere("SpuId",rop.getId());
-            List<PrdSku> d_PrdSkus=prdSkuMapper.find(selective_PrdSkus);
+            selective=new LumosSelective();
+            selective.setFields("Id,CumCode,SalePrice,BarCode,SpecDes");
+            selective.addWhere("MerchId",merchId);
+            selective.addWhere("SpuId",rop.getId());
+            List<PrdSku> d_PrdSkus=prdSkuMapper.find(selective);
 
             for (PrdSku d_PrdSku: d_PrdSkus ) {
 
@@ -843,12 +769,12 @@ public class ProductServiceImpl implements ProductService {
                     CustomResult result = add("00000000000000000000000000000000", merchId, rop);
 
                     if (result.getCode() == 1000) {
-                        LumosSelective selective_PrdSkuRfId = new LumosSelective();
-                        selective_PrdSkuRfId.setFields("*");
-                        selective_PrdSkuRfId.addWhere("MerchId", merchId);
-                        selective_PrdSkuRfId.addWhere("SkuId", skuId);
-                        selective_PrdSkuRfId.addWhere("RfId", rfId);
-                        PrdSkuRfId prdSkuRfId = prdSkuRfIdMapper.findOne(selective_PrdSkuRfId);
+                        LumosSelective selective = new LumosSelective();
+                        selective.setFields("*");
+                        selective.addWhere("MerchId", merchId);
+                        selective.addWhere("SkuId", skuId);
+                        selective.addWhere("RfId", rfId);
+                        PrdSkuRfId prdSkuRfId = prdSkuRfIdMapper.findOne(selective);
                         if (prdSkuRfId == null) {
                             prdSkuRfId = new PrdSkuRfId();
                             prdSkuRfId.setId(IdWork.buildGuId());

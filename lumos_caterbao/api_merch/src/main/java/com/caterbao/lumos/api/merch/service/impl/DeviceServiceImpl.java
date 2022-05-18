@@ -59,11 +59,11 @@ public class DeviceServiceImpl implements DeviceService {
 
         CustomResult<Object> result = new CustomResult<>();
 
-        LumosSelective selective_DeviceCount = new LumosSelective();
-        selective_DeviceCount.addWhere("MerchId", merchId);
+        LumosSelective selective = new LumosSelective();
+        selective.addWhere("MerchId", merchId);
 
 
-        long deviceCount = merchDeviceMapper.count(selective_DeviceCount);
+        long deviceCount = merchDeviceMapper.count(selective);
 
         HashMap<String, Object> ret = new HashMap<>();
 
@@ -95,11 +95,11 @@ public class DeviceServiceImpl implements DeviceService {
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize);
 
-        LumosSelective selective_MerchDevice=new LumosSelective();
-        selective_MerchDevice.addWhere("MerchId",merchId);
-        selective_MerchDevice.addWhere("SceneMode","2");
-        selective_MerchDevice.addWhere("DeviceCode",rop.getDeviceCode());
-        List<MerchDeviceVw> d_Devices= merchDeviceMapper.find(selective_MerchDevice);
+        LumosSelective selective=new LumosSelective();
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("SceneMode","2");
+        selective.addWhere("DeviceCode",rop.getDeviceCode());
+        List<MerchDeviceVw> d_Devices= merchDeviceMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -182,11 +182,11 @@ public class DeviceServiceImpl implements DeviceService {
 
         CustomResult<Object> result = new CustomResult<>();
 
-        LumosSelective selective_BookerSlots = new LumosSelective();
-        selective_BookerSlots.setFields("*");
-        selective_BookerSlots.addWhere("DeviceId", deviceId);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("DeviceId", deviceId);
 
-        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective_BookerSlots);
+        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective);
 
         List<Object> m_Slots = new ArrayList<>();
 

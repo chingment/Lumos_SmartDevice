@@ -124,11 +124,11 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<Object> result = new CustomResult<>();
 
-        LumosSelective selective_BookBorrow = new LumosSelective();
-        selective_BookBorrow.setFields("*");
-        selective_BookBorrow.addWhere("MerchId", merchId);
-        selective_BookBorrow.addWhere("BorrowId", borrowId);
-        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId", merchId);
+        selective.addWhere("BorrowId", borrowId);
+        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective);
 
         if (d_BookBorrow == null)
             return result.fail("找不到数据");
@@ -155,11 +155,11 @@ public class BookerServiceImpl implements BookerService {
         String returnDeviceCode = "";
         String returnIdentityName = "";
         if (!CommonUtil.isEmpty(d_BookBorrow.getReturnFlowId())) {
-            LumosSelective selective_BookFlowByReturn = new LumosSelective();
-            selective_BookFlowByReturn.setFields("*");
-            selective_BookFlowByReturn.addWhere("MerchId", merchId);
-            selective_BookFlowByReturn.addWhere("FlowId", d_BookBorrow.getReturnFlowId());
-            BookFlow d_BookFlowByReturn = bookFlowMapper.findOne(selective_BookFlowByReturn);
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", merchId);
+            selective.addWhere("FlowId", d_BookBorrow.getReturnFlowId());
+            BookFlow d_BookFlowByReturn = bookFlowMapper.findOne(selective);
             if (d_BookFlowByReturn != null) {
                 returnDeviceCode = DeviceVoUtil.getCode(d_BookFlowByReturn.getDeviceId(), d_BookFlowByReturn.getDeviceCumCode());
                 returnIdentityName = d_BookFlowByReturn.getIdentityName();
@@ -233,12 +233,12 @@ public class BookerServiceImpl implements BookerService {
 
         HashMap<String, Object> ret = new HashMap<>();
 
-        LumosSelective selective_Flow = new LumosSelective();
-        selective_Flow.setFields("*");
-        selective_Flow.addWhere("MerchId", merchId);
-        selective_Flow.addWhere("FlowId", flowId);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId", merchId);
+        selective.addWhere("FlowId", flowId);
 
-        BookFlow d_BookFlow = bookFlowMapper.findOne(selective_Flow);
+        BookFlow d_BookFlow = bookFlowMapper.findOne(selective);
 
         if(d_BookFlow==null)
             result.fail("找不到记录");
@@ -291,12 +291,12 @@ public class BookerServiceImpl implements BookerService {
             }
         }
 
-        LumosSelective selective_FlowLogs = new LumosSelective();
-        selective_FlowLogs.setFields("*");
-        selective_FlowLogs.addWhere("MerchId", merchId);
-        selective_FlowLogs.addWhere("FlowId", flowId);
+        selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId", merchId);
+        selective.addWhere("FlowId", flowId);
 
-        List<BookFlowLog> d_BookFlowLogs = bookFlowLogMapper.find(selective_FlowLogs);
+        List<BookFlowLog> d_BookFlowLogs = bookFlowLogMapper.find(selective);
 
         List<Object> flowLogs=new ArrayList<>();
 

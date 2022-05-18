@@ -85,19 +85,19 @@ public class DeviceServiceImpl implements DeviceService{
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return result.fail("设备编码为空");
 
-        LumosSelective selective_Device=new LumosSelective();
-        selective_Device.setFields("Id,Name,SceneMode,VersionMode");
-        selective_Device.addWhere("DeviceId",rop.getDeviceId());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,Name,SceneMode,VersionMode");
+        selective.addWhere("DeviceId",rop.getDeviceId());
 
-        Device d_Device = deviceMapper.findOne(selective_Device);
+        Device d_Device = deviceMapper.findOne(selective);
 
         if (d_Device == null)
             return result.fail("设备编码未注册");
 
-        LumosSelective selective_MerchDevice=new LumosSelective();
-        selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus","1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        selective=new LumosSelective();
+        selective.addWhere("DeviceId",rop.getDeviceId());
+        selective.addWhere("BindStatus","1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective);
 
         if (d_MerchDevice==null)
             return result.fail("设备未绑定商户");
@@ -125,11 +125,11 @@ public class DeviceServiceImpl implements DeviceService{
         m_Device.setSceneMode(d_Device.getSceneMode());
         m_Device.setVersionMode(d_Device.getVersionMode());
 
-        LumosSelective selective_Drives=new LumosSelective();
-        selective_Drives.setFields("DriveId,Name,ComId,ComPrl,ComBaud");
-        selective_Drives.addWhere("DeviceId",rop.getDeviceId());
+        selective=new LumosSelective();
+        selective.setFields("DriveId,Name,ComId,ComPrl,ComBaud");
+        selective.addWhere("DeviceId",rop.getDeviceId());
 
-        List<DeviceDrive> d_Drives = deviceDriveMapper.find(selective_Drives);
+        List<DeviceDrive> d_Drives = deviceDriveMapper.find(selective);
 
         HashMap<String, DriveVo> m_Drives=new HashMap<>();
         if(d_Drives!=null) {
@@ -198,12 +198,12 @@ public class DeviceServiceImpl implements DeviceService{
 
         String[] spaceIds = new String[]{"101"};
 
-        LumosSelective selective_AdSpace = new LumosSelective();
-        selective_AdSpace.setFields("*");
-        selective_AdSpace.addWhere("MerchId", merchId);
-        selective_AdSpace.addWhere("SpaceIds", spaceIds);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId", merchId);
+        selective.addWhere("SpaceIds", spaceIds);
 
-        List<AdSpace> d_AdSpaces = adSpaceMapper.find(selective_AdSpace);
+        List<AdSpace> d_AdSpaces = adSpaceMapper.find(selective);
 
 
         for (AdSpace d_AdSpace : d_AdSpaces) {
@@ -211,14 +211,14 @@ public class DeviceServiceImpl implements DeviceService{
             ad.setSpaceId(d_AdSpace.getId());
             ad.setName(d_AdSpace.getName());
 
-            LumosSelective selective_AdCreative = new LumosSelective();
-            selective_AdCreative.setFields("*");
-            selective_AdCreative.addWhere("MerchId", merchId);
-            selective_AdCreative.addWhere("SpaceId", d_AdSpace.getId());
-            selective_AdCreative.addWhere("Status", "1");
-            selective_AdCreative.addWhere("StartTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
-            selective_AdCreative.addWhere("EndTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
-            List<AdCreative> d_AdCreatives = adCreativeMapper.find(selective_AdCreative);
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", merchId);
+            selective.addWhere("SpaceId", d_AdSpace.getId());
+            selective.addWhere("Status", "1");
+            selective.addWhere("StartTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
+            selective.addWhere("EndTime", CommonUtil.toDateTimeStr(CommonUtil.getDateTimeNow()));
+            List<AdCreative> d_AdCreatives = adCreativeMapper.find(selective);
 
             List<AdCreativeVo> m_AdCreatives = new ArrayList<>();
             for (AdCreative d_AdCreative : d_AdCreatives) {
@@ -242,10 +242,10 @@ public class DeviceServiceImpl implements DeviceService{
         List<BookerSlotVo> m_Slots = new ArrayList<>();
 
 
-        LumosSelective selective_Drives=new LumosSelective();
-        selective_Drives.setFields("*");
-        selective_Drives.addWhere("DeviceId",deviceId);
-        List<BookerSlot> d_Slots = bookerSlotMapper.find(selective_Drives);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("DeviceId",deviceId);
+        List<BookerSlot> d_Slots = bookerSlotMapper.find(selective);
 
         if(d_Slots!=null) {
             for (BookerSlot d_Slot : d_Slots) {

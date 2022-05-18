@@ -178,11 +178,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         CustomResult<Object> result = new CustomResult<>();
 
-        LumosSelective selective_SysUser = new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,FullName,PhoneNumber,Email,Avatar,IsDisable");
-        selective_SysUser.addWhere("UserId", userId);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("Id,UserName,FullName,PhoneNumber,Email,Avatar,IsDisable");
+        selective.addWhere("UserId", userId);
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         HashMap<String,Object> ret=new HashMap<>();
 
@@ -210,11 +210,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         try {
 
-            LumosSelective selective_SysUser=new LumosSelective();
-            selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
-            selective_SysUser.addWhere("UserId",rop.getId());
+            LumosSelective selective=new LumosSelective();
+            selective.setFields("Id,UserName,PasswordHash,SecurityStamp,IsDisable");
+            selective.addWhere("UserId",rop.getId());
 
-            SysUser d_SysUser=sysUserMapper.findOne(selective_SysUser);
+            SysUser d_SysUser=sysUserMapper.findOne(selective);
 
             if(!CommonUtil.isEmpty(rop.getPassword())) {
                 d_SysUser.setPasswordHash(PasswordUtil.encryBySHA256(rop.getPassword(), d_SysUser.getSecurityStamp()));

@@ -73,11 +73,11 @@ public class BorrowerServiceImpl implements BorrowerService{
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime Desc");
 
-        LumosSelective selective_ClientUsers=new LumosSelective();
-        selective_ClientUsers.setFields("*");
-        selective_ClientUsers.addWhere("MerchId",merchId);
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId",merchId);
 
-        List<SysClientUserVw> d_ClientUsers = sysClientUserMapper.find(selective_ClientUsers);
+        List<SysClientUserVw> d_ClientUsers = sysClientUserMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
 
@@ -87,14 +87,14 @@ public class BorrowerServiceImpl implements BorrowerService{
             HashMap<String, Object> item = new HashMap<>();
 
 
-            LumosSelective selective_IcCards=new LumosSelective();
-            selective_IcCards.setFields("*");
-            selective_IcCards.addWhere("MerchId",merchId);
-            selective_IcCards.addWhere("ClientUserId",d_ClientUser.getId());
+            selective=new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId",merchId);
+            selective.addWhere("ClientUserId",d_ClientUser.getId());
 
             List<Object> m_IcCards=new ArrayList<>();
 
-            List<IcCard> d_IcCards = icCardMapper.find(selective_IcCards);
+            List<IcCard> d_IcCards = icCardMapper.find(selective);
 
             for (IcCard d_IcCard: d_IcCards ) {
                 HashMap<String, Object> m_IcCard = new HashMap<>();
@@ -212,10 +212,10 @@ public class BorrowerServiceImpl implements BorrowerService{
 
         CustomResult<Object> result = new CustomResult<>();
 
-        LumosSelective selective_SysClientUser = new LumosSelective();
-        selective_SysClientUser.setFields("*");
-        selective_SysClientUser.addWhere("UserId", borrowerId);
-        SysClientUserVw d_Sys_ClientUserVw = sysClientUserMapper.findOne(selective_SysClientUser);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("UserId", borrowerId);
+        SysClientUserVw d_Sys_ClientUserVw = sysClientUserMapper.findOne(selective);
 
         if (d_Sys_ClientUserVw == null)
             return result.fail("初始数据失败");

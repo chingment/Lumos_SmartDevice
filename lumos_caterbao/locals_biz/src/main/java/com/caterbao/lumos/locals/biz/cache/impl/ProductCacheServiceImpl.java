@@ -119,11 +119,11 @@ class ProductCacheServiceImpl implements ProductCacheService {
             if (d_PrdSku == null)
                 return skuInfo;
 
-            LumosSelective selective_PrdSpu = new LumosSelective();
-            selective_PrdSpu.setFields("*");
-            selective_PrdSpu.addWhere("MerchId", merchId);
-            selective_PrdSpu.addWhere("SpuId", d_PrdSku.getSpuId());
-            PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective_PrdSpu);
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", merchId);
+            selective.addWhere("SpuId", d_PrdSku.getSpuId());
+            PrdSpu d_PrdSpu = prdSpuMapper.findOne(selective);
 
             if (d_PrdSpu == null)
                 return skuInfo;
@@ -200,11 +200,12 @@ class ProductCacheServiceImpl implements ProductCacheService {
             spuInfo.setDisplayImgUrls(JsonUtil.toObject(d_PrdSpu.getDisplayImgUrls(), new TypeReference<List<FileVo>>() {}));
             spuInfo.setSpecItems(JsonUtil.toObject(d_PrdSpu.getSpecItems(), new TypeReference<List<SpecItemVo>>() {}));
             spuInfo.setSysKindIds(d_PrdSpu.getSysKindIds());
-            LumosSelective selective_PrdSku = new LumosSelective();
-            selective_PrdSku.setFields("*");
-            selective_PrdSku.addWhere("MerchId", merchId);
-            selective_PrdSku.addWhere("SpuId", spuId);
-            List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective_PrdSku);
+
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", merchId);
+            selective.addWhere("SpuId", spuId);
+            List<PrdSku> d_PrdSkus = prdSkuMapper.find(selective);
             if (d_PrdSkus != null) {
 
                 List<SpecIdxSkuVo> specIdxSkus = new ArrayList<>();

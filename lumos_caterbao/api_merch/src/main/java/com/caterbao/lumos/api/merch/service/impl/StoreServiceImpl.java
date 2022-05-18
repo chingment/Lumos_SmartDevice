@@ -158,13 +158,13 @@ public class StoreServiceImpl implements StoreService {
 
             HashMap<String,Object> item=new HashMap<>();
 
-            LumosSelective selective_ShopDevice=new LumosSelective();
-            selective_ShopDevice.addWhere("MerchId",merchId);
-            selective_ShopDevice.addWhere("StoreId",rop.getStoreId());
-            selective_ShopDevice.addWhere("ShopId",d_Shop.getId());
-            selective_ShopDevice.addWhere("BindStatus","1");//已绑定的设备
+            selective=new LumosSelective();
+            selective.addWhere("MerchId",merchId);
+            selective.addWhere("StoreId",rop.getStoreId());
+            selective.addWhere("ShopId",d_Shop.getId());
+            selective.addWhere("BindStatus","1");//已绑定的设备
 
-            long deviceCount=shopDeviceMapper.count(selective_ShopDevice);
+            long deviceCount=shopDeviceMapper.count(selective);
 
             item.put("id",d_Shop.getId());
             item.put("name",d_Shop.getName());

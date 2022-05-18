@@ -42,11 +42,11 @@ public class OwnServiceImpl implements OwnService {
 
         CustomResult<RetOwnLogin> result = new CustomResult<>();
 
-        LumosSelective selective_SysUser=new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,FullName,Avatar, PasswordHash,SecurityStamp,IsDisable");
-        selective_SysUser.addWhere("UserName",rop.getUserName());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,UserName,FullName,Avatar, PasswordHash,SecurityStamp,IsDisable");
+        selective.addWhere("UserName",rop.getUserName());
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         if (d_SysUser == null)
             return result.fail("账号或密码错误");
@@ -61,21 +61,21 @@ public class OwnServiceImpl implements OwnService {
         if(d_SysUser.getIsDisable())
             return result.fail("该账号已被停用");
 
-        LumosSelective selective_SysMerchUser=new LumosSelective();
-        selective_SysMerchUser.setFields("UserId,MerchId");
-        selective_SysMerchUser.addWhere("UserId",d_SysUser.getId());
+        selective=new LumosSelective();
+        selective.setFields("UserId,MerchId");
+        selective.addWhere("UserId",d_SysUser.getId());
 
-        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective_SysMerchUser);
+        SysMerchUserVw d_SysMerchUser = sysMerchUserMapper.findOne(selective);
 
         if (d_SysMerchUser == null)
             return result.fail("该账号未授权");
 
-        LumosSelective selective_MerchDevice=new LumosSelective();
-        selective_MerchDevice.addWhere("MerchId",d_SysMerchUser.getMerchId());
-        selective_MerchDevice.addWhere("DeviceId",rop.getDeviceId());
-        selective_MerchDevice.addWhere("BindStatus","1");
+        selective=new LumosSelective();
+        selective.addWhere("MerchId",d_SysMerchUser.getMerchId());
+        selective.addWhere("DeviceId",rop.getDeviceId());
+        selective.addWhere("BindStatus","1");
 
-        long validCount= merchDeviceMapper.count(selective_MerchDevice);
+        long validCount= merchDeviceMapper.count(selective);
 
         if(validCount<=0)
             return result.fail("该账号未授权");
@@ -100,11 +100,11 @@ public class OwnServiceImpl implements OwnService {
 
         CustomResult<RetOwnGetInfo> result=new CustomResult<>();
 
-        LumosSelective selective_SysUser=new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,FullName,Avatar");
-        selective_SysUser.addWhere("UserId",rop.getUserId());
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("Id,UserName,FullName,Avatar");
+        selective.addWhere("UserId",rop.getUserId());
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         if (d_SysUser == null)
             return result.fail("信息不存在");
@@ -125,11 +125,11 @@ public class OwnServiceImpl implements OwnService {
         CustomResult<RetOwnSaveInfo> result=new CustomResult<>();
 
 
-        LumosSelective selective_SysUser = new LumosSelective();
-        selective_SysUser.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
-        selective_SysUser.addWhere("UserId", rop.getUserId());
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("Id,UserName,PasswordHash,SecurityStamp,Avatar");
+        selective.addWhere("UserId", rop.getUserId());
 
-        SysUser d_SysUser = sysUserMapper.findOne(selective_SysUser);
+        SysUser d_SysUser = sysUserMapper.findOne(selective);
 
         if (d_SysUser == null)
             return result.fail("信息不存在");

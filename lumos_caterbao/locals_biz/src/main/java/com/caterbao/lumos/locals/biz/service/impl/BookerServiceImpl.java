@@ -44,12 +44,12 @@ public class BookerServiceImpl implements BookerService {
 
         BookerCountBorrowBookResult result = new BookerCountBorrowBookResult();
 
-        LumosSelective selective_1 = new LumosSelective();
-        selective_1.setFields("*");
-        selective_1.addWhere("ClientUserId", clientUserId);
-        selective_1.addWhere("Statuss",new String[]{"1000","2000"});
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("ClientUserId", clientUserId);
+        selective.addWhere("Statuss",new String[]{"1000","2000"});
 
-        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective_1);
+        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective);
 
         float sumOverdueFine=0;
 

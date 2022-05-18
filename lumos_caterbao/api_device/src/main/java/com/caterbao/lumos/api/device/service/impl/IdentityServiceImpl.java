@@ -42,11 +42,11 @@ public class IdentityServiceImpl implements IdentityService {
 
         if (rop.getVerifyMode()==1) {
 
-            LumosSelective selective_IcCard = new LumosSelective();
-            selective_IcCard.setFields("*");
-            selective_IcCard.addWhere("CardNo", rop.getPayload());
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("CardNo", rop.getPayload());
 
-            IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
+            IcCard d_IcCard = icCardMapper.findOne(selective);
 
             if (d_IcCard == null)
                 return result.fail("验证失败");
@@ -70,11 +70,11 @@ public class IdentityServiceImpl implements IdentityService {
 
         if (rop.getIdentityType() == 1) {
 
-            LumosSelective selective_IcCard = new LumosSelective();
-            selective_IcCard.setFields("*");
-            selective_IcCard.addWhere("IcCardId", rop.getIdentityId());
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("IcCardId", rop.getIdentityId());
 
-            IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
+            IcCard d_IcCard = icCardMapper.findOne(selective);
             if (d_IcCard == null)
                 return result.fail("获取失败");
 

@@ -212,20 +212,20 @@ public class AdServiceImpl implements AdService {
     public CustomResult<Object> initCreativeEdit(String operater, String merchId, String creativeId) {
 
         CustomResult<Object> result = new CustomResult<>();
-        LumosSelective selective_Creative = new LumosSelective();
-        selective_Creative.setFields("*");
-        selective_Creative.addWhere("CreativeId", creativeId);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("CreativeId", creativeId);
 
-        AdCreative d_AdCreative = adCreativeMapper.findOne(selective_Creative);
+        AdCreative d_AdCreative = adCreativeMapper.findOne(selective);
 
         if (d_AdCreative == null)
             return result.fail("初始失败");
 
-        LumosSelective selective_Space = new LumosSelective();
-        selective_Space.setFields("*");
-        selective_Space.addWhere("SpaceId", d_AdCreative.getSpaceId());
+        selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("SpaceId", d_AdCreative.getSpaceId());
 
-        AdSpace d_AdSpace = adSpaceMapper.findOne(selective_Space);
+        AdSpace d_AdSpace = adSpaceMapper.findOne(selective);
 
         if (d_AdSpace == null)
             return result.fail("初始失败");

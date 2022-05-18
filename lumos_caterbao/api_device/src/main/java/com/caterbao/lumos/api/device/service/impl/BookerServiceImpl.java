@@ -103,11 +103,11 @@ public class BookerServiceImpl implements BookerService {
     }
 
     private MerchDeviceVw  getDevice(String deviceId){
-        LumosSelective selective_MerchDevice = new LumosSelective();
-        selective_MerchDevice.setFields("*");
-        selective_MerchDevice.addWhere("DeviceId", deviceId);
-        selective_MerchDevice.addWhere("BindStatus", "1");
-        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective_MerchDevice);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("DeviceId", deviceId);
+        selective.addWhere("BindStatus", "1");
+        MerchDeviceVw d_MerchDevice = merchDeviceMapper.findOne(selective);
         return d_MerchDevice;
     }
 
@@ -150,16 +150,16 @@ public class BookerServiceImpl implements BookerService {
 
 
         if (rop.getType() == 1) {
-            LumosSelective selective_BookFlowExs = new LumosSelective();
-            selective_BookFlowExs.setFields("*");
-            selective_BookFlowExs.addWhere("MerchId", d_MerchDevice.getMerchId());
-            selective_BookFlowExs.addWhere("StoreId", d_MerchDevice.getStoreId());
-            selective_BookFlowExs.addWhere("ShopId", d_MerchDevice.getShopId());
-            selective_BookFlowExs.addWhere("DeviceId", d_MerchDevice.getId());
-            selective_BookFlowExs.addWhere("SlotId", rop.getSlotId());
-            selective_BookFlowExs.addWhere("Status", "3000");
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective.addWhere("DeviceId", d_MerchDevice.getId());
+            selective.addWhere("SlotId", rop.getSlotId());
+            selective.addWhere("Status", "3000");
 
-            List<BookFlow> d_BookFlowExs = bookFlowMapper.find(selective_BookFlowExs);
+            List<BookFlow> d_BookFlowExs = bookFlowMapper.find(selective);
 
             if (d_BookFlowExs.size() > 0)
                 return result.fail("该柜门存在异常使用情况[D04]");
@@ -213,11 +213,11 @@ public class BookerServiceImpl implements BookerService {
             String actionCode = rop.getActionCode();
             String flowId = rop.getFlowId();
 
-            LumosSelective selective_BookFlow = new LumosSelective();
-            selective_BookFlow.setFields("*");
-            selective_BookFlow.addWhere("FlowId", flowId);
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("FlowId", flowId);
 
-            BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
+            BookFlow d_BookFlow = bookFlowMapper.findOne(selective);
 
             if (d_BookFlow == null) {
                 return result.fail(2001, "反馈失败[D01]");
@@ -275,11 +275,11 @@ public class BookerServiceImpl implements BookerService {
                     }
                 }
 
-                LumosSelective selective_IcCard = new LumosSelective();
-                selective_IcCard.setFields("*");
-                selective_IcCard.addWhere("ClientUserId", d_BookFlow.getClientUserId());
-                selective_IcCard.addWhere("IcCardId", d_BookFlow.getIdentityId());
-                IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
+                selective= new LumosSelective();
+                selective.setFields("*");
+                selective.addWhere("ClientUserId", d_BookFlow.getClientUserId());
+                selective.addWhere("IcCardId", d_BookFlow.getIdentityId());
+                IcCard d_IcCard = icCardMapper.findOne(selective);
 
                 int maxBorrowExpireDay = 5;
                 if (d_IcCard != null) {
@@ -296,14 +296,13 @@ public class BookerServiceImpl implements BookerService {
 
                     if(r_Sku!=null&&!CommonUtil.isEmpty(r_Sku.getId())) {
 
-                        LumosSelective selective_BookBorrow = new LumosSelective();
-                        selective_BookBorrow.setFields("*");
-                        selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                        // selective_BookBorrow.addWhere("FlowId", flowId);
-                        selective_BookBorrow.addWhere("SkuRfId", borrow_RfId);
-                        selective_BookBorrow.addWhere("CanBorrow", "1");
+                        selective = new LumosSelective();
+                        selective.setFields("*");
+                        selective.addWhere("MerchId", d_BookFlow.getMerchId());
+                        selective.addWhere("SkuRfId", borrow_RfId);
+                        selective.addWhere("CanBorrow", "1");
 
-                        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+                        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective);
                         if (d_BookBorrow == null) {
                             d_BookBorrow = new BookBorrow();
                             d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
@@ -349,13 +348,13 @@ public class BookerServiceImpl implements BookerService {
                 //还书
                 for (String return_RfId : return_RfIds) {
 
-                    LumosSelective selective_BookBorrow = new LumosSelective();
-                    selective_BookBorrow.setFields("*");
-                    selective_BookBorrow.addWhere("MerchId", d_BookFlow.getMerchId());
-                    selective_BookBorrow.addWhere("SkuRfId", return_RfId);
-                    selective_BookBorrow.addWhere("CanReturn", "1");
+                    selective = new LumosSelective();
+                    selective.setFields("*");
+                    selective.addWhere("MerchId", d_BookFlow.getMerchId());
+                    selective.addWhere("SkuRfId", return_RfId);
+                    selective.addWhere("CanReturn", "1");
 
-                    BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective_BookBorrow);
+                    BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective);
                     if (d_BookBorrow != null) {
                         d_BookBorrow.setReturnFlowId(flowId);
                         d_BookBorrow.setReturnWay(d_BookBorrow.getBorrowWay());
@@ -414,11 +413,11 @@ public class BookerServiceImpl implements BookerService {
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize, "CreateTime Desc");
 
-        LumosSelective selective_BookBorrows = new LumosSelective();
-        selective_BookBorrows.setFields("*");
-        selective_BookBorrows.addWhere("ClientUserId", rop.getClientUserId());
-        selective_BookBorrows.addWhere("Status", "1000");
-        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective_BookBorrows);
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("ClientUserId", rop.getClientUserId());
+        selective.addWhere("Status", "1000");
+        List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective);
 
         List<Object> items = new ArrayList<>();
 
@@ -449,14 +448,14 @@ public class BookerServiceImpl implements BookerService {
 
             List<BookBorrow> d_BookBorrows = null;
 
-            LumosSelective selective_BookBorrows = new LumosSelective();
-            selective_BookBorrows.setFields("*");
-            selective_BookBorrows.addWhere("ClientUserId", rop.getClientUserId());
-            selective_BookBorrows.addWhere("Status", "1000");
-            selective_BookBorrows.addWhere("CanRenew", "1");
+            LumosSelective selective= new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("ClientUserId", rop.getClientUserId());
+            selective.addWhere("Status", "1000");
+            selective.addWhere("CanRenew", "1");
 
             if (actionCode.equals("multi")) {
-                selective_BookBorrows.addWhere("BorrowIds", rop.getBorrowIds());
+                selective.addWhere("BorrowIds", rop.getBorrowIds());
             } else if (actionCode.equals("all")) {
 
             } else {
@@ -464,18 +463,18 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("续借失败[01]");
             }
 
-            d_BookBorrows = bookBorrowMapper.find(selective_BookBorrows);
+            d_BookBorrows = bookBorrowMapper.find(selective);
 
             if (d_BookBorrows == null || d_BookBorrows.size() <= 0) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return result.fail("续借失败[02]，没有可续借的书本");
             }
 
-            LumosSelective selective_IcCard = new LumosSelective();
-            selective_IcCard.setFields("*");
-            selective_IcCard.addWhere("ClientUserId", rop.getClientUserId());
-            selective_IcCard.addWhere("IcCardId", rop.getIdentityId());
-            IcCard d_IcCard = icCardMapper.findOne(selective_IcCard);
+            selective= new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("ClientUserId", rop.getClientUserId());
+            selective.addWhere("IcCardId", rop.getIdentityId());
+            IcCard d_IcCard = icCardMapper.findOne(selective);
 
             int maxBorrowRenewDay = 5;
             if (d_IcCard != null) {
@@ -520,14 +519,14 @@ public class BookerServiceImpl implements BookerService {
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize, "SkuId Desc");
 
-        LumosSelective selective_BookerStocks = new LumosSelective();
-        selective_BookerStocks.setFields("*");
-        selective_BookerStocks.addWhere("MerchId", d_MerchDevice.getMerchId());
-        selective_BookerStocks.addWhere("StoreId", d_MerchDevice.getStoreId());
-        selective_BookerStocks.addWhere("ShopId", d_MerchDevice.getShopId());
-        selective_BookerStocks.addWhere("DeviceId", rop.getDeviceId());
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId", d_MerchDevice.getMerchId());
+        selective.addWhere("StoreId", d_MerchDevice.getStoreId());
+        selective.addWhere("ShopId", d_MerchDevice.getShopId());
+        selective.addWhere("DeviceId", rop.getDeviceId());
 
-        List<BookerDeviceSkuStockVw> d_BookerDeviceSkuStocksVw = bookerStockMapper.findDevcieSkuStock(selective_BookerStocks);
+        List<BookerDeviceSkuStockVw> d_BookerDeviceSkuStocksVw = bookerStockMapper.findDevcieSkuStock(selective);
 
         List<Object> items = new ArrayList<>();
 
@@ -576,11 +575,11 @@ public class BookerServiceImpl implements BookerService {
             String actionCode = rop.getActionCode();
             String flowId = rop.getFlowId();
 
-            LumosSelective selective_BookFlow = new LumosSelective();
-            selective_BookFlow.setFields("*");
-            selective_BookFlow.addWhere("FlowId", flowId);
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("FlowId", flowId);
 
-            BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
+            BookFlow d_BookFlow = bookFlowMapper.findOne(selective);
 
             if (d_BookFlow == null) {
                 return result.fail(2001, "反馈失败[D01]");
@@ -691,11 +690,11 @@ public class BookerServiceImpl implements BookerService {
 
         Page<?> page = PageHelper.startPage(pageNum, pageSize, "SlotId");
 
-        LumosSelective selective_BookerSlots = new LumosSelective();
-        selective_BookerSlots.setFields("*");
-        selective_BookerSlots.addWhere("DeviceId", rop.getDeviceId());
+        LumosSelective selective = new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("DeviceId", rop.getDeviceId());
 
-        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective_BookerSlots);
+        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective);
 
         List<Object> items = new ArrayList<>();
 
@@ -716,15 +715,15 @@ public class BookerServiceImpl implements BookerService {
 
             item.put("stockQuantity", stockQuantity);
 
-            LumosSelective selective_BookerTakeStockSheet = new LumosSelective();
-            selective_BookerTakeStockSheet.setFields("*");
-            selective_BookerTakeStockSheet.addWhere("MerchId", d_MerchDevice.getMerchId());
-            selective_BookerTakeStockSheet.addWhere("StoreId", d_MerchDevice.getStoreId());
-            selective_BookerTakeStockSheet.addWhere("ShopId", d_MerchDevice.getShopId());
-            selective_BookerTakeStockSheet.addWhere("DeviceId", rop.getDeviceId());
+            selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective.addWhere("DeviceId", rop.getDeviceId());
 
 
-            BookerTakeStockSheet d_BookerTakeStockSheet = bookerTakeStockSheetMapper.findLast(selective_BookerTakeStockSheet);
+            BookerTakeStockSheet d_BookerTakeStockSheet = bookerTakeStockSheetMapper.findLast(selective);
             if (d_BookerTakeStockSheet == null) {
                 item.put("lastTakeTime", "无");
                 item.put("lastTakeQuantity", 0);
@@ -758,15 +757,15 @@ public class BookerServiceImpl implements BookerService {
 
             MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
 
-            LumosSelective selective_BookerTakeStockSheet = new LumosSelective();
-            selective_BookerTakeStockSheet.setFields("*");
-            selective_BookerTakeStockSheet.addWhere("MerchId", d_MerchDevice.getMerchId());
-            selective_BookerTakeStockSheet.addWhere("StoreId", d_MerchDevice.getStoreId());
-            selective_BookerTakeStockSheet.addWhere("ShopId", d_MerchDevice.getShopId());
-            selective_BookerTakeStockSheet.addWhere("DeviceId", rop.getDeviceId());
-            selective_BookerTakeStockSheet.addWhere("SheetId", rop.getSheetId());
+            LumosSelective selective = new LumosSelective();
+            selective.setFields("*");
+            selective.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective.addWhere("DeviceId", rop.getDeviceId());
+            selective.addWhere("SheetId", rop.getSheetId());
 
-            BookerTakeStockSheet d_BookerTakeStockSheet=this.bookerTakeStockSheetMapper.findOne(selective_BookerTakeStockSheet);
+            BookerTakeStockSheet d_BookerTakeStockSheet=this.bookerTakeStockSheetMapper.findOne(selective);
 
             if(d_BookerTakeStockSheet==null)
                 return result.fail("盘点入库失败[01]");
@@ -777,16 +776,16 @@ public class BookerServiceImpl implements BookerService {
 
             bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
 
-            LumosSelective selective_BookerTakeStockSheetItems = new LumosSelective();
+            selective = new LumosSelective();
 
-            selective_BookerTakeStockSheetItems.setFields("*");
-            selective_BookerTakeStockSheetItems.addWhere("MerchId", d_MerchDevice.getMerchId());
-            selective_BookerTakeStockSheetItems.addWhere("StoreId", d_MerchDevice.getStoreId());
-            selective_BookerTakeStockSheetItems.addWhere("ShopId", d_MerchDevice.getShopId());
-            selective_BookerTakeStockSheetItems.addWhere("DeviceId", rop.getDeviceId());
-            selective_BookerTakeStockSheetItems.addWhere("SheetId", rop.getSheetId());
+            selective.setFields("*");
+            selective.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective.addWhere("DeviceId", rop.getDeviceId());
+            selective.addWhere("SheetId", rop.getSheetId());
 
-            List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems =this.bookerTakeStockSheetItemMapper.find(selective_BookerTakeStockSheetItems);
+            List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems =this.bookerTakeStockSheetItemMapper.find(selective);
 
             List<BookerStock> d_BookerStocks = new ArrayList<>();
 
@@ -833,12 +832,12 @@ public class BookerServiceImpl implements BookerService {
             deviceCumCode = d_MerchDevice.getCumCode();
         }
 
-        LumosSelective selective_BookFlowLog = new LumosSelective();
-        selective_BookFlowLog.addWhere("MerchId", merchId);
-        selective_BookFlowLog.addWhere("DeviceId", deviceId);
-        selective_BookFlowLog.addWhere("FlowId", flowId);
-        selective_BookFlowLog.addWhere("ActionSn",String.valueOf(actionSn));
-        BookFlowLog d_BookFlowLog= bookFlowLogMapper.findOne(selective_BookFlowLog);
+        LumosSelective selective = new LumosSelective();
+        selective.addWhere("MerchId", merchId);
+        selective.addWhere("DeviceId", deviceId);
+        selective.addWhere("FlowId", flowId);
+        selective.addWhere("ActionSn",String.valueOf(actionSn));
+        BookFlowLog d_BookFlowLog= bookFlowLogMapper.findOne(selective);
 
         if(d_BookFlowLog==null) {
             d_BookFlowLog = new BookFlowLog();
