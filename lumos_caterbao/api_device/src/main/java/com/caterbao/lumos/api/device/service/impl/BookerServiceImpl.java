@@ -202,13 +202,17 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerBorrowReturn> result = new CustomResult<>();
 
+        if(CommonUtil.isEmpty(rop.getFlowId())){
+            return result.fail(2001, "反馈失败[D00]");
+        }
+
         new Thread(() -> {
             addFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerBorrowReturn ret = new RetBookerBorrowReturn();
         ret.setFlowId(rop.getFlowId());
-
+        ret.setActionCode(rop.getActionCode());
         try {
             String actionCode = rop.getActionCode();
             String flowId = rop.getFlowId();
@@ -564,12 +568,17 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerTakeStock> result = new CustomResult<>();
 
+        if(CommonUtil.isEmpty(rop.getFlowId())){
+            return result.fail(2001, "反馈失败[D00]");
+        }
+
         new Thread(() -> {
             addFlowLog(rop.getMsgId(), rop.getMsgMode(), rop.getDeviceId(), rop.getFlowId(),rop.getActionSn(), rop.getActionCode(), rop.getActionData(), "", rop.getActionRemark(), rop.getActionTime());
         }).start();
 
         RetBookerTakeStock ret = new RetBookerTakeStock();
         ret.setFlowId(rop.getFlowId());
+        ret.setActionCode(rop.getActionCode());
         try {
 
             String actionCode = rop.getActionCode();

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class RetBookerTakeStock {
     private String flowId;
+    private String actionCode;
     private String sheetId;
     private List<BookVo> sheetItems;
     private boolean sheetIsUse;
@@ -52,5 +53,13 @@ public class RetBookerTakeStock {
 
     public void setSheetIsUse(boolean sheetIsUse) {
         this.sheetIsUse = sheetIsUse;
+    }
+
+    public String getActionCode() {
+        return actionCode;
+    }
+
+    public void setActionCode(String actionCode) {
+        this.actionCode = actionCode;
     }
 }

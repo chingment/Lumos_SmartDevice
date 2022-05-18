@@ -6,6 +6,7 @@ import java.util.List;
 
 public class RetBookerBorrowReturn {
     private String flowId;
+    private String actionCode;
     private List<BookVo> borrowBooks;
     private List<BookVo> returnBooks;
 
@@ -31,5 +32,13 @@ public class RetBookerBorrowReturn {
 
     public void setReturnBooks(List<BookVo> returnBooks) {
         this.returnBooks = returnBooks;
+    }
+
+    public String getActionCode() {
+        return actionCode;
+    }
+
+    public void setActionCode(String actionCode) {
+        this.actionCode = actionCode;
     }
 }
