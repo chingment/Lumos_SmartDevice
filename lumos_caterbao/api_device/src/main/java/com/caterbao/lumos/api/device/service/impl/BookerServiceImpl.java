@@ -640,6 +640,7 @@ public class BookerServiceImpl implements BookerService {
                 d_BookFlow.setStatus(4000);
                 ret.setSheetId(d_BookerTakeStockSheet.getId());
                 ret.setSheetItems(sheetItems);
+                ret.setSheetIsUse(false);
             }
 
 
@@ -747,29 +748,78 @@ public class BookerServiceImpl implements BookerService {
     }
 
     @Override
-    public  CustomResult<RetBookerStockInbound> stockInbound(String operater, RopBookerStockInbound rop){
+    @Transactional
+    public  CustomResult<RetBookerStockInbound> stockInbound(String operater, RopBookerStockInbound rop) {
 
-        //                    bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
-//
-//    List<BookerStock> d_BookerStocks = new ArrayList<>();
-//
-//                for (RfTagVo rfTag : rop.getRfTags()) {
-//        BookerStock d_BookerStock = new BookerStock();
-//        d_BookerStock.setId(IdWork.buildGuId());
-//        d_BookerStock.setMerchId(d_MerchDevice.getMerchId());
-//        d_BookerStock.setStoreId(d_MerchDevice.getStoreId());
-//        d_BookerStock.setShopId(d_MerchDevice.getShopId());
-//        d_BookerStock.setDeviceId(rop.getDeviceId());
-//        d_BookerStock.setSlotId(rfTag.getSlotId());
-//        d_BookerStock.setSkuRfId(rfTag.getRfId());
-//        d_BookerStock.setCreateTime(CommonUtil.getDateTimeNow());
-//        d_BookerStock.setCreator(operater);
-//        d_BookerStocks.add(d_BookerStock);
-//    }
-//
-//                bookerStockMapper.insertBatch(d_BookerStocks);
+        CustomResult<RetBookerStockInbound> result = new CustomResult<>();
 
-        return null;
+        try {
+
+
+            MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
+
+            LumosSelective selective_BookerTakeStockSheet = new LumosSelective();
+            selective_BookerTakeStockSheet.setFields("*");
+            selective_BookerTakeStockSheet.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective_BookerTakeStockSheet.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective_BookerTakeStockSheet.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective_BookerTakeStockSheet.addWhere("DeviceId", rop.getDeviceId());
+            selective_BookerTakeStockSheet.addWhere("SheetId", rop.getSheetId());
+
+            BookerTakeStockSheet d_BookerTakeStockSheet=this.bookerTakeStockSheetMapper.findOne(selective_BookerTakeStockSheet);
+
+            if(d_BookerTakeStockSheet==null)
+                return result.fail("盘点入库失败[01]");
+
+            if(d_BookerTakeStockSheet.getIsUse()) {
+                return result.fail("盘点入库失败[02]");
+            }
+
+            bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
+
+            LumosSelective selective_BookerTakeStockSheetItems = new LumosSelective();
+
+            selective_BookerTakeStockSheetItems.setFields("*");
+            selective_BookerTakeStockSheetItems.addWhere("MerchId", d_MerchDevice.getMerchId());
+            selective_BookerTakeStockSheetItems.addWhere("StoreId", d_MerchDevice.getStoreId());
+            selective_BookerTakeStockSheetItems.addWhere("ShopId", d_MerchDevice.getShopId());
+            selective_BookerTakeStockSheetItems.addWhere("DeviceId", rop.getDeviceId());
+            selective_BookerTakeStockSheetItems.addWhere("SheetId", rop.getSheetId());
+
+            List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems =this.bookerTakeStockSheetItemMapper.find(selective_BookerTakeStockSheetItems);
+
+            List<BookerStock> d_BookerStocks = new ArrayList<>();
+
+            for (BookerTakeStockSheetItem d_BookerTakeStockSheetItem : d_BookerTakeStockSheetItems) {
+
+                BookerStock d_BookerStock = new BookerStock();
+                d_BookerStock.setId(IdWork.buildGuId());
+                d_BookerStock.setMerchId(d_MerchDevice.getMerchId());
+                d_BookerStock.setStoreId(d_MerchDevice.getStoreId());
+                d_BookerStock.setShopId(d_MerchDevice.getShopId());
+                d_BookerStock.setDeviceId(rop.getDeviceId());
+                d_BookerStock.setSlotId(d_BookerTakeStockSheetItem.getSlotId());
+                d_BookerStock.setSkuRfId(d_BookerTakeStockSheetItem.getSkuRfId());
+                d_BookerStock.setSkuId(d_BookerTakeStockSheetItem.getSkuId());
+                d_BookerStock.setCreateTime(CommonUtil.getDateTimeNow());
+                d_BookerStock.setCreator(operater);
+
+                d_BookerStocks.add(d_BookerStock);
+            }
+
+            bookerStockMapper.insertBatch(d_BookerStocks);
+
+            d_BookerTakeStockSheet.setIsUse(true);
+
+            bookerTakeStockSheetMapper.update(d_BookerTakeStockSheet);
+
+            return result.success("盘点入库成功[99]");
+        }
+        catch (Exception ex){
+            logger.error("盘点入库发生异常", ex);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result.fail("盘点入库异常[99]");
+        }
     }
 
     private void addFlowLog(String msgId, String msgMode, String deviceId, String flowId,int actionSn, String actionCode, String actionData, String actionResult, String actionRemark, String actionTime) {

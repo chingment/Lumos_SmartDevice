@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface BookerTakeStockSheetMapper {
+    BookerTakeStockSheet findOne(LumosSelective selective);
     BookerTakeStockSheet findLast(LumosSelective selective);
     long insert(BookerTakeStockSheet bookerTakeStockSheet);
+    long update(BookerTakeStockSheet bookerTakeStockSheet);
 }

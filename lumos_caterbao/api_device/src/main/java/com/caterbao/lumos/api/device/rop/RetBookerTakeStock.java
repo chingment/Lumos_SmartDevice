@@ -1,6 +1,7 @@
 package com.caterbao.lumos.api.device.rop;
 
 import com.caterbao.lumos.api.device.rop.vo.BookVo;
+import com.caterbao.lumos.locals.common.vo.FieldVo;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class RetBookerTakeStock {
     private String flowId;
     private String sheetId;
     private List<BookVo> sheetItems;
+    private boolean sheetIsUse;
     private List<BookVo> warnItems;
 
     public String getFlowId() {
@@ -42,5 +44,13 @@ public class RetBookerTakeStock {
 
     public void setWarnItems(List<BookVo> warnItems) {
         this.warnItems = warnItems;
+    }
+
+    public boolean isSheetIsUse() {
+        return sheetIsUse;
+    }
+
+    public void setSheetIsUse(boolean sheetIsUse) {
+        this.sheetIsUse = sheetIsUse;
     }
 }

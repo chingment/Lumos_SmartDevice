@@ -11,8 +11,11 @@ public class BookerTakeStockSheet {
     private String deviceId;
     private String slotId;
     private int quantity;
+    private boolean isUse;
     private String creator;
     private Timestamp createTime;
+    private String mender;
+    private Timestamp mendTime;
 
     public String getId() {
         return id;
@@ -92,5 +95,29 @@ public class BookerTakeStockSheet {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
+    }
+
+    public boolean getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(boolean isUse) {
+        this.isUse = isUse;
+    }
+
+    public String getMender() {
+        return mender;
+    }
+
+    public void setMender(String mender) {
+        this.mender = mender;
+    }
+
+    public Timestamp getMendTime() {
+        return mendTime;
+    }
+
+    public void setMendTime(Timestamp mendTime) {
+        this.mendTime = mendTime;
     }
 }

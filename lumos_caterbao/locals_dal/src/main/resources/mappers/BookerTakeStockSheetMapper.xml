@@ -4,6 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.caterbao.lumos.locals.dal.mapper.BookerTakeStockSheetMapper">
+
+    <select id="findOne" resultType="com.caterbao.lumos.locals.dal.pojo.BookerTakeStockSheet"  parameterType="com.caterbao.lumos.locals.dal.LumosSelective" >
+        select  ${fields}  from BookerTakeStockSheet  where  id =#{where.SheetId}
+    </select>
+
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookerTakeStockSheet">
   insert into BookerTakeStockSheet(id,flowId,merchId,storeId,shopId,deviceId,slotId,quantity,creator,createTime)
   values(#{id},#{flowId},#{merchId},#{storeId},#{shopId},#{deviceId},#{slotId},#{quantity},#{creator},#{createTime})
@@ -18,5 +23,15 @@
         ORDER BY CreateTime DESC
         limit 0,1
     </select>
+
+    <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookerTakeStockSheet">
+        update BookerTakeStockSheet
+        <set>
+            <if test="isUse != null">isUse=#{isUse},</if>
+            <if test="mender != null">mender=#{mender},</if>
+            <if test="mendTime != null">mendTime=#{mendTime}</if>
+        </set>
+        where id=#{id}
+    </update>
 
 </mapper>
