@@ -197,7 +197,7 @@ public class BookerServiceImpl implements BookerService {
         if (type == 1)
             return new FieldVo(1, "借还");
         else if (type == 2)
-            return new FieldVo(2, "开机盘点");
+            return new FieldVo(2, "设备盘点");
         else if (type == 3)
             return new FieldVo(3, "后台盘点");
         return model;
