@@ -609,6 +609,7 @@ public class BookerServiceImpl implements BookerService {
                 List<BookVo> sheetItems = new ArrayList<>();
 
                 List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems = new ArrayList<>();
+
                 for (String closeRfId : closeRfIds) {
 
                     SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookerTakeStockSheet.getMerchId(), closeRfId);
@@ -637,11 +638,11 @@ public class BookerServiceImpl implements BookerService {
                 this.bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
 
                 d_BookFlow.setStatus(4000);
+
                 ret.setSheetId(d_BookerTakeStockSheet.getId());
                 ret.setSheetItems(sheetItems);
                 ret.setSheetIsUse(false);
             }
-
 
             if(rop.getActionSn()>=d_BookFlow.getLastActionSn()) {
                 d_BookFlow.setLastActionSn(rop.getActionSn());
@@ -658,9 +659,7 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("反馈失败[D02]");
             }
 
-
             return result.success("反馈成功",ret);
-
 
         } catch (Exception ex) {
             logger.error("盘点流程发生异常", ex);
@@ -753,7 +752,6 @@ public class BookerServiceImpl implements BookerService {
         CustomResult<RetBookerStockInbound> result = new CustomResult<>();
 
         try {
-
 
             MerchDeviceVw d_MerchDevice = getDevice(rop.getDeviceId());
 
