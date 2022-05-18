@@ -42,6 +42,14 @@ public class CustomResult<T>  {
         return this;
     }
 
+    public CustomResult<T> fail(int code, String msg) {
+        this.msg = msg;
+        this.code = code;
+        this.data = null;
+        return this;
+    }
+
+
     public CustomResult<T> success(String msg) {
         this.msg = msg;
         this.code = 1000;

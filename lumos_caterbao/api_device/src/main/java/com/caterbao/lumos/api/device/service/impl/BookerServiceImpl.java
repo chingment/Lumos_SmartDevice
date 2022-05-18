@@ -220,7 +220,7 @@ public class BookerServiceImpl implements BookerService {
             BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
 
             if (d_BookFlow == null) {
-                return result.fail("反馈失败[D01]");
+                return result.fail(2001, "反馈失败[D01]");
             }
 
             if (actionCode.equals("request_open_auth")) {
@@ -583,7 +583,7 @@ public class BookerServiceImpl implements BookerService {
             BookFlow d_BookFlow = bookFlowMapper.findOne(selective_BookFlow);
 
             if (d_BookFlow == null) {
-                return result.fail("反馈失败[D01]");
+                return result.fail(2001, "反馈失败[D01]");
             }
 
             if (actionCode.equals("rfreader_success")) {
