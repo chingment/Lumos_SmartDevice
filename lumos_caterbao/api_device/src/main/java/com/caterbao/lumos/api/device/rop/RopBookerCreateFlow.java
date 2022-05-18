@@ -3,11 +3,10 @@ package com.caterbao.lumos.api.device.rop;
 public class RopBookerCreateFlow {
     private String deviceId;
     private String slotId;
-    private String clientUserId;
+    private String flowUserId;
+    private int flowType;
     private int identityType;
     private String identityId;
-    private int type;
-
 
 
     public String getDeviceId() {
@@ -26,14 +25,6 @@ public class RopBookerCreateFlow {
         this.slotId = slotId;
     }
 
-    public String getClientUserId() {
-        return clientUserId;
-    }
-
-    public void setClientUserId(String clientUserId) {
-        this.clientUserId = clientUserId;
-    }
-
     public int getIdentityType() {
         return identityType;
     }
@@ -50,11 +41,19 @@ public class RopBookerCreateFlow {
         this.identityId = identityId;
     }
 
-    public int getType() {
-        return type;
+    public String getFlowUserId() {
+        return flowUserId;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setFlowUserId(String flowUserId) {
+        this.flowUserId = flowUserId;
+    }
+
+    public int getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(int flowType) {
+        this.flowType = flowType;
     }
 }

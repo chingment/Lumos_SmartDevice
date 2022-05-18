@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column label="类型" align="left" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.type.text }}</span>
+          <span>{{ scope.row.flowType.text }}</span>
         </template>
       </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">

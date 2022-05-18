@@ -117,17 +117,17 @@ public class BookerServiceImpl implements BookerService {
 
         CustomResult<RetBookerCreateFlow> result = new CustomResult<>();
 
-        if (rop.getType() == 0)
+        if (rop.getFlowType() == 0)
             return result.fail("创建失败[W01]");
 
         if (CommonUtil.isEmpty(rop.getDeviceId()))
             return result.fail("创建失败[W02]");
 
-        if (rop.getType() == 1) {
+        if (rop.getFlowType() == 1) {
             if (CommonUtil.isEmpty(rop.getSlotId()))
                 return result.fail("创建失败[W03]");
 
-            if (CommonUtil.isEmpty(rop.getClientUserId()))
+            if (CommonUtil.isEmpty(rop.getFlowUserId()))
                 return result.fail("创建失败[W04]");
 
             if (CommonUtil.isEmpty(rop.getIdentityType()))
@@ -149,7 +149,7 @@ public class BookerServiceImpl implements BookerService {
             return result.fail("创建失败[D03]");
 
 
-        if (rop.getType() == 1) {
+        if (rop.getFlowType() == 1) {
             LumosSelective selective = new LumosSelective();
             selective.setFields("*");
             selective.addWhere("MerchId", d_MerchDevice.getMerchId());
@@ -167,7 +167,7 @@ public class BookerServiceImpl implements BookerService {
 
         BookFlow d_BookFlow = new BookFlow();
         d_BookFlow.setId(IdWork.buildLongId());
-        d_BookFlow.setType(rop.getType());
+        d_BookFlow.setFlowType(rop.getFlowType());
         d_BookFlow.setMerchId(d_MerchDevice.getMerchId());
         d_BookFlow.setMerchName(d_MerchDevice.getMerchName());
         d_BookFlow.setStoreId(d_MerchDevice.getStoreId());
@@ -177,7 +177,7 @@ public class BookerServiceImpl implements BookerService {
         d_BookFlow.setDeviceId(rop.getDeviceId());
         d_BookFlow.setDeviceCumCode(d_MerchDevice.getCumCode());
         d_BookFlow.setSlotId(rop.getSlotId());
-        d_BookFlow.setClientUserId(rop.getClientUserId());
+        d_BookFlow.setFlowUserId(rop.getFlowUserId());
         d_BookFlow.setIdentityType(rop.getIdentityType());
         d_BookFlow.setIdentityId(rop.getIdentityId());
         d_BookFlow.setIdentityName(bizBookerService.getIdentityName(rop.getIdentityType(), rop.getIdentityId()));
@@ -277,7 +277,7 @@ public class BookerServiceImpl implements BookerService {
 
                 selective= new LumosSelective();
                 selective.setFields("*");
-                selective.addWhere("ClientUserId", d_BookFlow.getClientUserId());
+                selective.addWhere("ClientUserId", d_BookFlow.getFlowUserId());
                 selective.addWhere("IcCardId", d_BookFlow.getIdentityId());
                 IcCard d_IcCard = icCardMapper.findOne(selective);
 
@@ -319,7 +319,7 @@ public class BookerServiceImpl implements BookerService {
                             d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
                             d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
                             d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
-                            d_BookBorrow.setClientUserId(d_BookFlow.getClientUserId());
+                            d_BookBorrow.setClientUserId(d_BookFlow.getFlowUserId());
                             d_BookBorrow.setSkuRfId(borrow_RfId);
                             d_BookBorrow.setSkuId(r_Sku.getId());
                             d_BookBorrow.setSkuName(r_Sku.getName());

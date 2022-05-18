@@ -26,8 +26,8 @@
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
-  insert into BookFlow(id,type,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId, clientUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,lastActionSn, creator,createTime)
-  values(#{id},#{type},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{clientUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{lastActionSn}, #{creator},#{createTime})
+  insert into BookFlow(id,flowType,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId, flowUserId,identityType,identityId,identityName,openActionTime,openRfIds,status,lastActionSn, creator,createTime)
+  values(#{id},#{flowType},#{merchId},#{merchName},#{storeId},#{storeName},#{shopId},#{shopName},#{deviceId},#{deviceCumCode},#{slotId},#{flowUserId},#{identityType},#{identityId},#{identityName},#{openActionTime},#{openRfIds},#{status},#{lastActionSn}, #{creator},#{createTime})
     </insert>
     <update id="update" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">
         update BookFlow

@@ -13,8 +13,8 @@ public class BookFlow {
     private String deviceId;
     private String deviceCumCode;
     private String slotId;
-    private int type;
-    private String clientUserId;
+    private int flowType;
+    private String flowUserId;
     private int identityType;
     private String identityId;
     private String identityName;
@@ -86,14 +86,6 @@ public class BookFlow {
 
     public void setSlotId(String slotId) {
         this.slotId = slotId;
-    }
-
-    public String getClientUserId() {
-        return clientUserId;
-    }
-
-    public void setClientUserId(String clientUserId) {
-        this.clientUserId = clientUserId;
     }
 
     public int getIdentityType() {
@@ -216,12 +208,20 @@ public class BookFlow {
         this.identityName = identityName;
     }
 
-    public int getType() {
-        return type;
+    public int getFlowType() {
+        return flowType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setFlowType(int flowType) {
+        this.flowType = flowType;
+    }
+
+    public String getFlowUserId() {
+        return flowUserId;
+    }
+
+    public void setFlowUserId(String flowUserId) {
+        this.flowUserId = flowUserId;
     }
 
     public int getLastActionSn() {
