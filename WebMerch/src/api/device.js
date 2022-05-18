@@ -16,19 +16,35 @@ export function bookers(data) {
   })
 }
 
-export function init_manage(params) {
+export function init_booker_manage(params) {
   return request({
-    url: '/device/init_manage',
+    url: '/device/init_booker_manage',
     method: 'get',
     params
   })
 }
 
-export function init_manage_baseinfo(params) {
+export function init_booker_baseinfo(params) {
   return request({
-    url: '/device/init_manage_baseinfo',
+    url: '/device/init_booker_baseinfo',
     method: 'get',
     params
+  })
+}
+
+export function init_booker_stock(params) {
+  return request({
+    url: '/device/init_booker_stock',
+    method: 'get',
+    params
+  })
+}
+
+export function booker_stock(data) {
+  return request({
+    url: '/device/booker_stock',
+    method: 'post',
+    data
   })
 }
 
@@ -43,7 +59,9 @@ export function edit(data) {
 export default {
   init_bookers: init_bookers,
   bookers: bookers,
-  init_manage: init_manage,
-  init_manage_baseinfo: init_manage_baseinfo,
+  init_booker_manage: init_booker_manage,
+  init_booker_baseinfo: init_booker_baseinfo,
+  init_booker_stock:init_booker_stock,
+  booker_stock:booker_stock,
   edit: edit
 }

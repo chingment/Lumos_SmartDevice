@@ -1,5 +1,5 @@
 <template>
-  <div id="device_manage">
+  <div id="booker_manage">
     <page-header />
     <div class="cur-device cur-tab">
       <div class="it-name">
@@ -16,16 +16,18 @@
     </div>
     <el-tabs v-model="activeTab" type="card">
       <el-tab-pane label="基本信息" name="tabBaseInfo"> <manage-base-info :device-id="activeDropdown.id" /></el-tab-pane>
+      <el-tab-pane label="设备库存" name="tabStock"> <manage-stock :device-id="activeDropdown.id" /></el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import { init_manage } from '@/api/device'
+import { init_booker_manage } from '@/api/device'
 import ManageBaseInfo from './components/ManageBaseInfo'
+import ManageStock from './components/ManageStock'
 import PageHeader from '@/components/PageHeader/index.vue'
 export default {
   name: 'DeviceBookerManage',
-  components: { ManageBaseInfo, PageHeader },
+  components: { ManageBaseInfo,ManageStock, PageHeader },
   data() {
     return {
       loading: false,
@@ -55,7 +57,7 @@ export default {
   methods: {
     init() {
       this.loading = true
-      init_manage({ id: this.activeId }).then(res => {
+      init_booker_manage({ id: this.activeId }).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data
           this.dropdownOptions = d.devices

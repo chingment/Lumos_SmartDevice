@@ -1,5 +1,5 @@
 <template>
-  <div id="device_list">
+  <div id="booker_list">
     <div class="circle-status-bar">
       <div class="circle-item"> <span class="icon-status icon-status-1" /> <span class="name">关闭</span></div>
       <div class="circle-item"> <span class="icon-status icon-status-2" /> <span class="name">正常</span></div>
@@ -136,7 +136,7 @@ export default {
 
 <style lang="scss" scoped>
 
-#device_list {
+#booker_list {
   .it-header {
     position: relative;
 

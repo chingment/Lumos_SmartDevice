@@ -1,5 +1,5 @@
 <template>
-  <div id="device_baseinfo" v-loading="loading">
+  <div id="booker_baseinfo" v-loading="loading">
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="100px" :hide-required-asterisk="!isEdit">
       <el-form-item label="设备编码">
         {{ temp.id }}
@@ -33,11 +33,10 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { edit, init_manage_baseinfo } from '@/api/device'
+import { edit, init_booker_baseinfo } from '@/api/device'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
-  name: 'DeviceVendingPaneBaseInfo',
   props: {
     deviceId: {
       type: String,
@@ -75,7 +74,7 @@ export default {
     init() {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
-        init_manage_baseinfo({ id: this.deviceId }).then(res => {
+        init_booker_baseinfo({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
             this.temp = res.data
           }
@@ -123,7 +122,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-#device_baseinfo {
+#booker_baseinfo {
   .el-form .el-form-item {
     max-width: 600px;
   }

@@ -1,13 +1,21 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
+import com.caterbao.lumos.api.merch.rop.RopDeviceBookerStock;
 import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
 import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
 import com.caterbao.lumos.api.merch.service.DeviceService;
+import com.caterbao.lumos.locals.biz.cache.CacheFactory;
+import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
 import com.caterbao.lumos.locals.dal.LumosSelective;
+import com.caterbao.lumos.locals.dal.mapper.BookerSlotMapper;
+import com.caterbao.lumos.locals.dal.mapper.BookerStockMapper;
 import com.caterbao.lumos.locals.dal.mapper.MerchDeviceMapper;
+import com.caterbao.lumos.locals.dal.pojo.BookBorrow;
+import com.caterbao.lumos.locals.dal.pojo.BookerSlot;
+import com.caterbao.lumos.locals.dal.pojo.BookerStock;
 import com.caterbao.lumos.locals.dal.pojo.MerchDevice;
 import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
@@ -23,10 +31,27 @@ import java.util.List;
 public class DeviceServiceImpl implements DeviceService {
 
     private MerchDeviceMapper merchDeviceMapper;
+    private BookerSlotMapper bookerSlotMapper;
+    private BookerStockMapper bookerStockMapper;
+    private CacheFactory cacheFactory;
 
     @Autowired(required = false)
     public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
         this.merchDeviceMapper = merchDeviceMapper;
+    }
+
+    @Autowired(required = false)
+    public void setBookerSlotMapper(BookerSlotMapper bookerSlotMapper) {
+        this.bookerSlotMapper = bookerSlotMapper;
+    }
+    @Autowired(required = false)
+    public void setBookerStockMapper(BookerStockMapper bookerStockMapper) {
+        this.bookerStockMapper = bookerStockMapper;
+    }
+
+    @Autowired(required = false)
+    public void setCacheFactory(CacheFactory cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 
     @Override
@@ -43,7 +68,6 @@ public class DeviceServiceImpl implements DeviceService {
         HashMap<String, Object> ret = new HashMap<>();
 
         ret.put("deviceCount", deviceCount);
-
 
         return result.success("初始成功", ret);
     }
@@ -105,7 +129,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public CustomResult<Object> init_manage(String operater, String merchId,String deviceId) {
+    public CustomResult<Object> init_booker_manage(String operater, String merchId,String deviceId) {
 
         CustomResult<Object> result = new CustomResult<>();
 
@@ -132,7 +156,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public CustomResult<Object> init_manage_baseinfo(String operater, String merchId,String deviceId) {
+    public CustomResult<Object> init_booker_baseinfo(String operater, String merchId,String deviceId) {
 
         CustomResult<Object> result = new CustomResult<>();
 
@@ -152,6 +176,86 @@ public class DeviceServiceImpl implements DeviceService {
         ret.put("belongName",getBelongName(d_Device.getStoreName(),d_Device.getShopName()));
         return result.success("初始成功",ret);
     }
+
+    @Override
+    public CustomResult<Object> init_booker_stock(String operater, String merchId,String deviceId) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        LumosSelective selective_BookerSlots = new LumosSelective();
+        selective_BookerSlots.setFields("*");
+        selective_BookerSlots.addWhere("DeviceId", deviceId);
+
+        List<BookerSlot> d_BookerSlots = bookerSlotMapper.find(selective_BookerSlots);
+
+        List<Object> m_Slots = new ArrayList<>();
+
+        for (BookerSlot d_BookerSlot : d_BookerSlots) {
+            HashMap<String, Object> m_Slot = new HashMap<>();
+            m_Slot.put("id", d_BookerSlot.getId());
+            m_Slot.put("name", d_BookerSlot.getName());
+            m_Slots.add(m_Slot);
+        }
+
+        HashMap<String, Object> ret = new HashMap<>();
+
+        ret.put("slots", m_Slots);
+
+        return result.success("初始成功",ret);
+
+    }
+
+    @Override
+    public CustomResult<Object> booker_stock(String operater, String merchId, RopDeviceBookerStock rop) {
+
+        CustomResult<Object> result = new CustomResult<>();
+
+        int pageNum = rop.getPageNum();
+        int pageSize = rop.getPageSize();
+
+
+        Page<?> page = PageHelper.startPage(pageNum, pageSize,"CreateTime DESC");
+
+        LumosSelective selective=new LumosSelective();
+        selective.setFields("*");
+        selective.addWhere("MerchId",merchId);
+        selective.addWhere("DeviceId",rop.getDeviceId());
+
+        List<BookerStock> d_BookerStocks= bookerStockMapper.find(selective);
+
+        List<Object> items=new ArrayList<>();
+
+        for (BookerStock d_BookerStock :
+                d_BookerStocks) {
+
+            HashMap<String,Object> item=new HashMap<>();
+
+            SkuInfo r_SkuInfo = cacheFactory.getProduct().getSkuInfo(d_BookerStock.getMerchId(), d_BookerStock.getSkuId());
+            if (r_SkuInfo != null) {
+                item.put("slotId", d_BookerStock.getSlotId());
+                item.put("skuId", r_SkuInfo.getId());
+                item.put("skuRfId", d_BookerStock.getSkuRfId());
+                item.put("skuName", r_SkuInfo.getName());
+                item.put("skuImgUrl", r_SkuInfo.getImgUrl());
+                item.put("skuCumCode", r_SkuInfo.getCumCode());
+                items.add(item);
+            }
+
+
+            items.add(item);
+        }
+
+        long total = page.getTotal();
+        PageResult<Object> ret = new PageResult<>();
+        ret.setPageNum(pageNum);
+        ret.setPageSize(pageSize);
+        ret.setTotalPages(page.getPages());
+        ret.setTotalSize(total);
+        ret.setItems(items);
+
+        return result.success("",ret);
+    }
+
 
     @Override
     public CustomResult<Object> edit(String operater, String merchId, RopDeviceEdit rop) {
