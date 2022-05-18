@@ -708,7 +708,7 @@ public class BookerServiceImpl implements BookerService {
             item.put("lockeqId", d_BookerSlot.getLockeqId());
             item.put("lockeqAnt", d_BookerSlot.getLockeqAnt());
             item.put("rfeqId", d_BookerSlot.getRfeqId());
-            item.put("rfeqAnt", d_BookerSlot.getLockeqId());
+            item.put("rfeqAnt", d_BookerSlot.getRfeqAnt());
             item.put("isOpen", false);
 
 

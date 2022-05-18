@@ -57,6 +57,7 @@ public class AppAuthHandler implements HandlerInterceptor {
             return false;
         }
 
+        String version = request.getHeader("version");
         String appId = request.getHeader("appId");
         String appKey = request.getHeader("appKey");
         String sign = request.getHeader("sign");
@@ -86,6 +87,7 @@ public class AppAuthHandler implements HandlerInterceptor {
             data = HttpHelper.getBodyStringByMultipartFormData(request);
         }
 
+        logger.info("请求版本 : {}",version);
         logger.info("请求参数 : {}",data);
 
         String my_sign = getSign(appId, appKey, appSecret, data, timestamp);
