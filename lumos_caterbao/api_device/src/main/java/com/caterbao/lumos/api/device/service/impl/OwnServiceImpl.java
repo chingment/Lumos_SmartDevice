@@ -151,7 +151,7 @@ public class OwnServiceImpl implements OwnService {
         ret.setUserId(d_SysUser.getId());
         ret.setUserName(d_SysUser.getUserName());
         ret.setFullName(d_SysUser.getFullName());
-        ret.setAvatar(d_SysUser.getAvatar());
+        ret.setAvatar(FileVo.getFirstFileUrl(d_SysUser.getAvatar()));
 
         return result.success("保存成功", ret);
     }

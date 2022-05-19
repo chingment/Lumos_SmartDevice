@@ -734,28 +734,11 @@ public class BookerServiceImpl implements BookerService {
             item.put("rfeqId", d_BookerSlot.getRfeqId());
             item.put("rfeqAnt", d_BookerSlot.getRfeqAnt());
             item.put("isOpen", false);
-
+            item.put("lastInboundTime", CommonUtil.toDateTimeStr(d_BookerSlot.getLastInboundTime()));
 
             long stockQuantity = bookerStockMapper.getDeviceStockQuantityBySlotId(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId(),d_BookerSlot.getSlotId());
 
             item.put("stockQuantity", stockQuantity);
-
-            selective = new LumosSelective();
-            selective.setFields("*");
-            selective.addWhere("MerchId", d_MerchDevice.getMerchId());
-            selective.addWhere("StoreId", d_MerchDevice.getStoreId());
-            selective.addWhere("ShopId", d_MerchDevice.getShopId());
-            selective.addWhere("DeviceId", rop.getDeviceId());
-
-
-            BookerTakeStockSheet d_BookerTakeStockSheet = bookerTakeStockSheetMapper.findLast(selective);
-            if (d_BookerTakeStockSheet == null) {
-                item.put("lastTakeTime", "无");
-                item.put("lastTakeQuantity", 0);
-            } else {
-                item.put("lastTakeTime", CommonUtil.toDateTimeStr(d_BookerTakeStockSheet.getCreateTime()));
-                item.put("lastTakeQuantity", d_BookerTakeStockSheet.getQuantity());
-            }
 
             items.add(item);
         }
@@ -789,7 +772,7 @@ public class BookerServiceImpl implements BookerService {
             selective.addWhere("DeviceId", rop.getDeviceId());
             selective.addWhere("SheetId", rop.getSheetId());
 
-            BookerTakeStockSheet d_BookerTakeStockSheet=this.bookerTakeStockSheetMapper.findOne(selective);
+            BookerTakeStockSheet d_BookerTakeStockSheet=bookerTakeStockSheetMapper.findOne(selective);
 
             if(d_BookerTakeStockSheet==null)
                 return result.fail("盘点入库失败[01]");
@@ -809,7 +792,7 @@ public class BookerServiceImpl implements BookerService {
             selective.addWhere("DeviceId", rop.getDeviceId());
             selective.addWhere("SheetId", rop.getSheetId());
 
-            List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems =this.bookerTakeStockSheetItemMapper.find(selective);
+            List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems =bookerTakeStockSheetItemMapper.find(selective);
 
             List<BookerStock> d_BookerStocks = new ArrayList<>();
 
@@ -835,6 +818,16 @@ public class BookerServiceImpl implements BookerService {
             bookerStockMapper.insertBatch(d_BookerStocks);
 
             bookerTakeStockSheetMapper.update(d_BookerTakeStockSheet);
+
+            BookerSlot bookerSlot=new BookerSlot();
+            bookerSlot.setDeviceId(rop.getDeviceId());
+            bookerSlot.setSlotId(d_BookerTakeStockSheet.getSlotId());
+            bookerSlot.setLastInboundSheetId(d_BookerTakeStockSheet.getId());
+            bookerSlot.setLastInboundTime(CommonUtil.getDateTimeNow());
+            bookerSlot.setMender(operater);
+            bookerSlot.setMendTime(CommonUtil.getDateTimeNow());
+
+            bookerSlotMapper.update(bookerSlot);
 
             return result.success("盘点入库成功[99]");
         }

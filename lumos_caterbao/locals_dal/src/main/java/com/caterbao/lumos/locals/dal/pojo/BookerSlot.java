@@ -1,5 +1,7 @@
 package com.caterbao.lumos.locals.dal.pojo;
 
+import java.sql.Timestamp;
+
 public class BookerSlot {
     private String id;
     private String deviceId;
@@ -9,6 +11,12 @@ public class BookerSlot {
     private String lockeqAnt;
     private String rfeqId;
     private String rfeqAnt;
+    private Timestamp lastInboundTime;
+    private String lastInboundSheetId;
+    private String creator;
+    private Timestamp createTime;
+    private String mender;
+    private Timestamp mendTime;
 
     public String getId() {
         return id;
@@ -72,5 +80,53 @@ public class BookerSlot {
 
     public void setRfeqAnt(String rfeqAnt) {
         this.rfeqAnt = rfeqAnt;
+    }
+
+    public Timestamp getLastInboundTime() {
+        return lastInboundTime;
+    }
+
+    public void setLastInboundTime(Timestamp lastInboundTime) {
+        this.lastInboundTime = lastInboundTime;
+    }
+
+    public String getLastInboundSheetId() {
+        return lastInboundSheetId;
+    }
+
+    public void setLastInboundSheetId(String lastInboundSheetId) {
+        this.lastInboundSheetId = lastInboundSheetId;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getMender() {
+        return mender;
+    }
+
+    public void setMender(String mender) {
+        this.mender = mender;
+    }
+
+    public Timestamp getMendTime() {
+        return mendTime;
+    }
+
+    public void setMendTime(Timestamp mendTime) {
+        this.mendTime = mendTime;
     }
 }
