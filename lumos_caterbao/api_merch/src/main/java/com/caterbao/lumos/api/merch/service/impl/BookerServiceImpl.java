@@ -79,6 +79,28 @@ public class BookerServiceImpl implements BookerService {
         selective.setFields("*");
 
         selective.addWhere("MerchId",merchId);
+        selective.addWhere("LikeFlowId",rop.getFlowId());
+        selective.addWhere("LikeDeviceCode",rop.getDeviceCode());
+        selective.addWhere("LikeSkuName",rop.getSkuName());
+
+        if(rop.getBorrowTimeArea()!=null) {
+            if(rop.getBorrowTimeArea().size()>=1){
+                selective.addWhere("MinBorrowTime",rop.getBorrowTimeArea().get(0));
+            }
+            if(rop.getBorrowTimeArea().size()>=2) {
+                selective.addWhere("MaxBorrowTime", rop.getBorrowTimeArea().get(1));
+            }
+        }
+
+        if(rop.getReturnTimeArea()!=null) {
+            if(rop.getReturnTimeArea().size()>=1){
+                selective.addWhere("MinReturnTime",rop.getReturnTimeArea().get(0));
+            }
+            if(rop.getReturnTimeArea().size()>=2) {
+                selective.addWhere("MaxReturnTime", rop.getReturnTimeArea().get(1));
+            }
+        }
+
 
         List<BookBorrow> d_BookBorrows = bookBorrowMapper.find(selective);
 
@@ -195,6 +217,20 @@ public class BookerServiceImpl implements BookerService {
         selective.setFields("*");
 
         selective.addWhere("MerchId",merchId);
+        selective.addWhere("ActionCode",rop.getActionCode());
+
+        selective.addWhere("LikeFlowId",rop.getFlowId());
+        selective.addWhere("LikeDeviceCode",rop.getDeviceCode());
+
+
+        if(rop.getCreateTimeArea()!=null) {
+            if(rop.getCreateTimeArea().size()>=1){
+                selective.addWhere("MinCreateTime",rop.getCreateTimeArea().get(0));
+            }
+            if(rop.getCreateTimeArea().size()>=2) {
+                selective.addWhere("MaxCreateTime", rop.getCreateTimeArea().get(1));
+            }
+        }
 
         List<BookFlow> d_BookFlows = bookFlowMapper.find(selective);
 

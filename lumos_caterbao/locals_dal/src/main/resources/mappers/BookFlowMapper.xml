@@ -16,13 +16,23 @@
     </select>
     <select id="find" resultType="com.caterbao.lumos.locals.dal.pojo.BookFlow" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select ${fields} from BookFlow where 1=1
-        <if test="where.Name != null and where.Name.length() > 0">and name like concat('%', #{where.Name}, '%')</if>
+
         <if test="where.MerchId != null and where.MerchId.length() > 0">and merchId =#{where.MerchId}</if>
         <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
         <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
         <if test="where.SlotId != null">and SlotId =#{where.SlotId}</if>
         <if test="where.Status != null">and Status =#{where.Status}</if>
+        <if test="where.ActionCode != null and where.ActionCode.length() > 0 " >and lastActionCode =#{where.ActionCode}</if>
+        <if test="where.LikeFlowId != null and where.LikeFlowId.length() > 0">and id like concat('%', #{where.LikeFlowId}, '%')</if>
+        <if test="where.LikeDeviceCode != null and where.LikeDeviceCode.length() > 0">and ( deviceId like concat('%', #{where.LikeDeviceCode}, '%')  or deviceCumCode like concat('%', #{where.LikeDeviceCode}, '%')  ) </if>
+        <if test="where.MinCreateTime!=null and where.MinCreateTime.length() > 0">
+            <![CDATA[ and CreateTime >= #{where.MinCreateTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="where.MaxCreateTime!=null and where.MaxCreateTime.length() > 0">
+            <![CDATA[ and CreateTime <= #{where.MaxCreateTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+
     </select>
 
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookFlow">

@@ -6,33 +6,33 @@
           <el-input v-model="listQuery.flowId" clearable placeholder="业务号" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
         <el-form-item label="书名">
-          <el-input v-model="listQuery.shuName" clearable placeholder="书名" style="max-width: 300px;" class="filter-item" />
+          <el-input v-model="listQuery.skuName" clearable placeholder="书名" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
         <el-form-item label="设备">
           <el-input v-model="listQuery.deviceCode" clearable placeholder="设备编码" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
-        <el-form-item label="借阅时间">
+        <el-form-item label="借阅日期">
           <el-date-picker
             v-model="listQuery.borrowTimeArea"
-            type="datetimerange"
+            type="daterange"
             :picker-options="pickerOptions"
-            range-separator="至"
+            range-separator="-"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             align="right"
-            style="max-width: 400px;"
+            style="max-width: 300px;"
           />
         </el-form-item>
-        <el-form-item label="归还时间">
+        <el-form-item label="归还日期">
           <el-date-picker
             v-model="listQuery.returnTimeArea"
-            type="datetimerange"
+            type="daterange"
             :picker-options="pickerOptions"
-            range-separator="至"
+            range-separator="-"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             align="right"
-            style="max-width: 400px;"
+            style="max-width: 300px;"
           />
         </el-form-item>
         <el-form-item>

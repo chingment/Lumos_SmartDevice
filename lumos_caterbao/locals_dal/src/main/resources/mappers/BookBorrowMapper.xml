@@ -46,6 +46,23 @@
         </if>
         <if test="where.CanReturn != null "> and Status in (1000,2000)
         </if>
+
+        <if test="where.LikeSkuName != null and where.LikeSkuName.length() > 0">and skuName like concat('%', #{where.LikeSkuName}, '%')</if>
+        <if test="where.LikeFlowId != null and where.LikeFlowId.length() > 0">and id like concat('%', #{where.LikeFlowId}, '%')</if>
+        <if test="where.LikeDeviceCode != null and where.LikeDeviceCode.length() > 0">and ( deviceId like concat('%', #{where.LikeDeviceCode}, '%')  or deviceCumCode like concat('%', #{where.LikeDeviceCode}, '%')  ) </if>
+        <if test="where.MinBorrowTime!=null and where.MinBorrowTime.length() > 0">
+            <![CDATA[ and BorrowTime >= #{where.MinBorrowTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="where.MaxBorrowTime!=null and where.MaxBorrowTime.length() > 0">
+            <![CDATA[ and BorrowTime <= #{where.MaxBorrowTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="where.MinReturnTime!=null and where.MinReturnTime.length() > 0">
+            <![CDATA[ and ReturnTime >= #{where.MinReturnTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="where.MaxReturnTime!=null and where.MaxReturnTime.length() > 0">
+            <![CDATA[ and ReturnTime <= #{where.MaxReturnTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+
     </select>
     <insert id="insert" parameterType="com.caterbao.lumos.locals.dal.pojo.BookBorrow">
   insert into BookBorrow(id,merchId,merchName,storeId,storeName,shopId,shopName,deviceId,deviceCumCode,slotId,flowId,clientUserId,identityType,identityId,identityName,skuId,skuName,skuImgUrl,skuPrice, skuCumCode, skuRfId,borrowSeq,borrowTime,borrowWay,status,expireTime,renewCount,creator,createTime)

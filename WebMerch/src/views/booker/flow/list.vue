@@ -13,10 +13,10 @@
         </el-form-item>
         <el-form-item label="时间">
           <el-date-picker
-            v-model="listQuery.actionTimeArea"
+            v-model="listQuery.createTimeArea"
             type="datetimerange"
             :picker-options="pickerOptions"
-            range-separator="至"
+            range-separator="-"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             align="right"
@@ -103,7 +103,7 @@ export default {
         deviceCode: undefined,
         flowId: '',
         actionCode: '',
-        actionTimeArea: ['', '']
+        createTimeArea: ['', '']
       },
       listKey: 's',
       listData: {
