@@ -221,6 +221,10 @@ public class DeviceServiceImpl implements DeviceService {
         selective.addWhere("MerchId",merchId);
         selective.addWhere("DeviceId",rop.getDeviceId());
 
+        if(!CommonUtil.isEmpty(rop.getSlotId())){
+            selective.addWhere("SlotId",rop.getSlotId());
+        }
+
         List<BookerStock> d_BookerStocks= bookerStockMapper.find(selective);
 
         List<Object> items=new ArrayList<>();
@@ -240,9 +244,6 @@ public class DeviceServiceImpl implements DeviceService {
                 item.put("skuCumCode", r_SkuInfo.getCumCode());
                 items.add(item);
             }
-
-
-            items.add(item);
         }
 
         long total = page.getTotal();

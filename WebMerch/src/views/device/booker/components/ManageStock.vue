@@ -87,13 +87,13 @@ export default {
     }
   },
   created() {
-    this.listQuery.deviceId=this.deviceId
     this.init()
   },
   methods: {
     init() {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
+        this.listQuery.deviceId=this.deviceId
         init_booker_stock({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
             var d=res.data;

@@ -4,6 +4,7 @@ import com.caterbao.lumos.locals.common.BasePageRequest;
 
 public class RopDeviceBookerStock extends BasePageRequest {
     private String deviceId;
+    private String slotId;
 
     public String getDeviceId() {
         return deviceId;
@@ -11,5 +12,13 @@ public class RopDeviceBookerStock extends BasePageRequest {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getSlotId() {
+        return slotId;
+    }
+
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
     }
 }

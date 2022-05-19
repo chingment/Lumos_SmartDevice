@@ -631,6 +631,7 @@ public class BookerServiceImpl implements BookerService {
 
                 List<BookVo> sheetItems = new ArrayList<>();
                 List<BookVo> warnItems = new ArrayList<>();
+
                 List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems = new ArrayList<>();
 
                 for (String closeRfId : closeRfIds) {

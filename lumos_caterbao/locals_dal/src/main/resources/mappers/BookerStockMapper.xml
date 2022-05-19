@@ -9,6 +9,7 @@
         <if test="where.StoreId != null">and StoreId =#{where.StoreId}</if>
         <if test="where.ShopId != null">and ShopId =#{where.ShopId}</if>
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
+        <if test="where.SlotId != null">and SlotId =#{where.SlotId}</if>
     </select>
     <select id="findDevcieSkuStock" resultType="com.caterbao.lumos.locals.dal.vw.BookerDeviceSkuStockVw" parameterType="com.caterbao.lumos.locals.dal.LumosSelective">
         select distinct MerchId,StoreId,ShopId,DeviceId,SkuId,count(*) as Quantity from BookerStock

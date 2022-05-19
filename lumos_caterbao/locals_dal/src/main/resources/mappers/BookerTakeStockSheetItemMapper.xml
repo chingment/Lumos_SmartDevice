@@ -9,7 +9,6 @@
         <if test="where.MerchId != null">and MerchId =#{where.MerchId}</if>
         <if test="where.DeviceId != null">and DeviceId =#{where.DeviceId}</if>
         <if test="where.SheetId != null">and SheetId =#{where.SheetId}</if>
-        order by ActionSn
     </select>
 
     <insert id="insertBatch">
