@@ -314,6 +314,7 @@ public class BookerServiceImpl implements BookerService {
 
         ret.put("openSkus",openSkus);
         ret.put("closeSkus",closeSkus);
+        ret.put("flowType",d_BookFlow.getFlowType());
         ret.put("flowLogs",flowLogs);
 
 

@@ -664,6 +664,7 @@ public class BookerServiceImpl implements BookerService {
 
                 bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
 
+                d_BookFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
                 d_BookFlow.setStatus(4000);
 
                 ret.setSheetId(d_BookerTakeStockSheet.getId());

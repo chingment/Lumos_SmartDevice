@@ -28,7 +28,7 @@
           <span>{{ scope.row.slotId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="RFID" fixed="left" align="left" width="150">
+      <el-table-column label="RFID" fixed="left" align="left" width="240">
         <template slot-scope="scope">
           <span>{{ scope.row.skuRfId }}</span>
         </template>

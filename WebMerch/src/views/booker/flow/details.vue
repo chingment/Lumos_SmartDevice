@@ -3,7 +3,7 @@
     <div id="flow_detail" v-loading="loading" style="height:600px">
 
       <el-collapse v-model="activeNames">
-        <el-collapse-item name="1">
+        <el-collapse-item v-if="details.flowType==1" name="1">
           <template slot="title">
             <div class="row-title-1">
               <div class="pull-left">开门前书籍（{{ details.openSkus.length }}）本</div>
@@ -33,7 +33,7 @@
           </el-table>
 
         </el-collapse-item>
-        <el-collapse-item name="2">
+        <el-collapse-item v-if="details.flowType==1||details.flowType==2" name="2">
           <template slot="title">
             <div class="row-title-1">
               <div class="pull-left">关门后书籍（{{ details.closeSkus.length }}）本</div>
@@ -118,6 +118,7 @@ export default {
       },
       activeNames: [],
       details: {
+        flowType:0,
         flowLogs: [],
         openSkus: [],
         closeSkus: []
