@@ -339,14 +339,16 @@ public class BookerServiceImpl implements BookerService {
                             d_BookBorrow.setCreator(IdWork.buildGuId());
                             d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
 
-                            if (bookBorrowMapper.insert(d_BookBorrow) <= 0) {
-                                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                                return result.fail("反馈失败[D03]");
-                            } else {
-                                ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
-                            }
+                            bookBorrowMapper.insert(d_BookBorrow);
+
+
+                            bookerStockMapper.deleteDeviceStockBySkuRfId(d_BookFlow.getMerchId(),d_BookFlow.getStoreId(),d_BookFlow.getShopId(),d_BookFlow.getDeviceId(),d_BookBorrow.getSkuRfId());
+
+                            ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
+
                         }
                     }
+
                 }
 
                 //还书
@@ -364,16 +366,33 @@ public class BookerServiceImpl implements BookerService {
                         d_BookBorrow.setReturnWay(d_BookBorrow.getBorrowWay());
                         d_BookBorrow.setReturnTime(CommonUtil.getDateTimeNow());
                         d_BookBorrow.setStatus(3000);
-                        d_BookBorrow.setMender(IdWork.buildGuId());
+                        d_BookBorrow.setMender(operater);
                         d_BookBorrow.setMendTime(CommonUtil.getDateTimeNow());
 
-                        if (bookBorrowMapper.update(d_BookBorrow) <= 0) {
-                            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                            return result.fail("反馈失败[D04]");
-                        } else {
-                            ret_ReturnBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
+                        bookBorrowMapper.update(d_BookBorrow);
+
+                        long stockQuantity = bookerStockMapper.getDeviceStockQuantityBySkuRfId(d_BookFlow.getMerchId(), d_BookFlow.getStoreId(), d_BookFlow.getShopId(), rop.getDeviceId(),d_BookBorrow.getSkuRfId());
+
+                        if(stockQuantity==0) {
+                            BookerStock d_BookerStock = new BookerStock();
+                            d_BookerStock.setId(IdWork.buildGuId());
+                            d_BookerStock.setMerchId(d_BookFlow.getMerchId());
+                            d_BookerStock.setStoreId(d_BookFlow.getStoreId());
+                            d_BookerStock.setShopId(d_BookFlow.getShopId());
+                            d_BookerStock.setDeviceId(d_BookFlow.getDeviceId());
+                            d_BookerStock.setSlotId(d_BookFlow.getSlotId());
+                            d_BookerStock.setSkuId(d_BookBorrow.getSkuId());
+                            d_BookerStock.setSkuRfId(return_RfId);
+                            d_BookerStock.setCreator(operater);
+                            d_BookerStock.setCreateTime(CommonUtil.getDateTimeNow());
+                            bookerStockMapper.insert(d_BookerStock);
                         }
+
+
+                        ret_ReturnBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
+
                     }
+
                 }
 
                 ret.setBorrowBooks(ret_BorrowBooks);
@@ -382,22 +401,17 @@ public class BookerServiceImpl implements BookerService {
                 d_BookFlow.setStatus(4000);
             }
 
-
-            if(rop.getActionSn()>=d_BookFlow.getLastActionSn()) {
+            if(rop.getActionSn()>d_BookFlow.getLastActionSn()) {
                 d_BookFlow.setLastActionSn(rop.getActionSn());
                 d_BookFlow.setLastActionCode(rop.getActionCode());
                 d_BookFlow.setLastActionTime(CommonUtil.toDateTimeTimestamp(rop.getActionTime()));
                 d_BookFlow.setLastActionRemark(rop.getActionRemark());
             }
 
-
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
             d_BookFlow.setMender(IdWork.buildGuId());
 
-            if (bookFlowMapper.update(d_BookFlow) <= 0) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return result.fail("反馈失败[D02]");
-            }
+            bookFlowMapper.update(d_BookFlow);
 
             return result.success("反馈成功", ret);
         } catch (Exception ex) {
@@ -616,40 +630,44 @@ public class BookerServiceImpl implements BookerService {
                 bookerTakeStockSheetMapper.insert(d_BookerTakeStockSheet);
 
                 List<BookVo> sheetItems = new ArrayList<>();
-
+                List<BookVo> warnItems = new ArrayList<>();
                 List<BookerTakeStockSheetItem> d_BookerTakeStockSheetItems = new ArrayList<>();
 
                 for (String closeRfId : closeRfIds) {
 
                     SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookerTakeStockSheet.getMerchId(), closeRfId);
+                    if (r_Sku != null && !CommonUtil.isEmpty(r_Sku.getId())) {
+                        BookerTakeStockSheetItem d_BookerTakeStockSheetItem = new BookerTakeStockSheetItem();
+                        d_BookerTakeStockSheetItem.setId(IdWork.buildGuId());
+                        d_BookerTakeStockSheetItem.setFlowId(d_BookerTakeStockSheet.getFlowId());
+                        d_BookerTakeStockSheetItem.setSheetId(d_BookerTakeStockSheet.getId());
+                        d_BookerTakeStockSheetItem.setMerchId(d_BookerTakeStockSheet.getMerchId());
+                        d_BookerTakeStockSheetItem.setStoreId(d_BookerTakeStockSheet.getStoreId());
+                        d_BookerTakeStockSheetItem.setShopId(d_BookerTakeStockSheet.getShopId());
+                        d_BookerTakeStockSheetItem.setDeviceId(d_BookerTakeStockSheet.getDeviceId());
+                        d_BookerTakeStockSheetItem.setSlotId(d_BookerTakeStockSheet.getSlotId());
+                        d_BookerTakeStockSheetItem.setSkuId(r_Sku.getId());
+                        d_BookerTakeStockSheetItem.setSkuRfId(closeRfId);
+                        d_BookerTakeStockSheetItem.setCreateTime(d_BookerTakeStockSheet.getCreateTime());
+                        d_BookerTakeStockSheetItem.setCreator(d_BookerTakeStockSheet.getCreator());
 
-                    BookerTakeStockSheetItem d_BookerTakeStockSheetItem = new BookerTakeStockSheetItem();
-                    d_BookerTakeStockSheetItem.setId(IdWork.buildGuId());
-                    d_BookerTakeStockSheetItem.setFlowId(d_BookerTakeStockSheet.getFlowId());
-                    d_BookerTakeStockSheetItem.setSheetId(d_BookerTakeStockSheet.getId());
-                    d_BookerTakeStockSheetItem.setMerchId(d_BookerTakeStockSheet.getMerchId());
-                    d_BookerTakeStockSheetItem.setStoreId(d_BookerTakeStockSheet.getStoreId());
-                    d_BookerTakeStockSheetItem.setShopId(d_BookerTakeStockSheet.getShopId());
-                    d_BookerTakeStockSheetItem.setDeviceId(d_BookerTakeStockSheet.getDeviceId());
-                    d_BookerTakeStockSheetItem.setSlotId(d_BookerTakeStockSheet.getSlotId());
-                    d_BookerTakeStockSheetItem.setSkuId(r_Sku.getId());
-                    d_BookerTakeStockSheetItem.setSkuRfId(closeRfId);
-                    d_BookerTakeStockSheetItem.setCreateTime(d_BookerTakeStockSheet.getCreateTime());
-                    d_BookerTakeStockSheetItem.setCreator(d_BookerTakeStockSheet.getCreator());
+                        d_BookerTakeStockSheetItems.add(d_BookerTakeStockSheetItem);
 
-                    d_BookerTakeStockSheetItems.add(d_BookerTakeStockSheetItem);
-
-
-                    sheetItems.add(new BookVo(r_Sku.getId(), closeRfId, r_Sku.getName(), r_Sku.getCumCode(), r_Sku.getCumCode()));
+                        sheetItems.add(new BookVo(r_Sku.getId(), closeRfId, r_Sku.getName(), r_Sku.getCumCode(), r_Sku.getCumCode()));
+                    }
+                    else {
+                        warnItems.add(new BookVo("0", closeRfId, "无效", "0", "0"));
+                    }
                 }
 
 
-                this.bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
+                bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
 
                 d_BookFlow.setStatus(4000);
 
                 ret.setSheetId(d_BookerTakeStockSheet.getId());
                 ret.setSheetItems(sheetItems);
+                ret.setWarnItems(warnItems);
                 ret.setSheetIsUse(false);
             }
 
@@ -663,10 +681,7 @@ public class BookerServiceImpl implements BookerService {
             d_BookFlow.setMendTime(CommonUtil.getDateTimeNow());
             d_BookFlow.setMender(IdWork.buildGuId());
 
-            if (bookFlowMapper.update(d_BookFlow) <= 0) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return result.fail("反馈失败[D02]");
-            }
+            bookFlowMapper.update(d_BookFlow);
 
             return result.success("反馈成功",ret);
 
@@ -719,7 +734,7 @@ public class BookerServiceImpl implements BookerService {
             item.put("isOpen", false);
 
 
-            long stockQuantity = bookerStockMapper.getDeviceStockQuantity(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
+            long stockQuantity = bookerStockMapper.getDeviceStockQuantityBySlotId(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId(),d_BookerSlot.getSlotId());
 
             item.put("stockQuantity", stockQuantity);
 
@@ -781,7 +796,7 @@ public class BookerServiceImpl implements BookerService {
                 return result.fail("盘点入库失败[02]");
             }
 
-            bookerStockMapper.delete(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId());
+            bookerStockMapper.deleteDeviceStockBySlotId(d_MerchDevice.getMerchId(), d_MerchDevice.getStoreId(), d_MerchDevice.getShopId(), rop.getDeviceId(),d_BookerTakeStockSheet.getSlotId());
 
             selective = new LumosSelective();
 
@@ -813,9 +828,9 @@ public class BookerServiceImpl implements BookerService {
                 d_BookerStocks.add(d_BookerStock);
             }
 
-            bookerStockMapper.insertBatch(d_BookerStocks);
-
             d_BookerTakeStockSheet.setIsUse(true);
+
+            bookerStockMapper.insertBatch(d_BookerStocks);
 
             bookerTakeStockSheetMapper.update(d_BookerTakeStockSheet);
 

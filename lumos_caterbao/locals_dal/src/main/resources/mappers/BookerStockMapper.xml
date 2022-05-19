@@ -23,19 +23,79 @@
 
     </select>
 
-    <select id="getDeviceStockQuantity" resultType="java.lang.Long">
-        select count(*) from BookerStock where  MerchId =#{merchId}
+    <select id="getDeviceStockQuantityByDeviceId" resultType="java.lang.Long" >
+        select count(*) from BookerStock where
+        MerchId =#{merchId}
         and StoreId =#{storeId}
         and ShopId =#{shopId}
         and DeviceId =#{deviceId}
     </select>
 
-    <delete id="delete">
+    <select id="getDeviceStockQuantityBySlotId" resultType="java.lang.Long" >
+        select count(*) from BookerStock where
+        MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+        and SlotId =#{slotId}
+    </select>
+
+    <select id="getDeviceStockQuantityBySkuId" resultType="java.lang.Long" >
+      select Quantity FROM (   select distinct SkuId,count(*) as Quantity from BookerStock
+                MerchId =#{merchId}
+                and StoreId =#{storeId}
+                and ShopId =#{shopId}
+                and DeviceId =#{deviceId}
+                and SkuId =#{skuId}
+                GROUP BY skuId) a
+
+    </select>
+
+    <select id="getDeviceStockQuantityBySkuRfId" resultType="java.lang.Long" >
+         select count(*) from BookerStock where
+                MerchId =#{merchId}
+                and StoreId =#{storeId}
+                and ShopId =#{shopId}
+                and DeviceId =#{deviceId}
+                and skuRfId =#{skuRfId}
+    </select>
+
+    <delete id="deleteDeviceStockByDeviceId">
         delete from BookerStock where MerchId =#{merchId}
         and StoreId =#{storeId}
         and ShopId =#{shopId}
         and DeviceId =#{deviceId}
     </delete>
+
+    <delete id="deleteDeviceStockBySlotId">
+        delete from BookerStock where MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+        and SlotId =#{slotId}
+    </delete>
+
+    <delete id="deleteDeviceStockBySkuId">
+        delete from BookerStock where MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+        and SkuId =#{skuId}
+    </delete>
+
+    <delete id="deleteDeviceStockBySkuRfId">
+        delete from BookerStock where MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+        and SkuRfId =#{skuRfId}
+    </delete>
+
+
+    <insert id="insert">
+        INSERT INTO BookerStock (id, merchId, storeId, shopId, deviceId,slotId,skuId,skuRfId,creator,createTime) VALUES
+        (#{id},#{merchId},#{storeId},#{shopId},#{deviceId},#{slotId},#{skuId},#{skuRfId},#{creator},#{createTime})
+    </insert>
 
     <insert id="insertBatch">
         INSERT INTO BookerStock (id, merchId, storeId, shopId, deviceId,slotId,skuId,skuRfId,creator,createTime) VALUES
