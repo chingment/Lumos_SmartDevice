@@ -624,7 +624,6 @@ public class BookerServiceImpl implements BookerService {
                 d_BookerTakeStockSheet.setDeviceId(d_BookFlow.getDeviceId());
                 d_BookerTakeStockSheet.setSlotId(d_BookFlow.getSlotId());
 
-
                 bookerTakeStockSheetMapper.insert(d_BookerTakeStockSheet);
 
                 List<BookVo> sheetItems = new ArrayList<>();
@@ -658,7 +657,6 @@ public class BookerServiceImpl implements BookerService {
                         warnItems.add(new BookVo("0", closeRfId, "无效", "0", "0"));
                     }
                 }
-
 
                 d_BookerTakeStockSheet.setQuantity(sheetItems.size());
                 d_BookerTakeStockSheet.setCreateTime(CommonUtil.getDateTimeNow());
