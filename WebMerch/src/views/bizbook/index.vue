@@ -5,11 +5,11 @@
         <el-menu router :default-active="navActive">
           <el-menu-item-group>
             <template slot="title">借阅</template>
-            <el-menu-item index="/booker/borrow/list">借阅记录</el-menu-item>
+            <el-menu-item index="/bizbook/borrow/list">借阅记录</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
             <template slot="title">设备</template>
-            <el-menu-item index="/booker/flow/list">流程反馈</el-menu-item>
+            <el-menu-item index="/bizbook/flow/list">流程反馈</el-menu-item>
           </el-menu-item-group>
         </el-menu>
       </el-aside>

@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-public class RopDeviceShutdownSys {
+public class RopBookerShutdownSys {
     public String id;
 
     public String getId() {

@@ -33,7 +33,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { edit, init_booker_baseinfo } from '@/api/device'
+import { edit, init_baseinfo } from '@/api/booker'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
@@ -74,7 +74,7 @@ export default {
     init() {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
-        init_booker_baseinfo({ id: this.deviceId }).then(res => {
+        init_baseinfo({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
             this.temp = res.data
           }

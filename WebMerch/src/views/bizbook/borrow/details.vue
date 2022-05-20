@@ -46,7 +46,7 @@
 </template>
 <script>
 
-import { borrowDetails } from '@/api/booker'
+import { borrowDetails } from '@/api/bizbook'
 
 export default {
   name: '',

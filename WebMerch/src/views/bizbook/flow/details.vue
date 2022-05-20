@@ -96,7 +96,7 @@
 </template>
 <script>
 
-import { flowDetails } from '@/api/booker'
+import { flowDetails } from '@/api/bizbook'
 
 export default {
   name: '',

@@ -2,7 +2,7 @@ package com.caterbao.lumos.api.merch.rop;
 
 import com.caterbao.lumos.locals.common.BasePageRequest;
 
-public class RopDeviceBookerStock extends BasePageRequest {
+public class RopBookerStock extends BasePageRequest {
     private String deviceId;
     private String slotId;
 

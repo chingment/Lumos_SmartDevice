@@ -1,9 +1,6 @@
 package com.caterbao.lumos.api.merch.controller;
 
-
-import com.caterbao.lumos.api.merch.rop.RopBookerBorrowList;
-import com.caterbao.lumos.api.merch.rop.RopBookerFlowList;
-import com.caterbao.lumos.api.merch.rop.RopBookerRenewList;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.BookerService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,36 +17,65 @@ public class BookerController extends  BaseController  {
         this.bookerService = bookerService;
     }
 
-    @RequestMapping(value = "borrow/list", method = RequestMethod.POST)
+    @RequestMapping(value = "init_list", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> borrowList(@RequestBody RopBookerBorrowList rop) {
-        return bookerService.borrowList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    public CustomResult<Object> init_list() {
+        return bookerService.init_list(this.getCurrentUserId(), this.getCurrentMerchId());
     }
 
-    @RequestMapping(value = "borrow/details", method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CustomResult<Object> borrowDetails(@RequestParam String id) {
-        return bookerService.borrowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),id);
+    public CustomResult<Object> list(@RequestBody RopBookerList rop) {
+        return bookerService.list(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
-    @RequestMapping(value = "flow/list", method = RequestMethod.POST)
+    @RequestMapping(value = "init_manage", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> flowList(@RequestBody RopBookerFlowList rop) {
-        return bookerService.flowList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    public CustomResult<Object> init_manage(@RequestParam String id) {
+        return bookerService.init_manage(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
-    @RequestMapping(value = "flow/details", method = RequestMethod.GET)
+    @RequestMapping(value = "init_baseinfo", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> flowDetails(@RequestParam String id) {
-        return bookerService.flowDetails(this.getCurrentUserId(), this.getCurrentMerchId(),id);
+    public CustomResult<Object> init_baseinfo(@RequestParam String id) {
+        return bookerService.init_baseinfo(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
-    @RequestMapping(value = "renew/list", method = RequestMethod.POST)
+    @RequestMapping(value = "init_stock", method = RequestMethod.GET)
     @ResponseBody
-    public CustomResult<Object> renewList(@RequestBody RopBookerRenewList rop) {
-        return bookerService.renewList(this.getCurrentUserId(), this.getCurrentMerchId(),rop);
+    public CustomResult<Object> init_stock(@RequestParam String id) {
+        return bookerService.init_stock(this.getCurrentUserId(), this.getCurrentMerchId(),id);
     }
 
+    @RequestMapping(value = "stock", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> stock(@RequestBody RopBookerStock rop) {
+        return bookerService.stock(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> edit(@RequestBody RopBookerEdit rop) {
+        return bookerService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "rebootSys", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> rebootSys(@RequestBody RopBookerRebootSys rop) {
+        return bookerService.rebootSys(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "shutdownSys", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> shutdownSys(@RequestBody RopBookerShutdownSys rop) {
+        return bookerService.shutdownSys(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "updateApp", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> updateApp(@RequestBody RopBookerUpdateApp rop) {
+        return bookerService.updateApp(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
 
 
 }

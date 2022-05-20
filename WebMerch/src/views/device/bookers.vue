@@ -60,7 +60,7 @@
 
 <script>
 
-import { init_bookers, bookers } from '@/api/device'
+import { init_list, list } from '@/api/booker'
 
 export default {
   name: 'MerchDevice',
@@ -94,7 +94,7 @@ export default {
   methods: {
     init() {
       this.loading = true
-      init_bookers({}).then(res => {
+      init_list({}).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data
           this.deviceCount = d.deviceCount
@@ -108,7 +108,7 @@ export default {
     onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      bookers(this.listQuery).then(res => {
+      list(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }

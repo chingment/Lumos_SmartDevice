@@ -1,38 +1,26 @@
 <template>
-  <div id="borrow_list">
+  <div id="flow_list">
     <div class="filter-container">
       <el-form ref="form" label-width="120px" class="query-box">
         <el-form-item label="业务号">
           <el-input v-model="listQuery.flowId" clearable placeholder="业务号" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
-        <el-form-item label="书名">
-          <el-input v-model="listQuery.skuName" clearable placeholder="书名" style="max-width: 300px;" class="filter-item" />
-        </el-form-item>
         <el-form-item label="设备">
           <el-input v-model="listQuery.deviceCode" clearable placeholder="设备编码" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
-        <el-form-item label="借阅日期">
-          <el-date-picker
-            v-model="listQuery.borrowTimeArea"
-            type="daterange"
-            :picker-options="pickerOptions"
-            range-separator="-"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            align="right"
-            style="max-width: 300px;"
-          />
+        <el-form-item label="事件">
+          <el-input v-model="listQuery.actionCode" clearable placeholder="事件" style="max-width: 300px;" class="filter-item" />
         </el-form-item>
-        <el-form-item label="归还日期">
+        <el-form-item label="时间">
           <el-date-picker
-            v-model="listQuery.returnTimeArea"
-            type="daterange"
+            v-model="listQuery.createTimeArea"
+            type="datetimerange"
             :picker-options="pickerOptions"
             range-separator="-"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             align="right"
-            style="max-width: 300px;"
+            style="max-width: 400px;"
           />
         </el-form-item>
         <el-form-item>
@@ -52,19 +40,14 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="业务号" fixed="left" align="left" width="180">
+      <el-table-column label="业务号" align="left" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.flowId }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="书名" align="left" width="120">
+      <el-table-column label="类型" align="left" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.skuName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="借阅者" align="left" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.identityName }}</span>
+          <span>{{ scope.row.flowType.text }}</span>
         </template>
       </el-table-column>
       <el-table-column label="设备编码" align="left" width="120">
@@ -72,34 +55,19 @@
           <span>{{ scope.row.deviceCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="借阅方式" align="left" width="120">
+      <el-table-column label="最新事件" align="left" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowWay.text }}</span>
+          <span>{{ scope.row.lastActionCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="借阅时间" align="left" width="160">
+      <el-table-column label="备注" align="left" min-width="100%">
         <template slot-scope="scope">
-          <span>{{ scope.row.borrowTime }}</span>
+          <span>{{ scope.row.lastActionRemark }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="到期时间" align="left" width="160">
+      <el-table-column label="时间" align="left" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.expireTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="归还方式" align="left" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.returnWay.text }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="归还时间" align="left" mwidth="160">
-        <template slot-scope="scope">
-          <span>{{ scope.row.returnTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" fixed="right" align="center" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="getStatusColor(scope.row.status.value)">{{ scope.row.status.text }}</el-tag>
+          <span>{{ scope.row.lastActionTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="80" class-name="small-padding fixed-width">
@@ -113,18 +81,18 @@
 
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
 
-    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :borrow-id="selectBorrowId" />
+    <pane-details v-if="dialogVisibleDetails" :visible.sync="dialogVisibleDetails" :flow-id="selectFlowId" />
 
   </div>
 </template>
 
 <script>
-import { borrowList } from '@/api/booker'
-import Pagination from '@/components/Pagination'
+import { flowList } from '@/api/bizbook'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
 import PaneDetails from './details.vue'
 
 export default {
-  name: 'BookerBorrowList',
   components: { Pagination, PaneDetails },
   data() {
     return {
@@ -134,9 +102,8 @@ export default {
         pageSize: 10,
         deviceCode: undefined,
         flowId: '',
-        skuName: '',
-        borrowTimeArea: ['', ''],
-        returnTimeArea: ['', '']
+        actionCode: '',
+        createTimeArea: ['', '']
       },
       listKey: 's',
       listData: {
@@ -146,8 +113,6 @@ export default {
         totalPages: 0,
         totalSize: 0
       },
-      dialogVisibleDetails: false,
-      selectBorrowId: '',
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -175,6 +140,8 @@ export default {
           }
         }]
       },
+      dialogVisibleDetails: false,
+      selectFlowId: '',
       isDesktop: this.$store.getters.isDesktop
     }
   },
@@ -188,7 +155,7 @@ export default {
     onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      borrowList(this.listQuery).then(res => {
+      flowList(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }
@@ -201,21 +168,8 @@ export default {
       this.listQuery.pageNum = 1
       this.onList()
     },
-    getStatusColor(val) {
-      if (val === 1000) {
-        return 'success'
-      } else if (val === 2000) {
-        return 'warning'
-      } else if (val === 3000) {
-        return 'primary'
-      } else if (val === 4000) {
-        return 'danger'
-      } else {
-        return ''
-      }
-    },
     onSaw(item) {
-      this.selectBorrowId = item.id
+      this.selectFlowId = item.id
       this.dialogVisibleDetails = true
     }
   }

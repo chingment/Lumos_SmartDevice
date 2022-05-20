@@ -14,7 +14,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-tabs v-model="activeTab" type="card">
+    <el-tabs v-model="activeTab" type="card" @tab-click="onChangeTab">
       <el-tab-pane label="基本信息" name="tabBaseInfo"> <manage-base-info :store-id="activeId" /></el-tab-pane>
       <el-tab-pane label="关联门店" name="tabShop"><manage-shop :store-id="activeId" /></el-tab-pane>
     </el-tabs>
@@ -72,6 +72,14 @@ export default {
       this.$router.replace({
         query: {
           id: id,
+          tab: this.activeTab
+        }
+      })
+    },
+    onChangeTab(id) {
+      this.$router.replace({
+        query: {
+          id:  this.activeId,
           tab: this.activeTab
         }
       })

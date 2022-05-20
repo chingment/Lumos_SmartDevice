@@ -4,7 +4,7 @@ import com.caterbao.lumos.locals.common.BasePageRequest;
 
 import java.util.List;
 
-public class RopBookerFlowList extends BasePageRequest {
+public class RopBizBookFlowList extends BasePageRequest {
     private String flowId;
     private String deviceCode;
     private String actionCode;

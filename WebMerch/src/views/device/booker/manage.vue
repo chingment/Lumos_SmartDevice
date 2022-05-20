@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { init_booker_manage } from '@/api/device'
+import { init_manage } from '@/api/booker'
 import PaneBaseInfo from './components/PaneBaseInfo'
 import PaneStock from './components/PaneStock'
 import PaneControl from './components/PaneControl'
@@ -60,7 +60,7 @@ export default {
   methods: {
     init() {
       this.loading = true
-      init_booker_manage({ id: this.activeId }).then(res => {
+      init_manage({ id: this.activeId }).then(res => {
         if (res.code === this.$code_suc) {
           var d = res.data
           this.dropdownOptions = d.devices

@@ -50,7 +50,7 @@
 <script>
 
 import Pagination from '@/components/Pagination'
-import { booker_stock, init_booker_stock } from '@/api/device'
+import { stock, init_stock } from '@/api/booker'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
@@ -94,7 +94,7 @@ export default {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
         this.listQuery.deviceId=this.deviceId
-        init_booker_stock({ id: this.deviceId }).then(res => {
+        init_stock({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
             var d=res.data;
             this.slots = d.slots
@@ -110,7 +110,7 @@ export default {
     onList() {
       this.loading = true
       this.$store.dispatch('app/saveListPageQuery', { path: this.$route.path, query: this.listQuery })
-      booker_stock(this.listQuery).then(res => {
+      stock(this.listQuery).then(res => {
         if (res.code === this.$code_suc) {
           this.listData = res.data
         }

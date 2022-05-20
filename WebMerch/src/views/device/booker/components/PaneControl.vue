@@ -14,7 +14,7 @@
 <script>
 
 import { MessageBox } from 'element-ui'
-import { rebootSys, shutdownSys, updateApp } from '@/api/device'
+import { rebootSys, shutdownSys, updateApp } from '@/api/booker'
 
 export default {
   name: 'BookerPaneControl',

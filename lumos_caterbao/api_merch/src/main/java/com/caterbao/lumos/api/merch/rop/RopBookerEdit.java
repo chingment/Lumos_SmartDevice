@@ -1,6 +1,6 @@
 package com.caterbao.lumos.api.merch.rop;
 
-public class RopDeviceEdit {
+public class RopBookerEdit {
     private String id;
     private String cumCode;
 
