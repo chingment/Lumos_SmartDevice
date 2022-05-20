@@ -227,7 +227,7 @@ align-items: center;
     margin-top: 5px;
 }
 
- /deep/ input{
+::v-deep input{
       border: 0px solid #DCDFE6 ;
     }
 }

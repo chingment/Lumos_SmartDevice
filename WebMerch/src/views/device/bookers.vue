@@ -62,6 +62,18 @@
 
 import { init_list, list } from '@/api/booker'
 
+//  import mqtt from 'mqtt'
+
+//   var client
+//   const options = {
+//     connectTimeout: 40000,
+//     clientId: 'mqtitId-Home',
+//     username: 'admin',
+//     password: 'admin123',
+//     clean: true
+//   }
+//   client = mqtt.connect('ws://172.80.5.222:8083/mqtt', options)
+
 export default {
   name: 'MerchDevice',
   data() {
