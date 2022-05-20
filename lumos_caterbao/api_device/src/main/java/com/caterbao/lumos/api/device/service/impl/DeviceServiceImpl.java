@@ -124,6 +124,7 @@ public class DeviceServiceImpl implements DeviceService{
         m_Device.setName(d_Device.getName());
         m_Device.setSceneMode(d_Device.getSceneMode());
         m_Device.setVersionMode(d_Device.getVersionMode());
+        m_Device.setExIsHas(false);
 
         selective=new LumosSelective();
         selective.setFields("DriveId,Name,ComId,ComPrl,ComBaud");
@@ -148,7 +149,7 @@ public class DeviceServiceImpl implements DeviceService{
 
 
         MqttVo m_Mqtt=new MqttVo();
-        m_Mqtt.setHost("tcp://112.74.179.185:1883");
+        m_Mqtt.setHost("tcp://8.134.80.92:1883");
         m_Mqtt.setUserName("admin");
         m_Mqtt.setPassword("public");
         m_Mqtt.setClientId(rop.getDeviceId());

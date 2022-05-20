@@ -11,6 +11,7 @@ public class DeviceVo {
     private int versionMode;
     private HashMap<String, DriveVo> drives;
     private MqttVo mqtt;
+    private Boolean ExIsHas;
 
     public String getDeviceId() {
         return deviceId;
@@ -74,5 +75,13 @@ public class DeviceVo {
 
     public void setMqtt(MqttVo mqtt) {
         this.mqtt = mqtt;
+    }
+
+    public Boolean getExIsHas() {
+        return ExIsHas;
+    }
+
+    public void setExIsHas(Boolean exIsHas) {
+        ExIsHas = exIsHas;
     }
 }

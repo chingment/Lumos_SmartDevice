@@ -1,14 +1,14 @@
 package com.caterbao.lumos.api.merch.service.impl;
 
-import com.caterbao.lumos.api.merch.rop.RopDeviceBookerStock;
-import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
-import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.DeviceService;
+import com.caterbao.lumos.api.merch.service.MqttClientService;
 import com.caterbao.lumos.locals.biz.cache.CacheFactory;
 import com.caterbao.lumos.locals.biz.model.SkuInfo;
 import com.caterbao.lumos.locals.common.*;
 import com.caterbao.lumos.locals.common.vo.FieldVo;
 import com.caterbao.lumos.locals.dal.DeviceVoUtil;
+import com.caterbao.lumos.locals.dal.IdWork;
 import com.caterbao.lumos.locals.dal.LumosSelective;
 import com.caterbao.lumos.locals.dal.mapper.BookerSlotMapper;
 import com.caterbao.lumos.locals.dal.mapper.BookerStockMapper;
@@ -21,11 +21,13 @@ import com.caterbao.lumos.locals.dal.vw.MerchDeviceVw;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -34,6 +36,8 @@ public class DeviceServiceImpl implements DeviceService {
     private BookerSlotMapper bookerSlotMapper;
     private BookerStockMapper bookerStockMapper;
     private CacheFactory cacheFactory;
+    private RedisTemplate redisTemplate;
+    private MqttClientService mqttClientService;
 
     @Autowired(required = false)
     public void setMerchDeviceMapper(MerchDeviceMapper merchDeviceMapper) {
@@ -47,6 +51,16 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired(required = false)
     public void setBookerStockMapper(BookerStockMapper bookerStockMapper) {
         this.bookerStockMapper = bookerStockMapper;
+    }
+
+    @Autowired(required = false)
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Autowired(required = false)
+    public void setMqttClientService(MqttClientService mqttClientService) {
+        this.mqttClientService = mqttClientService;
     }
 
     @Autowired(required = false)
@@ -283,4 +297,71 @@ public class DeviceServiceImpl implements DeviceService {
 
         return result.fail("保存失败");
     }
+
+    @Override
+    public CustomResult<Object>  rebootSys(String operater, String merchId, RopDeviceRebootSys rop){
+        return  sendCommand(merchId,rop.getId(),"reboot_sys",null);
+    }
+
+    public CustomResult<Object>  shutdownSys(String operater, String merchId, RopDeviceShutdownSys rop){
+        return  sendCommand(merchId,rop.getId(),"shutdown_sys",null);
+    }
+
+    public CustomResult<Object>  updateApp(String operater, String merchId, RopDeviceUpdateApp rop){
+        return  sendCommand(merchId,rop.getId(),"update_app",null);
+    }
+
+    public  CustomResult<Object> sendCommand(String merchId,String deviceId,String method,Object pms) {
+
+        CustomResult<Object> result = new CustomResult<Object>();
+
+        String topic="/a1A2Mq6w51n/" + deviceId + "/user/get";
+
+        String msgId = IdWork.buildGuId();
+
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("id", msgId);
+        payload.put("method", method);
+        if(pms!=null) {
+            payload.put("params", pms);
+        }
+
+        String str_Payload = JsonUtil.getJson(payload);
+
+        mqttClientService.publish(topic,str_Payload, 1, false);
+
+        redisTemplate.opsForValue().set("mqtt_msg:" + msgId, "0", 15, TimeUnit.SECONDS);
+
+
+        long nDoMaxTime = 3 * 1000;
+        long nDoStartTime = System.currentTimeMillis();
+        long nDoLastTime = System.currentTimeMillis() - nDoStartTime;
+
+        boolean isSendSuccess=false;
+
+        while (nDoLastTime < nDoMaxTime) {
+
+            Object msg = redisTemplate.opsForValue().get("mqtt_msg:" + msgId);
+            if (msg != null) {
+                if (msg.toString().equals("1")) {
+                    isSendSuccess = true;
+                    break;
+                }
+            }
+
+            nDoLastTime = System.currentTimeMillis() - nDoStartTime;
+
+        }
+
+        if(isSendSuccess) {
+            HashMap<String, Object> ret = new HashMap<>();
+            ret.put("msgId", msgId);
+            return result.success("发送成功", ret);
+        }
+        else
+        {
+            return result.fail("失败");
+        }
+    }
+
 }

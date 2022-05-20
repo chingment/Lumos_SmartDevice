@@ -56,6 +56,30 @@ export function edit(data) {
   })
 }
 
+export function updateApp(data) {
+  return request({
+    url: '/device/updateApp',
+    method: 'post',
+    data
+  })
+}
+
+export function rebootSys(data) {
+  return request({
+    url: '/device/rebootSys',
+    method: 'post',
+    data
+  })
+}
+
+export function shutdownSys(data) {
+  return request({
+    url: '/device/shutdownSys',
+    method: 'post',
+    data
+  })
+}
+
 export default {
   init_bookers: init_bookers,
   bookers: bookers,
@@ -63,5 +87,8 @@ export default {
   init_booker_baseinfo: init_booker_baseinfo,
   init_booker_stock:init_booker_stock,
   booker_stock:booker_stock,
-  edit: edit
+  edit: edit,
+  updateApp:updateApp,
+  rebootSys:rebootSys,
+  shutdownSys:shutdownSys
 }

@@ -54,7 +54,7 @@ import { booker_stock, init_booker_stock } from '@/api/device'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
-  name: 'DeviceBookerManageStock',
+  name: 'BookerPaneStock',
   components: { Pagination },
   props: {
     deviceId: {

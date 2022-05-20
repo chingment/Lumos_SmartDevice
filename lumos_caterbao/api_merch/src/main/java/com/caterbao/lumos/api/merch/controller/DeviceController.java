@@ -1,9 +1,6 @@
 package com.caterbao.lumos.api.merch.controller;
 
-import com.caterbao.lumos.api.merch.rop.RopBorrowerList;
-import com.caterbao.lumos.api.merch.rop.RopDeviceBookerStock;
-import com.caterbao.lumos.api.merch.rop.RopDeviceEdit;
-import com.caterbao.lumos.api.merch.rop.RopDeviceBookers;
+import com.caterbao.lumos.api.merch.rop.*;
 import com.caterbao.lumos.api.merch.service.DeviceService;
 import com.caterbao.lumos.locals.common.CustomResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +57,24 @@ public class DeviceController extends  BaseController  {
     @ResponseBody
     public CustomResult<Object> edit(@RequestBody RopDeviceEdit rop) {
         return deviceService.edit(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "rebootSys", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> rebootSys(@RequestBody RopDeviceRebootSys rop) {
+        return deviceService.rebootSys(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "shutdownSys", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> shutdownSys(@RequestBody RopDeviceShutdownSys rop) {
+        return deviceService.shutdownSys(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
+    }
+
+    @RequestMapping(value = "updateApp", method = RequestMethod.POST)
+    @ResponseBody
+    public CustomResult<Object> updateApp(@RequestBody RopDeviceUpdateApp rop) {
+        return deviceService.updateApp(this.getCurrentUserId(), this.getCurrentMerchId(), rop);
     }
 
 

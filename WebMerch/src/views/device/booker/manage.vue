@@ -14,20 +14,23 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-tabs v-model="activeTab" type="card">
-      <el-tab-pane label="基本信息" name="tabBaseInfo"> <manage-base-info :device-id="activeDropdown.id" /></el-tab-pane>
-      <el-tab-pane label="设备库存" name="tabStock"> <manage-stock :device-id="activeDropdown.id" /></el-tab-pane>
+    <el-tabs v-model="activeTab" type="card" @tab-click="onChangeTab">
+      <el-tab-pane label="基本信息" name="tabBaseInfo"> <pane-base-info :device-id="activeDropdown.id" /></el-tab-pane>
+      <el-tab-pane label="设备库存" name="tabStock"> <pane-stock :device-id="activeDropdown.id" /></el-tab-pane>
+      <el-tab-pane label="控制中心" name="tabControl"> <pane-control :device-id="activeDropdown.id" /></el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
 import { init_booker_manage } from '@/api/device'
-import ManageBaseInfo from './components/ManageBaseInfo'
-import ManageStock from './components/ManageStock'
+import PaneBaseInfo from './components/PaneBaseInfo'
+import PaneStock from './components/PaneStock'
+import PaneControl from './components/PaneControl'
 import PageHeader from '@/components/PageHeader/index.vue'
+
 export default {
   name: 'DeviceBookerManage',
-  components: { ManageBaseInfo,ManageStock, PageHeader },
+  components: { PaneBaseInfo,PaneStock,PaneControl, PageHeader },
   data() {
     return {
       loading: false,
@@ -72,6 +75,14 @@ export default {
       this.$router.replace({
         query: {
           id: id,
+          tab: this.activeTab
+        }
+      })
+    },
+    onChangeTab(id) {
+      this.$router.replace({
+        query: {
+          id:  this.activeId,
           tab: this.activeTab
         }
       })
