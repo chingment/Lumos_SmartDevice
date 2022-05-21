@@ -662,7 +662,9 @@ public class BookerServiceImpl implements BookerService {
                 d_BookerTakeStockSheet.setCreateTime(CommonUtil.getDateTimeNow());
                 d_BookerTakeStockSheet.setCreator(operater);
 
-                bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
+                if(d_BookerTakeStockSheetItems.size()>0) {
+                    bookerTakeStockSheetItemMapper.insertBatch(d_BookerTakeStockSheetItems);
+                }
 
                 d_BookFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
                 d_BookFlow.setStatus(4000);

@@ -62,17 +62,17 @@
 
 import { init_list, list } from '@/api/booker'
 
-//  import mqtt from 'mqtt'
+ import mqtt from 'mqtt'
 
-//   var client
-//   const options = {
-//     connectTimeout: 40000,
-//     clientId: 'mqtitId-Home',
-//     username: 'admin',
-//     password: 'admin123',
-//     clean: true
-//   }
-//   client = mqtt.connect('ws://172.80.5.222:8083/mqtt', options)
+  var client
+  const options = {
+    connectTimeout: 40000,
+    clientId: 'mqtitId-Home',
+    username: 'admin',
+    password: 'public',
+    clean: true
+  }
+  client = mqtt.connect('ws://8.134.80.92:8083/mqtt', options)
 
 export default {
   name: 'MerchDevice',
@@ -101,6 +101,7 @@ export default {
     if (this.$store.getters.listPageQuery.has(this.$route.path)) {
       this.listQuery = this.$store.getters.listPageQuery.get(this.$route.path)
     }
+    this.mqttMsg()
     this.init()
   },
   methods: {
@@ -141,7 +142,25 @@ export default {
           tab: 'tabBaseInfo'
         }
       })
-    }
+    },
+       mqttMsg() {
+        client.on('connect', (e) => {
+          console.log("连接成功！！！")
+          client.subscribe('/+/+/user/update', { qos: 0 }, (error) => {
+            if (!error) {
+              console.log('订阅成功')
+            } else {
+              console.log('订阅失败')
+            }
+          })
+
+        })
+        // 接收消息处理
+        client.on('message', (topic, message) => {
+          console.log('收到来自', topic, '的消息', message.toString())
+          this.msg = message.toString()
+        })
+      }
   }
 }
 </script>
