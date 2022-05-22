@@ -11,8 +11,6 @@
 
 <script>
 import pathToRegexp from 'path-to-regexp'
-import { Tree } from 'element-ui'
-import { close } from 'fs'
 
 export default {
   data() {

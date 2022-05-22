@@ -50,7 +50,6 @@ import PageHeader from '@/components/PageHeader/index.vue'
 import LmUpload from '@/components/Upload/index.vue'
 import { getToken } from '@/utils/auth'
 export default {
-  name: 'SettingAdminUserAdd',
   components: {
     PageHeader,
     LmUpload
@@ -87,7 +86,7 @@ export default {
       this.loading = true
       init_add().then(res => {
         if (res.code === this.$code_suc) {
-          var d = res.data
+          // var d = res.data
         }
         this.loading = false
       }).catch(() => {

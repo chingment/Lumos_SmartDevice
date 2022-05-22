@@ -124,7 +124,6 @@ import Pagination from '@/components/Pagination'
 import PaneDetails from './details.vue'
 
 export default {
-  name: 'BookerBorrowList',
   components: { Pagination, PaneDetails },
   data() {
     return {

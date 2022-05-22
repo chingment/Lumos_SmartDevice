@@ -26,7 +26,6 @@ import ManageBaseInfo from './components/ManageBaseInfo'
 import ManageShop from './components/ManageShop'
 import PageHeader from '@/components/PageHeader/index.vue'
 export default {
-  name: 'MerchStoreManage',
   components: { ManageBaseInfo, ManageShop, PageHeader },
   data() {
     return {
@@ -79,7 +78,7 @@ export default {
     onChangeTab(id) {
       this.$router.replace({
         query: {
-          id:  this.activeId,
+          id: this.activeId,
           tab: this.activeTab
         }
       })

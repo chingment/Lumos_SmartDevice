@@ -255,13 +255,11 @@
 
 import { MessageBox } from 'element-ui'
 import { add, init_add, getSysKindAttrs } from '@/api/product'
-import fromReg from '@/utils/formReg'
 import { goBack, strLen, isMoney } from '@/utils/commonUtil'
 import LmUpload from '@/components/Upload/index.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
 import { getToken } from '@/utils/auth'
 export default {
-  name: 'MerchProductAdd',
   components: { PageHeader, LmUpload },
   data() {
     return {

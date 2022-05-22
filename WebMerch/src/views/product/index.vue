@@ -21,7 +21,6 @@
 </template>
 <script>
 export default {
-  name: 'ProductIndex',
   data() {
     return {
       navActive: '',
@@ -31,8 +30,6 @@ export default {
   created() {
     this.navActive = this.$route.path
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>

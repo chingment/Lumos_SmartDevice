@@ -1,18 +1,18 @@
 <template>
   <div id="booker_stock" v-loading="loading">
- 
-  <div class="filter-container">
+
+    <div class="filter-container">
       <el-select v-model="listQuery.slotId" clearable placeholder="全部柜号">
-    <el-option
-      v-for="item in slots"
-      :key="item.id"
-      :label="item.name"
-      :value="item.id">
-    </el-option>
-  </el-select>
-     <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
-            查询
-          </el-button>
+        <el-option
+          v-for="item in slots"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="onFilter">
+        查询
+      </el-button>
     </div>
 
     <el-table
@@ -38,7 +38,7 @@
           <span>{{ scope.row.skuCumCode }}</span>
         </template>
       </el-table-column>
-       <el-table-column label="书名" align="left" min-width="100%">
+      <el-table-column label="书名" align="left" min-width="100%">
         <template slot-scope="scope">
           <span>{{ scope.row.skuName }}</span>
         </template>
@@ -47,6 +47,7 @@
     <pagination v-show="listData.totalSize>0" :total="listData.totalSize" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="onList" />
   </div>
 </template>
+
 <script>
 
 import Pagination from '@/components/Pagination'
@@ -54,7 +55,6 @@ import { stock, init_stock } from '@/api/booker'
 import { isEmpty } from '@/utils/commonUtil'
 
 export default {
-  name: 'BookerPaneStock',
   components: { Pagination },
   props: {
     deviceId: {
@@ -65,12 +65,12 @@ export default {
   data() {
     return {
       loading: false,
-      slots:[],
+      slots: [],
       listKey: 's',
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        deviceId: undefined,
+        deviceId: ''
       },
       listData: {
         items: [],
@@ -93,10 +93,10 @@ export default {
     init() {
       this.loading = true
       if (!isEmpty(this.deviceId)) {
-        this.listQuery.deviceId=this.deviceId
+        this.listQuery.deviceId = this.deviceId
         init_stock({ id: this.deviceId }).then(res => {
           if (res.code === this.$code_suc) {
-            var d=res.data;
+            var d = res.data
             this.slots = d.slots
 
             this.onList()
@@ -125,8 +125,5 @@ export default {
     }
   }
 }
+
 </script>
-<style lang="scss" scoped>
-
-
-</style>

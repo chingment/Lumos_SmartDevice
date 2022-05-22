@@ -75,7 +75,6 @@ import { list, del } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'ProductList',
   components: { Pagination },
   data() {
     return {

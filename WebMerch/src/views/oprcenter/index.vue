@@ -20,7 +20,6 @@
 
 <script>
 export default {
-  name: 'OprCoreIndex',
   data() {
     return {
       navActive: '',

@@ -1,7 +1,6 @@
 <template>
   <div id="shop_edit">
     <page-header />
-    
     <el-form ref="form" v-loading="loading" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="门店名称" prop="name">
         <el-input v-model.trim="form.name" clearable style="max-width:500px" />
@@ -51,13 +50,11 @@
 
 import { MessageBox } from 'element-ui'
 import { edit, init_edit } from '@/api/shop'
-import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
 import LmUpload from '@/components/Upload/index.vue'
 import SelectAddressPoint from '@/components/SelectAddressPoint/index.vue'
 import { getToken } from '@/utils/auth'
 export default {
-  name: 'MerchShopEdit',
   components: { PageHeader, LmUpload, SelectAddressPoint },
   data() {
     return {

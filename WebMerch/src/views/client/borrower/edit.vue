@@ -38,7 +38,7 @@
 import { MessageBox } from 'element-ui'
 import { edit, init_edit } from '@/api/borrower'
 import fromReg from '@/utils/formReg'
-import { getUrlParam, goBack } from '@/utils/commonUtil'
+import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'
 import LmUpload from '@/components/Upload/index.vue'
 import { getToken } from '@/utils/auth'

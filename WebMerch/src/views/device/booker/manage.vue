@@ -29,8 +29,7 @@ import PaneControl from './components/PaneControl'
 import PageHeader from '@/components/PageHeader/index.vue'
 
 export default {
-  name: 'DeviceBookerManage',
-  components: { PaneBaseInfo,PaneStock,PaneControl, PageHeader },
+  components: { PaneBaseInfo, PaneStock, PaneControl, PageHeader },
   data() {
     return {
       loading: false,
@@ -82,7 +81,7 @@ export default {
     onChangeTab(id) {
       this.$router.replace({
         query: {
-          id:  this.activeId,
+          id: this.activeId,
           tab: this.activeTab
         }
       })

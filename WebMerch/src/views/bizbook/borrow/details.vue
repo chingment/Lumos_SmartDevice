@@ -49,7 +49,6 @@
 import { borrowDetails } from '@/api/bizbook'
 
 export default {
-  name: '',
   props: {
     borrowId: {
       type: String,

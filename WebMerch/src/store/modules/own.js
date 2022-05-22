@@ -1,6 +1,5 @@
 import { loginByAccount, logout, getInfo, checkPermission } from '@/api/own'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import router from '@/router'
 import { generateRoutes } from '@/utils/ownResource'
 
 const state = {
@@ -88,7 +87,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       checkPermission({ type: state.type, content: state.content }).then(res => {
         if (res.code === 1000) {
-          const d = res.data
+          // const d = res.data
           // commit('SET_PERMISSION', d.permission)
         }
         resolve(res)

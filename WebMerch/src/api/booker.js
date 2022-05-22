@@ -85,10 +85,10 @@ export default {
   list: list,
   init_manage: init_manage,
   init_baseinfo: init_baseinfo,
-  init_stock:init_stock,
-  stock:stock,
+  init_stock: init_stock,
+  stock: stock,
   edit: edit,
-  updateApp:updateApp,
-  rebootSys:rebootSys,
-  shutdownSys:shutdownSys
+  updateApp: updateApp,
+  rebootSys: rebootSys,
+  shutdownSys: shutdownSys
 }

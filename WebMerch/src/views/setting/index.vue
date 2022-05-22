@@ -20,7 +20,6 @@
 
 <script>
 export default {
-  name: 'SettingIndex',
   data() {
     return {
       navActive: '',

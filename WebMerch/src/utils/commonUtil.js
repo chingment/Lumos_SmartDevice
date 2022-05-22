@@ -8,7 +8,13 @@ export function getPageTitle(pageTitle) {
 }
 
 export function getUrlParam(name) {
-  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ''])[1].replace(/\+/g, '%20')) || null
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
+  var r = window.location.search.substr(1).match(reg) // 获取url中"?"符后的字符串并正则匹配
+  var context = ''
+  if (r != null) { context = decodeURIComponent(r[2]) }
+  reg = null
+  r = null
+  return context == null || context === '' || context === 'undefined' ? '' : context
 }
 
 export function isEmpty(str) {
@@ -28,7 +34,7 @@ export function changeURLArg(url, arg, arg_val) {
   var replaceText = arg + '=' + arg_val
   if (url.match(pattern)) {
     var tmp = '/(' + arg + '=)([^&]*)/gi'
-    tmp = url.replace(eval(tmp), replaceText)
+    tmp = url.replace(tmp, replaceText)
     return tmp
   } else {
     if (url.match('[\?]')) {
@@ -37,7 +43,6 @@ export function changeURLArg(url, arg, arg_val) {
       return url + '?' + replaceText
     }
   }
-  return url + '\n' + arg + '\n' + arg_val
 }
 
 export function getCheckedKeys(tree) {

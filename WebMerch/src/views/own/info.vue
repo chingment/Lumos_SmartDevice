@@ -41,13 +41,11 @@
 </template>
 
 <script>
-import store from '@/store'
 import { MessageBox } from 'element-ui'
 import { changePassword, getInfo } from '@/api/own'
 import fromReg from '@/utils/formReg'
 import { isEmpty } from '@/utils/commonUtil'
 export default {
-  name: 'ProfileUserInfo',
   data() {
     return {
       loading: false,

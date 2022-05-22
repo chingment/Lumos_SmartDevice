@@ -53,7 +53,6 @@ import PageHeader from '@/components/PageHeader/index.vue'
 import { getToken } from '@/utils/auth'
 import LmUpload from '@/components/Upload/index.vue'
 export default {
-  name: 'OprCenterAdRelease',
   components: {
     PageHeader,
     LmUpload

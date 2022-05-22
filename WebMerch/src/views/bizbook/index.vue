@@ -23,7 +23,6 @@
 </template>
 <script>
 export default {
-  name: 'BookerIndex',
   data() {
     return {
       navActive: '',

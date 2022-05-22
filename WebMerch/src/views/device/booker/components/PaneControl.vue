@@ -17,7 +17,6 @@ import { MessageBox } from 'element-ui'
 import { rebootSys, shutdownSys, updateApp } from '@/api/booker'
 
 export default {
-  name: 'BookerPaneControl',
   props: {
     deviceId: {
       type: String,
@@ -54,7 +53,7 @@ export default {
           if (res.code === this.$code_suc) {
             this.$message.success(res.msg)
           } else {
-             this.$message.error(res.msg)
+            this.$message.error(res.msg)
           }
         })
       }).catch(() => {
@@ -75,10 +74,8 @@ export default {
             this.$message.error(res.msg)
           }
         }).catch(() => {
-           this.hideLoading()
+          this.hideLoading()
         })
-
-
       })
     },
     onShutDownSys() {

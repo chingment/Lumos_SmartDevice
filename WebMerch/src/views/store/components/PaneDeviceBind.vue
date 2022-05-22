@@ -126,7 +126,6 @@ import { details as shopDetails, devices, unDevices, bindDevice, unBindDevice } 
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'ShopSelect',
   components: { Pagination },
   props: {
     storeId: {

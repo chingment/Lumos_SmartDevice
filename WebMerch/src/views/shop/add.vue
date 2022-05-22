@@ -54,7 +54,6 @@ import LmUpload from '@/components/Upload/index.vue'
 import { getToken } from '@/utils/auth'
 import SelectAddressPoint from '@/components/SelectAddressPoint/index.vue'
 export default {
-  name: 'MerchShopAdd',
   components: { PageHeader, SelectAddressPoint, LmUpload },
   data() {
     return {

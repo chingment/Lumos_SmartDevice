@@ -38,7 +38,6 @@ import { isEmpty } from '@/utils/commonUtil'
 import { getToken } from '@/utils/auth'
 import LmUpload from '@/components/Upload/index.vue'
 export default {
-  name: 'PaneStoreManageBaseInfo',
   components: { LmUpload },
   props: {
     storeId: {

@@ -56,7 +56,6 @@
 <script>
 
 export default {
-  name: 'Login',
   data() {
     const validateUserName = (rule, value, callback) => {
       if (value.length <= 0) {

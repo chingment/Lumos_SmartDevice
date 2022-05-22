@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken, removeToken } from '@/utils/auth'
 
@@ -59,7 +59,7 @@ service.interceptors.response.use(
         if (code === 2501) {
           removeToken()
           this.$router.push({ path: '/login' })
-          
+
           // MessageBox.confirm('您链接请求已经超时', '确定退出？', {
           //   confirmButtonText: '重新登录',
           //   cancelButtonText: '取消',

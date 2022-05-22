@@ -20,7 +20,6 @@
 </template>
 <script>
 export default {
-  name: 'DeviceIndex',
   data() {
     return {
       navActive: '',

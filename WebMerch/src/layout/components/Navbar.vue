@@ -27,10 +27,9 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import { removeToken, getToken } from '@/utils/auth'
 import { isExternal } from '@/utils/validate'
 import { getNavBars } from '@/utils/ownResource'
-
+import { getToken } from '@/utils/auth'
 export default {
   components: {
     Breadcrumb,

@@ -50,7 +50,7 @@ export default {
 
       for (let i = 0, len = arr.length; i < len; i++) {
         // 如果有等号，则执行赋值操作
-        if (arr[i].indexOf('=') != -1) {
+        if (arr[i].indexOf('=') !== -1) {
           const str = arr[i].split('=')
           // str=[a,1];
           res[str[0]] = str[1]

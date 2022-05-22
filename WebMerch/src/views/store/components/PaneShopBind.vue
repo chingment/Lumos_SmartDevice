@@ -57,7 +57,6 @@ import { unShops, bindShop } from '@/api/store'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'ShopSelect',
   components: { Pagination },
   props: {
     storeId: {

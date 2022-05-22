@@ -51,7 +51,6 @@
 import { list } from '@/api/shop'
 
 export default {
-  name: 'ShopList',
   data() {
     return {
       loading: true,

@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import { MessageBox } from 'element-ui'
 import { init_creatives, creatives } from '@/api/ad'
 import { getUrlParam } from '@/utils/commonUtil'
 import PageHeader from '@/components/PageHeader/index.vue'

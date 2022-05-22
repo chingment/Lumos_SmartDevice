@@ -106,7 +106,6 @@ import { list, del, searchSpu } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { isEmpty } from '@/utils/commonUtil'
 export default {
-  name: 'ProductList',
   components: { Pagination },
   data() {
     return {

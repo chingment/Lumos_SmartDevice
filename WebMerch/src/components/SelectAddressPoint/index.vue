@@ -1,3 +1,4 @@
+
 <template>
 
   <div class="selectAddress" style="width:100%;height:500px">
@@ -143,7 +144,7 @@ export default {
       var options = {
         onSearchComplete: function(res) { // 检索完成后的回调函数
           var s = []
-          if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+          if (local.getStatus() === BMAP_STATUS_SUCCESS) {
             for (var i = 0; i < res.getCurrentNumPois(); i++) {
               s.push(res.getPoi(i))
             }

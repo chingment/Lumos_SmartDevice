@@ -47,7 +47,6 @@ import { isEmpty } from '@/utils/commonUtil'
 import PaneShopBind from './PaneShopBind'
 import PaneDeviceBind from './PaneDeviceBind'
 export default {
-  name: 'StorePaneShop',
   components: { PaneShopBind, PaneDeviceBind },
   props: {
     storeId: {

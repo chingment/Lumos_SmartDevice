@@ -99,7 +99,6 @@
 import { flowDetails } from '@/api/bizbook'
 
 export default {
-  name: '',
   props: {
     flowId: {
       type: String,
@@ -118,7 +117,7 @@ export default {
       },
       activeNames: [],
       details: {
-        flowType:0,
+        flowType: 0,
         flowLogs: [],
         openSkus: [],
         closeSkus: []
