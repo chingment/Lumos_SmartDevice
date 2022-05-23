@@ -44,8 +44,10 @@
         <set>
             <if test="openActionTime != null">openActionTime=#{openActionTime},</if>
             <if test="openRfIds != null">openRfIds=#{openRfIds},</if>
+            <if test="openRfIdsSize != null">openRfIdsSize=#{openRfIdsSize},</if>
             <if test="closeActionTime != null">closeActionTime=#{closeActionTime},</if>
             <if test="closeRfIds != null">closeRfIds=#{closeRfIds},</if>
+            <if test="closeRfIdsSize != null">closeRfIdsSize=#{closeRfIdsSize},</if>
             <if test="status != null">status=#{status},</if>
             <if test="lastActionSn != null">lastActionSn=#{lastActionSn},</if>
             <if test="lastActionCode != null">lastActionCode=#{lastActionCode},</if>

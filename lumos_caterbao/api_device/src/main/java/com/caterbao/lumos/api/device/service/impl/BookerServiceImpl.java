@@ -236,6 +236,7 @@ public class BookerServiceImpl implements BookerService {
 
                 d_BookFlow.setOpenActionTime(CommonUtil.getDateTimeNow());
                 d_BookFlow.setOpenRfIds(JsonUtil.getJson(openRfIds));
+                d_BookFlow.setOpenRfIdsSize(openRfIds.size());
 
             } else if (actionCode.equals("open_success")) {
                 d_BookFlow.setStatus(3000);
@@ -251,7 +252,7 @@ public class BookerServiceImpl implements BookerService {
 
                 d_BookFlow.setCloseActionTime(CommonUtil.getDateTimeNow());
                 d_BookFlow.setCloseRfIds(JsonUtil.getJson(closeRfIds));
-
+                d_BookFlow.setCloseRfIdsSize(closeRfIds.size());
                 List<String> openRfIds = JsonUtil.toObject(d_BookFlow.getOpenRfIds(), new TypeReference<List<String>>() {
                 });
 
@@ -293,62 +294,65 @@ public class BookerServiceImpl implements BookerService {
 
                 //借书
                 for (int i = 0; i < borrow_RfIds.size(); i++) {
-
                     String borrow_RfId = borrow_RfIds.get(i);
 
-                    SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), borrow_RfId);
+                    long stockQuantity=bookerStockMapper.getSlotStockQuantityBySkuRfId(d_BookFlow.getMerchId(),d_BookFlow.getStoreId(),d_BookFlow.getShopId(),d_BookFlow.getDeviceId(), d_BookFlow.getSlotId(),borrow_RfId);
 
-                    if(r_Sku!=null&&!CommonUtil.isEmpty(r_Sku.getId())) {
+                    if(stockQuantity>0) {
 
-                        selective = new LumosSelective();
-                        selective.setFields("*");
-                        selective.addWhere("MerchId", d_BookFlow.getMerchId());
-                        selective.addWhere("SkuRfId", borrow_RfId);
-                        selective.addWhere("CanBorrow", "1");
+                        SkuInfo r_Sku = cacheFactory.getProduct().getSkuInfoByRfId(d_BookFlow.getMerchId(), borrow_RfId);
 
-                        BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective);
-                        if (d_BookBorrow == null) {
-                            d_BookBorrow = new BookBorrow();
-                            d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
-                            d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
-                            d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
-                            d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
-                            d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
-                            d_BookBorrow.setShopId(d_BookFlow.getShopId());
-                            d_BookBorrow.setShopName(d_BookFlow.getShopName());
-                            d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
-                            d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
-                            d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
-                            d_BookBorrow.setFlowId(d_BookFlow.getId());
-                            d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
-                            d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
-                            d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
-                            d_BookBorrow.setClientUserId(d_BookFlow.getFlowUserId());
-                            d_BookBorrow.setSkuRfId(borrow_RfId);
-                            d_BookBorrow.setSkuId(r_Sku.getId());
-                            d_BookBorrow.setSkuName(r_Sku.getName());
-                            d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
-                            d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
-                            d_BookBorrow.setSkuPrice(r_Sku.getSalePrice());
-                            d_BookBorrow.setBorrowSeq(i);
-                            d_BookBorrow.setBorrowWay(1);
-                            d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
-                            d_BookBorrow.setStatus(1000);
-                            d_BookBorrow.setRenewCount(0);
-                            d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowExpireDay));
-                            d_BookBorrow.setCreator(IdWork.buildGuId());
-                            d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
+                        if (r_Sku != null && !CommonUtil.isEmpty(r_Sku.getId())) {
 
-                            bookBorrowMapper.insert(d_BookBorrow);
+                            selective = new LumosSelective();
+                            selective.setFields("*");
+                            selective.addWhere("MerchId", d_BookFlow.getMerchId());
+                            selective.addWhere("SkuRfId", borrow_RfId);
+                            selective.addWhere("CanBorrow", "1");
+
+                            BookBorrow d_BookBorrow = bookBorrowMapper.findOne(selective);
+                            if (d_BookBorrow == null) {
+                                d_BookBorrow = new BookBorrow();
+                                d_BookBorrow.setId(String.valueOf(d_BookFlow.getId()) + String.valueOf(i));
+                                d_BookBorrow.setMerchId(d_BookFlow.getMerchId());
+                                d_BookBorrow.setMerchName(d_BookFlow.getMerchName());
+                                d_BookBorrow.setStoreId(d_BookFlow.getStoreId());
+                                d_BookBorrow.setStoreName(d_BookFlow.getStoreName());
+                                d_BookBorrow.setShopId(d_BookFlow.getShopId());
+                                d_BookBorrow.setShopName(d_BookFlow.getShopName());
+                                d_BookBorrow.setDeviceId(d_BookFlow.getDeviceId());
+                                d_BookBorrow.setDeviceCumCode(d_BookFlow.getDeviceCumCode());
+                                d_BookBorrow.setSlotId(d_BookFlow.getSlotId());
+                                d_BookBorrow.setFlowId(d_BookFlow.getId());
+                                d_BookBorrow.setIdentityType(d_BookFlow.getIdentityType());
+                                d_BookBorrow.setIdentityId(d_BookFlow.getIdentityId());
+                                d_BookBorrow.setIdentityName(d_BookFlow.getIdentityName());
+                                d_BookBorrow.setClientUserId(d_BookFlow.getFlowUserId());
+                                d_BookBorrow.setSkuRfId(borrow_RfId);
+                                d_BookBorrow.setSkuId(r_Sku.getId());
+                                d_BookBorrow.setSkuName(r_Sku.getName());
+                                d_BookBorrow.setSkuCumCode(r_Sku.getCumCode());
+                                d_BookBorrow.setSkuImgUrl(r_Sku.getImgUrl());
+                                d_BookBorrow.setSkuPrice(r_Sku.getSalePrice());
+                                d_BookBorrow.setBorrowSeq(i);
+                                d_BookBorrow.setBorrowWay(1);
+                                d_BookBorrow.setBorrowTime(CommonUtil.getDateTimeNow());
+                                d_BookBorrow.setStatus(1000);
+                                d_BookBorrow.setRenewCount(0);
+                                d_BookBorrow.setExpireTime(CommonUtil.getDateTimeNowAndAddDay(maxBorrowExpireDay));
+                                d_BookBorrow.setCreator(IdWork.buildGuId());
+                                d_BookBorrow.setCreateTime(CommonUtil.getDateTimeNow());
+
+                                bookBorrowMapper.insert(d_BookBorrow);
 
 
-                            bookerStockMapper.deleteDeviceStockBySkuRfId(d_BookFlow.getMerchId(),d_BookFlow.getStoreId(),d_BookFlow.getShopId(),d_BookFlow.getDeviceId(),d_BookBorrow.getSkuRfId());
+                                bookerStockMapper.deleteSlotStockBySkuRfId(d_BookFlow.getMerchId(), d_BookFlow.getStoreId(), d_BookFlow.getShopId(), d_BookFlow.getDeviceId(),d_BookFlow.getSlotId(), d_BookBorrow.getSkuRfId());
 
-                            ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
+                                ret_BorrowBooks.add(new BookVo(d_BookBorrow.getSkuId(), d_BookBorrow.getSkuRfId(), d_BookBorrow.getSkuName(), d_BookBorrow.getSkuCumCode(), d_BookBorrow.getSkuImgUrl()));
 
+                            }
                         }
                     }
-
                 }
 
                 //还书
@@ -715,6 +719,8 @@ public class BookerServiceImpl implements BookerService {
         int pageNum = rop.getPageNum();
         int pageSize = rop.getPageSize();
 
+        long deviceStockQuantity=bookerStockMapper.getDeviceStockQuantityByDeviceId(d_MerchDevice.getMerchId(),d_MerchDevice.getStoreId(),d_MerchDevice.getShopId(),d_MerchDevice.getId());
+
         Page<?> page = PageHelper.startPage(pageNum, pageSize, "SlotId");
 
         LumosSelective selective = new LumosSelective();
@@ -752,6 +758,7 @@ public class BookerServiceImpl implements BookerService {
         ret.setTotalPages(page.getPages());
         ret.setTotalSize(total);
         ret.setItems(items);
+        ret.setStockQuantity(deviceStockQuantity);
 
         return result.success("获取成功", ret);
     }

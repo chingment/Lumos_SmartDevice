@@ -64,15 +64,17 @@ import { init_list, list } from '@/api/booker'
 
 import mqtt from 'mqtt'
 
-var client
+import { getToken } from '@/utils/auth'
+
+var mqttClient
 const options = {
   connectTimeout: 40000,
-  clientId: 'mqtitId-Home',
+  clientId: 'merch-' + getToken(),
   username: 'admin',
   password: 'public',
   clean: true
 }
-client = mqtt.connect('ws://8.134.80.92:8083/mqtt', options)
+mqttClient = mqtt.connect('ws://8.134.80.92:8083/mqtt', options)
 
 export default {
   data() {
@@ -143,9 +145,14 @@ export default {
       })
     },
     mqttMsg() {
-      client.on('connect', (e) => {
+      mqttClient.on('error', (e) => {
+        console.log(e)
+      })
+
+      mqttClient.on('connect', (e) => {
         console.log('连接成功！！！')
-        client.subscribe('/+/+/user/update', { qos: 0 }, (error) => {
+
+        mqttClient.subscribe('/+/+/user/update', { qos: 0 }, (error) => {
           if (!error) {
             console.log('订阅成功')
           } else {
@@ -154,10 +161,30 @@ export default {
         })
       })
       // 接收消息处理
-      client.on('message', (topic, message) => {
+      mqttClient.on('message', (topic, message) => {
+        var o_messsage = JSON.parse(message.toString())
         console.log('收到来自', topic, '的消息', message.toString())
-        this.msg = message.toString()
+        console.log('message.method:' + o_messsage.method)
+        // this.msg = message.toString()
+        if (o_messsage.method === 'device_status') {
+          var params = o_messsage.params
+          console.log('params.status:' + params.status)
+        }
       })
+    },
+    beforeDestroy() {
+      console.log('beforeDestroy')
+      if (mqttClient != null) {
+        mqttClient.end()
+        mqttClient = null
+      }
+    },
+    destroyed() {
+      console.log('destroyed')
+      if (mqttClient != null) {
+        mqttClient.end()
+        mqttClient = null
+      }
     }
   }
 }

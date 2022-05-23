@@ -58,15 +58,19 @@
                 and StoreId =#{storeId}
                 and ShopId =#{shopId}
                 and DeviceId =#{deviceId}
-                and skuRfId =#{skuRfId}
+                and SkuRfId =#{skuRfId}
     </select>
 
-    <delete id="deleteDeviceStockByDeviceId">
-        delete from BookerStock where MerchId =#{merchId}
-        and StoreId =#{storeId}
-        and ShopId =#{shopId}
-        and DeviceId =#{deviceId}
-    </delete>
+    <select id="getSlotStockQuantityBySkuRfId" resultType="java.lang.Long" >
+         select count(*) from BookerStock where
+                MerchId =#{merchId}
+                and StoreId =#{storeId}
+                and ShopId =#{shopId}
+                and DeviceId =#{deviceId}
+                and SlotId =#{slotId}
+                and SkuRfId =#{skuRfId}
+    </select>
+
 
     <delete id="deleteDeviceStockBySlotId">
         delete from BookerStock where MerchId =#{merchId}
@@ -74,6 +78,15 @@
         and ShopId =#{shopId}
         and DeviceId =#{deviceId}
         and SlotId =#{slotId}
+    </delete>
+
+    <delete id="deleteSlotStockBySkuRfId">
+        delete from BookerStock where MerchId =#{merchId}
+        and StoreId =#{storeId}
+        and ShopId =#{shopId}
+        and DeviceId =#{deviceId}
+        and SlotId =#{slotId}
+        and SkuRfId =#{skuRfId}
     </delete>
 
     <delete id="deleteDeviceStockBySkuId">

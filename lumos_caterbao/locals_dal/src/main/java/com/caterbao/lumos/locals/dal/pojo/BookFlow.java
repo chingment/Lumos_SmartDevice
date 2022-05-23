@@ -20,8 +20,10 @@ public class BookFlow {
     private String identityName;
     private Timestamp openActionTime;
     private String openRfIds;
+    private int openRfIdsSize;
     private Timestamp closeActionTime;
     private String closeRfIds;
+    private int closeRfIdsSize;
     private int status;//1000 已提交 2000 就绪中 3000执行中 4000已完成
     private Timestamp lastActionTime;
     private int lastActionSn;
@@ -254,5 +256,21 @@ public class BookFlow {
 
     public void setLastActionRemark(String lastActionRemark) {
         this.lastActionRemark = lastActionRemark;
+    }
+
+    public int getOpenRfIdsSize() {
+        return openRfIdsSize;
+    }
+
+    public void setOpenRfIdsSize(int openRfIdsSize) {
+        this.openRfIdsSize = openRfIdsSize;
+    }
+
+    public int getCloseRfIdsSize() {
+        return closeRfIdsSize;
+    }
+
+    public void setCloseRfIdsSize(int closeRfIdsSize) {
+        this.closeRfIdsSize = closeRfIdsSize;
     }
 }
